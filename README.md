@@ -65,7 +65,14 @@ To successfully develop StudySync, we'll need a thorough understanding of ReactJ
             <br />
             <sub><b>Shen Liu</b></sub>
         </a>
+    </td><td align="center">
+        <a href="https://github.com/tuo85214temple">
+            <img src="https://avatars.githubusercontent.com/u/123430237?s=400&u=8a0c706c017ba40d3d13690851efac759017bfd6&v=4" width="100;" alt="leighflagg"/>
+            <br />
+            <sub><b>Kai Guo</b></sub>
+        </a>
     </td></tr>
+    
 </table>
 
 [//]: # ( readme: collaborators -end )
