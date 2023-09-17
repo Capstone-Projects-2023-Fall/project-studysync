@@ -9,6 +9,8 @@
 
 </div>
 
+## Project Overview
+StudySync is a web-based studying tool that allows users to add flashcards with terms and definitions to study from. The added flashcards can be customized by upvoting/downvoting cards , adding comments to a friend’s study set, and organizing cards’ priority levels, upcoming dates and difficulty levels. Users can also add friends and create flashcards and quizzes/tests for each other. They can also compete based on the score of the tests they made for each other. This project is a full stack application that requires the use of JavaScript, HTML, CSS, Nodejs, MongoDb, ExpressJs, and ReactJs. ExpressJs and NodeJs are used to create a server and API that ReactJs can use to provide users an interface to interact with. Users can login and store all of their information into the MongoDb database. This application is similar to quizlet in helping students use cards to learn new terms and definitions, however, StudySync will be more interactive as it has more customization options and allows students to add friends and help each other learn.
 
 ## Keywords
 
