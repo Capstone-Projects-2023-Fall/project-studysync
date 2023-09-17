@@ -75,7 +75,7 @@ To successfully develop StudySync, we'll need a thorough understanding of ReactJ
         </a>
     </td><td align="center">
         <a href="https://[github.com//mingjiew522)">
-            <img src="[https://avatars.githubusercontent.com/u/123430237?s=400&u=8a0c706c017ba40d3d13690851efac759017bfd6&v=4](https://avatars.githubusercontent.com/u/112578002?s=400&v=4)" width="100;" alt="leighflagg"/>
+            <img src="https://avatars.githubusercontent.com/u/112578002?s=400&v=4)" width="100;" alt="leighflagg"/>
             <br />
             <sub><b>Mingjie Wu</b></sub>
         </a>
