@@ -93,6 +93,13 @@ To successfully develop StudySync, we'll need a thorough understanding of ReactJ
             <sub><b>Leapheng Keam</b></sub>
         </a>
     </td>  
+    <td align="center">
+        <a href="https://github.com/atoaidoocr7">
+            <img src="https://avatars.githubusercontent.com/u/70645481?v=4" width="100;" alt="leighflagg"/>
+            <br />
+            <sub><b>Ato Aidoo</b></sub>
+        </a>
+    </td>  
 </tr>
     
 </table>
