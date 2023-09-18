@@ -79,7 +79,15 @@ To successfully develop StudySync, we'll need a thorough understanding of ReactJ
             <br />
             <sub><b>Mingjie Wu</b></sub>
         </a>
-    </td></tr>
+    </td>
+    </td><td align="center">
+        <a href="https://github.com/harriskwong1208">
+            <img src="https://avatars.githubusercontent.com/u/123189023?v=4" width="100;" alt="leighflagg"/>
+            <br />
+            <sub><b>Harris Kwong</b></sub>
+        </a>
+    </td>    
+</tr>
     
 </table>
 
