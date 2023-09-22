@@ -31,9 +31,11 @@ app.get('/test/:name',(req,res)=>{
    const {name} = req.params;
    const _name = testArray.find(a => a.name === name);
    if(_name){
-        res.send(`${_name.name}'s major is ${_name.major}.`);
+        //res.send(`${_name.name}'s major is ${_name.major}.`);
+        res.json(_name);
    }else{
-        res.send(`Error! ${name} not found in database.`);
+        //res.send(`Error! ${name} not found in database.`);
+        res.json({name:"Error",Major:"Error"});
    }
 })
 
