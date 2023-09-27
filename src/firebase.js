@@ -1,23 +1,20 @@
-import firebase from "firebase/app";
-import "firebase/auth";    
-import "firebase/firestore"; 
-
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import {getFirestore} from 'firebase/firestore';
+import keys from './keys';
 
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-  measurementId: "YOUR_MEASUREMENT_ID" 
+
+  apiKey: keys.apiKey,
+  authDomain: keys.authDomain,
+  projectId: keys.projectId,
+  storageBucket: keys.storageBucket,
+  messagingSenderId: keys.messagingSenderId,
+  appId: keys.appId,
+  measurementId: keys.measurementId
 };
 
-
-firebase.initializeApp(firebaseConfig);
-
-
-export const auth = firebase.auth();
-export const db = firebase.firestore();
-export default firebase;
+// Initialize Firebase
+export const app = initializeApp(firebaseConfig);
+export const database = getFirestore(app);
