@@ -42,6 +42,8 @@ A user is about to take a naturalization test but doesn't have time to study for
 4. After completing the screening you can study, then while flash card studying you are not satisfied with a particular topic then choose to be dissatisfied with that topic.
 5. The question will then be deleted from the pool.
 
+![](static/UseCase4.png)
+
 ## Use Case 5
    A user wants to take a quiz created by themselves or a friend.
 
@@ -51,6 +53,8 @@ A user is about to take a naturalization test but doesn't have time to study for
 4. Then the user completes the quiz and submits their answers.
 5. The system will then calculate and the display user's score on the leaderboard.
 
+![](static/UseCase5.png)
+
 ## Use Case 6
    A user wants to add friends on StudySync.
 
@@ -59,6 +63,9 @@ A user is about to take a naturalization test but doesn't have time to study for
 3. User enters the friend's email or username.
 4. Once the friend's name popup, user recognizes their friends then clicks "add as friend".
 5. The friend receives the friend request and is able to accept or reject it.
+
+![](static/UseCase6.png)
+
 
 ## Use Case 7
    A user has been studying for 6 hours and wants to take a break but also wants to save the quiz's progress.
