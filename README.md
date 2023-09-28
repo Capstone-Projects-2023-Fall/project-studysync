@@ -10,11 +10,11 @@
 </div>
 
 ## Project Overview
-StudySync is a web-based studying tool that allows users to add flashcards with terms and definitions to study from. The added flashcards can be customized by upvoting/downvoting cards , adding comments to a friend’s study set, and organizing cards’ priority levels, upcoming dates and difficulty levels. Users can also add friends and create flashcards and quizzes/tests for each other. They can also compete based on the score of the tests they made for each other. This project is a full stack application that requires the use of JavaScript, HTML, CSS, Nodejs, MongoDb, ExpressJs, and ReactJs. ExpressJs and NodeJs are used to create a server and API that ReactJs can use to provide users an interface to interact with. Users can login and store all of their information into the MongoDb database. This application is similar to quizlet in helping students use cards to learn new terms and definitions, however, StudySync will be more interactive as it has more customization options and allows students to add friends and help each other learn.
+StudySync is a web-based studying tool that allows users to add flashcards with terms and definitions to study from. The added flashcards can be customized by upvoting/downvoting cards , adding comments to a friend’s study set, and organizing cards’ priority levels, upcoming dates and difficulty levels. Users can also add friends and create flashcards and quizzes/tests for each other. They can also compete based on the score of the tests they made for each other. This project is a full stack application that requires the use of JavaScript, HTML, CSS, Nodejs, ExpressJs, Firebase and ReactJs. ExpressJs and NodeJs are used to create a server and API that ReactJs can use to provide users an interface to interact with. Users can login and store all of their information into the Firebase database. This application is similar to quizlet in helping students use cards to learn new terms and definitions, however, StudySync will be more interactive as it has more customization options and allows students to add friends and help each other learn.
 
 ## Keywords
 
-Quizlet, HTML, CSS, JS, ReactJS, MongoDB, NodeJs
+Quizlet, HTML, CSS, JS, ReactJS, Firebase, NodeJs
 
 ## Project Abstract
 
@@ -25,11 +25,11 @@ StudySync - A Comprehensive Web-based Study Tool. To design an interactive, web-
 1. **Flashcard Creation & Customization:** Users can add terms and definitions to flashcards. These cards can be further customized based on priority, difficulty, and upcoming study dates.
 2. **Interactivity & Collaboration:** Users can upvote/downvote cards, add comments, and organize their study materials.
 3. **Social Learning:** The platform allows users to add friends, create quizzes/tests for each other, and even compete based on test scores.
-4. **User Account Management:** Secure login capabilities with personal data stored in a MongoDB database.
+4. **User Account Management:** Secure login capabilities with personal data stored in a Firebase database.
 
 ## High Level Requirement
 
-StudySync is a comprehensive, user-centric digital study tool designed for enhanced interactive learning. Users can craft, customize, and categorize flashcards for efficient knowledge retention, bolstered by features like prioritization, comments, and upvote/downvote mechanisms. Moreover, it fosters a collaborative learning ecosystem where users can connect with peers, exchange study materials, challenge each other through quizzes, and track their collaborative progress. Embedded with a user-friendly interface powered by ReactJs and backed by a robust MongoDB database, StudySync offers a secure, seamless experience, marrying the best of individualized study and social learning.
+StudySync is a comprehensive, user-centric digital study tool designed for enhanced interactive learning. Users can craft, customize, and categorize flashcards for efficient knowledge retention, bolstered by features like prioritization, comments, and upvote/downvote mechanisms. Moreover, it fosters a collaborative learning ecosystem where users can connect with peers, exchange study materials, challenge each other through quizzes, and track their collaborative progress. Embedded with a user-friendly interface powered by ReactJs and backed by a robust Firebase database, StudySync offers a secure, seamless experience, marrying the best of individualized study and social learning.
 
 ## Conceptual Design
 
@@ -38,7 +38,7 @@ The application is designed as a full-stack web application.
 
 1. **Frontend:** Developed using ReactJs, offering an interactive interface for users.
 2. **Backend:** Built using NodeJs and ExpressJs, responsible for server operations and API functionalities.
-3. **Database:** MongoDB is chosen as the database system to store user information, flashcards, comments, and quiz scores.
+3. **Database:** Firebase is chosen as the database system to store user information, flashcards, comments, and quiz scores.
 4. **Integration:** The backend will serve the frontend through API endpoints, with data interchange in JSON format.
 
 ## Background
@@ -47,7 +47,7 @@ The idea of StudySync is derived from platforms like Quizlet, which assist stude
 
 ## Required Resources
 
-To successfully develop StudySync, we'll need a thorough understanding of ReactJS, NodeJS, ExpressJS, and MongoDB. Hardware-wise, potent development computers and a robust server (either on-premise or cloud-based) are crucial. On the software front, essential tools include development frameworks for React, Node, and MongoDB, an IDE like Visual Studio Code, version control via GitHub, and testing tools like Jest and Postman. 
+To successfully develop StudySync, we'll need a thorough understanding of ReactJS, NodeJS, ExpressJS, and Firebase. Hardware-wise, potent development computers and a robust server (either on-premise or cloud-based) are crucial. On the software front, essential tools include development frameworks for React, Node, and Firebase, an IDE like Visual Studio Code, version control via GitHub, and testing tools like Jest and Postman. 
 
 ## Collaborators
 
