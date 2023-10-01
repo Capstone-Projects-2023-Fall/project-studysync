@@ -75,7 +75,8 @@ A user is about to take a naturalization test but doesn't have time to study for
 3. The system saves the user's progress.
 4. After the break, the user logs in and goes to the "Quiz" section to resume the paused quiz.
 5. User chooses to resume the quiz from where they left off.
-![mermaid-diagram-2023-09-29-214820](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/dff8525a-0253-4e1c-8e4b-fa054c0cbf0d)
+![mermaid-diagram-2023-09-30-214956](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/dccf5064-cf96-48ae-94e8-ab090ccc78ec)
+
 
 
 ## Use Case 8
@@ -86,4 +87,5 @@ A user is about to take a naturalization test but doesn't have time to study for
 3. User finds out which flashcards need to be updated.
 4. User makes some changes to the flashcard definition and details.
 5. User saves changes and then flashcards are updated and ready to be learned.
-![mermaid-diagram-2023-09-29-215726](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/87578246-13a9-4a34-be91-208cb6d3a7b5)
+![mermaid-diagram-2023-09-30-214822](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/899e1be7-14e6-4d47-8cc6-8e9af2d732bc)
+
