@@ -6,7 +6,7 @@ sidebar_position: 5
 
 ## Use Case 1
 
-Features associated with this use case
+Features associated with this use case:
 user account management
 flashcard creation/customization
 Interactivity and collaboration
@@ -23,7 +23,7 @@ Interactivity and collaboration
 
 ## Use Case 2
 
-Features associated with this use case
+Features associated with this use case:
 User account management
 Flashcard creation/customization
 
@@ -38,7 +38,7 @@ Flashcard creation/customization
 
 ## Use Case 3
 
-Features associated with this use case
+Features associated with this use case:
 User account management
 Social learning
 Quizzes/test
@@ -53,7 +53,7 @@ Quizzes/test
 
 ## Use Case 4
 
-Features associated with this use case
+Features associated with this use case:
 User account management
 Flashcard creation/customization
 Customization(AI generation function)
@@ -69,7 +69,7 @@ Customization(AI generation function)
 
 ## Use Case 5
 
-Features associated with this use case
+Features associated with this use case:
 User account management
 Quizzes/tests
 
@@ -84,7 +84,7 @@ Quizzes/tests
 
 ## Use Case 6
 
-Features associated with this use case
+Features associated with this use case:
 User account management
 Social Learning(add friends)
 
@@ -100,7 +100,7 @@ Social Learning(add friends)
 
 ## Use Case 7
 
-Features associated with this use case
+Features associated with this use case:
 User account management
 Quizzes/tests(save and resume function)
 
@@ -116,7 +116,7 @@ Quizzes/tests(save and resume function)
 
 ## Use Case 8
 
-Features associated with this use case
+Features associated with this use case:
 User account management
 Flashcard creation and customization
 
