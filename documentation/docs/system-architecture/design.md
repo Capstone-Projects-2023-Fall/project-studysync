@@ -37,6 +37,7 @@ A user forgets to review because of daily chores and uses StudySync to review be
 4. Next the user will proceed to flash Select Q&A mode.
 5. Finally, the user completes the quiz and the correct answer is displayed.
 6. The last wrong questions will be collected and then these questions will be saved in a new topic.
+![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/4a16778b-12ff-4403-8b45-0d7561016055)
 
 
 ## Use case 2
@@ -48,6 +49,7 @@ A user is about to take a naturalization test but doesn't have time to study for
 4. After completing the upload of the question bank he chose flash card mode for memory training.
 5. When the flash card comes out there are three options, recognize, don't recognize.
 6. Finally, the questions you recognize will be skipped in the next exercise, and the questions you don't recognize will show the answer and then continue to appear in the next exercise.
+![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/e8129876-288c-4dad-825c-cb1c7f0c33a1)
 
 
 ## Use case 3
@@ -57,6 +59,7 @@ A user is about to take a naturalization test but doesn't have time to study for
 2. Then he went to the friends list and chose to add a friend.
 3. After adding his friends he received an invitation to a quiz contest sent to him by his classmate.
 4. After completing the quiz the scores and rankings of the inviter as well as all invited people appeared.
+![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/2bccda65-2a0a-4397-9911-85f3f90a95cc)
 
 
 ## Use case 4
