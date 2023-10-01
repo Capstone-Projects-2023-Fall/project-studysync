@@ -9,6 +9,8 @@ The StudySync web interface offers a user-centric dashboard that centralizes lea
 ![stydysync](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/48d10c14-63b8-4edb-925a-37d79a6ac535)
 
 ## Server
+StudySync is an easy-to-use learning platform where users can study, interact with friends, and manage their profiles. It’s powered by Firebase from Google Cloud, ensuring everything runs smoothly and securely. Users can quickly access up-to-date study materials like flashcards and quizzes, and the platform can respond in real-time to keep users engaged. 
+![1696123345(1)](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/102b6575-ef92-4386-8071-7abf1a253bf9)
 
 
 ## Database
