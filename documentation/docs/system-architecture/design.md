@@ -25,3 +25,9 @@ Entity-relation diagram.
 Table design.
 
 A check list for architecture design is attached here [architecture\_design\_checklist.pdf](https://templeu.instructure.com/courses/106563/files/16928870/download?wrap=1 "architecture_design_checklist.pdf")  and should be used as a guidance.
+
+
+The StudySync web interface offers a user-centric dashboard that centralizes learning tools, friend interactions, and personalized notifications. After logging in, users can access a suite of study tools, view and interact with friends' content, receive system and friend notifications, and manage their profile, all seamlessly interconnected for an efficient and engaging learning experience.
+
+![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/40097f84-0033-41e3-81cb-8f5c49b35099)
+
