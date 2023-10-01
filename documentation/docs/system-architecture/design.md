@@ -26,32 +26,32 @@ For single properties on a user model such as email, password and name, we will 
 ![StudySync (2)](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/77356776/9778a182-94c4-44be-ac72-f4f6c11adcf3)
 
 
-## User case 1
+## Use case 1
 
 
-## User case 2
+## Use case 2
 
 
-## User case 3
+## Use case 3
 
 
-## User case 4
+## Use case 4
 
 ![](../requirements/static/UseCase4.png)
 
-## User case 5
+## Use case 5
 ![](../requirements/static/UseCase5.png)
 
 
-## User case 6
+## Use case 6
 ![](../requirements/static/UseCase6.png)
 
 
-## User case 7
+## Use case 7
 ![mermaid-diagram-2023-09-29-214820](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/68267170-a3d8-4f8d-92d3-f32b7a341f02)
 
 
-## User case 8
+## Use case 8
 ![mermaid-diagram-2023-09-29-215726](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/b3762de4-801c-475e-b658-c9a7b5b2d8bb)
 
 
