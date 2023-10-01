@@ -6,7 +6,8 @@ sidebar_position: 1
 
 The StudySync web interface offers a user-centric dashboard that centralizes learning tools, friend interactions, and personalized notifications. After logging in, users can access a suite of study tools, view and interact with friends' content, receive system and friend notifications, and manage their profile, all seamlessly interconnected for an efficient and engaging learning experience.
 
-![stydysync](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/48d10c14-63b8-4edb-925a-37d79a6ac535)
+![stydysync2](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/1c1f832c-66f8-4687-ac0b-89185ad4812d)
+
 
 ## Server
 StudySync is an easy-to-use learning platform where users can study, interact with friends, and manage their profiles. It’s powered by Firebase from Google Cloud, ensuring everything runs smoothly and securely. Users can quickly access up-to-date study materials like flashcards and quizzes, and the platform can respond in real-time to keep users engaged. 
