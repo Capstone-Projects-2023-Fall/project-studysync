@@ -25,11 +25,14 @@ The StudySync web interface offers a user-centric dashboard that centralizes lea
 
 ## User case 4
 
+![](../requirements/static/UseCase4.png)
 
 ## User case 5
+![](../requirements/static/UseCase5.png)
 
 
 ## User case 6
+![](../requirements/static/UseCase6.png)
 
 
 ## User case 7
