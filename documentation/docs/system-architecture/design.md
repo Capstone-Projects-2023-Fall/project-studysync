@@ -12,8 +12,6 @@ The StudySync web interface offers a user-centric dashboard that centralizes lea
 
 
 ## Database
-![StudySync (2)](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/77356776/9778a182-94c4-44be-ac72-f4f6c11adcf3)
-
 Database Model
 StudySync will be using a NoSQL database to store all data. The database will be made up of the following collections: 
 
@@ -26,6 +24,9 @@ StudySync will be using a NoSQL database to store all data. The database will be
 ### Quiz: Internal Representation of a Quiz
 
 For single properties on a user model such as email, password and name, we will just store it in the user database. For more complex properties such as notifications, followers and following, flashcards and events, we will store the ids of each corresponding field in the user collection and query the respective collection as needed. In the case of notifications, the actual data for notifications will be stored in the Notifications collections, anytime we need to query user notifications, we can do this easily by fetching all the notification ids for that user from the Users collection and then querying the Notifications collection using those ids. This same idea applies to fetching events for Notifications
+![StudySync (2)](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/77356776/9778a182-94c4-44be-ac72-f4f6c11adcf3)
+
+
 
 
 
