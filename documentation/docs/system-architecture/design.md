@@ -12,6 +12,7 @@ The StudySync web interface offers a user-centric dashboard that centralizes lea
 
 
 ## Database
+![StudySync (2)](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/77356776/9778a182-94c4-44be-ac72-f4f6c11adcf3)
 
 
 ## User case 1
