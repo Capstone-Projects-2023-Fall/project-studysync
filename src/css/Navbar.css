@@ -1,0 +1,46 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #333;
+  }
+  
+  .navbar .brand {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .nav-items {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .nav-item {
+    position: relative;
+  }
+  
+  .submenu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #666;
+    border: 1px solid #444;
+  }
+  
+  .nav-item:hover .submenu {
+    display: block;
+  }
+  
+  .submenu a {
+    color: white;
+    padding: 5px 10px;
+    display: block;
+    text-decoration: none;
+  }
+  
+  .submenu a:hover {
+    background-color: #555;
+  }
+  
