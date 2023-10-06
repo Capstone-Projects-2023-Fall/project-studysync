@@ -1,7 +1,7 @@
 /**
  * Represents a notification that can be of various types, e.g., friend request, flashcard reminder.
  */
-export default class Notification {
+export class Notification {
     /**
      * Creates a new notification.
      * 

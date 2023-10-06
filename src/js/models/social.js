@@ -6,7 +6,7 @@ import Leaderboard from './leaderboard.js';
  * Represents the social features of a system, allowing users to view friends, 
  * access a leaderboard, and initiate a chat.
  */
-export default class Social {
+export class Social {
     /**
     * Creates a new Social instance.
     * 

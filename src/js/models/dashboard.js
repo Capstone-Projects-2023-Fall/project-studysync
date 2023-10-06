@@ -7,7 +7,7 @@ import Event from './event.js';
  * Represents a user's dashboard with functionalities to manage and display 
  * upcoming events, recent flashcards, and quizzes.
  */
-export default class Dashboard {
+export class Dashboard {
     /**
      * Creates a new Dashboard instance for a given user.
      * 

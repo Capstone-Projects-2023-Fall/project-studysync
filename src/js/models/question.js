@@ -1,7 +1,7 @@
 /**
  * Represents a question with associated choices and a correct answer.
  */
-export default class Question {
+export class Question {
     /**
      * Creates a new Question instance.
      * 

@@ -3,9 +3,10 @@ import Dashboard from './dashboard.js';
 
 /**
  * Represents an event, capturing essential details like date and title.
- * can also edit event deatail
+ * can also edit event deatailEvent
+ 
  */
-export default class Event extends Dashboard {
+export class Event extends Dashboard {
     /**
      * Creates a new Event instance.
      * 

@@ -5,7 +5,7 @@ import Score from './score.js';
 /**
  * Represents a quiz containing a list of questions, associated with an owner and having a creation date.
  */
-export default class Quiz {
+export class Quiz {
     /**
      * Creates a new Quiz instance.
      * 

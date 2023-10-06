@@ -3,7 +3,7 @@ import Event from './Event';
 /**
  * Represents a scheduling system that manages scheduled events.
  */
-export default class SchedulingSystem {
+export  class SchedulingSystem {
     /**
      * Creates a new SchedulingSystem instance.
      */
