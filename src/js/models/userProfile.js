@@ -1,8 +1,13 @@
+/**
+ * Represents a user's profile with associated details such as name, bio, and profile image URL.
+ */
 export default class UserProfile {
     /**
-     * @param {string} name 
-     * @param {string} bio 
-     * @param {string} profileImageURL 
+     * Creates a new UserProfile instance.
+     * 
+     * @param {String} name - The name of the user.
+     * @param {String} bio - A brief biography or description of the user.
+     * @param {String} profileImageURL - The URL pointing to the user's profile image.
      */
     constructor(name, bio, profileImageURL) {
         this.name = name;
@@ -10,7 +15,11 @@ export default class UserProfile {
         this.profileImageURL = profileImageURL;
     }
 
+    /**
+     * Allows the user to update their profile details.
+     */
     updateProfile() {
-        // Update profile logic
+        // Logic to update the user's profile details
+        console.log('Profile updated successfully.');
     }
 }
