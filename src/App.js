@@ -8,7 +8,8 @@ import {useState} from "react";
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import User from './js/models/user.js'; 
-import DashboardCom from './js/models/user.js'; 
+import DashboardCom from './js/react/DashboardCom.js'; 
+import LoginPage from './js/react/LoginPage.js'; 
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
     <div className="app">
         <Navbar items={isLoggedIn ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
         <Routes>
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={
                 isLoggedIn 
                 ? <DashboardCom /> 
