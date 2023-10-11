@@ -45,3 +45,21 @@
   font-size: 20px;
   font-weight: bold;
 }
+.loginform{
+  padding-top: 10%;
+  text-align: center;
+}
+
+.loginform #email{
+  margin-bottom: 2%;
+}
+.loginform #btn{
+  margin-top: 1%;
+}
+.login-header{
+  color: white;
+  background-color: blueviolet;
+  padding-top: 5%;
+  padding-bottom: 5%;
+  text-align: center;
+}

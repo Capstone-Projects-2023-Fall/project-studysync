@@ -3,7 +3,7 @@ import User from './user.js';
 /**
  * Represents a user's score, capturing details such as obtained marks and total marks.
  */
-export class Score {
+export default class Score {
     /**
      * Creates a new Score instance.
      * 

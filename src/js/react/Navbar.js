@@ -9,7 +9,7 @@ function Navbar({ items }) {
       <Link to="/" className="brand">StudySync</Link>
       <div className="nav-items">
       {items.map((item, index) => 
-  <div key={index} className="nav-item">
+        <div key={index} className="nav-item">
     {item.link ? <Link to={item.link} onClick={item.action}>{item.label}</Link> : item.label}
     {item.submenu && 
       <div className="submenu">

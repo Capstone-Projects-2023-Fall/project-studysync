@@ -1,7 +1,7 @@
 /**
  * Represents an AI-driven tutor capable of answering questions.
  */
-export class AiTutor {
+export default class AiTutor {
     /**
      * Allows a user to ask a question to the AI tutor.
      * 
