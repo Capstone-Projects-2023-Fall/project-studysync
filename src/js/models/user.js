@@ -6,7 +6,7 @@ import Notification from './notification.js';
 /**
  * Represents a user with functionalities such as login, logout, creating flashcards, and managing friends.
  */
-export  class User {
+export  default class User {
     /**
      * Creates a new user.
      * 

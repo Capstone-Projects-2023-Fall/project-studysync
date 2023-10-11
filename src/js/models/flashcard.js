@@ -3,7 +3,7 @@ import User from './user.js';
 /**
  * Represents a flashcard with a term, definition, owner, and creation date.
  */
-export  class Flashcard {
+export  default class Flashcard {
     /**
      * Creates a new Flashcard instance.
      * 
