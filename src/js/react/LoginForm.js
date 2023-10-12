@@ -2,11 +2,11 @@ import { useState,useEffect } from 'react';
 import '../../App.css';
 import User from '../models/user';
 import { BrowserRouter as Router, Switch, 
-    Route, Redirect,} from "react-router-dom";
+    Route, Redirect, useNavigate,} from "react-router-dom";
 import App from '../../App';
 
 
-function LoginForm(){
+function LoginForm({user}){
 
     const[email,setEmail] = useState('');
     const [password,setPassword ] = useState('');
@@ -14,14 +14,14 @@ function LoginForm(){
 
 
 
-    //replace this 
-    const user = new User();
+   
 
     const handlesubmit = (e) =>{
         e.preventDefault();
         user.email = email;
         user.password = password;
         user.login();
+
     }
     
 

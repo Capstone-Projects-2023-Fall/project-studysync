@@ -2,7 +2,7 @@ import './App.css';
 /*import {app ,database} from "./firebase.js"*/
 /*import {getAuth, createUserWithEmailAndPassword,
 signInWithEmailAndPassword} from "firebase/auth";*/
-import {useState} from "react";
+import {useEffect, useState} from "react";
 /*import {collection, addDoc} from 'firebase/firestore';*/
 /*import keys from './keys';*/
 import Navbar from './js/react/Navbar.js';
@@ -15,6 +15,8 @@ function App() {
 
   const user = new User();
   const [isLoggedIn, setIsLoggedIn] = useState(user.isLoggedIn);
+
+  
 
   const handleLogin = () => {
     user.login();  
@@ -45,7 +47,7 @@ function App() {
                 ? <DashboardCom /> 
                 : <div className="login-center">Please log in or sign up to continue</div>
             } />
-            <Route path='/login' element={<LoginForm/>}/>
+            <Route path='/login' element={<LoginForm user={user}/>}/>
             <Route path='/signup' element={<SignUpForm/>}/>            
         </Routes>
     </div>
