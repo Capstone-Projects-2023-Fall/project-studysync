@@ -1,14 +1,14 @@
 /**
  * Represents a notification that can be of various types, e.g., friend request, flashcard reminder.
  */
-export class Notification {
+export default class Notification {
     /**
      * Creates a new notification.
      * 
      * @param {string} message - The message or content of the notification.
-     * @param {NotificationType} type - The type of the notification.
+     * @param {int} type - The type of the notification.
      */
-    constructor(message = '', type = NotificationType.DEFAULT) {
+    constructor(message = '', type = 0) {
         this.message = message;
         this.type = type;
     }

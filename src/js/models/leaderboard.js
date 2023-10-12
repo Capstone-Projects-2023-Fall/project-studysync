@@ -3,7 +3,7 @@ import Quiz from './quiz.js'; //to get score for leaderboard
 /**
  * Represents a leaderboard that maintains a list of quiz scores.
  */
-export  class Leaderboard {
+export  default class Leaderboard {
     /**
      * Creates a new Leaderboard instance.
      */

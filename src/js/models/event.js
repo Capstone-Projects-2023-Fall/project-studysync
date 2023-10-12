@@ -6,7 +6,7 @@ import Dashboard from './dashboard.js';
  * can also edit event deatailEvent
  
  */
-export class Event extends Dashboard {
+export default class Event extends Dashboard {
     /**
      * Creates a new Event instance.
      * 
