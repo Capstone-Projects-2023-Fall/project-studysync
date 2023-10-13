@@ -3,4 +3,6 @@ sidebar_position: 3
 ---
 # Acceptance test
 
-Demonstration of all of the functional and non-functional requirements. This can be a combination of automated tests derived from the use-cases (user stories) and manual tests with recorded observation of the results.
+
+![functional](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/d2c4d648-7cbb-4111-8622-2006afc747af)
+![non-functional](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/fa9d8cee-c7a3-4abe-b434-964362ac4bd3)
