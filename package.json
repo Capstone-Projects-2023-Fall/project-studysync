@@ -13,8 +13,9 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.5.1",
     "date-fns": "^2.30.0",
-    "firebase": "^10.4.0",
+    "firebase": "^10.5.0",
     "font-awesome": "^4.7.0",
+    "formic": "^0.0.10",
     "formik": "^2.4.5",
     "framer-motion": "^10.16.4",
     "lodash": "^4.17.21",
@@ -24,7 +25,7 @@
     "react-router-dom": "^6.16.0",
     "react-scripts": "5.0.1",
     "redux": "^4.2.1",
-    "styled-components": "^6.0.8",
+    "styled-components": "^6.0.9",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -52,7 +53,21 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "babel-jest": "^29.7.0",
     "jest": "^27.5.1",
     "jsdoc": "^4.0.2"
+  },
+  "description": "[![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-7f7980b617ed060a017424585567c406b6ee15c891e84e1186181d67ecf80aa0.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=11817743) <div align=\"center\">",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
   }
+  
 }
