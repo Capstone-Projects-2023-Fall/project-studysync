@@ -3,6 +3,6 @@ sidebar_position: 3
 ---
 # Acceptance test
 
-
-![functional](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/d2c4d648-7cbb-4111-8622-2006afc747af)
+![1](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/549c9fd2-3b0c-43c5-86a4-9d20ba8fd90e)
+![2](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/ddbf0e50-d1fa-416b-baab-0f4e48f73a65)
 ![non-functional](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/fa9d8cee-c7a3-4abe-b434-964362ac4bd3)
