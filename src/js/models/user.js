@@ -1,24 +1,27 @@
-import UserProfile from './userProfile.js';
-import Flashcard from './flashcard.js';
-import Quiz from './quiz.js';
-import Notification from './notification.js';
+import {UserProfile} from './userProfile.js';
+import {Flashcard} from './flashcard.js';
+import {Quiz} from './quiz.js';
+
 
 /**
  * Represents a user with functionalities such as login, logout, creating flashcards, and managing friends.
  */
-export  class User {
+export class User {
     /**
      * Creates a new user.
      * 
      * @param {string} email - User's email address.
      * @param {string} password - User's password.
      */
-    constructor(email = '', password = '') {
+    constructor(email = '', password = '', id = '') {
         this.email = email;
         this.password = password;
+        this.id = id
         this.flashcards = [];
         this.quizzes = [];
         this.friends = [];
+        this.followers = []
+        this.following = []
         this.profile = new UserProfile();
         this.notifications = [];
         this.isLoggedIn = false;

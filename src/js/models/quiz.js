@@ -1,6 +1,6 @@
 import Question from './question.js';
 import User from './user.js';
-import Score from './score.js';
+import {Score} from './score.js';
 
 /**
  * Represents a quiz containing a list of questions, associated with an owner and having a creation date.
@@ -12,9 +12,10 @@ export class Quiz {
      * @param {List<Question>} question - List of questions that make up the quiz.
      * @param {User} owner - The user who created or owns the quiz.
      */
-    constructor(question, owner) {
+    constructor(author, question, id) {
         this.question = question;
-        this.owner = owner;
+        this.author = author;
+        this.id = id;
         this.creationDate = new Date();
     }
 
