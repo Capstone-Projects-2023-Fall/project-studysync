@@ -110,8 +110,10 @@ function App() {
        />  
        <button onClick={handleSubmit}>Auth Button</button>
        <hr></hr>
+
        <button onClick={database_submit}>Database Button</button>
     </div>*/
-}
-export default App;
 
+}
+
+export default App;

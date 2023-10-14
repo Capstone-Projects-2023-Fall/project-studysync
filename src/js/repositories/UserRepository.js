@@ -1,5 +1,9 @@
 import {collection, getDocs, query, where} from 'firebase/firestore';
 import {User} from "../models/user"
+
+/**
+ * Utility class to talk to FireStore User Collection [IN PROGRESS]
+ */
 export class UserRepository{
     constructor(database, quizRepository){
       this.database = database
@@ -23,10 +27,13 @@ export class UserRepository{
     }
   
     async getUserById(id){
-      // await this.initializationPromise;
-      // const users = await this.getUserMap()
-      // if(users[id] !== null && users[id] !== undefined) return users[id]
-      // return "DOES NOT EXIST"
+      const result = query(collection(this.database, "users"), where("id", "==", id));
+      const snapshot = await getDocs(result);
+
+      if(snapshot.size > 1) return "Cannot have two users with the same id"
+      else if(snapshot.size === 0) return `User with id ${id} does not exist`
+
+      return snapshot.docs.at(0).data()
     }
 
 
@@ -55,7 +62,7 @@ export class UserRepository{
 }
 
 
-// Firestore data converter
+// Firestore data converter[IN PROGRESS]
 const userConverter = {
   toFirestore: (user) => {
       return {
