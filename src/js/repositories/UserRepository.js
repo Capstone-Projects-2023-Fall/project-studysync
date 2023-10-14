@@ -1,25 +1,9 @@
-import {collection, getDocs} from 'firebase/firestore';
+import {collection, getDocs, query, where} from 'firebase/firestore';
 import {User} from "../models/user"
 export class UserRepository{
     constructor(database, quizRepository){
       this.database = database
-      this.ref = collection(this.database, "users")
-      this.snapshot = null;
-      this.initializationPromise = this.initializeSnapshot();
       this.quizRepository = quizRepository
-    }
-  
-    async initializeSnapshot() {
-      try {
-          this.snapshot = await this.getSnapshot();
-      } catch (error) {
-          console.error("Error while initializing snapshot: ", error);
-          throw error;
-      }
-    }
-  
-    async getSnapshot() {
-        return await getDocs(this.ref, "users");
     }
   
     async getAllUsers(){
@@ -27,21 +11,34 @@ export class UserRepository{
       return Object.values(usersMap)
     }
   
-    async getUserMap(){
-      await this.initializationPromise;
-      const users = {}
-      this.snapshot.docs.forEach((doc)=>{
+    async getAllUsers(){
+      const usersRef = collection(this.database, "users").withConverter(userConverter)
+      const snapshot = await getDocs(usersRef, "users");
+      const users = []
+      snapshot.docs.forEach((doc)=>{
         const user = doc.data()
-        users[doc.id] = new User(user.email, user.password, doc.id)
+        users.push(user)
       })
       return users
     }
   
     async getUserById(id){
-      await this.initializationPromise;
-      const users = await this.getUserMap()
-      if(users[id] !== null && users[id] !== undefined) return users[id]
-      return "DOES NOT EXIST"
+      // await this.initializationPromise;
+      // const users = await this.getUserMap()
+      // if(users[id] !== null && users[id] !== undefined) return users[id]
+      // return "DOES NOT EXIST"
+    }
+
+
+
+    async getUserByEmail(email){
+      const result = query(collection(this.database, "users"), where("email", "==", email));
+      const snapshot = await getDocs(result);
+
+      if(snapshot.size > 1) return "Cannot have two users with the same email"
+      else if(snapshot.size === 0) return `User with email ${email} does not exist`
+
+      return snapshot.docs.at(0).data()
     }
   
   
@@ -56,3 +53,22 @@ export class UserRepository{
       return userQuizes
     }
 }
+
+
+// Firestore data converter
+const userConverter = {
+  toFirestore: (user) => {
+      return {
+        email: user.email,
+        password: user.password,
+        quizes: user.quizes
+          };
+  },
+  fromFirestore: (snapshot, options) => {
+      const data = snapshot.data(options);
+      const user = new User(data.email, data.password);
+      user.quizzes = data.quizes
+      user.id = snapshot.id
+      return user;
+  }
+};

@@ -1,6 +1,7 @@
 import {UserProfile} from './userProfile.js';
 import {Flashcard} from './flashcard.js';
 import {Quiz} from './quiz.js';
+import { UsbTwoTone } from '@mui/icons-material';
 
 
 /**
@@ -13,10 +14,9 @@ export class User {
      * @param {string} email - User's email address.
      * @param {string} password - User's password.
      */
-    constructor(email = '', password = '', id = '') {
+    constructor(email = '', password = '') {
         this.email = email;
         this.password = password;
-        this.id = id
         this.flashcards = [];
         this.quizzes = [];
         this.friends = [];
@@ -24,6 +24,7 @@ export class User {
         this.following = []
         this.profile = new UserProfile();
         this.notifications = [];
+        this.events = []
         this.isLoggedIn = false;
     }
 
