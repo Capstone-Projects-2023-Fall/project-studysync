@@ -37,7 +37,7 @@ function App() {
 
   return (
     <div className="app">
-        <Navbar items={navbarItemsLoggedIn} />
+        <Navbar items={isLoggedIn ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
         <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/studytool" element={<FlashcardComponent />} />
