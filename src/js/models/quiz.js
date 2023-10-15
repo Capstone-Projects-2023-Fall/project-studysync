@@ -80,3 +80,4 @@ export default class Quiz {
 //         console.log(`Quiz shared with ${friend.name}.`);
 //     }
 // }
+}
