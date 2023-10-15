@@ -1,7 +1,7 @@
 /**
  * Represents a user's profile with associated details such as name, bio, and profile image URL.
  */
-export class UserProfile {
+export default class UserProfile {
     /**
      * Creates a new UserProfile instance.
      * 

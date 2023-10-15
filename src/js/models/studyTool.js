@@ -7,7 +7,7 @@ import Quiz from './quiz.js';
  * Represents a comprehensive study tool that integrates AI-based tutoring,
  * scheduling functionalities, and capabilities to create flashcards and quizzes.
  */
-export class StudyTool {
+export default class StudyTool {
     /**
      * Creates a new StudyTool instance.
      * 
