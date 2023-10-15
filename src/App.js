@@ -8,9 +8,13 @@ import {useEffect, useState} from "react";
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import User from './js/models/user.js'; 
-import DashboardCom from './js/models/user.js'; 
+
+import DashboardCom from './js/react/DashboardCom.js'; 
+import LoginPage from './js/react/LoginPage.js'; 
+import FlashcardComponent from './js/react/flashcardCom.jsx'; 
 import LoginForm from './js/react/LoginForm';
 import SignUpForm from './js/react/SignUpForm';
+
 function App() {
 
   const user = new User();
@@ -23,7 +27,7 @@ function App() {
   };
 
   const navbarItemsLoggedOut = [
-    { label: 'Login', link: '/login', action: handleLogin },
+    { label: 'Log in', link: '/login', action: handleLogin },
     { label: 'Sign Up', link: '/signup' },
   ];
   
@@ -56,10 +60,7 @@ function App() {
 
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
-    { label: 'StudyTool', link: '/studytool', submenu: [
-      { label: 'Submenu 1', link: '/submenu1' },
-      { label: 'Submenu 2', link: '/submenu2' },
-    ]},
+    { label: 'StudyTool', link: '/studytool'},
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     //... add other items
   ];
@@ -68,6 +69,8 @@ function App() {
     <div className="app">
         <Navbar items={isLoggedIn ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
         <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/studytool" element={<FlashcardComponent />} />
             <Route path="/" element={
                 isLoggedIn 
                 ? <DashboardCom /> 

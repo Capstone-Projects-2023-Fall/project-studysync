@@ -1,5 +1,18 @@
 // import User from './user.js';
 
+
+/**
+ * Represents a flashcard with a term, definition, owner, and creation date.
+ */
+export  default class Flashcard {
+    /**
+     * Creates a new Flashcard instance.
+     * 
+     * @param {string} term - The term or concept on the flashcard.
+     * @param {string} definition - The definition or explanation of the term.
+     * @param {User} owner - The user who owns or created the flashcard.
+     */
+
 // /**
 //  * Represents a flashcard with a term, definition, owner, and creation date.
 //  */
@@ -11,6 +24,7 @@
 //      * @param {string} definition - The definition or explanation of the term.
 //      * @param {User} owner - The user who owns or created the flashcard.
 //      */
+
 
 //     constructor(term, definition, owner) {
 //         this.term = term;
@@ -48,3 +62,4 @@
 //         console.log(`Flashcard shared with ${friend.name}.`);
 //     }
 // }
+}

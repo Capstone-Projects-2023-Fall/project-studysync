@@ -18,6 +18,7 @@ import { auth } from '../../firebase.js';
 
 export  default class User {
 
+
     /**
      * Creates a new user.
      * 
