@@ -1,12 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../css/Navbar.css';
-
+import useUser from './useUser';
+import {signOut} from 'firebase/auth';
+import { auth } from '../../firebase';
 
 function Navbar({ items }) {
+
+  const {user} = useUser();
+
   return (
     <nav className="navbar">
       <Link to="/" className="brand">StudySync</Link>
+      {user && <button onClick={()=>signOut(auth)}>Logout</button>}
       <div className="nav-items">
       {items.map((item, index) => 
         <div key={index} className="nav-item">

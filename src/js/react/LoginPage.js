@@ -12,6 +12,11 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import { auth } from '../../firebase';
+
 
 function Copyright(props) {
   return (
@@ -30,14 +35,28 @@ function Copyright(props) {
 
 const defaultTheme = createTheme();
 
-export default function LoginPage() {
-  const handleSubmit = (event) => {
+const LoginPage = ()=> {
+
+  const [_email,setEmail] = useState('');
+  const [_password,setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async(event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+      if(_email == '' || _password == ''){
+        alert('One or both of the fields are empty!');
+        return;
+      }
+        try{
+          await signInWithEmailAndPassword(auth,_email,_password);
+          
+          navigate('/');
+      }catch(e){
+          setError(e.message);
+          alert(error);
+      }
   };
 
   return (
@@ -76,6 +95,8 @@ export default function LoginPage() {
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
+                value={_email}
+                onChange={(e)=>setEmail(e.target.value)}
                 margin="normal"
                 required
                 fullWidth
@@ -87,6 +108,10 @@ export default function LoginPage() {
               />
               <TextField
                 margin="normal"
+
+                value={_password}
+                onChange={(e)=>setPassword(e.target.value)}
+
                 required
                 fullWidth
                 name="password"
@@ -100,7 +125,7 @@ export default function LoginPage() {
                 label="Remember me"
               />
               <Button
-                type="submit"
+                onClick={handleSubmit}
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
@@ -127,3 +152,5 @@ export default function LoginPage() {
     </ThemeProvider>
   );
 }
+
+export default LoginPage;
