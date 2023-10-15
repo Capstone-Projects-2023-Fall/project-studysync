@@ -2,22 +2,25 @@ import './App.css';
 /*import {app ,database} from "./firebase.js"*/
 /*import {getAuth, createUserWithEmailAndPassword,
 signInWithEmailAndPassword} from "firebase/auth";*/
-import {useState} from "react";
+import {useEffect, useState} from "react";
 /*import {collection, addDoc} from 'firebase/firestore';*/
 /*import keys from './keys';*/
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import User from './js/models/user.js'; 
+
 import DashboardCom from './js/react/DashboardCom.js'; 
 import LoginPage from './js/react/LoginPage.js'; 
 import FlashcardComponent from './js/react/flashcardCom.jsx'; 
-
+import LoginForm from './js/react/LoginForm';
+import SignUpForm from './js/react/SignUpForm';
 
 function App() {
 
   const user = new User();
   const [isLoggedIn, setIsLoggedIn] = useState(user.isLoggedIn);
 
+  
   const handleLogin = () => {
     user.login();  
     setIsLoggedIn(user.isLoggedIn);
@@ -27,48 +30,8 @@ function App() {
     { label: 'Log in', link: '/login', action: handleLogin },
     { label: 'Sign Up', link: '/signup' },
   ];
-
-  const navbarItemsLoggedIn = [
-    { label: 'Dashboard', link: '/dashboard' },
-    { label: 'StudyTool', link: '/studytool'},
-    { label: 'Message', icon: 'message-icon', link: '/messages' },
-    //... add other items
-  ];
-
-  return (
-    <div className="app">
-        <Navbar items={isLoggedIn ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
-        <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/studytool" element={<FlashcardComponent />} />
-            <Route path="/" element={
-                isLoggedIn 
-                ? <DashboardCom /> 
-                : <div className="login-center">Please log in or sign up to continue</div>
-            } />
-            {/* other routes */}
-        </Routes>
-    </div>
-);
-
-
-
-  /*let auth = getAuth();
-  const [data,setData] = useState({});
-  //Database collection called users
-  const collectionRef = collection(database,'users');
-
-  const handleInput = (event)=>{
-    let newInput = {[event.target.name]: event.target.value };
-    setData({...data,...newInput});
-  }
-
-  const navbarItems = [
-    { label: 'Login', link: '/login' },
-    { label: 'Sign Up', link: '/signup' },
-  ];
-
-  const handleSubmit= ()=>{
+  
+   const handleSubmit= ()=>{
     //createUserWithEmailAndPassword(auth, data.email,data.password)
     signInWithEmailAndPassword(auth, data.email,data.password)      
     .then((response)=>{
@@ -95,6 +58,36 @@ function App() {
     })
   }*/
 
+  const navbarItemsLoggedIn = [
+    { label: 'Dashboard', link: '/dashboard' },
+    { label: 'StudyTool', link: '/studytool'},
+    { label: 'Message', icon: 'message-icon', link: '/messages' },
+    //... add other items
+  ];
+
+  return (
+    <div className="app">
+        <Navbar items={isLoggedIn ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
+        <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/studytool" element={<FlashcardComponent />} />
+            <Route path="/" element={
+                isLoggedIn 
+                ? <DashboardCom /> 
+                : <div className="login-center">Please log in or sign up to continue</div>
+            } />
+            <Route path='/login' element={<LoginForm user={user}/>}/>
+            <Route path='/signup' element={<SignUpForm/>}/>            
+        </Routes>
+    </div>
+);
+
+// return (<>  
+//   Homepage
+
+// </>)
+
+
 
 
 
@@ -114,7 +107,8 @@ function App() {
 
        <button onClick={database_submit}>Database Button</button>
     </div>*/
-  
+
+
 }
 
 export default App;

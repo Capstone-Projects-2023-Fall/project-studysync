@@ -1,12 +1,24 @@
+
+import { UsbTwoTone } from '@mui/icons-material';
 import UserProfile from './userProfile.js';
 import Flashcard from './flashcard.js';
 import Quiz from './quiz.js';
 import Notification from './notification.js';
+import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import {createUserWithEmailAndPassword} from 'firebase/auth';
+import { auth } from '../../firebase.js';
+
+
+
 
 /**
  * Represents a user with functionalities such as login, logout, creating flashcards, and managing friends.
  */
+
+
 export  default class User {
+
+
     /**
      * Creates a new user.
      * 
@@ -19,25 +31,56 @@ export  default class User {
         this.flashcards = [];
         this.quizzes = [];
         this.friends = [];
+        this.followers = []
+        this.following = []
         this.profile = new UserProfile();
         this.notifications = [];
+        this.events = []
         this.isLoggedIn = false;
+    }
+
+    //Sign users up 
+    signup(){
+        createUserWithEmailAndPassword(auth,this.email,this.password)
+            .then((e)=>{
+                alert('Sucessfully signed up!');
+            }).catch((error)=>{
+                alert(error);
+            });            
     }
 
     /**
      * Logs the user in.
      */
     login() {
-        // Actual login logic
-        this.isLoggedIn = true;
-        console.log('User logged in');
+ 
+        if(this.email == '' && this.password == ''){
+            return;
+        }
+            
+        signInWithEmailAndPassword(auth,this.email,this.password)
+            .then((e)=>{
+
+                //User is logged in 
+                this.isLoggedIn = true;                            
+                alert('Logged in!');
+            }).catch((error)=>{
+                alert(error);
+            });
+
+
       }
 
     /**
      * Logs the user out.
      */
     logout() {
-        // Logout logic
+        signOut(auth).then(()=>{
+            this.isLoggedIn = false;
+            alert('Signed out Successful!');
+        }).catch((error)=>{
+            alert(error);
+        })
     }
 
     /**

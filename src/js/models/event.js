@@ -6,7 +6,9 @@ import Dashboard from './dashboard.js';
  * can also edit event deatailEvent
  
  */
+
 export default class Event {
+
     /**
      * Creates a new Event instance.
      * 
