@@ -43,7 +43,8 @@ A user forgets to review because of daily chores and uses StudySync to review be
 4. Next the user will proceed to flash Select Q&A mode.
 5. Finally, the user completes the quiz and the correct answer is displayed.
 6. The last wrong questions will be collected and then these questions will be saved in a new topic.
-![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/blob/53128b973c9cfe249e60377e8d03e7ed18598a09/documentation/docs/requirements/static/user%20case1.drawio.png)
+![user case1](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/23609bc1-daf0-40c4-916e-c6b169d03936)
+
   
 
 
@@ -51,13 +52,14 @@ A user forgets to review because of daily chores and uses StudySync to review be
 ## Use case 2
 A user is about to take a naturalization test but doesn't have time to study for it due to work, so he needs to practice for the test using StudySyne.
 
-1. Users open the website and enter their account password to log in.
-2. Then since there is nothing on StudySyne that he needs to learn, he needs to enter the questions himself.
-3. He then adds the naturalization test questions he has studied and uploads them to StudySyne.
-4. After completing the upload of the question bank he chose flash card mode for memory training.
-5. When the flash card comes out there are three options, recognize, don't recognize.
-6. Finally, the questions you recognize will be skipped in the next exercise, and the questions you don't recognize will show the answer and then continue to appear in the next exercise.
-![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/blob/53128b973c9cfe249e60377e8d03e7ed18598a09/documentation/docs/requirements/static/user%20case2.drawio.png)
+1. The user opens the website and enters their account credentials to log in.
+2. Then, because there is no content they need to study on StudySync, they have to input their own questions.
+3. Afterward, they add the citizenship test questions they've learned to StudySync.
+4. Once the question bank upload is complete, they choose flashcards for memory training.
+5. When flashcards appear, there are three options: recognize, don't recognize, and unsure.
+6. Finally, in the next practice session, the questions they didn't recognize will be added to a quiz and continue to appear in the subsequent exercises.
+![user case2](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/192b3e85-9173-4d86-b0c7-5dfe55447132)
+
 
 
 ## Use case 3
@@ -67,7 +69,8 @@ A user is about to take a naturalization test but doesn't have time to study for
 2. Then he went to the friends list and chose to add a friend.
 3. After adding his friends he received an invitation to a quiz contest sent to him by his classmate.
 4. After completing the quiz the scores and rankings of the inviter as well as all invited people appeared.
-![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/2bccda65-2a0a-4397-9911-85f3f90a95cc)
+![user case3](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/9dbe93cc-fcc5-4435-9335-26b936b4ab41)
+
 
 
 ## Use case 4
