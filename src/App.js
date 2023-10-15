@@ -31,7 +31,7 @@ function App() {
     { label: 'Sign Up', link: '/signup' },
   ];
   
-   const handleSubmit= ()=>{
+  /* const handleSubmit= ()=>{
     //createUserWithEmailAndPassword(auth, data.email,data.password)
     signInWithEmailAndPassword(auth, data.email,data.password)      
     .then((response)=>{
