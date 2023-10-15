@@ -1,3 +1,25 @@
+
+import Question from './question.js';
+import User from './user.js';
+import {Score} from './score.js';
+
+/**
+ * Represents a quiz containing a list of questions, associated with an owner and having a creation date.
+ */
+export class Quiz {
+    /**
+     * Creates a new Quiz instance.
+     * 
+     * @param {List<Question>} question - List of questions that make up the quiz.
+     * @param {User} owner - The user who created or owns the quiz.
+     */
+    constructor(author, question, id) {
+        this.question = question;
+        this.author = author;
+        this.id = id;
+        this.creationDate = new Date();
+    }
+
 // import Question from './question.js';
 // import User from './user.js';
 // import Score from './score.js';
@@ -17,6 +39,7 @@
 //         this.owner = owner;
 //         this.creationDate = new Date();
 //     }
+
 
 //     /**
 //      * Allows a user to take the quiz.

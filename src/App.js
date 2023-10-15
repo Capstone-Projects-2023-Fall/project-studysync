@@ -17,7 +17,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(user.isLoggedIn);
 
   
-
   const handleLogin = () => {
     user.login();  
     setIsLoggedIn(user.isLoggedIn);
@@ -27,6 +26,33 @@ function App() {
     { label: 'Login', link: '/login', action: handleLogin },
     { label: 'Sign Up', link: '/signup' },
   ];
+  
+   const handleSubmit= ()=>{
+    //createUserWithEmailAndPassword(auth, data.email,data.password)
+    signInWithEmailAndPassword(auth, data.email,data.password)      
+    .then((response)=>{
+        console.log(response.user);
+        alert('Signed in!');
+      })
+      .catch((err)=>{
+        alert(err.message);
+      });
+  };
+
+
+  const database_submit= ()=>{
+    
+    //add a collection called users if it does not exists, 
+    //add email and password to users collection if it exists already
+    addDoc(collectionRef,{
+      email: data.email,
+      password: data.password
+    }).then(()=>{
+      alert("Data added");
+    }).catch((err)=>{
+      alert(err.message);
+    })
+  }*/
 
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
@@ -59,7 +85,27 @@ function App() {
 // </>)
 
 
- 
+
+
+
+   /* <div className="App">
+    
+      <input
+        name='email'
+        placeholder='Email'
+        onChange={(event)=> handleInput(event)}/>
+      <input
+        name='password'
+        placeholder='Password'
+        onChange={(event)=> handleInput(event)}  
+       />  
+       <button onClick={handleSubmit}>Auth Button</button>
+       <hr></hr>
+
+       <button onClick={database_submit}>Database Button</button>
+    </div>*/
+
+
 }
 
 export default App;

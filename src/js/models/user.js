@@ -1,3 +1,5 @@
+
+import { UsbTwoTone } from '@mui/icons-material';
 import UserProfile from './userProfile.js';
 import Flashcard from './flashcard.js';
 import Quiz from './quiz.js';
@@ -8,10 +10,14 @@ import { auth } from '../../firebase.js';
 
 
 
+
 /**
  * Represents a user with functionalities such as login, logout, creating flashcards, and managing friends.
  */
+
+
 export  default class User {
+
     /**
      * Creates a new user.
      * 
@@ -24,8 +30,11 @@ export  default class User {
         this.flashcards = [];
         this.quizzes = [];
         this.friends = [];
+        this.followers = []
+        this.following = []
         this.profile = new UserProfile();
         this.notifications = [];
+        this.events = []
         this.isLoggedIn = false;
     }
 
