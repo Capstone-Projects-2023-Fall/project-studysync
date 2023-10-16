@@ -1,5 +1,5 @@
-import {collection, getDocs, query, where} from 'firebase/firestore';
-import {User} from "../models/user"
+import {collection, getDocs, query, where,setDoc, doc} from 'firebase/firestore';
+import User from "../models/user"
 
 /**
  * Utility class to talk to FireStore User Collection [IN PROGRESS]
@@ -8,6 +8,19 @@ export class UserRepository{
     constructor(database, quizRepository){
       this.database = database
       this.quizRepository = quizRepository
+    }
+
+    async signUpUser(user){
+      try{
+        await setDoc(doc(this.database, "users", user.email), {
+          email: user.email,
+          password: user.password,
+          quizes: user.quizzes
+        });
+        console.log('Successfully added user to database',user.email);
+      }catch(error){
+        console.log("error adding user", error)
+      }
     }
   
     async getAllUsers(){
