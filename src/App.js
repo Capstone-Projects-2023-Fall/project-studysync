@@ -8,42 +8,33 @@ import {useEffect, useState} from "react";
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import User from './js/models/user.js'; 
-
 import DashboardCom from './js/react/DashboardCom.js'; 
 import LoginPage from './js/react/LoginPage.js'; 
 import FlashcardComponent from './js/react/flashcardCom.jsx'; 
 import LoginForm from './js/react/LoginForm';
 import SignUpForm from './js/react/SignUpForm';
+import useUser from './js/react/useUser';
+
 
 function App() {
 
-  const user = new User();
-  const [isLoggedIn, setIsLoggedIn] = useState(user.isLoggedIn);
+  // const user = new User();
+  const {user} = useUser();
+
+  // const [isLoggedIn, setIsLoggedIn] = useState(user);
 
   
   const handleLogin = () => {
-    user.login();  
-    setIsLoggedIn(user.isLoggedIn);
+
   };
 
   const navbarItemsLoggedOut = [
     { label: 'Log in', link: '/login', action: handleLogin },
     { label: 'Sign Up', link: '/signup' },
   ];
-  
-  /* const handleSubmit= ()=>{
-    //createUserWithEmailAndPassword(auth, data.email,data.password)
-    signInWithEmailAndPassword(auth, data.email,data.password)      
-    .then((response)=>{
-        console.log(response.user);
-        alert('Signed in!');
-      })
-      .catch((err)=>{
-        alert(err.message);
-      });
-  };
 
 
+/*
   const database_submit= ()=>{
     
     //add a collection called users if it does not exists, 
@@ -67,16 +58,16 @@ function App() {
 
   return (
     <div className="app">
-        <Navbar items={isLoggedIn ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
+        <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
         <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/studytool" element={<FlashcardComponent />} />
             <Route path="/" element={
-                isLoggedIn 
+                user 
                 ? <DashboardCom /> 
                 : <div className="login-center">Please log in or sign up to continue</div>
             } />
-            <Route path='/login' element={<LoginForm user={user}/>}/>
+            
             <Route path='/signup' element={<SignUpForm/>}/>            
         </Routes>
     </div>
