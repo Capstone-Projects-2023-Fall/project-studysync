@@ -63,27 +63,27 @@ User account management, Flashcards creation/customization, Interactivity, and c
 
 ## USE CASE #2:
  
-Features to be Tested: User Account Management, Flashcards Creation/Customization
- 
--	A user is about to take a naturalization test but does not have time to study for it due to work, so he needs to practice for the test using Studysync.
-  -	Users open the website and enter their account password to log in.
-  - Then since there is nothing on Studysync that he needs to learn, he needs to enter the questions himself.
-  - He then adds the naturalization test questions he has studied and uploads them to StudySync.
-  - After completing the upload of the question bank, he chose flashcard mode for memory training.
-  - When the flash card comes out there are three options, recognize, don't recognize.
-  - Finally, the questions you recognize will be skipped in the next exercise, and the questions you don't recognize will show the answer and then continue to appear in the next exercise.
-  - 
+Features to be Tested: User Account Management, Flashcards Creation/Customization.
+
+- A user is about to take a naturalization test but does not have time to study for it due to work, so they need to practice for the test using Studysync.
+  - Users open the website and enter their account password to log in.
+  - Since there is nothing on Studysync that they need to learn, they need to enter the questions themselves.
+  - They then add the naturalization test questions they have studied and upload them to StudySync.
+  - After completing the upload of the question bank, they choose the flashcard mode for memory training.
+  - When the flashcard comes out, there are three options: recognize, don't recognize.
+  - Finally, the questions they recognize will be skipped in the next exercise, and the questions they don't recognize will show the answer and then continue to appear in the next exercise.
+     
 ### Test Steps:
-- User Login
+- **User Login**
   - Action: User navigates to Studysync website and logs in using their valid credentials.
   - Expected Result: The user is successfully logged in and has access to the website.
--	Flashcards Creation from User:
+- **Flashcards Creation from User**
   - Action: The user selects custom flashcard mode by using their custom questions.
   - Expected Result: Flashcards are generated from the user’s custom questions.
--	Interacting with Custom Flashcards:
-  - Action: The user gets to choose recognize or not recognize when flashcard pops up.
+- **Interacting with Custom Flashcards**
+  - Action: The user gets to choose recognize or not recognize when the flashcard pops up.
   - Expected Result: Recognized flashcards are skipped in the next exercise.
-  - 
+   
 ## USE CASE #3:
  
 Features to be Tested: User Account Management, Social Learning, Quiz
@@ -95,16 +95,17 @@ Features to be Tested: User Account Management, Social Learning, Quiz
   - After completing the quiz, the scores and rankings of the inviter as well as all invited people appeared.
     
 ### Test Steps:
--	User Account Registration
+
+- **User Account Registration**
   - Action: The user wants to register an account to use Studysync.
-  - Expected Result: The user successfully registered the account and has access to Studysync.
--	Adding Friends on Studysync
+  - Expected Result: The user successfully registers the account and gains access to Studysync.
+- **Adding Friends on Studysync**
   - Action: The user is new to Studysync and would like to add some friends.
-  - Expected Result: New friends were added and waiting for approval from others.
-- Quiz Competition
-  - Action: After adding friends, the user receives an invitation to a quiz competition from his/her friends.
-  - Expected Result: The user can successfully join the quiz and complete the quiz.
--	Viewing Scores and Rankings
+  - Expected Result: New friends are added and await approval from others.
+- **Quiz Competition**
+  - Action: After adding friends, the user receives an invitation to a quiz competition from their friends.
+  - Expected Result: The user can successfully join the quiz and complete it.
+- **Viewing Scores and Rankings**
   - Action: The user wants to view the quiz scores and the leaderboard.
   - Expected Result: Scores and rankings for all participants are displayed as expected.
     
@@ -119,10 +120,10 @@ Features to be Tested: User Account Management, Flashcards Creation/Customizatio
   - The question will then be deleted from the pool.
     
 ### Test Steps:
-- User Login
+- **User Login**
   - Action: User navigates to Studysync website and logs in using their valid credentials.
   - Expected Result: The user is successfully logged in and has access to the website.
--	Enabling AI Flashcard Generator
+- **Enabling AI Flashcard Generator**
   - Action: The user cannot find any flashcards for his subjects, so he/she turns on AI flashcards generator.
   - Expected Result: The AI flashcards generator feature is enabled.
 
@@ -144,18 +145,18 @@ Failed Call:
 { 
 “error”: “500: An unexpected error occurred”
 }
-``` 
--	Filtering AI-Generated Flashcards
+```
+- **Filtering AI-Generated Flashcards**
   - Action: The user gets all the AI-generated flashcards and wants to filter them.
   - Expected Result: Flashcards are generated by AI and can be filtered for learning.
--	Managing Flashcards:
+- **Managing Flashcards**
   - Action: The user does not like some of the flashcards that AI has generated.
   - Expected Result: Any marked flashcards are removed successfully.
     
 ## USE CASE #5:
 Features to be Tested: User Account Management, Quiz.
- 
--	A user wants to take a quiz created by themselves or a friend.
+
+- A user wants to take a quiz created by themselves or a friend.
   - User logs in to StudySync.
   - User then navigate to the "Quiz" section.
   - At the "Quiz" section, user has a wide range of quizzes either created by themselves or friends.
@@ -163,23 +164,23 @@ Features to be Tested: User Account Management, Quiz.
   - The system will then calculate and display users score on the leaderboard.
  
 ### Test Steps:
--	User Login
+- **User Login**
   - Action: User navigates to Studysync website and logs in using their valid credentials.
   - Expected Result: The user is successfully logged in and has access to the website.
--	Navigating to the Quiz Section
+- **Navigating to the Quiz Section**
   - Action: The user wants to navigate to the Quiz section in the Studysync interface.
   - Expected Result: The Quiz section is loaded, and the user can view all available quizzes.
--	Selecting a Quiz
+- **Selecting a Quiz**
   - Action: The user selects a specific from the list of available quizzes either from friends or themselves.
   - Expected Result: The selected quiz is loaded, and the user is able to work on the quiz seamlessly.
--	Viewing Scores and Rankings:
+- **Viewing Scores and Rankings**
   - Action: The user has finished the quiz and now submitted for grading.
   - Expected Result: The quiz is now graded, and the system calculates the user’s score, displays it and updates the leaderboard.
     
 ## USE CASE #6:
 Features to be Tested: User Account Management, Social Learning
  
--	A user wants to add friends on StudySync.
+- A user wants to add friends on StudySync.
   - The user will have to log in to their own account.
   - Then navigate to the "Add Friend" section.
   - User enters the friend's email or username.
@@ -187,20 +188,20 @@ Features to be Tested: User Account Management, Social Learning
   - The friend receives the request and can accept or reject it.
     
 ### Test Steps:
--	User Login
+- **User Login**
   - Action: User navigates to Studysync website and logs in using their valid credentials.
   - Expected Result: The user is successfully logged in and has access to the website.
--	Sending Friends Request:
+- **Sending Friends Request**
   - Action: The user navigates to the “Add Friend” section.
   - Expected Result: The user sent a friend request and waits for approval.
--	 Friend’s Response:
+- **Friend’s Response**
   - Action: The user’s friend receives the friend request and can either accept it or reject it.
   - Expected Result: The friend can either accept or reject the request without any issue.
     
 ## USE CASE #7:
 Features to be Tested: User Account Management, Quiz.
  
--	A user has been studying for 6 hours and wants to take a break but also wants to save the quiz's progress.
+- A user has been studying for 6 hours and wants to take a break but also wants to save the quiz's progress.
   - The user is taking a quiz but then realizes he/she wants to take a quick coffee break.
   - User clicks "Save&Exit" button in order for the quiz to be saved and quit.
   - The system saves the user's progress.
@@ -208,17 +209,17 @@ Features to be Tested: User Account Management, Quiz.
   - Users choose to resume the quiz from where they left off.
     
 ### Test Steps:
--	Save Quiz Progress
+- **Save Quiz Progress**
   - Action: The user is taking a quiz but decides to quit by clicking Save&Exit button to save the quiz’s progress and quit.
   - Expected Result: The quiz’s progress is successfully saved.
--	Resuming the Quiz:
+- **Resuming the Quiz**
   - Action: After the break, the user logs back in and goes to the quiz section to resume the paused quiz.
   - Expected Result: The user can pick up the quiz where it has been left off and continue to work it.
     
 ## USE CASE #8:
 Features to be Tested: User Account Management, Flashcards Creation/Customization
- 
--	A user finds out some flashcards need to be updated in order to improve accuracy.
+
+- A user finds out some flashcards need to be updated in order to improve accuracy.
   - User logs in to Studysync as usual.
   - Then the user has to go to their created flashcards.
   - User finds out which flashcards need to be updated.
@@ -226,13 +227,13 @@ Features to be Tested: User Account Management, Flashcards Creation/Customizatio
   - User saves changes and then flashcards are updated and ready to be learned.
 
 ### Test Steps:
--	User Login
+- **User Login**
   - Action: User navigates to Studysync website and logs in using their valid credentials.
   - Expected Result: The user is successfully logged in and has access to the website.
--	Accessing Flashcards
+- **Accessing Flashcards**
   - Action: The user navigates to the flashcards that he/she wishes to update.
   - Expected Result: The user can navigate to the flashcards that need customizations.
--	Updating Flashcards: 
+- **Updating Flashcards** 
   - Action: The user identifies flashcards that need updates and then proceeds to make changes to the flashcard definitions and details.
   - Expected Result: The flashcards are updated and ready to be learned again.
 
