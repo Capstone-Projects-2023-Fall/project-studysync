@@ -1,5 +1,5 @@
 import {collection, getDocs} from 'firebase/firestore';
-import {Quiz} from "../models/quiz"
+import Quiz from "../models/quiz"
 
 /**
  * Utility class to talk to FireStore Quiz Collection [IN PROGRESS]

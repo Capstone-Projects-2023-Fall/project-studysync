@@ -7,6 +7,7 @@ import Notification from './notification.js';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebase.js';
+import { userRepository, quizRepository } from '../../firebase.js';
 
 
 
@@ -43,10 +44,11 @@ export  default class User {
     signup(){
         createUserWithEmailAndPassword(auth,this.email,this.password)
             .then((e)=>{
+                userRepository.signUpUser(new User(this.email, this.password));
                 alert('Sucessfully signed up!');
             }).catch((error)=>{
                 alert(error);
-            });            
+            });         
     }
 
     /**
@@ -60,7 +62,6 @@ export  default class User {
             
         signInWithEmailAndPassword(auth,this.email,this.password)
             .then((e)=>{
-
                 //User is logged in 
                 this.isLoggedIn = true;                            
                 alert('Logged in!');
@@ -89,6 +90,7 @@ export  default class User {
      * @returns {Flashcard} - The newly created flashcard.
      */
     createFlashcard() {
+
         const flashcard = new Flashcard(this);
         this.flashcards.push(flashcard);
         return flashcard;

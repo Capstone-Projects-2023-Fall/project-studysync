@@ -2,8 +2,10 @@
 import { initializeApp } from "firebase/app";
 import {getFirestore} from 'firebase/firestore';
 
-import keys from './keys';
+import {keys} from './keys';
 import {getAuth} from "firebase/auth";
+import { UserRepository } from "./js/repositories/UserRepository";
+import { QuizRepository } from "./js/repositories/QuizRepository";
 
 
 const firebaseConfig = {
@@ -25,4 +27,7 @@ export const auth = getAuth(app);
 
 
 export const database = getFirestore(app);
+
+export const quizRepository = new QuizRepository(database)
+export const userRepository = new UserRepository(database, quizRepository)
 
