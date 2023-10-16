@@ -49,19 +49,6 @@ The idea of StudySync is derived from platforms like Quizlet, which assist stude
 
 To successfully develop StudySync, we'll need a thorough understanding of ReactJS, NodeJS, ExpressJS, and Firebase. Hardware-wise, potent development computers and a robust server (either on-premise or cloud-based) are crucial. On the software front, essential tools include development frameworks for React, Node, and Firebase, an IDE like Visual Studio Code, version control via GitHub, and testing tools like Jest and Postman. 
 
-## [StudySync](https://capstone-projects-2023-fall.github.io/project-studysync/) GitHub Stats
-
-### Number of opened pull requests made by each team member
-
-![StudySync pull requests](https://courses.ianapplebaum.com/api/pull-requests/Capstone-Projects-2023-Fall/project-studysync)
-
-### Number of code reviews made by each team member
-
-![StudySync reviews](https://courses.ianapplebaum.com/api/reviews/Capstone-Projects-2023-Fall/project-studysync)
-
-### Number of commits made by each team member
-
-![StudySync commits](https://courses.ianapplebaum.com/api/commits/Capstone-Projects-2023-Fall/project-studysync)
 
 ## Collaborators
 
