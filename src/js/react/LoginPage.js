@@ -59,12 +59,20 @@ const LoginPage = ()=> {
         return;
       }
         try{
-          await signInWithEmailAndPassword(auth,_email,_password);
-          
+          await signInWithEmailAndPassword(auth,_email,_password);          
           navigate('/');
       }catch(e){
-          setError(e.message);
-          alert(error);
+          switch(e.code){
+            case 'auth/invalid-email':
+              alert('Invalid Email!');
+              break;
+            case 'auth/invalid-login-credentials':
+              alert('Invalid Credentials!');
+              break;        
+            case 'auth/invalid-password':
+              alert('Invalid password!');
+              break;   
+          }
       }
   };
 

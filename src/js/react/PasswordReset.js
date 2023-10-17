@@ -13,21 +13,32 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-
-
-// TODO remove, this demo shouldn't need to reset the theme.
+import { auth } from '../../firebase';
+import { useState } from 'react';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 const defaultTheme = createTheme();
 
 const PasswordReset =() => {
 
+    const [email,setEmail] = useState('');
+
     const navigate = useNavigate();
 
-  const handleSubmit = (event) => {
+  const sendEmail = (event) => {
     event.preventDefault();
-    
-    alert('Resetted Password!');
-    navigate('/login');
+
+
+
+
+    sendPasswordResetEmail(auth,email)
+        .then(()=>{
+            alert('Password reset email sent!');
+            navigate('/login');
+        })
+        .catch((error)=>{
+            alert(`Error: ${error.message}`);
+        })
   };
 
   return (
@@ -50,6 +61,8 @@ const PasswordReset =() => {
           </Typography>
           <Box component="form"  noValidate sx={{ mt: 1 }}>
             <TextField
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}  
               margin="normal"
               required
               fullWidth
@@ -60,7 +73,7 @@ const PasswordReset =() => {
               autoFocus
             />
             <Button
-              onClick={handleSubmit}
+              onClick={sendEmail}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}>
