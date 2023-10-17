@@ -16,7 +16,7 @@ import {useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import {createUserWithEmailAndPassword,signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebase';
-
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 function Copyright(props) {
   return (
@@ -37,6 +37,8 @@ const defaultTheme = createTheme();
 
 const SignUpForm = ()=> {
 
+  const [_firstName, setFirstName] = useState('');  
+  const [_lastName, setLastName] = useState(''); 
   const [_email,setEmail] = useState('');
   const [_password,setPassword] = useState('');
   const [_confirmPassword,setconfirmPassword] = useState('');
@@ -46,22 +48,49 @@ const SignUpForm = ()=> {
 
   const handleSubmit = async(event) => {
     event.preventDefault();
-      if(_email == '' || _password == '' || _confirmPassword == ''){
-        alert('One or both of the fields are empty!');
-        return;
-      }
-      if(_password != _confirmPassword){
-        alert('Passwords do not match!');
-        return;
-      }
-        try{
-          await createUserWithEmailAndPassword(auth,_email,_password);
-          
-          navigate('/');
-      }catch(e){
-          setError(e.message);
-          alert(error);
-      }
+    if (_email === '' || _password === '' || _confirmPassword === '') {
+      alert('One or more fields are empty!');
+      return;
+    }
+    if (_password !== _confirmPassword) {
+      alert('Passwords do not match!');
+      return;
+    }
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, _email, _password);
+      const user = userCredential.user;
+      
+      // Initialize Firestore user document
+      const db = getFirestore();
+      const userRef = doc(db, 'users', user.uid);
+  
+      
+      const defaultUserData = {
+        bio: "",
+        username: `${_firstName} ${_lastName}`,
+        email: user.email,
+        imageURL: "",
+        followers: [],
+        following: [],
+        ownedFlashcards: [],
+        ownedQuizzes: []
+      };
+  
+      await setDoc(userRef, defaultUserData);
+      
+      
+      const placeholderData = { placeholder: true };
+  
+      await setDoc(doc(userRef, 'events', 'placeholder'), placeholderData);
+      await setDoc(doc(userRef, 'notifications', 'placeholder'), placeholderData);
+      await setDoc(doc(userRef, 'sharedFlashcards', 'placeholder'), placeholderData);
+      await setDoc(doc(userRef, 'sharedQuizzes', 'placeholder'), placeholderData);
+      
+      navigate('/');
+    } catch (e) {
+      setError(e.message);
+      alert(error);
+    }
   };
 
   return (
@@ -98,6 +127,32 @@ const SignUpForm = ()=> {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
+            
+                <TextField
+                margin="normal"
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                  value={_firstName}
+                   onChange={e => setFirstName(e.target.value)}
+                />
+              
+                <TextField
+                margin="normal"
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                  value={_lastName}
+                  onChange={e => setLastName(e.target.value)}
+                />
+             
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 value={_email}

@@ -2,15 +2,15 @@ import { database, auth } from '../../firebase';
 import { collection, getDocs, getDoc, query, where, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 const FlashCardRepository = {
-
-  getCurrentUid: function() {
+  
+  getCurrentUid: function() {   // works
     const user = auth.currentUser;
     return user ? user.uid : null;
   },
 
-  getUserSubjects: async function(uid) {
+  getUserSubjects: async function(uid) {   //works
     try {
-      const userDoc = await getDoc(doc(database, 'users', uid)); // 使用 getDoc
+      const userDoc = await getDoc(doc(database, 'users', uid)); 
       if (userDoc.exists()) {
         return userDoc.data().subject || [];
       } else {
@@ -72,7 +72,7 @@ const FlashCardRepository = {
       }
     },
 
-    addUserSubject: async function(uid, newSubject) {
+    addUserSubject: async function(uid, newSubject) {   // works
         try {
           const userRef = doc(database, 'users', uid);
           await updateDoc(userRef, {
