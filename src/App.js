@@ -9,19 +9,15 @@ import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import User from './js/models/user.js'; 
 import DashboardCom from './js/react/DashboardCom.js'; 
-import LoginPage from './js/react/LoginPage.js'; 
 import FlashcardComponent from './js/react/flashcardCom.jsx'; 
-import LoginForm from './js/react/LoginForm';
+import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
-
-
+import PasswordReset from './js/react/PasswordReset';
 function App() {
 
-  // const user = new User();
   const {user} = useUser();
 
-  // const [isLoggedIn, setIsLoggedIn] = useState(user);
 
   
   const handleLogin = () => {
@@ -67,37 +63,12 @@ function App() {
                 ? <DashboardCom /> 
                 : <div className="login-center">Please log in or sign up to continue</div>
             } />
-            
+            <Route path='/passwordreset' element={<PasswordReset/>}/>
             <Route path='/signup' element={<SignUpForm/>}/>            
         </Routes>
     </div>
 );
 
-// return (<>  
-//   Homepage
-
-// </>)
-
-
-
-
-
-   /* <div className="App">
-    
-      <input
-        name='email'
-        placeholder='Email'
-        onChange={(event)=> handleInput(event)}/>
-      <input
-        name='password'
-        placeholder='Password'
-        onChange={(event)=> handleInput(event)}  
-       />  
-       <button onClick={handleSubmit}>Auth Button</button>
-       <hr></hr>
-
-       <button onClick={database_submit}>Database Button</button>
-    </div>*/
 
 
 }

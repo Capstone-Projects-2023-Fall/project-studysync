@@ -18,12 +18,21 @@ import {signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebase';
 
 
+
+
+
+
+
+
+
+
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="/">
+        StudySync
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -120,10 +129,7 @@ const LoginPage = ()=> {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+
               <Button
                 onClick={handleSubmit}
                 fullWidth
@@ -134,13 +140,13 @@ const LoginPage = ()=> {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/passwordreset" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link href="/signup" variant="body2">
+                    {"Don't have an account?"}
                   </Link>
                 </Grid>
               </Grid>
