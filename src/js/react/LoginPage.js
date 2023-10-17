@@ -18,12 +18,21 @@ import {signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebase';
 
 
+
+
+
+
+
+
+
+
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
+      <Link color="inherit" href="/">
+        StudySync
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -50,12 +59,20 @@ const LoginPage = ()=> {
         return;
       }
         try{
-          await signInWithEmailAndPassword(auth,_email,_password);
-          
+          await signInWithEmailAndPassword(auth,_email,_password);          
           navigate('/');
       }catch(e){
-          setError(e.message);
-          alert(error);
+          switch(e.code){
+            case 'auth/invalid-email':
+              alert('Invalid Email!');
+              break;
+            case 'auth/invalid-login-credentials':
+              alert('Invalid Credentials!');
+              break;        
+            case 'auth/invalid-password':
+              alert('Invalid password!');
+              break;   
+          }
       }
   };
 
@@ -120,10 +137,7 @@ const LoginPage = ()=> {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+
               <Button
                 onClick={handleSubmit}
                 fullWidth
@@ -134,13 +148,13 @@ const LoginPage = ()=> {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/passwordreset" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
+                  <Link href="/signup" variant="body2">
+                    {"Don't have an account?"}
                   </Link>
                 </Grid>
               </Grid>
