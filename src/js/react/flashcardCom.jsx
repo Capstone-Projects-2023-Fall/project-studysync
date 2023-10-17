@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import {
   List, ListItem, ListItemText, Button, Divider, Dialog, DialogTitle,
   DialogContent, DialogContentText, DialogActions, TextField, InputAdornment, IconButton, Paper
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import FlashCardRepository from '../repositories/FlashCardRepository';
 
 const astyle = {
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
@@ -15,22 +16,51 @@ const astyle = {
 };
 
 const FlashcardComponent = () => {
-  const [subjects, setSubjects] = useState(['Math', 'Computer Science']);
+  const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(null);
   const [flashcards, setFlashcards] = useState({});
   const [open, setOpen] = useState(false);
   const [newEntry, setNewEntry] = useState('');
   const [dialogType, setDialogType] = useState('subject'); // can be 'subject' or 'topic'
 
-  const handleAdd = () => {
-    const trimmedEntry = newEntry.trim();
 
-    if (trimmedEntry) {
-        if (dialogType === 'subject') {
-            if (!subjects.includes(trimmedEntry)) {
-                setSubjects(prev => [...prev, trimmedEntry]);
-                setFlashcards(prev => ({ ...prev, [trimmedEntry]: [] }));
+  useEffect(() => {
+    async function fetchData() {
+        try {
+            const uid = FlashCardRepository.getCurrentUid();
+            if (uid) {
+                const userSubjects = await FlashCardRepository.getUserSubjects(uid);
+                setSubjects(userSubjects);
             }
+        } catch (error) {
+            console.error("Error fetching user subjects:", error);
+        }
+    }
+
+    fetchData();
+}, []);
+
+const handleAdd = async () => {
+  const trimmedEntry = newEntry.trim();
+
+  if (trimmedEntry) {
+      if (dialogType === 'subject') {
+          if (!subjects.includes(trimmedEntry)) {
+              // Update the local state
+              setSubjects(prev => [...prev, trimmedEntry]);
+              setFlashcards(prev => ({ ...prev, [trimmedEntry]: [] }));
+
+              // Update the Firebase database
+              const uid = FlashCardRepository.getCurrentUid();
+              if (uid) {
+                  try {
+                      await FlashCardRepository.addUserSubject(uid, trimmedEntry);
+                  } catch (error) {
+                      console.error("Error adding subject to Firebase:", error);
+                  }
+              }
+          }
+      
         } else if (dialogType === 'topic' && selectedSubject) {
             const currentFlashcards = flashcards[selectedSubject] || [];
             if (!currentFlashcards.includes(trimmedEntry)) {
