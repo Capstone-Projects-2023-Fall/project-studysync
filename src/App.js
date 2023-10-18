@@ -9,7 +9,7 @@ import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import User from './js/models/user.js'; 
 import DashboardCom from './js/react/DashboardCom.js'; 
-import FlashcardComponent from './js/react/flashcardCom.jsx'; 
+import FlashcardComponent from './js/react/flashcardCom.js'; 
 import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
