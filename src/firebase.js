@@ -31,3 +31,11 @@ export const database = getFirestore(app);
 export const quizRepository = new QuizRepository(database)
 export const userRepository = new UserRepository(database, quizRepository)
 
+
+export function test(){
+  console.log("hereski")
+  userRepository.signUpUser("toey233456@gmail.com", "toey12345678")
+  userRepository.getUserById("toey233456@gmail.com")
+}
+
+

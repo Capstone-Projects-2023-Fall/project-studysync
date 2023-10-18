@@ -10,24 +10,25 @@ export class UserRepository{
       this.quizRepository = quizRepository
     }
 
-    async signUpUser(user){
+    /**Add a user to the database for the first time */
+    async signUpUser(email, username){
       try{
-        await setDoc(doc(this.database, "users", user.email), {
-          email: user.email,
-          password: user.password,
-          quizes: user.quizzes
-        });
-        console.log('Successfully added user to database',user.email);
+        // await setDoc(doc(this.database, "users", user.email), {
+        //   email: user.email,
+        //   password: user.password,
+        //   quizes: user.quizzes
+        // });
+
+        const userRef = doc(this.database, "users", email).withConverter(userConverter)
+        await setDoc(userRef, new User(email, username))
+
+        console.log('Successfully added user to database',username);
       }catch(error){
         console.log("error adding user", error)
       }
     }
-  
-    async getAllUsers(){
-      const usersMap = await this.getUserMap()
-      return Object.values(usersMap)
-    }
-  
+    
+    /**Return all users in the user collection */
     async getAllUsers(){
       const usersRef = collection(this.database, "users").withConverter(userConverter)
       const snapshot = await getDocs(usersRef, "users");
@@ -38,19 +39,20 @@ export class UserRepository{
       })
       return users
     }
-  
+    
+    /**Given a unique uuid, return the user associated with that uuid */
     async getUserById(id){
-      const result = query(collection(this.database, "users"), where("id", "==", id));
+      const result = query(collection(this.database, "users"), where("email", "==", id));
       const snapshot = await getDocs(result);
 
       if(snapshot.size > 1) return "Cannot have two users with the same id"
       else if(snapshot.size === 0) return `User with id ${id} does not exist`
-
+      console.log("user is: ", snapshot.docs.at(0).data())
       return snapshot.docs.at(0).data()
     }
 
 
-
+    /**Given an email, return the user associated with that email */
     async getUserByEmail(email){
       const result = query(collection(this.database, "users"), where("email", "==", email));
       const snapshot = await getDocs(result);
@@ -61,7 +63,7 @@ export class UserRepository{
       return snapshot.docs.at(0).data()
     }
   
-  
+    /**Given a user id fetch all the user's quizes */
     async getUserQuizes(id){
       const quizes = await this.quizRepository.getAllQuizes()
       const userQuizes = []
@@ -79,16 +81,41 @@ export class UserRepository{
 const userConverter = {
   toFirestore: (user) => {
       return {
+        username: user.username,
         email: user.email,
-        password: user.password,
-        quizes: user.quizes
-          };
+        bio: user.bio,
+        following: user.following,
+        followers: user.followers,
+        friends: user.friends,
+        imageUrl: user.imageUrl,
+        ownedQuizzes: user.ownedQuizzes,
+        sharedQuizzes: user.sharedQuizzes,
+        ownedFlashcards : user.sharedFlashcards,
+        sharedFlashcards : user.sharedFlashcards,
+        notifications: user.notifications,
+        events: user.events
+      };
   },
   fromFirestore: (snapshot, options) => {
       const data = snapshot.data(options);
-      const user = new User(data.email, data.password);
-      user.quizzes = data.quizes
-      user.id = snapshot.id
-      return user;
+      return setUser(data);
   }
 };
+
+function setUser(data){
+  const user = new User()
+    user.username = data.username;
+    user.email = data.email;
+      user.bio = data.bio;
+      user.following = data.following;
+      user.followers = data.followers;
+      user.friends = data.friends;
+      user.imageUrl = data.imageUrl;
+      user.ownedQuizzes = data.ownedQuizzes
+      user.sharedQuizzes = data.sharedQuizzes
+      user.ownedFlashcards = data.ownedFlashcards
+      user.sharedFlashcards = data.sharedFlashcards
+      user.notifications = data.notifications
+      user.events = data.events
+}
+

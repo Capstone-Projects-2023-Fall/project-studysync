@@ -10,8 +10,6 @@ import { auth } from '../../firebase.js';
 import { userRepository, quizRepository } from '../../firebase.js';
 
 
-
-
 /**
  * Represents a user with functionalities such as login, logout, creating flashcards, and managing friends.
  */
@@ -26,17 +24,21 @@ export  default class User {
      * @param {string} email - User's email address.
      * @param {string} password - User's password.
      */
-    constructor(email = '', password = '') {
+    constructor(email = '', username='', id) {
+        this.username = username;
         this.email = email;
-        this.password = password;
-        this.flashcards = [];
-        this.quizzes = [];
-        this.friends = [];
-        this.followers = []
+        this.bio = 'default bio'
         this.following = []
-        this.profile = new UserProfile();
-        this.notifications = [];
+        this.followers = []
+        this.friends = []
+        this.imageUrl = 'default.jpg'
+        this.ownedQuizzes = []
+        this.sharedQuizzes = []
+        this.ownedFlashcards = []
+        this.sharedFlashcards = []
+        this.notifications = []
         this.events = []
+        this.profile = new UserProfile();
         this.isLoggedIn = false;
     }
 
@@ -44,7 +46,7 @@ export  default class User {
     signup(){
         createUserWithEmailAndPassword(auth,this.email,this.password)
             .then((e)=>{
-                userRepository.signUpUser(new User(this.email, this.password));
+                // userRepository.signUpUser(new User(this.email, this.password));
                 alert('Sucessfully signed up!');
             }).catch((error)=>{
                 alert(error);
