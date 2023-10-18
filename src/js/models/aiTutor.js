@@ -1,15 +1,36 @@
+import keys from "../../keys";
+
 /**
  * Represents an AI-driven tutor capable of answering questions.
  */
+
+
 export default class AiTutor {
-    /**
-     * Allows a user to ask a question to the AI tutor.
-     * 
-     * @returns {String} - The AI tutor's response to the question.
-     */
-    askQuestion() {
-        // Logic to process the question and generate a response
-        let response = "Sample AI response"; // Placeholder response
-        return response;
+
+    
+  
+    async definitionsuggestion(term){
+        const options = {
+            method: 'POST',
+            headers:{
+                'Authorization': `Bearer ${keys.chatgpt_apiKey}`,
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({
+                model:"gpt-3.5-turbo",
+                messages:[{role:"user",content:term}],
+                max_token:100
+            })
+        }
+        try{
+            const response = await fetch('',options);
+            const data = await response.json;
+            return data;
+        }catch(e){
+            return "Error occured";
+        }
+    }
+    printUser(){
+       return keys.chatgpt_apiKey; 
     }
 }

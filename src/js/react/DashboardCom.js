@@ -1,9 +1,10 @@
 import useUser from "./useUser";
-
+import AiTutor from "../models/aiTutor";
 
 const  DashboardCom = ()=> {
 
-    const {user} = useUser();
+    const ai = new AiTutor();
+
 
     return (
 
