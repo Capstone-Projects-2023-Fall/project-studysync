@@ -14,7 +14,6 @@ import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
-import {test} from "./firebase"
 function App() {
 
   const {user} = useUser();
@@ -24,8 +23,6 @@ function App() {
   const handleLogin = () => {
 
   };
-
-  test()
 
   const navbarItemsLoggedOut = [
     { label: 'Log in', link: '/login', action: handleLogin },

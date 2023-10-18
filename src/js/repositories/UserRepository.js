@@ -13,18 +13,20 @@ export class UserRepository{
     /**Add a user to the database for the first time */
     async signUpUser(email, username){
       try{
-        // await setDoc(doc(this.database, "users", user.email), {
-        //   email: user.email,
-        //   password: user.password,
-        //   quizes: user.quizzes
-        // });
-
         const userRef = doc(this.database, "users", email).withConverter(userConverter)
         await setDoc(userRef, new User(email, username))
 
         console.log('Successfully added user to database',username);
       }catch(error){
         console.log("error adding user", error)
+      }
+    }
+
+    async saveUser(user, saveObject){
+      try{
+
+      }catch(error){
+
       }
     }
     
@@ -51,6 +53,95 @@ export class UserRepository{
       return snapshot.docs.at(0).data()
     }
 
+    async getUserOwnedQuizzes(id){
+      try{
+
+      }catch(error){
+
+      }
+    }
+
+    async getUserProfile(id){
+      try{
+
+      }catch(error){
+
+      }
+    }
+
+    async getUserSharedQuizzes(id){
+      try{
+
+      }catch(error){
+
+      }
+    }
+
+    async getUserOwnedFlashcards(id){
+      try{
+
+      }catch(error){
+
+      }
+    }
+
+    async getUserSharedFlashcards(id){
+      try{
+
+      }catch(error){
+
+      }
+    }
+
+    async getUserFollowers(id){
+      try{
+
+      }catch(error){
+
+      }
+    }
+
+    async getUserFollowing(id){
+      try{
+
+      }catch(error){
+
+      }
+    }
+
+    async getUserFriends(id){
+      try{
+
+      }catch(error){
+
+      }
+    }
+
+    async getUserNotifications(id){}
+
+    async getUserEvents(id){}
+
+    async getUserBio(id){}
+    
+    async addFlashcard(id){}
+
+    async addFriend(id){}
+
+    async addFollower(id){}
+
+    async addFollowing(id) {}
+
+    async addSharedQuiz(id){}
+    
+    async addSharedFlashcard(id){}
+
+    async addOwnedQuiz(id){}
+
+    async addOwnedFlashcard(id) {}
+
+    async addEvent(id){}
+
+    async addNotification(id){}
 
     /**Given an email, return the user associated with that email */
     async getUserByEmail(email){
@@ -63,17 +154,6 @@ export class UserRepository{
       return snapshot.docs.at(0).data()
     }
   
-    /**Given a user id fetch all the user's quizes */
-    async getUserQuizes(id){
-      const quizes = await this.quizRepository.getAllQuizes()
-      const userQuizes = []
-      quizes.forEach((quiz)=>{
-        if(quiz.author === id){
-          userQuizes.push(quiz)
-        }
-      })
-      return userQuizes
-    }
 }
 
 
