@@ -1,17 +1,13 @@
-import { useNavigate } from 'react-router-dom';
 import './UserProfileStyle.css';
 
 
-const  UserProfile = ()=> {
+const  EditUserProfile = ()=> {
 
   //Replace this with real friends list
   const friends = ["Bob","Joe","Alice","John"];
 
-  const navigate = useNavigate();
-
   function editProfile(e){
     e.preventDefault();
-    navigate('/profile/edit');
   }
 
 
@@ -167,4 +163,4 @@ const  UserProfile = ()=> {
   );
 }
 
-export default UserProfile;
+export default EditUserProfile;

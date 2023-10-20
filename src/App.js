@@ -14,6 +14,7 @@ import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
 import UserProfile from './js/react/UserProfilePage';
+import EditUserProfile from './js/react/EditUserProfile';
 
 function App() {
 
@@ -67,6 +68,8 @@ function App() {
             <Route path='/passwordreset' element={<PasswordReset/>}/>
             <Route path='/signup' element={<SignUpForm/>}/>  
             <Route path='/profile' element={<UserProfile/>}/>
+            <Route path='/profile/edit' element={<EditUserProfile/>}/>
+
         </Routes>
     </div>
 );
