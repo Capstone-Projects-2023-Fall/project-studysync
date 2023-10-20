@@ -1,4 +1,4 @@
-import {collection, getDocs, query, where,setDoc, doc} from 'firebase/firestore';
+import {collection, getDocs, query, where,setDoc, doc, updateDoc, arrayRemove, arrayUnion} from 'firebase/firestore';
 import User from "../models/user"
 
 /**
@@ -19,14 +19,6 @@ export class UserRepository{
         console.log('Successfully added user to database',username);
       }catch(error){
         console.log("error adding user", error)
-      }
-    }
-
-    async saveUser(user, saveObject){
-      try{
-
-      }catch(error){
-
       }
     }
     
@@ -54,14 +46,6 @@ export class UserRepository{
     }
 
     async getUserOwnedQuizzes(id){
-      try{
-
-      }catch(error){
-
-      }
-    }
-
-    async getUserProfile(id){
       try{
 
       }catch(error){
@@ -127,9 +111,14 @@ export class UserRepository{
 
     async addFriend(id){}
 
-    async addFollower(id){}
 
-    async addFollowing(id) {}
+
+    async removeFollower(db, userId, followerId) {
+      const userRef = doc(db, 'users', userId);
+      await updateDoc(userRef, {
+          followers: arrayRemove(followerId)
+      });
+    }
 
     async addSharedQuiz(id){}
     
@@ -142,6 +131,20 @@ export class UserRepository{
     async addEvent(id){}
 
     async addNotification(id){}
+
+    async addSubject(uid, newSubject) {  
+      try {
+        const userRef = doc(this.database, 'users', uid);
+        await updateDoc(userRef, {
+          subject: arrayUnion(newSubject)
+        });
+        console.log("Subject added successfully.");
+      } catch (error) {
+        console.error("Error adding subject:", error);
+        throw error;
+      }
+    }
+
 
     /**Given an email, return the user associated with that email */
     async getUserByEmail(email){
