@@ -1,0 +1,26 @@
+
+
+.UserProfilePage{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr ;
+}
+.UserHeader{
+    text-align: center;
+}
+.UserPicture{
+    margin-top: 40%;
+}
+.UserName{
+    margin-top: 5%;
+}
+.UserDescription{
+    margin-top: 30%;
+}
+.UserSettings{
+    text-align: center;
+    margin-top: 10%;
+}
+.UserFriendList{
+    margin-top: 10%;
+    text-align: center;
+}

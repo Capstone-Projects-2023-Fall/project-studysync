@@ -9,6 +9,8 @@ function Navbar({ items }) {
 
   const {user} = useUser();
 
+  
+
   return (
     <nav className="navbar">
       <Link to="/" className="brand">StudySync</Link>

@@ -7,13 +7,14 @@ import {useEffect, useState} from "react";
 /*import keys from './keys';*/
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import User from './js/models/user.js'; 
 import DashboardCom from './js/react/DashboardCom.js'; 
 import FlashcardComponent from './js/react/flashcardCom.jsx'; 
 import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
+import UserProfile from './js/react/UserProfilePage';
+
 function App() {
 
   const {user} = useUser();
@@ -64,7 +65,8 @@ function App() {
                 : <div className="login-center">Please log in or sign up to continue</div>
             } />
             <Route path='/passwordreset' element={<PasswordReset/>}/>
-            <Route path='/signup' element={<SignUpForm/>}/>            
+            <Route path='/signup' element={<SignUpForm/>}/>  
+            <Route path='/profile' element={<UserProfile/>}/>
         </Routes>
     </div>
 );
