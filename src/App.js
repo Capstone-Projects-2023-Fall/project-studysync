@@ -15,7 +15,10 @@ import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
 import { getItemById, addItemToArrayField,removeItemFromArrayField, setField} from './js/utils/sharedRepositoryFunctions';
-import { database } from './firebase';
+import { database, flashcardRepository, notificationRepository, userRepository } from './firebase';
+import { Notification } from './js/models/notification';
+import { FlashCardRepository } from './js/repositories/FlashCardRepository';
+import { FlashcardItem, FlashcardSet } from './js/models/flashcard';
 
 function App() {
 
@@ -55,17 +58,21 @@ function App() {
     //... add other items
   ];
 
-  console.log("hello world")
-  getItemById(database, "Nps6CcZIzRbXn5rZecg4GsJok4s1", "users", "user").then((user)=>{
-    console.log("res: ",user)
-  }).catch((err)=>{
-    console.log("err: ", err)
-  })
 
-  addItemToArrayField(database, "Nps6CcZIzRbXn5rZecg4GsJok4s1", "kokont", "users", "followers", "user")
-  removeItemFromArrayField(database, "Nps6CcZIzRbXn5rZecg4GsJok4s1","kokonte", "users", "followers", "user")
-  setField(database, "Nps6CcZIzRbXn5rZecg4GsJok4s1", "users", "bio", "BANCHE DAMIUS");
-  
+   const flashCardItems = [
+    new FlashcardItem("a", "b"),
+    new FlashcardItem("c", "d"),
+    new FlashcardItem("e", "f"),
+    new FlashcardItem("g", "h")
+   ]
+
+  //  const flashcardSet = new FlashcardSet("TEST FLASHCARD","Nps6CcZIzRbXn5rZecg4GsJok4s1", flashCardItems)
+  //  flashcardRepository.addFlashCard(flashcardSet)
+  //  .then((res)=>{console.log("res: ", res)})
+  //  .catch((err)=>{console.log("err: ", err)})
+
+  flashcardRepository.addToSharedWith("40RtXasadj3DqoL0HoUL", "Nps6CcZIzRbXn5rZecg4GsJok4s1")
+   
   return (
     <div className="app">
         <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
