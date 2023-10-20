@@ -5,7 +5,7 @@ import UserProfile from './userProfile.js';
  */
 export  default class User {
     constructor(email = '', username='', uuid='') {
-        this.uuid = uuid
+        this.id = uuid
         this.username = username;
         this.email = email;
         this.bio = 'default bio'
@@ -19,5 +19,24 @@ export  default class User {
         this.notifications = []
         this.events = []
         this.profile = new UserProfile();
+    }
+
+    toJSON(){
+        const user = this      
+        return {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        bio: user.bio,
+        following: user.following,
+        followers: user.followers,
+        imageUrl: user.imageUrl,
+        ownedQuizzes: user.ownedQuizzes,
+        sharedQuizzes: user.sharedQuizzes,
+        ownedFlashcards : user.sharedFlashcards,
+        sharedFlashcards : user.sharedFlashcards,
+        notifications: user.notifications,
+        events: user.events
+      };
     }
 }

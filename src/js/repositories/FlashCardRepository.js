@@ -1,6 +1,6 @@
-import { FlashcardSet } from "../models/flashcard"
-import { getItemById, removeDocumentFromCollection, getAllItems, setField, addItemToArrayField } from "../utils/sharedRepositoryFunctions"
-import { addDoc, collection, doc, setDoc } from "firebase/firestore"
+import { getItemById, removeDocumentFromCollection, updateArrayDocumentFields, updateNonArrayDocumentFields, getAllItems, setField, addItemToArrayField } from "../utils/sharedRepositoryFunctions"
+import { addDoc, collection, doc, getDoc, updateDoc} from "firebase/firestore"
+import {flashcardConverter} from  "../converters/flashcardConverter"
 
 export class FlashCardRepository{
     constructor(database){
@@ -13,8 +13,13 @@ export class FlashCardRepository{
         return flashCardSet
     }
 
+    //Retrieve all flashcard sets
+    async getAllFlashcardsSets(){
+        return await getAllItems(this.database, "flashcardSets", flashcardConverter)
+    }
+
     //add a flashcard set to the flashcard table
-    async addFlashCard(flashcardSet){
+    async addFlashCardSet(flashcardSet){
         try{
             console.log("json: ", flashcardSet.toJSON())
             const flashcardCollection = collection(this.database, "flashcardSets")
@@ -26,36 +31,54 @@ export class FlashCardRepository{
         }
     }
 
-    async deleteCardFromFlashcardSet(setId, itemId){
-        
+    //add a new card to flashcardSet with id: {setId}
+    async addCardtoFlashcardSet(setId, cardToAdd){
+        try{
+            const ref= doc(this.database, "flashcardSets", setId);
+            const item = await getDoc(ref);
+            const cards = item.data().flashcardItems;
+
+            cards.push(cardToAdd.toJSON())
+    
+            await updateDoc(ref, {
+                flashcardItems : cards
+            })
+
+        }catch(error){
+            console.log("err while adding card to set with id: ", setId)
+            throw error
+        }
+    }
+
+    //given a flashcard wit id: {setId}, delete a card with id {cardToDeleteId}
+    async deleteCardFromFlashcardSet(setId, cardToDeleteId){
+        const ref= doc(this.database, "flashcardSets", setId);
+        const item = await getDoc(ref);
+        const cards = item.data().flashcardItems;
+
+        await updateDoc(ref, {
+            flashcardItems : cards.filter(curr=>curr.id != cardToDeleteId)
+        })
+    }
+
+     //delete set with id: {setId} from collection
+     async deleteFlashcardSet(setId){
+        await removeDocumentFromCollection(this.database, setId, "flashcardSets", "flashcardSet")
     }
 
     //add user with id: userId to the shared with list of flashcard set with id: flashcardId
     async addToSharedWith(flashCardId, userId){
         await addItemToArrayField(this.database, flashCardId, userId, "flashcardSets", "sharedWith", "sharedWith")
     }
+
+    //update one or more non-array field by passing in object
+    async updateNonArrayFlashcardSetFields(id, toUpdate){
+        await updateNonArrayDocumentFields(this.database, id, "flashcardSets", toUpdate)
+    }
+
+    //update one or more array fields by passing in object
+    async updateArrayFlashcardSetFields(id, toUpdate){
+        await updateArrayDocumentFields(this.database, id, "flashcardSets", toUpdate)
+    }
 }
 
-const flashcardConverter = {
-    toFirestore: (flashcard) => {
-        return {
-            authorId: flashcard.authorId,
-            flashcardItems: flashcard.flashcardItems,
-            createdAt: flashcard.createdAt
-        };
-    },
-    fromFirestore: (snapshot, options) => {
-        const data = snapshot.data(options);
-        data.id = snapshot.id
-        return setFlashcard(data);
-    }
-};
-  
-function setFlashcard(data){
-    const flashcard= new FlashcardSet(data.name, data.authorId);
-    flashcard.flashcardItems = data.flashcardItems
-    flashcard.id = data.id
-    flashcard.createdAt = data.createdAt || ''
-    return flashcard
-}
-  

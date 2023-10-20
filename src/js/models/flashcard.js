@@ -31,7 +31,8 @@ export class FlashcardItem{
     toJSON() {
         return {
             question: this.question,
-            answer: this.answer
+            answer: this.answer,
+            id: this.id
         };
     }
 }

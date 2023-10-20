@@ -1,4 +1,4 @@
-import {collection, getDocs, getDoc, deleteDoc, doc, updateDoc, arrayRemove, arrayUnion} from 'firebase/firestore';
+import {collection, getDocs, getDoc, deleteDoc, doc, updateDoc, arrayRemove, where, arrayUnion, query} from 'firebase/firestore';
 
 //add user follower, etc
 export async function addItemToArrayField(db, uuid, itemToAdd, collectionToAdd, fieldToAddTo, singleName) {
@@ -49,6 +49,7 @@ export async function addItemToArrayField(db, uuid, itemToAdd, collectionToAdd, 
       if (!item.exists()) {
         return `{singleName} with id ${uuid} does not exist`;
       }
+      console.log("item: ", item.data())
       return item.data();
     } catch (error) {
       console.error(`Error getting ${singleName} with id ${uuid}`);
@@ -71,44 +72,16 @@ export async function addItemToArrayField(db, uuid, itemToAdd, collectionToAdd, 
 
   //get all users, get all quizes etc
   export async function getAllItems(db, collectionName, dataConverter = null) {
-    const collectionRef = collection(db, collectionName);
+    const collectionRef = dataConverter == null? collection(db, collectionName) : collection(db, collectionName).withConverter(dataConverter);
     const snapshot = await getDocs(collectionRef);
     const items = [];
   
     snapshot.forEach((doc) => {
-      const item = dataConverter ? doc.data(dataConverter) : doc.data();
+      const item = doc.data();
       items.push(item);
     });
   
     return items;
-  }
-
-  //updates all fields with the given object
-  export async function updateDocumentFields(db, documentId, collectionName, fieldsToUpdate) {
-    const docRef = doc(db, collectionName, documentId);
-    try {
-      // Initialize an object to store the updates
-      const updates = {};
-  
-      // Loop through the fields to update
-      for (const field in fieldsToUpdate) {
-        if (Array.isArray(fieldsToUpdate[field])) {
-          // If the field is an array, use arrayUnion to add specific elements
-          updates[field] = arrayUnion(fieldsToUpdate[field]);
-        } else {
-          // If the field is not an array, set it directly
-          updates[field] = fieldsToUpdate[field];
-        }
-      }
-  
-      // Update the Firestore document with the calculated updates
-      await updateDoc(docRef, updates);
-  
-      console.log(`Successfully updated document with ID ${documentId} in collection ${collectionName}`);
-    } catch (error) {
-      console.error(`Error updating document with ID ${documentId} in collection ${collectionName}: ${error}`);
-      throw error;
-    }
   }
 
   //get user followers etc
@@ -135,3 +108,59 @@ export async function addItemToArrayField(db, uuid, itemToAdd, collectionToAdd, 
     }
   }
   
+    //updates all non-array fields with the given object
+    export async function updateNonArrayDocumentFields(db, documentId, collectionName, fieldsToUpdate) {
+      const docRef = doc(db, collectionName, documentId);
+      try {
+        //object to store the updates
+        const updates = {};
+      
+        for (const field in fieldsToUpdate) {
+            //These fields are not arrays so we set it directly
+            const fieldExists = await checkFieldExists(db, collectionName,field)
+            if(!fieldExists) throw new Error(`The field ${field} does not exist in the ${collectionName} collection`)
+            updates[field] = fieldsToUpdate[field];
+        }
+    
+        await updateDoc(docRef, updates);
+    
+        console.log(`Successfully updated document with ID ${documentId} in collection ${collectionName}`);
+      } catch (error) {
+        console.error(`Error updating document with ID ${documentId} in collection ${collectionName}: ${error}`);
+        throw error;
+      }
+    }
+
+    export async function updateArrayDocumentFields(db, documentId, collectionName, fieldsToUpdate) {
+      const docRef = doc(db, collectionName, documentId);
+      try {
+          // Object to store the updates
+          const updates = {};
+  
+          for (const field in fieldsToUpdate) {
+              const fieldExists = await checkFieldExists(db, collectionName, field);
+              if (!fieldExists) throw new Error(`The field ${field} does not exist in the ${collectionName} collection`);
+
+              updates[field] = arrayUnion(...fieldsToUpdate[field]);
+          }
+  
+          await updateDoc(docRef, updates);
+  
+          console.log(`Successfully updated document with ID ${documentId} in collection ${collectionName}`);
+      } catch (error) {
+          console.error(`Error updating document with ID ${documentId} in collection ${collectionName}: ${error}`);
+          throw error;
+      }
+  }
+
+    async function checkFieldExists(db, col, fieldName){
+      try{
+          const q = query(collection(db, col), where(fieldName, '!=', null));
+          const querySnapshot = await getDocs(q);
+          console.log("snap: ", querySnapshot)
+          return !querySnapshot.empty
+      }catch(error){
+          console.log("Error checking field existence:", error);
+          return false
+      }
+    }

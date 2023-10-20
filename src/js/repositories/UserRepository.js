@@ -1,5 +1,6 @@
-import {collection, getDocs, query, where,setDoc, doc, updateDoc, arrayRemove, arrayUnion} from 'firebase/firestore';
-import { addItemToArrayField, getArrayFieldFromCollection } from '../utils/sharedRepositoryFunctions';
+import {setDoc, doc} from 'firebase/firestore';
+import { updateArrayDocumentFields, addItemToArrayField, getArrayFieldFromCollection, getAllItems, getItemById, removeDocumentFromCollection, updateNonArrayDocumentFields } from '../utils/sharedRepositoryFunctions';
+import {userConverter} from "../converters/userConverter"
 import User from "../models/user"
 
 /**
@@ -13,87 +14,85 @@ export class UserRepository{
       this.flashcardRepository = flashcardRepository
     }
 
-    /**Add a user to the database for the first time */
+    /**Add a user to the database for the first time with id: uuid*/
     async addUser(email, username, uuid){
       try{
-        const userRef = doc(this.database, "users", uuid).withConverter(userConverter)
-        await setDoc(userRef, new User(email, username, uuid))
-
+        const userRef = doc(this.database, "users", uuid)
+        await setDoc(userRef, new User(email, username, uuid).toJSON())
         console.log('Successfully added user to database',username);
       }catch(error){
         console.log("error adding user", error)
       }
     }
+
+    /**Given a unique uuid, return the user associated with that uuid */
+    async getUserById(id){
+      return await getItemById(this.database, id, "users", "user")
+    }
+
+    async deleteUser(id){
+      return await removeDocumentFromCollection(this.database, id, "users", "user")
+    }
+
+    async updateNonArrayUserFields(id, toUpdate){
+      await updateNonArrayDocumentFields(this.database, id, "users", toUpdate)
+    }
+
+    async updateArrayUserFields(id, toUpdate){
+      await updateArrayDocumentFields(this.database, id, "users", toUpdate)
+    }
     
     /**Return all users in the user collection */
     async getAllUsers(){
-      const usersRef = collection(this.database, "users").withConverter(userConverter)
-      const snapshot = await getDocs(usersRef, "users");
-      const users = []
-      snapshot.docs.forEach((doc)=>{
-        const user = doc.data()
-        users.push(user)
-      })
-      return users
+      return await getAllItems(this.database, "users",userConverter)
     }
     
-    /**Given a unique uuid, return the user associated with that uuid */
-    async getUserById(id){
-      const result = query(collection(this.database, "users"), where("email", "==", id));
-      const snapshot = await getDocs(result);
-
-      if(snapshot.size > 1) return "Cannot have two users with the same id"
-      else if(snapshot.size === 0) return `User with id ${id} does not exist`
-      console.log("user is: ", snapshot.docs.at(0).data())
-      return snapshot.docs.at(0).data()
-    }
-
+    /**Get all owned quizzes owned by user with id: {id} */
     async getOwnedQuizzes(id){
       const ownedQuizzes = await getArrayFieldFromCollection(this.database, "users", id, "ownedQuizzes")
       return ownedQuizzes
     }
 
+    /**Get all quizzes shared by user with id: {id} */
     async getSharedQuizzes(id){
       const sharedQuizzes = await getArrayFieldFromCollection(this.database, "users", id, "sharedQuizzes")
       return sharedQuizzes
     }
 
+    /**Get all owned flashcards owned by user with id: {id} */
     async getOwnedFlashcards(id){
       const ownedFlashcards = await getArrayFieldFromCollection(this.database, "users", id, "ownedFlashcards")
       return ownedFlashcards
     }
 
+    /**Get all flashcards shared by user with id: {id} */
     async getSharedFlashcards(id){
       const sharedFlashcards = await getArrayFieldFromCollection(this.database, "users", id, "sharedFlashcards")
       return sharedFlashcards
     }
 
+    /**Get all followers of user with id: {id} */
     async getFollowers(id){
       const followers = await getArrayFieldFromCollection(this.database, "users", id, "followers")
       return followers
     }
 
+    /**Get all following of user with id: {id} */
     async getFollowing(id){
       const following = await getArrayFieldFromCollection(this.database, "users", id, "following")
       return following
     }
 
+    /**Get all notifications of user with id: {id}, returns the ids */
     async getNotifications(id){
       const notificationIds = await getArrayFieldFromCollection(this.database, "users", id, "notifications")
-      const notifications = []
-      for(let i = 0; i < notificationIds.length; i++){
-        const id = notificationIds[i]
-        notifications.push(await this.notificationRepository.getNotification(id))
-      }
-      return notifications
+      return notificationIds
     }
 
     async getEvents(id){
       const events = await getArrayFieldFromCollection(this.database, "users", id, "events")
       return events
     }
-
-    async getBio(id){}
     
     async addFlashcard(userId, flashcardId){
       await addItemToArrayField(this.database, userId, flashcardId, "users", "flashcards", "flashcard")
@@ -127,45 +126,12 @@ export class UserRepository{
       await addItemToArrayField(this.database, userId, subjectId, "users", "subjects", "subject")
     }
 
-    async addFollower(){}
-}
+    async addFollower(userId, followerId){
+      await addItemToArrayField(this.database, userId, followerId, "users", "followers", "follower")
+    }
 
-const userConverter = {
-  toFirestore: (user) => {
-      return {
-        username: user.username,
-        email: user.email,
-        bio: user.bio,
-        following: user.following,
-        followers: user.followers,
-        imageUrl: user.imageUrl,
-        ownedQuizzes: user.ownedQuizzes,
-        sharedQuizzes: user.sharedQuizzes,
-        ownedFlashcards : user.sharedFlashcards,
-        sharedFlashcards : user.sharedFlashcards,
-        notifications: user.notifications,
-        events: user.events
-      };
-  },
-  fromFirestore: (snapshot, options) => {
-      const data = snapshot.data(options);
-      return setUser(data);
-  }
-};
-
-function setUser(data){
-  const user = new User()
-    user.username = data.username;
-    user.email = data.email;
-      user.bio = data.bio;
-      user.following = data.following;
-      user.followers = data.followers;
-      user.imageUrl = data.imageUrl;
-      user.ownedQuizzes = data.ownedQuizzes
-      user.sharedQuizzes = data.sharedQuizzes
-      user.ownedFlashcards = data.ownedFlashcards
-      user.sharedFlashcards = data.sharedFlashcards
-      user.notifications = data.notifications
-      user.events = data.events
+    async addFollowing(userId, followingId){
+      await addItemToArrayField(this.database, userId, followingId, "users", "following", "following")
+    }
 }
 
