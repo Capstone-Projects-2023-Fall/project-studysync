@@ -1,13 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import './UserProfileStyle.css';
-
+import useUser from './useUser';
 
 const  UserProfile = ()=> {
+
 
   //Replace this with real friends list
   const friends = ["Bob","Joe","Alice","John"];
 
+
+  const {user} = useUser();
   const navigate = useNavigate();
+
 
   function editProfile(e){
     e.preventDefault();
@@ -24,15 +28,12 @@ const  UserProfile = ()=> {
       <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>      
     </head>
       <div class="container emp-profile">
-            <form method="post">
+            <form >
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-img">
                             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt=""/>
-                            <div class="file btn btn-lg btn-primary">
-                                Change Photo
-                                <input type="file" name="file"/>
-                            </div>
+
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -43,17 +44,24 @@ const  UserProfile = ()=> {
                                     <h6>
                                         Web Developer and Designer
                                     </h6>
+                                    <p class="proile-rating">About me : <span>
+                                      Description
+                                      </span></p>
+
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Info</a>
                                 </li>
-
+                                <li class="nav-item">
+                                </li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-md-2">
+                      { user &&
                         <button  onClick={editProfile} class="profile-edit-btn" name="btnAddMore" >Edit profile</button>
-                    </div>
+                      }
+                        </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">

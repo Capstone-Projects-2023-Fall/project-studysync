@@ -1,13 +1,24 @@
+import { useNavigate } from 'react-router-dom';
 import './UserProfileStyle.css';
-
+import { useState,useEffect } from 'react';
 
 const  EditUserProfile = ()=> {
 
-  //Replace this with real friends list
-  const friends = ["Bob","Joe","Alice","John"];
+  //Replace this with real friends list from database
+   const [friends,setFriends] =  useState(["Bob","Joe","Alice","John"]);
 
-  function editProfile(e){
-    e.preventDefault();
+    const navigate = useNavigate();
+
+    function saveProfile(){
+        navigate('/profile');
+    }
+
+
+  function RemoveFriend(index,friend){
+
+    //replace this with code to remove friend from database  
+    friends.splice(index,1);
+    setFriends(friends);
   }
 
 
@@ -20,7 +31,7 @@ const  EditUserProfile = ()=> {
       <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>      
     </head>
       <div class="container emp-profile">
-            <form method="post">
+            
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-img">
@@ -39,6 +50,9 @@ const  EditUserProfile = ()=> {
                                     <h6>
                                         Web Developer and Designer
                                     </h6>
+                                    <p class="proile-about"><p>About me :</p> 
+                                        <textarea id='ProfileAboutMe' placeholder='Enter description'></textarea>
+                                    </p>                                    
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
@@ -47,8 +61,8 @@ const  EditUserProfile = ()=> {
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <button  onClick={editProfile} class="profile-edit-btn" name="btnAddMore" >Edit profile</button>
+                    <div class="col-md-2"> 
+                        <button  onClick={saveProfile} class="profile-save-btn" name="btnAddMore" >Save</button>   
                     </div>
                 </div>
                 <div class="row">
@@ -57,7 +71,9 @@ const  EditUserProfile = ()=> {
                         <p>Friends:</p>
                         <ul>
                           {friends.map((friend, index) => (
-                            <li key={index}>{friend}</li>
+                            <li key={index}>{friend}
+                            <button onClick={() => RemoveFriend(index,friend)} className='RemoveFriend'>X</button>
+                            </li>
                           ))}
                         </ul>
                       </div>
@@ -65,20 +81,14 @@ const  EditUserProfile = ()=> {
                     <div class="col-md-8">
                         <div class="tab-content profile-tab" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label>User Id</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>Kshiti123</p>
-                                            </div>
-                                        </div>
+
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <label>Name</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Kshiti Ghelani</p>
+                                                <input id='ProfileName' type='text' placeholder='Name'></input>
+
                                             </div>
                                         </div>
                                         <div class="row">
@@ -94,7 +104,8 @@ const  EditUserProfile = ()=> {
                                                 <label>Phone</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>123 456 7890</p>
+                                                <input id='ProfilePhoneNum' type='text' placeholder='Phone Number'></input>
+
                                             </div>
                                         </div>
                                         <div class="row">
@@ -102,7 +113,7 @@ const  EditUserProfile = ()=> {
                                                 <label>Profession</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Web Developer and Designer</p>
+                                                <input id='ProfileProfession' type='text' placeholder='profession'></input>
                                             </div>
                                         </div>
                             </div>
@@ -157,7 +168,7 @@ const  EditUserProfile = ()=> {
                         </div>
                     </div>
                 </div>
-            </form>           
+                
         </div>
         </>
   );
