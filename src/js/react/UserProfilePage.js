@@ -1,6 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './UserProfileStyle.css';
 import useUser from './useUser';
+import UserProfileComponent from './UserProfileComponent';
+
 
 const  UserProfile = ()=> {
 
@@ -8,19 +10,18 @@ const  UserProfile = ()=> {
   //Replace this with real friends list
   const friends = ["Bob","Joe","Alice","John"];
 
-
+  const {UserId } = useParams();
   const {user} = useUser();
   const navigate = useNavigate();
 
-
   function editProfile(e){
     e.preventDefault();
-    navigate('/profile/edit');
+    navigate(`/profile/${UserId}/edit`);
   }
 
 
   return (
-
+    
     <>
     <head>
       <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
@@ -39,7 +40,7 @@ const  UserProfile = ()=> {
                     <div class="col-md-6">
                         <div class="profile-head">
                                     <h5>
-                                        Kshiti Ghelani
+                                        Kshiti Ghelani 
                                     </h5>
                                     <h6>
                                         Web Developer and Designer
@@ -58,7 +59,7 @@ const  UserProfile = ()=> {
                         </div>
                     </div>
                     <div class="col-md-2">
-                      { user &&
+                      { ( user && user.uid == UserId )   &&
                         <button  onClick={editProfile} class="profile-edit-btn" name="btnAddMore" >Edit profile</button>
                       }
                         </div>

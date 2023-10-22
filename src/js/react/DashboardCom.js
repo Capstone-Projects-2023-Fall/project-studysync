@@ -8,7 +8,7 @@ const  DashboardCom = ()=> {
     return (
 
       <div>
-        This is the dashboard.
+        This is the dashboard. 
       </div>
     );
   }

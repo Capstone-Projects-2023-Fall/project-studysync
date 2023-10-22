@@ -122,3 +122,22 @@ body{
     height: 100px;
     width: 70%;
 }
+
+#home .row{
+    margin-bottom: 4%;
+}
+
+.profile-friends{
+    padding: 5%;
+    margin-top: -15%;
+}
+.profile-friends ul{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+    list-style: none;
+}
+.profile-friends li{
+    margin-bottom: 5%;
+}
