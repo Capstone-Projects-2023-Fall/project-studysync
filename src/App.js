@@ -15,7 +15,7 @@ import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
 import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
-
+import { signOut } from 'firebase/auth';
 function App() {
 
   const {user} = useUser();
@@ -51,6 +51,7 @@ function App() {
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'StudyTool', link: '/studytool'},
     { label: 'Message', icon: 'message-icon', link: '/messages' },
+    {label: 'Profile', link: `/profile/${user.uid}` },
     //... add other items
   ];
 

@@ -64,4 +64,9 @@
   border-bottom: none; 
 }
 
+#logout-btn{
+  border-radius: 20%;
+  border: none;
+  background-color: grey;
+}
   
