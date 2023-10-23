@@ -9,7 +9,7 @@ export async function addItemToArrayField(db, uuid, itemToAdd, collectionToAdd, 
       await updateDoc(itemRef,fieldToUpdate);
       return itemToAdd
     } catch (error) {
-      console.error(`Error adding new follower${singleName}`);
+      console.error(`Error adding new ${singleName}`);
       throw error
     }
   }
