@@ -2,12 +2,8 @@ import './App.css';
 /*import {app ,database} from "./firebase.js"*/
 /*import {getAuth, createUserWithEmailAndPassword,
 signInWithEmailAndPassword} from "firebase/auth";*/
-import {useEffect, useState} from "react";
-/*import {collection, addDoc} from 'firebase/firestore';*/
-/*import keys from './keys';*/
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import User from './js/models/user.js'; 
 import DashboardCom from './js/react/DashboardCom.js'; 
 import FlashcardComponent from './js/react/flashcardCom.jsx'; 
 import LoginPage from './js/react/LoginPage';
@@ -18,17 +14,12 @@ function App() {
 
   const {user} = useUser();
 
-
-  
-  const handleLogin = () => {
-
-  };
+  const handleLogin = () => {};
 
   const navbarItemsLoggedOut = [
     { label: 'Log in', link: '/login', action: handleLogin },
     { label: 'Sign Up', link: '/signup' },
   ];
-
 
 /*
   const database_submit= ()=>{
@@ -68,9 +59,6 @@ function App() {
         </Routes>
     </div>
 );
-
-
-
 }
 
 export default App;
