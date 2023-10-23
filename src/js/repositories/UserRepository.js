@@ -1,5 +1,5 @@
 import {setDoc, doc} from 'firebase/firestore';
-import { updateArrayDocumentFields, addItemToArrayField, getArrayFieldFromCollection, getAllItems, getItemById, removeDocumentFromCollection, updateNonArrayDocumentFields } from '../utils/sharedRepositoryFunctions';
+import { removeItemFromArrayField, updateArrayDocumentFields, addItemToArrayField, getArrayFieldFromCollection, getAllItems, getItemById, removeDocumentFromCollection, updateNonArrayDocumentFields } from '../utils/sharedRepositoryFunctions';
 import {userConverter} from "../converters/userConverter"
 import User from "../models/user"
 
@@ -132,6 +132,14 @@ export class UserRepository{
 
     async addFollowing(userId, followingId){
       await addItemToArrayField(this.database, userId, followingId, "users", "following", "following")
+    }
+
+    async removeFollower(userId, followerId){
+      await removeItemFromArrayField(this.database, userId, followerId, "users", "followers", "follower")
+    }
+
+    async removeFollowing(userId, followingId){
+      await removeItemFromArrayField(this.database, userId, followingId, "users", "following", "following")
     }
 }
 
