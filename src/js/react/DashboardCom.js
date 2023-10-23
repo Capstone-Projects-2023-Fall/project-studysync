@@ -3,7 +3,6 @@ import useUser from "./useUser";
 
 const  DashboardCom = ()=> {
 
-    const {user} = useUser();
 
     return (
 

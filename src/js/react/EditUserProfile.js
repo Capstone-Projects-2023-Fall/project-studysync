@@ -13,7 +13,7 @@ const  EditUserProfile = ()=> {
     const navigate = useNavigate();
 
     function saveProfile(){
-        navigate('/profile');
+        navigate(`/profile/${user && user.uid}`);
     }
 
 

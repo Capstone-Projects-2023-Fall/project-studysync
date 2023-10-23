@@ -51,7 +51,7 @@ function App() {
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'StudyTool', link: '/studytool'},
     { label: 'Message', icon: 'message-icon', link: '/messages' },
-    {label: 'Profile', link: `/profile/${user.uid}` },
+    {label: 'Profile', link: `/profile/${user && user.uid}` },
     //... add other items
   ];
 
