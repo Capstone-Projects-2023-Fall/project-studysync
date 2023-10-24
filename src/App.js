@@ -61,7 +61,7 @@ const user = null;
     <div className="app">
         <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
         <Routes>
-            <Route path="/flashcardUICom" element={<FlashcardApp />} />
+            {/* <Route path="/flashcardUICom" element={<FlashcardApp />} /> */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/studytool" element={<FlashcardComponent />} />
             <Route path="/" element={
@@ -72,9 +72,7 @@ const user = null;
             <Route path='/passwordreset' element={<PasswordReset/>}/>
             <Route path='/signup' element={<SignUpForm/>}/>            
         </Routes>
-        {/* <Routes>
-        <Route path="/flashcardPage" element={<FlashcardPage />} />
-        </Routes> */}
+        
 
     </div>
 );
