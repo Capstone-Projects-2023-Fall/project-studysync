@@ -134,7 +134,70 @@ function FlashcardApp() {
                     </div>
                 </div>
     
-                
+                <div style={{
+                    maxHeight: "30%", overflowY: "scroll", backgroundColor: '#fff', borderRadius: '8px', 
+                    padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
+                }}>
+                    {comments.map((comment, index) => (
+                        <div key={index} style={{
+                            display: "flex", alignItems: "center", padding: "10px", borderBottom: '1px solid #e0e0e0'
+                        }}>
+                            <Avatar src="/broken-image.jpg" />
+                            <Typography variant="body1" style={{ marginLeft: "10px", fontWeight: 'bold' }}>
+                                {comment.user}
+                            </Typography>
+                            <Typography variant="body1" style={{ marginLeft: "10px" }}>
+                                {comment.content}
+                            </Typography>
+                            <IconButton>
+                                <ThumbUpIcon />
+                            </IconButton>
+                        </div>
+                    ))}
+                    <div style={{
+                        display: "flex", alignItems: "center", padding: "10px", borderTop: '1px solid #e0e0e0'
+                    }}>
+                        <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
+                        <IconButton onClick={handleSendComment}>
+                            <SendIcon />
+                        </IconButton>
+                    </div>
+                </div>
+    
+                <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
+                    <DialogTitle>Add a new flashcard</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Term"
+                            fullWidth
+                            onChange={(e) => setTerm(e.target.value)}
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Definition"
+                            fullWidth
+                            onChange={(e) => setDefinition(e.target.value)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenAdd(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                if (term && definition) {
+                                    setCards((prev) => [...prev, { term, definition }]);
+                                }
+                                setOpenAdd(false);
+                            }}
+                            color="primary"
+                        >
+                            Add
+                        </Button>
+                    </DialogActions>
+                </Dialog>
     
                 
             </div>
