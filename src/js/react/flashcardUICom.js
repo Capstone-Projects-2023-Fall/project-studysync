@@ -199,7 +199,29 @@ function FlashcardApp() {
                     </DialogActions>
                 </Dialog>
     
-                
+                <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
+                    <DialogTitle>Confirm Deletion</DialogTitle>
+                    <DialogContent>
+                        <Typography>Are you sure you want to delete this flashcard?</Typography>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenDelete(false)} color="primary">
+                            No
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                if (selectedCard) {
+                                    setCards((prev) => prev.filter((card) => card !== selectedCard));
+                                    setSelectedCard(null);
+                                }
+                                setOpenDelete(false);
+                            }}
+                            color="primary"
+                        >
+                            Yes
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         </ThemeProvider>
     );
