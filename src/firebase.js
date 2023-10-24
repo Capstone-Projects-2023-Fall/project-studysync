@@ -30,14 +30,14 @@ export const quizRepository = new QuizRepository(database)
 export const userRepository = new UserRepository(database, quizRepository)
 
 
-export const askGPT = async (prompt) => {
-  const askGPTFunction = httpsCallable(functions, 'askGPT');
-  try {
-    const response = await askGPTFunction({ prompt });
-    return response.data;  // This will contain the GPT-3 response
-  } catch (error) {
-    console.error('Error calling GPT-3 through Firebase:', error);
-    throw error;
-  }
-};
+// export const askGPT = async (prompt) => {
+//   const askGPTFunction = httpsCallable(functions, 'askGPT');
+//   try {
+//     const response = await askGPTFunction({ prompt });
+//     return response.data;  // This will contain the GPT-3 response
+//   } catch (error) {
+//     console.error('Error calling GPT-3 through Firebase:', error);
+//     throw error;
+//   }
+// };
 
