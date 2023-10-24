@@ -17,11 +17,24 @@ const  EditUserProfile = ()=> {
     }
 
 
+   //Delete user from database here 
+  function deleteProfile(e){
+    var result = prompt("Are you sure you want to delete your account? Type (yes) and click ok.");
+    
+    
+    if(result && result.toLowerCase() == 'yes'){
+        alert('Deleted user account.')
+    }
+    else {
+        return;
+    }
+  }  
+
+
   function RemoveFriend(index,friend){
 
     //replace this with code to remove friend from database  
-    // friends.splice(index,1);
-    // setFriends(friends);
+
   }
 
   if(user  && UserId == user.uid){
@@ -66,6 +79,8 @@ const  EditUserProfile = ()=> {
                         </div>
                         <div class="col-md-2"> 
                             <button  onClick={saveProfile} class="profile-save-btn" name="btnAddMore" >Save</button>   
+                            <button  onClick={deleteProfile} class="profile-delete-btn" name="btnAddMore" >Delete</button>   
+
                         </div>
                     </div>
                     <div class="row">
