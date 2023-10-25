@@ -153,3 +153,18 @@
 .profile-friends li{
     margin-bottom: 5%;
 }
+.profile-save-btn{
+
+    border-radius: 20%;
+    color: white;
+    background-color: #2e3278;
+    border: none;
+    margin-right: 20%;        
+}
+.profile-delete-btn{
+  
+    border-radius: 20%;
+    color: white;
+    background-color: red;
+    border: none;
+}
