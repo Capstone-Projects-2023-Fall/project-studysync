@@ -5,6 +5,8 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FlashCardRepository from '../repositories/FlashCardRepository';
+import { useNavigate } from 'react-router-dom';
+
 
 const astyle = {
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
@@ -22,6 +24,23 @@ const FlashcardComponent = () => {
   const [open, setOpen] = useState(false);
   const [newEntry, setNewEntry] = useState('');
   const [dialogType, setDialogType] = useState('subject'); // can be 'subject' or 'topic'
+
+  const navigate = useNavigate();
+
+const handleFlashcardClick = async (topicName) => {
+    try {
+        const setId = await FlashCardRepository.getSetIdByTopicName(topicName);
+        if (setId) {
+            navigate(`/flashcard-ui/${setId}`);
+        } else {
+            console.error("Unable to fetch set ID for topic:", topicName);
+        }
+    } catch (error) {
+        console.error("Error in handleFlashcardClick:", error);
+    }
+};
+
+
 
 
   useEffect(() => {
@@ -207,7 +226,7 @@ const handleAdd = async () => {
             <h3>{topic}</h3>
             <div style={{ display: 'flex', gap: '10px' }}>
               <Button variant="outlined">Edit</Button>
-              <Button variant="outlined">Flashcard</Button>
+              <Button variant="outlined" onClick={() => handleFlashcardClick(topic)}>Flashcard</Button>
               <Button variant="outlined">Quiz</Button>
               <Button variant="outlined">AITutor</Button>
               <Button variant="outlined" color="secondary" onClick={() => handleDelete(topic)}>Delete</Button>

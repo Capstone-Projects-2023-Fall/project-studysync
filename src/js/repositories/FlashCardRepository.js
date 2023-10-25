@@ -60,11 +60,34 @@ const FlashCardRepository = {
 
   createFlashcardSet: async function({ name, subject }) {
     try {
+
+        const initialFlashcardItems = [
+            {
+                flashcardId: "flashcard1",
+                term: "Sample Term",
+                definition: "Sample Definition"
+            },
+        ];
+
+        const initialComments = [
+            {
+                uid: this.getCurrentUid(),
+                content: "Sample comment content",
+                like: 0,
+                timestamp: Timestamp.now()
+            },
+        ];
+
+
         const setData = {
             name: name,
             createdAt: Timestamp.now(),
             authorId: this.getCurrentUid(),
             subject: subject,
+            sharedWith:[],
+            flashcardItems: initialFlashcardItems, 
+            comments: initialComments 
+
         };
         
         const newDocRef = await addDoc(collection(database, 'flashcardSets'), setData);

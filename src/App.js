@@ -14,6 +14,7 @@ import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
+import FlashcardApp from './js/react/flashcardUICom';
 function App() {
 
   const {user} = useUser();
@@ -58,6 +59,7 @@ function App() {
         <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/studytool" element={<FlashcardComponent />} />
+            <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
             <Route path="/" element={
                 user 
                 ? <DashboardCom /> 

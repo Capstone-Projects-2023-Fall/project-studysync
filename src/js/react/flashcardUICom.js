@@ -6,6 +6,7 @@ import SendIcon from '@mui/icons-material/Send';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useParams } from 'react-router-dom';
 
 
 
@@ -16,6 +17,7 @@ function FlashcardApp() {
     const [openAdd, setOpenAdd] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [showDefinition, setShowDefinition] = useState(false);
+    const { setId } = useParams();
 
     const [cards, setCards] = useState([
         { term: "Term1", definition: "Definition1" },
