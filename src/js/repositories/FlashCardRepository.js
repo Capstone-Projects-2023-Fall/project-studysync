@@ -131,14 +131,45 @@ const FlashCardRepository = {
     }
   },
 
-  addFlashcardToSet: async function(setId, cardData) {
+  
+  addFlashcardItem: async function(setId, term, definition) {
     try {
-      await addDoc(collection(database, 'flashcardSets', setId, 'flashcards'), cardData);
+      const newDocRef = doc(collection(database, 'dummyCollection'));
+      const flashcardId = newDocRef.id;
+
+      const cardData = {
+        term: term,
+        definition: definition,
+        flashcardId: flashcardId
+      };
+
+      const flashcardSetRef = doc(database, 'flashcardSets', setId);
+
+      const snap = await getDoc(flashcardSetRef);
+      const data = snap.data();
+      let flashcardItems = data.flashcardItems || {};
+
+      let maxKey = Object.keys(flashcardItems).length > 0 ? Math.max(...Object.keys(flashcardItems).map(Number)) : -1;
+      const newKey = (maxKey + 1).toString();
+
+      flashcardItems[newKey] = cardData;
+
+      
+      await updateDoc(flashcardSetRef, {
+        flashcardItems: flashcardItems
+      });
+
     } catch (error) {
-      console.error("Error adding flashcard:", error);
+      console.error("fetch flashcard error", error);
       throw error;
     }
   },
+
+  
+  
+ 
+  
+  
 
   deleteFlashcard: async function(setId, cardId) {
     try {
@@ -198,50 +229,47 @@ async getSetIdByTopicName(topicName) {
 },
 
 getFlashcardItems: async function(setId) {
-    try {
-      const flashcardsRef = collection(database, 'flashcardSets', setId, 'flashcards');
-      const flashcardSnapshot = await getDocs(flashcardsRef);
-      const flashcardData = [];
-      flashcardSnapshot.forEach(doc => {
-        const data = doc.data();
-        flashcardData.push({
-          term: data.term,
-          definition: data.definition
-        });
-      });
-      return flashcardData;
-    } catch (error) {
-      console.error("Error getting flashcard items:", error);
-      throw error;
-    }
-  },
-
-  getCommentsWithUserData: async function(setId) {
-    try {
-      const commentsRef = collection(database, 'flashcardSets', setId, 'comments');
-      const commentSnapshot = await getDocs(commentsRef);
-      
-      const commentsData = [];
-      for (let doc of commentSnapshot.docs) {
-        const comment = doc.data();
-        const userRef = doc(database, 'users', comment.uid);
-        const userSnapshot = await getDoc(userRef);
-        const userData = userSnapshot.data();
-  
-        commentsData.push({
-          content: comment.content,
-          date: comment.date,
-          like: comment.like,
-          username: userData.username,
-          imageURL: userData.imageURL
-        });
-      }
-      return commentsData;
-    } catch (error) {
-      console.error("Error getting comments with user data:", error);
-      throw error;
-    }
+  try {
+    const setRef = doc(database, 'flashcardSets', setId);
+    const setSnapshot = await getDoc(setRef);
+    const setData = setSnapshot.data();
+    const flashcardData = setData.flashcardItems || []; 
+    return flashcardData;
+  } catch (error) {
+    console.error("Error getting flashcard items:", error);
+    throw error;
   }
+},
+
+getCommentsWithUserData: async function(setId) {
+  try {
+    const setRef = doc(database, 'flashcardSets', setId);
+    const setSnapshot = await getDoc(setRef);
+    const setData = setSnapshot.data();
+    const comments = setData.comments || [];
+
+    const commentsData = [];
+    for (let comment of comments) {
+      const userRef = doc(database, 'users', comment.uid);
+      const userSnapshot = await getDoc(userRef);
+      const userData = userSnapshot.data();
+
+      commentsData.push({
+        content: comment.content,
+        date: comment.date,
+        like: comment.like,
+        username: userData.username,
+        imageURL: userData.imageURL
+      });
+    }
+
+    return commentsData;
+  } catch (error) {
+    console.error("Error getting comments with user data:", error);
+    throw error;
+  }
+}
+
 
 
 

@@ -20,12 +20,14 @@ function FlashcardApp() {
     const [cards, setCards] = useState([]);
     const [selectedCard, setSelectedCard] = useState(null);
     const [comments, setComments] = useState([]);
-
+    
     useEffect(() => {
         const fetchFlashcards = async () => {
             try {
-                const flashcards = await FlashCardRepository.getFlashcardItems(setId);
-                setCards(flashcards);
+                const flashcardData = await FlashCardRepository.getFlashcardItems(setId);
+                console.log("fetching flashcards", flashcardData);
+                const flashcardsArray = Object.keys(flashcardData).map(key => flashcardData[key]);
+                setCards(flashcardsArray);
             } catch (error) {
                 console.error("Failed to fetch flashcards:", error);
             }
@@ -34,6 +36,7 @@ function FlashcardApp() {
         const fetchComments = async () => {
             try {
                 const commentsData = await FlashCardRepository.getCommentsWithUserData(setId);
+                console.log("fetching comments",commentsData);
                 setComments(commentsData);
             } catch (error) {
                 console.error("Failed to fetch comments:", error);
@@ -73,7 +76,19 @@ function FlashcardApp() {
             setShowDefinition(false);
         }
     };
-
+    const handleAddFlashcard = async () => {
+        if (term && definition) {
+            try {
+                await FlashCardRepository.addFlashcardItem(setId, term, definition);
+                setCards((prev) => [...prev, { term, definition }]);
+                setTerm(''); 
+                setDefinition(''); 
+            } catch (error) {
+                console.error("Failed to add flashcard:", error);
+            }
+        }
+    };
+    
     const theme = createTheme({
         palette: {
             primary: { main: '#007aff' },
@@ -83,7 +98,18 @@ function FlashcardApp() {
             fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
         },
     });
-
+    console.log({
+        term,
+        definition,
+        comment,
+        openAdd,
+        openDelete,
+        showDefinition,
+        setId,
+        cards,
+        selectedCard,
+        comments
+    });
 
     return (
         <ThemeProvider theme={theme}>
@@ -191,19 +217,17 @@ function FlashcardApp() {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setOpenAdd(false)} color="primary">
-                            Cancel
+                         Cancel
                         </Button>
                         <Button
-                            onClick={() => {
-                                if (term && definition) {
-                                    setCards((prev) => [...prev, { term, definition }]);
-                                }
-                                setOpenAdd(false);
-                            }}
+                             onClick={() => {
+                            handleAddFlashcard();
+                            setOpenAdd(false);
+                             }}
                             color="primary"
-                        >
-                            Add
-                        </Button>
+                            >
+                           Add
+                         </Button>
                     </DialogActions>
                 </Dialog>
     
