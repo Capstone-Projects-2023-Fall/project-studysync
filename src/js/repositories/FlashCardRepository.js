@@ -195,7 +195,53 @@ async getSetIdByTopicName(topicName) {
         console.error("Error fetching set ID by topic name:", error);
         return null;
     }
-}
+},
+
+getFlashcardItems: async function(setId) {
+    try {
+      const flashcardsRef = collection(database, 'flashcardSets', setId, 'flashcards');
+      const flashcardSnapshot = await getDocs(flashcardsRef);
+      const flashcardData = [];
+      flashcardSnapshot.forEach(doc => {
+        const data = doc.data();
+        flashcardData.push({
+          term: data.term,
+          definition: data.definition
+        });
+      });
+      return flashcardData;
+    } catch (error) {
+      console.error("Error getting flashcard items:", error);
+      throw error;
+    }
+  },
+
+  getCommentsWithUserData: async function(setId) {
+    try {
+      const commentsRef = collection(database, 'flashcardSets', setId, 'comments');
+      const commentSnapshot = await getDocs(commentsRef);
+      
+      const commentsData = [];
+      for (let doc of commentSnapshot.docs) {
+        const comment = doc.data();
+        const userRef = doc(database, 'users', comment.uid);
+        const userSnapshot = await getDoc(userRef);
+        const userData = userSnapshot.data();
+  
+        commentsData.push({
+          content: comment.content,
+          date: comment.date,
+          like: comment.like,
+          username: userData.username,
+          imageURL: userData.imageURL
+        });
+      }
+      return commentsData;
+    } catch (error) {
+      console.error("Error getting comments with user data:", error);
+      throw error;
+    }
+  }
 
 
 

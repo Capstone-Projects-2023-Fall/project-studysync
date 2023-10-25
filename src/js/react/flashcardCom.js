@@ -47,21 +47,21 @@ const handleFlashcardClick = async (topicName) => {
     async function fetchData() {
         try {
             const uid = FlashCardRepository.getCurrentUid();
-            console.log("User ID:", uid); // 输出当前用户ID
+            console.log("User ID:", uid); 
 
             if (uid) {
                 const userSubjects = await FlashCardRepository.getUserSubjects(uid);
-                console.log("Fetched user subjects:", userSubjects); // 输出用户主题
+                console.log("Fetched user subjects:", userSubjects); 
                 
                 setSubjects(userSubjects);
                 
                 const ownedFlashcardSetIds = await FlashCardRepository.getUserFlashcardSets(uid);
-                console.log("Fetched flashcard set IDs:", ownedFlashcardSetIds);  // 输出获取到的Flashcard Set IDs
+                console.log("Fetched flashcard set IDs:", ownedFlashcardSetIds);  
                 
                 const ownedFlashcards = [];
                 for (let setId of ownedFlashcardSetIds) {
                     const flashcardSet = await FlashCardRepository.getFlashcardSetById(setId);
-                    console.log("Fetched flashcard set:", flashcardSet);  // 输出每个获取到的Flashcard Set
+                    console.log("Fetched flashcard set:", flashcardSet);  
                     ownedFlashcards.push(flashcardSet);
                 }
 
@@ -73,7 +73,7 @@ const handleFlashcardClick = async (topicName) => {
                     }
                     flashcardData[subject].push(name);
                 }
-                console.log("Constructed flashcard data:", flashcardData); // 输出构造后的flashcardData
+                console.log("Constructed flashcard data:", flashcardData);
                 setFlashcards(flashcardData);
             }
         } catch (error) {

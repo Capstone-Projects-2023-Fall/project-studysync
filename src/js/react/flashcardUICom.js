@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -7,8 +7,7 @@ import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useParams } from 'react-router-dom';
-
-
+import FlashCardRepository from '../repositories/FlashCardRepository';
 
 function FlashcardApp() {
     const [term, setTerm] = useState('');
@@ -18,37 +17,47 @@ function FlashcardApp() {
     const [openDelete, setOpenDelete] = useState(false);
     const [showDefinition, setShowDefinition] = useState(false);
     const { setId } = useParams();
-
-    const [cards, setCards] = useState([
-        { term: "Term1", definition: "Definition1" },
-        { term: "Term2", definition: "Definition2" }
-    ]); 
+    const [cards, setCards] = useState([]);
     const [selectedCard, setSelectedCard] = useState(null);
+    const [comments, setComments] = useState([]);
 
-    const [comments, setComments] = useState([{ user: 'UserA', content: 'Comment1' }, { user: 'UserB', content: 'Comment2' }]);
+    useEffect(() => {
+        const fetchFlashcards = async () => {
+            try {
+                const flashcards = await FlashCardRepository.getFlashcardItems(setId);
+                setCards(flashcards);
+            } catch (error) {
+                console.error("Failed to fetch flashcards:", error);
+            }
+        };
 
-    const handleSendComment = () => {
+        const fetchComments = async () => {
+            try {
+                const commentsData = await FlashCardRepository.getCommentsWithUserData(setId);
+                setComments(commentsData);
+            } catch (error) {
+                console.error("Failed to fetch comments:", error);
+            }
+        };
+
+        fetchFlashcards();
+        fetchComments();
+    }, [setId]);
+
+
+    const handleSendComment = async () => {
         if (comment) {
-            setComments(prevComments => [...prevComments, { user: 'UserA', content: comment }]); // 假设当前用户为 UserA
-            setComment("");
-        }
-        const handlePrevCard = () => {
-        const currentIndex = cards.indexOf(selectedCard);
-        if (currentIndex > 0) {
-            setSelectedCard(cards[currentIndex - 1]);
-            setShowDefinition(false);
+            try {
+                const newComment = { user: 'UserA', content: comment };
+                await FlashCardRepository.addComment(setId, newComment);
+                setComments(prevComments => [...prevComments, newComment]);
+                setComment("");
+            } catch (error) {
+                console.error("Failed to send comment:", error);
+            }
         }
     };
 
-    const handleNextCard = () => {
-        const currentIndex = cards.indexOf(selectedCard);
-        if (currentIndex < cards.length - 1) {
-            setSelectedCard(cards[currentIndex + 1]);
-            setShowDefinition(false);
-        }
-    };
-    
-    };
     const handlePrevCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex > 0) {
@@ -64,22 +73,19 @@ function FlashcardApp() {
             setShowDefinition(false);
         }
     };
+
     const theme = createTheme({
         palette: {
-          primary: {
-            main: '#007aff', 
-          },
-          secondary: {
-            main: '#ff2d55', 
-          },
+            primary: { main: '#007aff' },
+            secondary: { main: '#ff2d55' },
         },
         typography: {
-          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
+            fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
         },
-      });
+    });
 
 
-      return (
+    return (
         <ThemeProvider theme={theme}>
             <div style={{
                 display: "flex", flexDirection: "column", height: "100vh",
@@ -102,7 +108,7 @@ function FlashcardApp() {
                             Add
                         </Button>
                     </List>
-        
+    
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
                         <Typography variant="h6">
                             {selectedCard ? `${cards.indexOf(selectedCard) + 1}/${cards.length}` : ""}
@@ -227,9 +233,6 @@ function FlashcardApp() {
             </div>
         </ThemeProvider>
     );
-    
-    
-        
     
 }
 
