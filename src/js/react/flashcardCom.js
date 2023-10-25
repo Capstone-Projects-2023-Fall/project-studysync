@@ -28,17 +28,88 @@ const FlashcardComponent = () => {
     async function fetchData() {
         try {
             const uid = FlashCardRepository.getCurrentUid();
+            console.log("User ID:", uid); // 输出当前用户ID
+
             if (uid) {
                 const userSubjects = await FlashCardRepository.getUserSubjects(uid);
+                console.log("Fetched user subjects:", userSubjects); // 输出用户主题
+                
                 setSubjects(userSubjects);
+                
+                const ownedFlashcardSetIds = await FlashCardRepository.getUserFlashcardSets(uid);
+                console.log("Fetched flashcard set IDs:", ownedFlashcardSetIds);  // 输出获取到的Flashcard Set IDs
+                
+                const ownedFlashcards = [];
+                for (let setId of ownedFlashcardSetIds) {
+                    const flashcardSet = await FlashCardRepository.getFlashcardSetById(setId);
+                    console.log("Fetched flashcard set:", flashcardSet);  // 输出每个获取到的Flashcard Set
+                    ownedFlashcards.push(flashcardSet);
+                }
+
+                const flashcardData = {};
+                for (let flashcardSet of ownedFlashcards) {
+                    const { name, subject } = flashcardSet;
+                    if (!flashcardData[subject]) {
+                        flashcardData[subject] = [];
+                    }
+                    flashcardData[subject].push(name);
+                }
+                console.log("Constructed flashcard data:", flashcardData); // 输出构造后的flashcardData
+                setFlashcards(flashcardData);
             }
         } catch (error) {
-            console.error("Error fetching user subjects:", error);
+            console.error("Error fetching user data:", error);
         }
     }
-
     fetchData();
 }, []);
+
+const handleAddTopic = async () => {
+    try {
+        const uid = FlashCardRepository.getCurrentUid();
+        if (uid) {
+            const flashcardSetId = await FlashCardRepository.createFlashcardSet({    
+                name: newEntry,        
+                subject: selectedSubject
+            });
+            console.log('selectedSubject:', selectedSubject);
+
+            await FlashCardRepository.addOwnedFlashcardSetToUser(uid, flashcardSetId);
+
+            // Update the local state
+            const currentFlashcards = flashcards[selectedSubject] || [];
+            setFlashcards(prev => ({
+                ...prev,
+                [selectedSubject]: [...currentFlashcards, newEntry]
+            }));
+        }
+    } catch (error) {
+        console.error("Error adding new topic:", error);
+    }
+};
+
+const handleDelete = async (topicName) => {
+    try {
+        const uid = FlashCardRepository.getCurrentUid();
+
+        
+        const setId = await FlashCardRepository.getSetIdByTopicName(topicName);
+
+        
+        await FlashCardRepository.removeSetIdFromUser(uid, setId);
+
+        
+        await FlashCardRepository.removeUidFromSharedWith(setId, uid);
+
+        const updatedFlashcards = flashcards[selectedSubject].filter(t => t !== topicName);
+        setFlashcards(prev => ({
+            ...prev,
+            [selectedSubject]: updatedFlashcards
+        }));
+    } catch (error) {
+        console.error("Error deleting flashcard set:", error);
+    }
+};
 
 const handleAdd = async () => {
   const trimmedEntry = newEntry.trim();
@@ -62,18 +133,14 @@ const handleAdd = async () => {
           }
       
         } else if (dialogType === 'topic' && selectedSubject) {
-            const currentFlashcards = flashcards[selectedSubject] || [];
-            if (!currentFlashcards.includes(trimmedEntry)) {
-                setFlashcards(prev => ({
-                    ...prev,
-                    [selectedSubject]: [...currentFlashcards, trimmedEntry]
-                }));
+            
+            handleAddTopic();
             }
         }
         setNewEntry('');
         setOpen(false);
     }
-};
+
 
   return (
     <div style={{ display: 'flex', marginTop: '60px', fontFamily: astyle.fontFamily }}>
@@ -85,7 +152,10 @@ const handleAdd = async () => {
             <ListItem
               button
               key={subject}
-              onClick={() => setSelectedSubject(subject)}
+              onClick={() => {
+                console.log('Selected subject:', subject);  
+                setSelectedSubject(subject);
+            }}
               style={{ padding: '15px 10px' }}
             >
               <ListItemText primary={subject} />
@@ -140,6 +210,7 @@ const handleAdd = async () => {
               <Button variant="outlined">Flashcard</Button>
               <Button variant="outlined">Quiz</Button>
               <Button variant="outlined">AITutor</Button>
+              <Button variant="outlined" color="secondary" onClick={() => handleDelete(topic)}>Delete</Button>
             </div>
           </div>
         ))}

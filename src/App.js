@@ -14,14 +14,9 @@ import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
-import FlashcardApp from './js/react/flashcardUICom';
-
-
 function App() {
- 
 
-// const {user} = useUser();
-const user = null;
+  const {user} = useUser();
 
 
   
@@ -61,7 +56,6 @@ const user = null;
     <div className="app">
         <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
         <Routes>
-            {/* <Route path="/flashcardUICom" element={<FlashcardApp />} /> */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/studytool" element={<FlashcardComponent />} />
             <Route path="/" element={
@@ -72,8 +66,6 @@ const user = null;
             <Route path='/passwordreset' element={<PasswordReset/>}/>
             <Route path='/signup' element={<SignUpForm/>}/>            
         </Routes>
-        
-
     </div>
 );
 
