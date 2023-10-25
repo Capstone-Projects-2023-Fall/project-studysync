@@ -20,7 +20,7 @@ function FlashcardApp() {
     const [cards, setCards] = useState([]);
     const [selectedCard, setSelectedCard] = useState(null);
     const [comments, setComments] = useState([]);
-    
+
     useEffect(() => {
         const fetchFlashcards = async () => {
             try {
@@ -36,7 +36,7 @@ function FlashcardApp() {
         const fetchComments = async () => {
             try {
                 const commentsData = await FlashCardRepository.getCommentsWithUserData(setId);
-                console.log("fetching comments",commentsData);
+                console.log("fetching comments", commentsData);
                 setComments(commentsData);
             } catch (error) {
                 console.error("Failed to fetch comments:", error);
@@ -68,6 +68,27 @@ function FlashcardApp() {
             setShowDefinition(false);
         }
     };
+    const handleDeleteClick = async (cardToDelete) => {
+        // 打开确认删除的对话框
+        const userConfirmed = window.confirm("Are you sure you want to delete this flashcard?");
+
+        if (userConfirmed) {
+            try {
+                // 调用repository函数来从数据库中删除flashcard
+                await FlashCardRepository.deleteFlashcard(setId, cardToDelete.flashcardId);
+
+                // 从UI中的cards列表中移除这个flashcard
+                const updatedCards = cards.filter(card => card.flashcardId !== cardToDelete.flashcardId);
+                setCards(updatedCards);
+
+                console.log("Flashcard deleted successfully!");
+            } catch (error) {
+                console.error("Failed to delete flashcard:", error);
+            }
+        } else {
+            console.log("User canceled the delete operation.");
+        }
+    }
 
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
@@ -81,14 +102,14 @@ function FlashcardApp() {
             try {
                 await FlashCardRepository.addFlashcardItem(setId, term, definition);
                 setCards((prev) => [...prev, { term, definition }]);
-                setTerm(''); 
-                setDefinition(''); 
+                setTerm('');
+                setDefinition('');
             } catch (error) {
                 console.error("Failed to add flashcard:", error);
             }
         }
     };
-    
+
     const theme = createTheme({
         palette: {
             primary: { main: '#007aff' },
@@ -125,7 +146,7 @@ function FlashcardApp() {
                         {cards.map((card, index) => (
                             <ListItem button key={index} onClick={() => { setSelectedCard(card); setShowDefinition(false); }}>
                                 {card.term}
-                                <IconButton onClick={() => setOpenDelete(true)}>
+                                <IconButton onClick={() => handleDeleteClick(card)}>
                                     <DeleteIcon />
                                 </IconButton>
                             </ListItem>
@@ -134,13 +155,13 @@ function FlashcardApp() {
                             Add
                         </Button>
                     </List>
-    
+
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
                         <Typography variant="h6">
                             {selectedCard ? `${cards.indexOf(selectedCard) + 1}/${cards.length}` : ""}
                         </Typography>
                         <div style={{
-                            display: "flex", alignItems: "center", width: "80%", justifyContent: "space-between", 
+                            display: "flex", alignItems: "center", width: "80%", justifyContent: "space-between",
                             marginTop: '20px', borderRadius: '8px', padding: '10px', backgroundColor: '#fff', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                         }}>
                             <IconButton onClick={handlePrevCard}>
@@ -167,9 +188,9 @@ function FlashcardApp() {
                         </div>
                     </div>
                 </div>
-    
+
                 <div style={{
-                    maxHeight: "30%", overflowY: "scroll", backgroundColor: '#fff', borderRadius: '8px', 
+                    maxHeight: "30%", overflowY: "scroll", backgroundColor: '#fff', borderRadius: '8px',
                     padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                 }}>
                     {comments.map((comment, index) => (
@@ -197,7 +218,7 @@ function FlashcardApp() {
                         </IconButton>
                     </div>
                 </div>
-    
+
                 <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
                     <DialogTitle>Add a new flashcard</DialogTitle>
                     <DialogContent>
@@ -217,20 +238,20 @@ function FlashcardApp() {
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setOpenAdd(false)} color="primary">
-                         Cancel
+                            Cancel
                         </Button>
                         <Button
-                             onClick={() => {
-                            handleAddFlashcard();
-                            setOpenAdd(false);
-                             }}
+                            onClick={() => {
+                                handleAddFlashcard();
+                                setOpenAdd(false);
+                            }}
                             color="primary"
-                            >
-                           Add
-                         </Button>
+                        >
+                            Add
+                        </Button>
                     </DialogActions>
                 </Dialog>
-    
+
                 <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
                     <DialogTitle>Confirm Deletion</DialogTitle>
                     <DialogContent>
@@ -257,7 +278,7 @@ function FlashcardApp() {
             </div>
         </ThemeProvider>
     );
-    
+
 }
 
 export default FlashcardApp;
