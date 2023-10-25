@@ -30,5 +30,5 @@ function MainQuizPage() {
     </div>
   );
 }
-
+//
 export default MainQuizPage;
