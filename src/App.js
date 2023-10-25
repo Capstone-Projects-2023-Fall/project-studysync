@@ -12,6 +12,7 @@ import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
 import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
+import MainQuizPage from './MainQuizPage';
 import { signOut } from 'firebase/auth';
 function App() {
 
@@ -62,10 +63,11 @@ function App() {
             <Route path='/signup' element={<SignUpForm/>}/>  
             <Route path='/profile/:UserId' element={<UserProfile/>}/>
             <Route path='/profile/:UserId/edit' element={<EditUserProfile/>}/>
-
+            <Route path='/quizmain' element={<MainQuizPage />} />
         </Routes>
     </div>
 );
 }
+
 
 export default App;
