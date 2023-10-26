@@ -20,18 +20,25 @@ function FlashcardApp() {
     const [cards, setCards] = useState([]);
     const [selectedCard, setSelectedCard] = useState(null);
     const [comments, setComments] = useState([]);
+    const [cardToDelete, setCardToDelete] = useState(null);
 
     useEffect(() => {
         const fetchFlashcards = async () => {
             try {
                 const flashcardData = await FlashCardRepository.getFlashcardItems(setId);
                 console.log("fetching flashcards", flashcardData);
-                const flashcardsArray = Object.keys(flashcardData).map(key => flashcardData[key]);
-                setCards(flashcardsArray);
+                const flashcardsArray = Object.keys(flashcardData).map(key => {
+                    return {
+                        ...flashcardData[key], 
+                        flashcardId: key      
+                    }
+                });
+                setCards(flashcardsArray);  
             } catch (error) {
                 console.error("Failed to fetch flashcards:", error);
             }
         };
+        
 
         const fetchComments = async () => {
             try {
@@ -68,27 +75,25 @@ function FlashcardApp() {
             setShowDefinition(false);
         }
     };
-    const handleDeleteClick = async (cardToDelete) => {
-        // 打开确认删除的对话框
-        const userConfirmed = window.confirm("Are you sure you want to delete this flashcard?");
-
-        if (userConfirmed) {
+    const handleDeleteClick = (card) => {
+        setCardToDelete(card);
+        setOpenDelete(true);
+    };
+    
+    const confirmDelete = async () => {
+        if (cardToDelete) {
             try {
-                // 调用repository函数来从数据库中删除flashcard
                 await FlashCardRepository.deleteFlashcard(setId, cardToDelete.flashcardId);
-
-                // 从UI中的cards列表中移除这个flashcard
                 const updatedCards = cards.filter(card => card.flashcardId !== cardToDelete.flashcardId);
                 setCards(updatedCards);
-
-                console.log("Flashcard deleted successfully!");
+                setCardToDelete(null);
             } catch (error) {
                 console.error("Failed to delete flashcard:", error);
             }
-        } else {
-            console.log("User canceled the delete operation.");
+            setOpenDelete(false);
         }
     }
+    
 
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
@@ -119,18 +124,7 @@ function FlashcardApp() {
             fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
         },
     });
-    console.log({
-        term,
-        definition,
-        comment,
-        openAdd,
-        openDelete,
-        showDefinition,
-        setId,
-        cards,
-        selectedCard,
-        comments
-    });
+    
 
     return (
         <ThemeProvider theme={theme}>
@@ -144,13 +138,13 @@ function FlashcardApp() {
                         borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                     }}>
                         {cards.map((card, index) => (
-                            <ListItem button key={index} onClick={() => { setSelectedCard(card); setShowDefinition(false); }}>
-                                {card.term}
-                                <IconButton onClick={() => handleDeleteClick(card)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItem>
-                        ))}
+                              <ListItem button key={index} onClick={() => { setSelectedCard(card); setShowDefinition(false); }}>
+                               {card.term}
+                     <IconButton onClick={() => handleDeleteClick(card)}>
+                      <DeleteIcon />
+                  </IconButton>
+                     </ListItem>
+                ))}
                         <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
                             Add
                         </Button>
@@ -253,27 +247,21 @@ function FlashcardApp() {
                 </Dialog>
 
                 <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
-                    <DialogTitle>Confirm Deletion</DialogTitle>
-                    <DialogContent>
-                        <Typography>Are you sure you want to delete this flashcard?</Typography>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setOpenDelete(false)} color="primary">
-                            No
-                        </Button>
-                        <Button
-                            onClick={() => {
-                                if (selectedCard) {
-                                    setCards((prev) => prev.filter((card) => card !== selectedCard));
-                                    setSelectedCard(null);
-                                }
-                                setOpenDelete(false);
-                            }}
-                            color="primary"
-                        >
-                            Yes
-                        </Button>
-                    </DialogActions>
+                  <DialogTitle>Confirm Deletion</DialogTitle>
+                      <DialogContent>
+                     <Typography>Are you sure you want to delete this flashcard?</Typography>
+                 </DialogContent>
+                 <DialogActions>
+                 <Button onClick={() => setOpenDelete(false)} color="primary">
+                     No
+                 </Button>
+                 <Button
+                    onClick={confirmDelete} // confirm the deletion when "Yes" is clicked
+                    color="primary"
+                    >
+                        Yes
+                     </Button>
+                 </DialogActions>
                 </Dialog>
             </div>
         </ThemeProvider>

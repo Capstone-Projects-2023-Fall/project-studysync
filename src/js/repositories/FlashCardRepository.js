@@ -166,22 +166,16 @@ const FlashCardRepository = {
       const data = snap.data();
       let flashcardItems = data.flashcardItems || {};
 
-      console.log("Before deletion:", flashcardItems);
-
+      // Check if the flashcardId exists in the flashcardItems map
       if (flashcardItems[flashcardIdToDelete]) {
+        // Delete the flashcard from the map
         delete flashcardItems[flashcardIdToDelete];
 
-        console.log("After deletion:", flashcardItems);
-
-        for (let key in flashcardItems) {
-          if (flashcardItems[key] === undefined) {
-            console.error(`Found undefined value at key: ${key}`);
-          }
-        }
-
+        // Update the database with the modified flashcardItems
         await updateDoc(flashcardSetRef, {
           flashcardItems: flashcardItems
         });
+        console.log(`Flashcard with ID ${flashcardIdToDelete} deleted successfully.`);
       } else {
         console.log(`Flashcard with ID ${flashcardIdToDelete} not found.`);
       }
@@ -191,6 +185,7 @@ const FlashCardRepository = {
       throw error;
     }
   },
+
 
 
 
@@ -264,10 +259,12 @@ const FlashCardRepository = {
       const setRef = doc(database, 'flashcardSets', setId);
       const setSnapshot = await getDoc(setRef);
       const setData = setSnapshot.data();
-      const comments = setData.comments || [];
+      const commentsMap = setData.comments || {};
 
       const commentsData = [];
-      for (let comment of comments) {
+      for (let commentId in commentsMap) {  
+        const comment = commentsMap[commentId];  
+
         const userRef = doc(database, 'users', comment.uid);
         const userSnapshot = await getDoc(userRef);
         const userData = userSnapshot.data();
