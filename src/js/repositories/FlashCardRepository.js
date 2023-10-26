@@ -55,29 +55,27 @@ const FlashCardRepository = {
   },
 
 
-
-
-
   createFlashcardSet: async function ({ name, subject }) {
     try {
+      // Generate unique IDs for flashcard and comments
+      const flashcardId = doc(collection(database, 'flashcards')).id;
+      const commentId = doc(collection(database, 'comments')).id;
 
-      const initialFlashcardItems = [
-        {
-          flashcardId: "flashcard1",
+      const initialFlashcardItems = {
+        [flashcardId]: {  // Use the generated ID as a key here
           term: "Sample Term",
           definition: "Sample Definition"
         },
-      ];
+      };
 
-      const initialComments = [
-        {
+      const initialComments = {
+        [commentId]: {  // Use the generated ID as a key here
           uid: this.getCurrentUid(),
           content: "Sample comment content",
           like: 0,
           timestamp: Timestamp.now()
         },
-      ];
-
+      };
 
       const setData = {
         name: name,
@@ -87,7 +85,6 @@ const FlashCardRepository = {
         sharedWith: [],
         flashcardItems: initialFlashcardItems,
         comments: initialComments
-
       };
 
       const newDocRef = await addDoc(collection(database, 'flashcardSets'), setData);
@@ -103,7 +100,9 @@ const FlashCardRepository = {
       console.error("Error creating flashcard set:", error);
       throw error;
     }
-  },
+},
+
+
 
   addOwnedFlashcardSetToUser: async function (uid, flashcardSetId) {
     try {
@@ -134,13 +133,12 @@ const FlashCardRepository = {
 
   addFlashcardItem: async function (setId, term, definition) {
     try {
-      const newDocRef = doc(collection(database, 'dummyCollection'));
-      const flashcardId = newDocRef.id;
+      const flashcardId = doc(collection(database, 'flashcards')).id;
+    
 
       const cardData = {
         term: term,
         definition: definition,
-
       };
 
       const flashcardSetRef = doc(database, 'flashcardSets', setId);
