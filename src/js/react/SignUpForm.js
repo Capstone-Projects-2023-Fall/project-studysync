@@ -16,6 +16,7 @@ import {useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import {createUserWithEmailAndPassword,signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebase';
+import { userRepository } from '../../firebase';
 
 
 function Copyright(props) {
@@ -55,8 +56,10 @@ const SignUpForm = ()=> {
         return;
       }
         try{
-          await createUserWithEmailAndPassword(auth,_email,_password);
-          
+          const {user} = await createUserWithEmailAndPassword(auth,_email,_password);
+          if(user != null){
+            await userRepository.addUser(_email, "default-username", user.uid)
+          }
           navigate('/');
       }catch(e){
           setError(e.message);
