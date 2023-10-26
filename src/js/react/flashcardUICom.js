@@ -29,9 +29,10 @@ function FlashcardApp() {
                 console.log("fetching flashcards", flashcardData);
                 const flashcardsArray = Object.keys(flashcardData).map(key => {
                     return {
-                        ...flashcardData[key], 
-                        flashcardId: key      
-                    }
+                        term: flashcardData[key].term,
+                        definition: flashcardData[key].definition,
+                        flashcardId: key
+                    };
                 });
                 setCards(flashcardsArray);  
             } catch (error) {
@@ -105,8 +106,8 @@ function FlashcardApp() {
     const handleAddFlashcard = async () => {
         if (term && definition) {
             try {
-                await FlashCardRepository.addFlashcardItem(setId, term, definition);
-                setCards((prev) => [...prev, { term, definition }]);
+                const newFlashcardId = await FlashCardRepository.addFlashcardItem(setId, term, definition);
+                setCards((prev) => [...prev, { term, definition, flashcardId: newFlashcardId }]); 
                 setTerm('');
                 setDefinition('');
             } catch (error) {

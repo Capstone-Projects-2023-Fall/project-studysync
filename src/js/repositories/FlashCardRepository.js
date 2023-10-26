@@ -152,6 +152,7 @@ const FlashCardRepository = {
       await updateDoc(flashcardSetRef, {
         flashcardItems: flashcardItems
       });
+      return flashcardId;
 
     } catch (error) {
       console.error("fetch flashcard error", error);
