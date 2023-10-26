@@ -31,6 +31,6 @@ export const database = getFirestore(app);
 export const quizRepository = new QuizRepository(database)
 
 export const notificationRepository = new NotificationRepository(database)
-export const userRepository = new UserRepository(database, quizRepository, notificationRepository)
 export const flashcardRepository = new FlashCardRepository(database)
+export const userRepository = new UserRepository(database, quizRepository, notificationRepository, flashcardRepository)
 

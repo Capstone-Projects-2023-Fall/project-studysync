@@ -49,7 +49,6 @@ export async function addItemToArrayField(db, uuid, itemToAdd, collectionToAdd, 
       if (!item.exists()) {
         return `{singleName} with id ${uuid} does not exist`;
       }
-      console.log("item: ", item.data())
       return item.data();
     } catch (error) {
       console.error(`Error getting ${singleName} with id ${uuid}`);

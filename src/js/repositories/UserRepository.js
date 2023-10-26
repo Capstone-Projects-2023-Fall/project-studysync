@@ -62,25 +62,25 @@ export class UserRepository{
     /**Get all owned flashcards owned by user with id: {id} */
     async getOwnedFlashcards(id){
       const ownedFlashcards = await getArrayFieldFromCollection(this.database, "users", id, "ownedFlashcards")
-      return ownedFlashcards
+      return await this.flashcardRepository.getFlashcards(ownedFlashcards)
     }
 
     /**Get all flashcards shared by user with id: {id} */
     async getSharedFlashcards(id){
       const sharedFlashcards = await getArrayFieldFromCollection(this.database, "users", id, "sharedFlashcards")
-      return sharedFlashcards
+      return await this.flashcardRepository.getFlashcards(sharedFlashcards)
     }
 
     /**Get all followers of user with id: {id} */
     async getFollowers(id){
       const followers = await getArrayFieldFromCollection(this.database, "users", id, "followers")
-      return followers
+      return this.getUsers(followers)
     }
 
     /**Get all following of user with id: {id} */
     async getFollowing(id){
       const following = await getArrayFieldFromCollection(this.database, "users", id, "following")
-      return following
+      return this.getUsers(following)
     }
 
     /**Get all notifications of user with id: {id}, returns the ids */
@@ -136,6 +136,15 @@ export class UserRepository{
 
     async removeFollowing(userId, followingId){
       await removeItemFromArrayField(this.database, userId, followingId, "users", "following", "following")
+    }
+
+    //Given a list of user ids, get the actual user representation objects
+    async getUsers(userIds){
+      const users = []
+      for(const userId of userIds){
+        users.push(await this.getUserById(userId))
+      }
+      return users
     }
 }
 

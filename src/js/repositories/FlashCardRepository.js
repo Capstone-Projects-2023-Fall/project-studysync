@@ -84,5 +84,15 @@ export class FlashCardRepository{
     async updateArrayFlashcardSetFields(id, toUpdate){
         await updateArrayDocumentFields(this.database, id, "flashcardSets", toUpdate)
     }
+
+    //Given a list of flashcard ids, get the actual object representation of those flashcards
+    async getFlashcards(flashcardIds){
+        const flashcards = []
+        for(const id of flashcardIds){
+            const set = await this.getFlashcardSet(id)
+            flashcards.push(set)
+        }
+        return flashcards
+    }
 }
 
