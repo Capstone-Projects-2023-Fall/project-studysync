@@ -4,7 +4,7 @@ import {
   DialogContent, DialogContentText, DialogActions, TextField, InputAdornment, IconButton, Paper
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import FlashCardRepository from '../repositories/FlashCardRepository';
+import FlashcardRepo from '../repositories/FlashcardRepo';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -29,7 +29,7 @@ const FlashcardComponent = () => {
 
 const handleFlashcardClick = async (topicName) => {
     try {
-        const setId = await FlashCardRepository.getSetIdByTopicName(topicName);
+        const setId = await FlashcardRepo.getSetIdByTopicName(topicName);
         if (setId) {
             navigate(`/flashcard-ui/${setId}`);
         } else {
@@ -46,21 +46,21 @@ const handleFlashcardClick = async (topicName) => {
   useEffect(() => {
     async function fetchData() {
         try {
-            const uid = FlashCardRepository.getCurrentUid();
+            const uid = FlashcardRepo.getCurrentUid();
             console.log("User ID:", uid); 
 
             if (uid) {
-                const userSubjects = await FlashCardRepository.getUserSubjects(uid);
+                const userSubjects = await FlashcardRepo.getUserSubjects(uid);
                 console.log("Fetched user subjects:", userSubjects); 
                 
                 setSubjects(userSubjects);
                 
-                const ownedFlashcardSetIds = await FlashCardRepository.getUserFlashcardSets(uid);
+                const ownedFlashcardSetIds = await FlashcardRepo.getUserFlashcardSets(uid);
                 console.log("Fetched flashcard set IDs:", ownedFlashcardSetIds);  
                 
                 const ownedFlashcards = [];
                 for (let setId of ownedFlashcardSetIds) {
-                    const flashcardSet = await FlashCardRepository.getFlashcardSetById(setId);
+                    const flashcardSet = await FlashcardRepo.getFlashcardSetById(setId);
                     console.log("Fetched flashcard set:", flashcardSet);  
                     ownedFlashcards.push(flashcardSet);
                 }
@@ -85,15 +85,15 @@ const handleFlashcardClick = async (topicName) => {
 
 const handleAddTopic = async () => {
     try {
-        const uid = FlashCardRepository.getCurrentUid();
+        const uid = FlashcardRepo.getCurrentUid();
         if (uid) {
-            const flashcardSetId = await FlashCardRepository.createFlashcardSet({    
+            const flashcardSetId = await FlashcardRepo.createFlashcardSet({    
                 name: newEntry,        
                 subject: selectedSubject
             });
             console.log('selectedSubject:', selectedSubject);
 
-            await FlashCardRepository.addOwnedFlashcardSetToUser(uid, flashcardSetId);
+            await FlashcardRepo.addOwnedFlashcardSetToUser(uid, flashcardSetId);
 
             // Update the local state
             const currentFlashcards = flashcards[selectedSubject] || [];
@@ -109,16 +109,16 @@ const handleAddTopic = async () => {
 
 const handleDelete = async (topicName) => {
     try {
-        const uid = FlashCardRepository.getCurrentUid();
+        const uid = FlashcardRepo.getCurrentUid();
 
         
-        const setId = await FlashCardRepository.getSetIdByTopicName(topicName);
+        const setId = await FlashcardRepo.getSetIdByTopicName(topicName);
 
         
-        await FlashCardRepository.removeSetIdFromUser(uid, setId);
+        await FlashcardRepo.removeSetIdFromUser(uid, setId);
 
         
-        await FlashCardRepository.removeUidFromSharedWith(setId, uid);
+        await FlashcardRepo.removeUidFromSharedWith(setId, uid);
 
         const updatedFlashcards = flashcards[selectedSubject].filter(t => t !== topicName);
         setFlashcards(prev => ({
@@ -141,10 +141,10 @@ const handleAdd = async () => {
               setFlashcards(prev => ({ ...prev, [trimmedEntry]: [] }));
 
               // Update the Firebase database
-              const uid = FlashCardRepository.getCurrentUid();
+              const uid = FlashcardRepo.getCurrentUid();
               if (uid) {
                   try {
-                      await FlashCardRepository.addUserSubject(uid, trimmedEntry);
+                      await FlashcardRepo.addUserSubject(uid, trimmedEntry);
                   } catch (error) {
                       console.error("Error adding subject to Firebase:", error);
                   }
