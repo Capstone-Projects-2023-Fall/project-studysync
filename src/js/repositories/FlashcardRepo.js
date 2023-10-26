@@ -73,7 +73,7 @@ const FlashcardRepo = {
           uid: this.getCurrentUid(),
           content: "Sample comment content",
           like: 0,
-          timestamp: Timestamp.now()
+          date: Timestamp.now()
         },
       };
 
@@ -275,7 +275,8 @@ const FlashcardRepo = {
           date: comment.date,
           like: comment.like,
           username: userData.username,
-          imageURL: userData.imageURL
+          imageURL: userData.imageURL,
+          commentId: commentId  // Add this line to include the commentId in the returned data
         });
       }
 
@@ -284,7 +285,26 @@ const FlashcardRepo = {
       console.error("Error getting comments with user data:", error);
       throw error;
     }
-  }
+  },
+  updateLikesForComment: async function(setId, commentId, updatedLikes) {
+    try {
+        // Reference to the flashcard set
+        const setRef = doc(database, 'flashcardSets', setId);
+
+        // Construct the field path using dot notation for the nested map
+        const fieldPath = `comments.${commentId}.like`;
+
+        // Update the likes count for that specific comment within the map
+        await updateDoc(setRef, {
+            [fieldPath]: updatedLikes
+        });
+
+        console.log(`Successfully updated likes for comment ${commentId} to ${updatedLikes}.`);
+    } catch (error) {
+        console.error("Error updating likes for comment:", error);
+        throw error;
+    }
+},
 
 
 

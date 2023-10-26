@@ -100,7 +100,7 @@ const FlashCardRepository = {
       console.error("Error creating flashcard set:", error);
       throw error;
     }
-},
+  },
 
 
 
@@ -134,7 +134,7 @@ const FlashCardRepository = {
   addFlashcardItem: async function (setId, term, definition) {
     try {
       const flashcardId = doc(collection(database, 'flashcards')).id;
-    
+
 
       const cardData = {
         term: term,
@@ -263,8 +263,8 @@ const FlashCardRepository = {
       const commentsMap = setData.comments || {};
 
       const commentsData = [];
-      for (let commentId in commentsMap) {  
-        const comment = commentsMap[commentId];  
+      for (let commentId in commentsMap) {
+        const comment = commentsMap[commentId];
 
         const userRef = doc(database, 'users', comment.uid);
         const userSnapshot = await getDoc(userRef);
