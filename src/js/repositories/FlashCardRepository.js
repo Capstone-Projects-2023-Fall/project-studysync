@@ -1,10 +1,12 @@
 import { getItemById, removeDocumentFromCollection, updateArrayDocumentFields, updateNonArrayDocumentFields, getAllItems, setField, addItemToArrayField } from "../utils/sharedRepositoryFunctions"
 import { addDoc, collection, doc, getDoc, updateDoc} from "firebase/firestore"
 import {flashcardConverter} from  "../converters/flashcardConverter"
+import { UserRepository } from "./UserRepository"
 
 export class FlashCardRepository{
     constructor(database){
         this.database = database
+        this.userRepository = new UserRepository(database)
     }
 
     //Retrive a flashcard by id
@@ -21,10 +23,12 @@ export class FlashCardRepository{
     //add a flashcard set to the flashcard table
     async addFlashCardSet(flashcardSet){
         try{
-            console.log("json: ", flashcardSet.toJSON())
             const flashcardCollection = collection(this.database, "flashcardSets")
             const flashcardRef = await addDoc(flashcardCollection, flashcardSet.toJSON())
             await setField(this.database, flashcardRef.id, "flashcardSets","id", flashcardRef.id)
+            /**whenever we create a flashcard, we add it to the list of flashcards for the user
+            who created it */
+            await this.userRepository.addOwnedFlashcard(flashcardSet.authorId, flashcardRef.id)
             return flashcardRef.id
         }catch(error){
             console.log("error adding flashcard set", error)
@@ -57,7 +61,7 @@ export class FlashCardRepository{
         const cards = item.data().flashcardItems;
 
         await updateDoc(ref, {
-            flashcardItems : cards.filter(curr=>curr.id != cardToDeleteId)
+            flashcardItems : cards.filter(curr=>curr.id !== cardToDeleteId)
         })
     }
 

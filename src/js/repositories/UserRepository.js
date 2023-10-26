@@ -94,10 +94,6 @@ export class UserRepository{
       return events
     }
     
-    async addFlashcard(userId, flashcardId){
-      await addItemToArrayField(this.database, userId, flashcardId, "users", "flashcards", "flashcard")
-    }
-
     async addSharedQuiz(userId, quizId){
       await addItemToArrayField(this.database, userId, quizId, "users", "sharedQuizzes", "quiz")
     }
