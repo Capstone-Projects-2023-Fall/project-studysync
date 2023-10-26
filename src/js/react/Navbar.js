@@ -15,7 +15,7 @@ function Navbar({ items }) {
     <nav className="navbar">
       <Link to="/" className="brand">StudySync</Link>
       <div className="nav-items">
-      {user && <button id='logout-btn' onClick={()=>signOut(auth)}>Logout</button>}
+
 
       {items.map((item, index) => 
         <div key={index} className="nav-item">
@@ -31,7 +31,12 @@ function Navbar({ items }) {
   </div>
   
 )}
+      {user && 
+      <a  id='logout-btn' onClick={()=>signOut(auth)}>
+      Logout</a>
+        }
       </div>
+      
     </nav>
   );
 }
