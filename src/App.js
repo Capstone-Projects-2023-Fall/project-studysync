@@ -5,15 +5,18 @@ signInWithEmailAndPassword} from "firebase/auth";*/
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DashboardCom from './js/react/DashboardCom.js'; 
-import FlashcardComponent from './js/react/flashcardCom.jsx'; 
+import FlashcardComponent from './js/react/flashcardCom.js'; 
 import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
-import PasswordReset from './js/react/PasswordReset';
+
+import FlashcardApp from './js/react/flashcardUICom';
+
 import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebase';
+
 
 function App() {
 
@@ -53,6 +56,7 @@ function App() {
         <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/studytool" element={<FlashcardComponent />} />
+            <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
             <Route path="/" element={
                 user 
                 ? <DashboardCom /> 
