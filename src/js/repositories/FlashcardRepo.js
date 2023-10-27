@@ -201,6 +201,35 @@ const FlashcardRepo = {
         }
     },
 
+    updateFlashcard: async function (setId, flashcardIdToUpdate, newTerm, newDefinition) {
+        try {
+            const flashcardSetRef = doc(database, 'flashcardSets', setId);
+            const snap = await getDoc(flashcardSetRef);
+            const data = snap.data();
+            let flashcardItems = data.flashcardItems || {};
+
+            // Check if the flashcardId exists in the flashcardItems map
+            if (flashcardItems[flashcardIdToUpdate]) {
+                // Update the flashcard in the map
+                flashcardItems[flashcardIdToUpdate] = {
+                    term: newTerm,
+                    definition: newDefinition
+                };
+
+                // Update the database with the modified flashcardItems
+                await updateDoc(flashcardSetRef, {
+                    flashcardItems: flashcardItems
+                });
+                console.log(`Flashcard with ID ${flashcardIdToUpdate} updated successfully.`);
+            } else {
+                console.log(`Flashcard with ID ${flashcardIdToUpdate} not found.`);
+            }
+        } catch (error) {
+            console.error("Error updating flashcard", error);
+            throw error;
+        }
+    },
+
 
 
 
@@ -221,7 +250,8 @@ const FlashcardRepo = {
         }
     },
 
-    async removeUidFromSharedWith(setId, uid) {
+    removeUidFromSharedWith: async function (setId, uid) {
+
         try {
             const setRef = doc(database, 'flashcardSets', setId);
             await updateDoc(setRef, {
@@ -232,7 +262,8 @@ const FlashcardRepo = {
         }
     },
 
-    async removeSetIdFromUser(uid, setId) {
+    removeSetIdFromUser: async function (uid, setId) {
+
         try {
             const userRef = doc(database, 'users', uid); // Assuming 'users' is the name of your user collection
             await updateDoc(userRef, {
@@ -243,7 +274,8 @@ const FlashcardRepo = {
         }
     },
 
-    async getSetIdByTopicName(topicName) {
+
+    getSetIdByTopicName: async function (topicName) {
         try {
             const querySnapshot = await getDocs(query(collection(database, 'flashcardSets'), where('name', '==', topicName)));
             if (!querySnapshot.empty) {
@@ -268,29 +300,6 @@ const FlashcardRepo = {
             throw error;
         }
     },
-    getUserImageURLByUid: async function (uid) {
-        try {
-            const userRef = doc(database, 'users', uid);
-            const userSnapshot = await getDoc(userRef);
-
-            if (userSnapshot.exists()) {
-                const userData = userSnapshot.data();
-                if (userData && userData.imageURL) {
-                    return userData.imageURL;
-                } else {
-                    console.error("User avatar URL not found for the given UID.");
-                    return null;
-                }
-            } else {
-                console.error("User with the given UID not found.");
-                return null;
-            }
-        } catch (error) {
-            console.error("Error fetching user avatar URL by UID:", error);
-            throw error;
-        }
-    },
-
 
     getCommentsWithUserData: async function (setId) {
         try {

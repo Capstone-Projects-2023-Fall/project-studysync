@@ -9,6 +9,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useParams } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
+import EditIcon from '@mui/icons-material/Edit';
 
 function FlashcardApp() {
     const [term, setTerm] = useState('');
@@ -23,12 +24,12 @@ function FlashcardApp() {
     const [comments, setComments] = useState([]);
     const [cardToDelete, setCardToDelete] = useState(null);
     const [likedComments, setLikedComments] = useState({});
+    const [openEdit, setOpenEdit] = useState(false);
+    const [cardToEdit, setCardToEdit] = useState(null);
     const uid = FlashcardRepo.getCurrentUid();
-    const [userImage, setUserImage] = useState(null);
 
 
     useEffect(() => {
-
         const fetchFlashcards = async () => {
             try {
                 const flashcardData = await FlashcardRepo.getFlashcardItems(setId);
@@ -62,27 +63,10 @@ function FlashcardApp() {
                 console.error("Failed to fetch comments:", error);
             }
         };
-        const fetchCurrentUserImage = async () => {
-            const uid = await FlashcardRepo.getCurrentUid();
-            console.log("uid", uid);
-            try {
 
-                const currentUserImg = await FlashcardRepo.getUserImageURLByUid(uid);
-                // 更新状态
-                setUserImage(currentUserImg);
-            } catch (error) {
-                console.error("Error fetching current user image:", error);
-            }
-        };
-        fetchCurrentUserImage();
         fetchFlashcards();
         fetchComments();
     }, [setId]);
-
-
-
-
-
 
     const fetchComments = async () => {
         try {
@@ -106,14 +90,14 @@ function FlashcardApp() {
             try {
                 const newComment = {
                     content: comment,
-                    uid: uid, // 这里添加了UID
-                    date: new Date(), // 假设你想添加当前时间戳作为评论日期
-                    like: 0 // 初始喜欢数为0
+                    uid: uid,
+                    date: new Date(),
+                    like: 0
                 };
                 await FlashcardRepo.addComment(setId, newComment);
 
                 setComment("");
-                await fetchComments(); // 直接调用 fetchComments
+                await fetchComments();
             } catch (error) {
                 console.error("Failed to send comment:", error);
             }
@@ -195,6 +179,33 @@ function FlashcardApp() {
         });
     };
 
+    const handleEditClick = (card) => {
+        setTerm(card.term);
+        setDefinition(card.definition);
+        setCardToEdit(card);
+        setOpenEdit(true);
+    };
+
+    const handleUpdateFlashcard = async () => {
+        if (cardToEdit && term && definition) {
+            try {
+                await FlashcardRepo.updateFlashcard(setId, cardToEdit.flashcardId, term, definition);
+
+                const updatedCards = cards.map(card => {
+                    if (card.flashcardId === cardToEdit.flashcardId) {
+                        return { ...card, term, definition };
+                    }
+                    return card;
+                });
+                setCards(updatedCards);
+                setOpenEdit(false);
+                setCardToEdit(null);
+            } catch (error) {
+                console.error("Failed to update flashcard:", error);
+            }
+        }
+    };
+
     const theme = createTheme({
         palette: {
             primary: { main: '#007aff' },
@@ -220,6 +231,9 @@ function FlashcardApp() {
                         {cards.map((card, index) => (
                             <ListItem button key={index} onClick={() => { setSelectedCard(card); setShowDefinition(false); }}>
                                 {card.term}
+                                <IconButton onClick={() => handleEditClick(card)}>
+                                    <EditIcon />
+                                </IconButton>
                                 <IconButton onClick={() => handleDeleteClick(card)}>
                                     <DeleteIcon />
                                 </IconButton>
@@ -263,7 +277,10 @@ function FlashcardApp() {
                     </div>
                 </div>
 
-                <div style={{ flex: 1, overflowY: 'auto', maxHeight: 'calc(30% - 60px)', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
+                <div style={{
+                    maxHeight: "30%", overflowY: "scroll", backgroundColor: '#fff', borderRadius: '8px',
+                    padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
+                }}>
                     {comments.map((comment, index) => (
                         <div key={index} style={{
                             display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", borderBottom: '1px solid #e0e0e0'
@@ -284,7 +301,7 @@ function FlashcardApp() {
                                 <Button
                                     startIcon={likedComments[comment.commentId] ? <ThumbUpIcon color="primary" /> : <ThumbUpOutlinedIcon />}
                                     onClick={() => {
-                                        console.log("Like button clicked for commentId:", comment.commentId);
+                                        console.log("Like button clicked for commentId:", comment.commentId); // Adding console log here
                                         handleLikeClick(comment.commentId);
                                     }}
                                 >
@@ -293,10 +310,9 @@ function FlashcardApp() {
                             </div>
                         </div>
                     ))}
-                </div>
-                <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
-                    <div style={{ display: "flex", alignItems: "center", }}>
-                        <Avatar src={userImage} />
+                    <div style={{
+                        display: "flex", alignItems: "center", padding: "10px", borderTop: '1px solid #e0e0e0'
+                    }}>
                         <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
                         <IconButton onClick={handleSendComment}>
                             <SendIcon />
@@ -337,6 +353,38 @@ function FlashcardApp() {
                     </DialogActions>
                 </Dialog>
 
+                <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
+                    <DialogTitle>Edit flashcard</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Term"
+                            fullWidth
+                            value={term}
+                            onChange={(e) => setTerm(e.target.value)}
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Definition"
+                            fullWidth
+                            value={definition}
+                            onChange={(e) => setDefinition(e.target.value)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenEdit(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleUpdateFlashcard}
+                            color="primary"
+                        >
+                            Update
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
                     <DialogTitle>Confirm Deletion</DialogTitle>
                     <DialogContent>
@@ -347,7 +395,7 @@ function FlashcardApp() {
                             No
                         </Button>
                         <Button
-                            onClick={confirmDelete}
+                            onClick={confirmDelete} // confirm the deletion when "Yes" is clicked
                             color="primary"
                         >
                             Yes
@@ -357,7 +405,6 @@ function FlashcardApp() {
             </div>
         </ThemeProvider>
     );
-
 
 }
 
