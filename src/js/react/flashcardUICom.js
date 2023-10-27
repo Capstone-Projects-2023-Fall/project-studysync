@@ -23,6 +23,7 @@ function FlashcardApp() {
     const [comments, setComments] = useState([]);
     const [cardToDelete, setCardToDelete] = useState(null);
     const [likedComments, setLikedComments] = useState({});
+    const uid = FlashcardRepo.getCurrentUid();
 
     useEffect(() => {
         const fetchFlashcards = async () => {
@@ -41,7 +42,6 @@ function FlashcardApp() {
                 console.error("Failed to fetch flashcards:", error);
             }
         };
-
 
         const fetchComments = async () => {
             try {
@@ -64,19 +64,42 @@ function FlashcardApp() {
         fetchComments();
     }, [setId]);
 
+    const fetchComments = async () => {
+        try {
+            const commentsData = await FlashcardRepo.getCommentsWithUserData(setId);
+            console.log("fetching comments", commentsData);
+
+            // Convert Firebase Timestamp to Date objects
+            const formattedComments = commentsData.map(comment => ({
+                ...comment,
+                date: comment.date.toDate()  // This converts the Timestamp to a Date object
+            }));
+
+            setComments(formattedComments);
+        } catch (error) {
+            console.error("Failed to fetch comments:", error);
+        }
+    };
 
     const handleSendComment = async () => {
         if (comment) {
             try {
-                const newComment = { user: 'UserA', content: comment };
+                const newComment = {
+                    content: comment,
+                    uid: uid, // 这里添加了UID
+                    date: new Date(), // 假设你想添加当前时间戳作为评论日期
+                    like: 0 // 初始喜欢数为0
+                };
                 await FlashcardRepo.addComment(setId, newComment);
-                setComments(prevComments => [...prevComments, newComment]);
+
                 setComment("");
+                await fetchComments(); // 直接调用 fetchComments
             } catch (error) {
                 console.error("Failed to send comment:", error);
             }
         }
     };
+
 
     const handlePrevCard = () => {
         const currentIndex = cards.indexOf(selectedCard);

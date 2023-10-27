@@ -319,6 +319,32 @@ const FlashcardRepo = {
             throw error;
         }
     },
+    addComment: async function (setId, commentData) {
+        try {
+            const setRef = doc(database, 'flashcardSets', setId);
+            const snap = await getDoc(setRef);
+            const setData = snap.data();
+
+            if (setData && setData.comments) {
+                // 使用JavaScript的解构功能更新评论数据
+                const updatedComments = {
+                    ...setData.comments,
+                    [doc(collection(database, 'comments')).id]: commentData
+                };
+
+                await updateDoc(setRef, {
+                    comments: updatedComments
+                });
+
+                console.log(`Successfully added a new comment to flashcard set with ID ${setId}.`);
+            } else {
+                console.error(`Flashcard set with ID ${setId} does not exist or has no 'comments' field.`);
+            }
+        } catch (error) {
+            console.error("Error adding comment:", error);
+            throw error;
+        }
+    },
 
 
 
