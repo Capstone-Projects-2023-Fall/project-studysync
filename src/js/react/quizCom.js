@@ -41,8 +41,8 @@ function QuizComponent() {
       </div>
       <div>
         <h3>Quiz Details: </h3>
-        <QuizList />
         <AddQuiz />
+        <QuizList />
       </div>
     </div>
   );

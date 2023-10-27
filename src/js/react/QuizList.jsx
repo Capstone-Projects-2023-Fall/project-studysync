@@ -89,16 +89,19 @@ function QuizList() {
           <TableHead>
             <TableRow>
               <StyledTableCell sx={{ width: '20%' }}>List of Quiz</StyledTableCell>
-              <StyledTableCell sx={{ width: '20%' }} align="right">
+              <StyledTableCell sx={{ width: '15%' }} align="right">
                 Question&nbsp;(s)
               </StyledTableCell>
-              <StyledTableCell sx={{ width: '20%' }} align="right">
+              <StyledTableCell sx={{ width: '15%' }} align="right">
                 Author
+              </StyledTableCell>
+              <StyledTableCell sx={{ width: '10%' }} align="right">
+                Time Limit&nbsp;(mn)
               </StyledTableCell>
               <StyledTableCell sx={{ width: '20%' }} align="right">
                 Date Created
               </StyledTableCell>
-              <StyledTableCell sx={{ width: '20%' }} align="right">
+              <StyledTableCell sx={{ width: '10%' }} align="right">
                 Actions
               </StyledTableCell>
             </TableRow>
@@ -117,6 +120,7 @@ function QuizList() {
                 </StyledTableCell>
                 <StyledTableCell align="right">{quiz.question}</StyledTableCell>
                 <StyledTableCell align="right">{quiz.author}</StyledTableCell>
+                <StyledTableCell align="right">{quiz.time}</StyledTableCell>
                 <StyledTableCell align="right">
                 {quiz.creationDate}
                 </StyledTableCell>

@@ -13,13 +13,14 @@ export default class Quiz {
      * @param {List<Question>} question - List of questions that make up the quiz.
      * @param {User} owner - The user who created or owns the quiz.
      */
-    constructor(title, question, id, subject, author, dateCreated) {
+    constructor(title, question, id, subject, author, dateCreated, time) {
         this.question = question;
         this.title = title;
         this.id = id;
         this.dateCreated = dateCreated;
         this.subject = subject;
         this.author = author;
+        this.time = time;
     }
 
 // import Question from './question.js';

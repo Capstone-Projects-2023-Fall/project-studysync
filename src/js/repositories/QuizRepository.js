@@ -36,7 +36,7 @@ export class QuizRepository{
       this.snapshot.docs.forEach((doc)=>{
         const quiz = doc.data()
         quizes[doc.id] = new Quiz(quiz.title, quiz.question, 
-          doc.id, quiz.subject, quiz.author, quiz.dateCreated)
+          doc.id, quiz.subject, quiz.author, quiz.dateCreated, quiz.time)
       })
       return quizes
     }
