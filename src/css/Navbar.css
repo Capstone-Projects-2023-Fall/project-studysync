@@ -65,8 +65,13 @@
 }
 
 #logout-btn{
-  border-radius: 20%;
-  border: none;
-  background-color: grey;
+  color: #333; 
+  text-decoration: none;
+  transition: color 0.3s ease;   
+  cursor: pointer;
+}
+#logout-btn:hover{
+  color: #007aff; 
+
 }
   

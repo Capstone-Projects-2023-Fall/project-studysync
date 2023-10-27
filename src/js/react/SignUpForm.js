@@ -16,7 +16,11 @@ import {useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import {createUserWithEmailAndPassword,signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebase';
+
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
 import { userRepository } from '../../firebase';
+
 
 
 function Copyright(props) {
@@ -38,6 +42,8 @@ const defaultTheme = createTheme();
 
 const SignUpForm = ()=> {
 
+  const [_firstName, setFirstName] = useState('');  
+  const [_lastName, setLastName] = useState(''); 
   const [_email,setEmail] = useState('');
   const [_password,setPassword] = useState('');
   const [_confirmPassword,setconfirmPassword] = useState('');
@@ -47,6 +53,7 @@ const SignUpForm = ()=> {
 
   const handleSubmit = async(event) => {
     event.preventDefault();
+
       if(_email == '' || _password == '' || _confirmPassword == ''){
         alert('One or both of the fields are empty!');
         return;
@@ -65,6 +72,7 @@ const SignUpForm = ()=> {
           setError(e.message);
           alert(error);
       }
+
   };
 
   return (
@@ -101,6 +109,32 @@ const SignUpForm = ()=> {
             <Typography component="h1" variant="h5">
               Sign up
             </Typography>
+            
+                <TextField
+                margin="normal"
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                  value={_firstName}
+                   onChange={e => setFirstName(e.target.value)}
+                />
+              
+                <TextField
+                margin="normal"
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                  value={_lastName}
+                  onChange={e => setLastName(e.target.value)}
+                />
+             
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 value={_email}

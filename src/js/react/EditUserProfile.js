@@ -131,7 +131,7 @@ const  EditUserProfile = ()=> {
 
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label>Name</label>
+                                                    <label>Name:</label>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input onChange={handleInputChange} name="name" value={profile.name} id='ProfileName' type='text' placeholder='Name'></input>
@@ -140,7 +140,7 @@ const  EditUserProfile = ()=> {
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label>Email</label>
+                                                    <label>Email:</label>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <p>kshitighelani@gmail.com</p>
@@ -148,7 +148,7 @@ const  EditUserProfile = ()=> {
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label>Phone</label>
+                                                    <label>Phone:</label>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input onChange={handleInputChange} name="phone" value={profile.phone} id='ProfilePhoneNum' type='text' placeholder='Phone Number'></input>
@@ -157,7 +157,7 @@ const  EditUserProfile = ()=> {
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label>Profession</label>
+                                                    <label>Profession:</label>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <input onChange={handleInputChange} name="profession" value={profile.profession} id='ProfileProfession' type='text' placeholder='profession'></input>
