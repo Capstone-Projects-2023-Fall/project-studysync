@@ -1,10 +1,21 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper } from '@mui/material';
+import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 
 function MainQuizPage() {
 
     const [selectedSubject, setSelectedSubject] = useState(null);
-    const subjects = ['Math', 'History', 'Science', 'English'];
+    const [subjects, setSubjects] = useState(['Math', 'English', 'History', 'Music']);
+    const [open, setOpen] = useState(false); 
+    const [newSubject, setNewSubject] = useState('');
+
+    // Function to handle adding a new subject
+    const handleAddSubject = () => {
+        if (newSubject) {
+            setSubjects(prevSubjects => [...prevSubjects, newSubject]);
+            setNewSubject('');
+            setOpen(false);
+        }
+    };
 
     return (
         <div>
@@ -14,11 +25,18 @@ function MainQuizPage() {
                     <Typography variant="h4" component="h2" style={{ margin: 0 }}>
                         Quiz
                     </Typography>
-                    <Button 
-                        variant="contained"
-                        // for fitutre ;learderboard page implement navigation
-                    >leaderboard
-                    </Button>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        {/* Profile Avatar Button */}
+                        <Button onClick={() => { /* navigate to profile page */ }}>
+                            <Avatar alt="User Profile" src="https://via.placeholder.com/40" />
+                        </Button>
+                        <Button 
+                            variant="contained"
+                            // for future leaderboard page implement navigation
+                        >
+                            LEADERBOARD
+                        </Button>
+                    </div>
                 </Toolbar>
             </AppBar>
 
@@ -32,17 +50,38 @@ function MainQuizPage() {
                             </ListItem>
                         ))}
                     </List>
+                    <Button variant="contained" color="primary" onClick={() => setOpen(true)}>ADD SUBJECT</Button> 
                 </Paper>
 
                 {/* Main Content */}
                 <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     {selectedSubject && (
                         <>
-                            {/* other content related to selectedSubject*/}
+                            {/* other content related to selectedSubject */}
                         </>
                     )}
                 </div>
             </div>
+
+            {/* Dialog for adding a new subject */}
+            <Dialog open={open} onClose={() => setOpen(false)}>
+                <DialogTitle>Add a New Subject</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Subject Name"
+                        type="text"
+                        fullWidth
+                        value={newSubject}
+                        onChange={e => setNewSubject(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpen(false)} color="primary">CANCEL</Button>
+                    <Button onClick={handleAddSubject} color="primary">ADD</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
