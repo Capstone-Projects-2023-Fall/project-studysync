@@ -142,7 +142,7 @@ const  UserProfile = ()=> {
                                                 <label>User Id:</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>{UserId}</p>
+                                                <p>user-id</p>
                                             </div>
                                         </div>
                                         <div class="row">

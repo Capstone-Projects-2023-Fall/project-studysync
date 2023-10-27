@@ -143,7 +143,7 @@ const  EditUserProfile = ()=> {
                                                     <label>Email:</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p>kshitighelani@gmail.com</p>
+                                                    <p>{userProfile.email}</p>
                                                 </div>
                                             </div>
                                             <div class="row">
