@@ -181,12 +181,10 @@ const FlashcardRepo = {
             const data = snap.data();
             let flashcardItems = data.flashcardItems || {};
 
-            // Check if the flashcardId exists in the flashcardItems map
             if (flashcardItems[flashcardIdToDelete]) {
-                // Delete the flashcard from the map
+
                 delete flashcardItems[flashcardIdToDelete];
 
-                // Update the database with the modified flashcardItems
                 await updateDoc(flashcardSetRef, {
                     flashcardItems: flashcardItems
                 });
@@ -208,15 +206,13 @@ const FlashcardRepo = {
             const data = snap.data();
             let flashcardItems = data.flashcardItems || {};
 
-            // Check if the flashcardId exists in the flashcardItems map
             if (flashcardItems[flashcardIdToUpdate]) {
-                // Update the flashcard in the map
+
                 flashcardItems[flashcardIdToUpdate] = {
                     term: newTerm,
                     definition: newDefinition
                 };
 
-                // Update the database with the modified flashcardItems
                 await updateDoc(flashcardSetRef, {
                     flashcardItems: flashcardItems
                 });
@@ -229,13 +225,6 @@ const FlashcardRepo = {
             throw error;
         }
     },
-
-
-
-
-
-
-
 
     addUserSubject: async function (uid, newSubject) {
         try {
@@ -255,7 +244,7 @@ const FlashcardRepo = {
         try {
             const setRef = doc(database, 'flashcardSets', setId);
             await updateDoc(setRef, {
-                sharedWith: arrayRemove(uid)  // Assuming 'sharedWith' is an array of user IDs
+                sharedWith: arrayRemove(uid)
             });
         } catch (error) {
             console.error("Error removing UID from sharedWith:", error);
@@ -265,12 +254,36 @@ const FlashcardRepo = {
     removeSetIdFromUser: async function (uid, setId) {
 
         try {
-            const userRef = doc(database, 'users', uid); // Assuming 'users' is the name of your user collection
+            const userRef = doc(database, 'users', uid);
             await updateDoc(userRef, {
-                ownedFlashcards: arrayRemove(setId)  // Assuming the field is named 'flashcardSets' and it's an array of setIds
+                ownedFlashcards: arrayRemove(setId)
             });
         } catch (error) {
             console.error("Error removing set ID from user:", error);
+        }
+    },
+
+
+    getUserImageURLByUid: async function (uid) {
+        try {
+            const userRef = doc(database, 'users', uid);
+            const userSnapshot = await getDoc(userRef);
+
+            if (userSnapshot.exists()) {
+                const userData = userSnapshot.data();
+                if (userData && userData.imageURL) {
+                    return userData.imageURL;
+                } else {
+                    console.error("User avatar URL not found for the given UID.");
+                    return null;
+                }
+            } else {
+                console.error("User with the given UID not found.");
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching user avatar URL by UID:", error);
+            throw error;
         }
     },
 
@@ -322,7 +335,7 @@ const FlashcardRepo = {
                     like: comment.like,
                     username: userData.username,
                     imageURL: userData.imageURL,
-                    commentId: commentId  // Add this line to include the commentId in the returned data
+                    commentId: commentId
                 });
             }
 
@@ -334,13 +347,11 @@ const FlashcardRepo = {
     },
     updateLikesForComment: async function (setId, commentId, updatedLikes) {
         try {
-            // Reference to the flashcard set
+
             const setRef = doc(database, 'flashcardSets', setId);
 
-            // Construct the field path using dot notation for the nested map
             const fieldPath = `comments.${commentId}.like`;
 
-            // Update the likes count for that specific comment within the map
             await updateDoc(setRef, {
                 [fieldPath]: updatedLikes
             });
@@ -358,7 +369,7 @@ const FlashcardRepo = {
             const setData = snap.data();
 
             if (setData && setData.comments) {
-                // 使用JavaScript的解构功能更新评论数据
+
                 const updatedComments = {
                     ...setData.comments,
                     [doc(collection(database, 'comments')).id]: commentData
@@ -377,10 +388,6 @@ const FlashcardRepo = {
             throw error;
         }
     },
-
-
-
-
 
 };
 

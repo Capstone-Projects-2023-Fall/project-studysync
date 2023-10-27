@@ -24,6 +24,7 @@ function FlashcardApp() {
     const [comments, setComments] = useState([]);
     const [cardToDelete, setCardToDelete] = useState(null);
     const [likedComments, setLikedComments] = useState({});
+    const [userImage, setUserImage] = useState(null);
     const [openEdit, setOpenEdit] = useState(false);
     const [cardToEdit, setCardToEdit] = useState(null);
     const uid = FlashcardRepo.getCurrentUid();
@@ -64,6 +65,20 @@ function FlashcardApp() {
             }
         };
 
+        const fetchCurrentUserImage = async () => {
+            const uid = await FlashcardRepo.getCurrentUid();
+            console.log("uid", uid);
+            try {
+
+                const currentUserImg = await FlashcardRepo.getUserImageURLByUid(uid);
+
+                setUserImage(currentUserImg);
+            } catch (error) {
+                console.error("Error fetching current user image:", error);
+            }
+        };
+
+        fetchCurrentUserImage();
         fetchFlashcards();
         fetchComments();
     }, [setId]);
@@ -244,6 +259,7 @@ function FlashcardApp() {
                         </Button>
                     </List>
 
+
                     <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
                         <Typography variant="h6">
                             {selectedCard ? `${cards.indexOf(selectedCard) + 1}/${cards.length}` : ""}
@@ -277,10 +293,8 @@ function FlashcardApp() {
                     </div>
                 </div>
 
-                <div style={{
-                    maxHeight: "30%", overflowY: "scroll", backgroundColor: '#fff', borderRadius: '8px',
-                    padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
-                }}>
+
+                <div style={{ flex: 1, overflowY: 'auto', maxHeight: 'calc(30% - 60px)', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
                     {comments.map((comment, index) => (
                         <div key={index} style={{
                             display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", borderBottom: '1px solid #e0e0e0'
@@ -301,7 +315,7 @@ function FlashcardApp() {
                                 <Button
                                     startIcon={likedComments[comment.commentId] ? <ThumbUpIcon color="primary" /> : <ThumbUpOutlinedIcon />}
                                     onClick={() => {
-                                        console.log("Like button clicked for commentId:", comment.commentId); // Adding console log here
+                                        console.log("Like button clicked for commentId:", comment.commentId);
                                         handleLikeClick(comment.commentId);
                                     }}
                                 >
@@ -310,15 +324,51 @@ function FlashcardApp() {
                             </div>
                         </div>
                     ))}
-                    <div style={{
-                        display: "flex", alignItems: "center", padding: "10px", borderTop: '1px solid #e0e0e0'
-                    }}>
+                </div>
+                <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
+                    <div style={{ display: "flex", alignItems: "center", }}>
+                        <Avatar src={userImage} />
                         <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
                         <IconButton onClick={handleSendComment}>
                             <SendIcon />
                         </IconButton>
                     </div>
                 </div>
+
+
+                <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
+                    <DialogTitle>Edit flashcard</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Term"
+                            fullWidth
+                            value={term}
+                            onChange={(e) => setTerm(e.target.value)}
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Definition"
+                            fullWidth
+                            value={definition}
+                            onChange={(e) => setDefinition(e.target.value)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenEdit(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleUpdateFlashcard}
+                            color="primary"
+                        >
+                            Update
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
+
 
                 <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
                     <DialogTitle>Add a new flashcard</DialogTitle>
@@ -353,37 +403,6 @@ function FlashcardApp() {
                     </DialogActions>
                 </Dialog>
 
-                <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
-                    <DialogTitle>Edit flashcard</DialogTitle>
-                    <DialogContent>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Term"
-                            fullWidth
-                            value={term}
-                            onChange={(e) => setTerm(e.target.value)}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Definition"
-                            fullWidth
-                            value={definition}
-                            onChange={(e) => setDefinition(e.target.value)}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={() => setOpenEdit(false)} color="primary">
-                            Cancel
-                        </Button>
-                        <Button
-                            onClick={handleUpdateFlashcard}
-                            color="primary"
-                        >
-                            Update
-                        </Button>
-                    </DialogActions>
-                </Dialog>
 
                 <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
                     <DialogTitle>Confirm Deletion</DialogTitle>
@@ -395,7 +414,7 @@ function FlashcardApp() {
                             No
                         </Button>
                         <Button
-                            onClick={confirmDelete} // confirm the deletion when "Yes" is clicked
+                            onClick={confirmDelete}
                             color="primary"
                         >
                             Yes
