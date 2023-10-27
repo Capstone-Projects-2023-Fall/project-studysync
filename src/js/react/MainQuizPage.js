@@ -7,10 +7,11 @@ function MainQuizPage() {
     const quizzes = {
         Math: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4'],
         History: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4'],
-        Science: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4'],
+        Science: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4'], 
         English: ['Quiz 1', 'Quiz 2', 'Quiz 3', 'Quiz 4'],
+   
     };
-
+    
     return (
         <div>
             {/* Navigation Bar */}
@@ -21,7 +22,6 @@ function MainQuizPage() {
                     </Typography>
                 </Toolbar>
             </AppBar>
-
             <div style={{ display: 'flex', marginTop: '20px' }}>
                 {/* Sidebar */}
                 <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto' }}>
@@ -33,28 +33,27 @@ function MainQuizPage() {
                         ))}
                     </List>
                 </Paper>
-
+                
                 {/* Main Content */}
-                <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    {selectedSubject && (
-                        <>
-
-                            <Typography variant="h5" component="h3" style={{ margin: '20px 0' }}>
-                                Quizzes for {selectedSubject}
-                            </Typography>
-                            <List>
-                                {quizzes[selectedSubject].map((quiz) => (
-                                    <ListItem button key={quiz}>
-                                        {quiz}
-                                    </ListItem>
-                                ))}
-                            </List>
-                        </>
-                    )}
-                </div>
+                    <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                     {selectedSubject && (
+                                <>
+                             <Typography variant="h5" component="h3" style={{ margin: '20px 0' }}>
+                                  Quizzes for {selectedSubject}
+                             </Typography>
+                              <List>
+                                  {quizzes[selectedSubject].map((quiz) => (
+                                        <ListItem button key={quiz}>
+                                            {quiz}
+                                        </ListItem>
+                                  ))}
+                               </List>
+                            </>
+                      )}
+                    </div>
+             </div>
             </div>
-        </div>
-    );
+       );
 }
 
 export default MainQuizPage;
