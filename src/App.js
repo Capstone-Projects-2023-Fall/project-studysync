@@ -13,6 +13,8 @@ import PasswordReset from './js/react/PasswordReset';
 import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
 import { signOut } from 'firebase/auth';
+import { auth } from './firebase';
+
 function App() {
 
   const {user} = useUser();
@@ -24,28 +26,26 @@ function App() {
     { label: 'Sign Up', link: '/signup' },
   ];
 
-/*
-  const database_submit= ()=>{
-    
-    //add a collection called users if it does not exists, 
-    //add email and password to users collection if it exists already
-    addDoc(collectionRef,{
-      email: data.email,
-      password: data.password
-    }).then(()=>{
-      alert("Data added");
-    }).catch((err)=>{
-      alert(err.message);
-    })
-  }*/
 
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'StudyTool', link: '/studytool'},
     { label: 'Message', icon: 'message-icon', link: '/messages' },
-    {label: 'Profile', link: `/profile/${user && user.uid}` },
+    { label: 'Profile', link: `/profile/${user && user.uid}` },
     //... add other items
   ];
+
+  // if(user){
+  //   navbarItemsLoggedIn.push(
+  //     { label:'Logout',action:signOut(auth)}
+  //   )
+  // }
+  // else{
+  //   if(navbarItemsLoggedIn[4]){
+  //     navbarItemsLoggedIn.splice(4,1);
+  //   }
+  // }
+
 
   return (
     <div className="app">
