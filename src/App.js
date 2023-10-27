@@ -14,6 +14,9 @@ import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
+import QuizList from './js/react/quizCom';
+
+
 function App() {
 
   const {user} = useUser();
@@ -55,6 +58,7 @@ function App() {
   return (
     <div className="app">
         <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
+        <QuizList/>
         <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/studytool" element={<FlashcardComponent />} />

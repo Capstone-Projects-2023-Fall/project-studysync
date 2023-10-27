@@ -7,7 +7,7 @@ import Quiz from "../models/quiz"
 export class QuizRepository{
     constructor(database){
         this.database = database
-        this.ref = collection(this.database, "quizes")
+        this.ref = collection(this.database, "quizzes")
         this.snapshot = null;
         this.initializationPromise = this.initializeSnapshot();
     }
@@ -22,7 +22,7 @@ export class QuizRepository{
     }
     
     async getSnapshot() {
-        return await getDocs(this.ref, "quizes");
+        return await getDocs(this.ref, "quizzes");
     }
   
     async getAllQuizes(){
@@ -35,7 +35,8 @@ export class QuizRepository{
       const quizes = {}
       this.snapshot.docs.forEach((doc)=>{
         const quiz = doc.data()
-        quizes[doc.id] = new Quiz(quiz.author, quiz.question, doc.id)
+        quizes[doc.id] = new Quiz(quiz.title, quiz.question, 
+          doc.id, quiz.subject, quiz.author, quiz.dateCreated)
       })
       return quizes
     }
