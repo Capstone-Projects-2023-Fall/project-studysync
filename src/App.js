@@ -61,7 +61,7 @@ function App() {
             <Route path='/passwordreset' element={<PasswordReset/>}/>
             <Route path='/signup' element={<SignUpForm/>}/>  
             <Route path='/profile/:UserId' element={<UserProfile/>}/>
-            <Route path='/profile/:UserId/edit' element={<EditUserProfile/>}/>
+            <Route path='/profile/:data/edit' element={<EditUserProfile/>}/>
 
         </Routes>
     </div>

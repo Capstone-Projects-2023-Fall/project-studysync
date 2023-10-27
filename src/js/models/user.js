@@ -8,6 +8,9 @@ export  default class User {
         this.id = uuid
         this.username = username;
         this.email = email;
+        this.name = ''
+        this.phone = ''
+        this.profession = ''
         this.bio = 'default bio'
         this.following = []
         this.followers = []
