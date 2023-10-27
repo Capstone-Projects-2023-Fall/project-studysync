@@ -82,7 +82,7 @@ const  UserProfile = ()=> {
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>User Id</label>
+                                                <label>User Id:</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>Kshiti123</p>
@@ -90,7 +90,7 @@ const  UserProfile = ()=> {
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Name</label>
+                                                <label>Name:</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>Kshiti Ghelani</p>
@@ -98,7 +98,7 @@ const  UserProfile = ()=> {
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Email</label>
+                                                <label>Email:</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>kshitighelani@gmail.com</p>
@@ -106,15 +106,15 @@ const  UserProfile = ()=> {
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Phone</label>
+                                                <label>Phone:</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>123 456 7890</p>
+                                                <p>123-456-7890</p>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label>Profession</label>
+                                                <label>Profession:</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <p>Web Developer and Designer</p>
