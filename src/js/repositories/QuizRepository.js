@@ -1,4 +1,4 @@
-import {collection, getDocs} from 'firebase/firestore';
+import {collection, getDocs, deleteDoc,doc} from 'firebase/firestore';
 import Quiz from "../models/quiz"
 
 /**
@@ -47,4 +47,14 @@ export class QuizRepository{
         if(quizes[id] !== null && quizes[id] !== undefined) return quizes[id]
         return "DOES NOT EXIST"
     }
+
+    async deleteQuiz(quizId) {
+      const quizDocRef = doc(this.ref, quizId); // Reference to the specific quiz document
+      try {
+          await deleteDoc(quizDocRef);
+      } catch (error) {
+          console.error('Error deleting quiz:', error);
+          throw error;
+      }
+  }
   }

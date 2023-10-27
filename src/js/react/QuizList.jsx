@@ -74,6 +74,19 @@ function QuizList() {
     console.log(`Clicked on quiz with ID ${quiz.id}`);
     console.log(`Quiz Date ${quiz.dateCreated}`);
   };
+  const quizRepository = new QuizRepository(database);
+  const handleDeleteQuiz = (quizId) => {
+    
+    quizRepository
+    .deleteQuiz(quizId)
+    .then(() => {
+      // Remove the deleted quiz from the state
+      setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz.id !== quizId));
+    })
+    .catch((error) => {
+      console.error('Error deleting quiz:', error);
+    });
+  };
 
   return (
     <div
@@ -125,7 +138,7 @@ function QuizList() {
                 {quiz.creationDate}
                 </StyledTableCell>
                 <StyledTableCell align="right">
-                  <PositionedMenu /> {/* Add the PositionedMenu component */}
+                  <PositionedMenu onDelete={handleDeleteQuiz} quizId={quiz.id}/> {/* Add the PositionedMenu component */}
                 </StyledTableCell>
               </StyledTableRow>
             ))}

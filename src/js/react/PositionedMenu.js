@@ -4,7 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-export default function PositionedMenu() {
+export default function PositionedMenu({ onDelete, quizId }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -13,7 +13,11 @@ export default function PositionedMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleDelete = () => {
+    // Call the onDelete function with the quiz ID to delete the quiz
+    onDelete(quizId);
+    handleClose();
+  };
   return (
     <div>
       <Button
@@ -39,7 +43,7 @@ export default function PositionedMenu() {
           horizontal: 'left',
         }}
       >
-        <MenuItem onClick={handleClose}>Delete</MenuItem>
+        <MenuItem onClick={handleDelete}>Delete</MenuItem>
         <MenuItem onClick={handleClose}>Share</MenuItem>
       </Menu>
     </div>
