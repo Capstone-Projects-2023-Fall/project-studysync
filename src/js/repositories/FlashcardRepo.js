@@ -268,6 +268,29 @@ const FlashcardRepo = {
             throw error;
         }
     },
+    getUserImageURLByUid: async function (uid) {
+        try {
+            const userRef = doc(database, 'users', uid);
+            const userSnapshot = await getDoc(userRef);
+
+            if (userSnapshot.exists()) {
+                const userData = userSnapshot.data();
+                if (userData && userData.imageURL) {
+                    return userData.imageURL;
+                } else {
+                    console.error("User avatar URL not found for the given UID.");
+                    return null;
+                }
+            } else {
+                console.error("User with the given UID not found.");
+                return null;
+            }
+        } catch (error) {
+            console.error("Error fetching user avatar URL by UID:", error);
+            throw error;
+        }
+    },
+
 
     getCommentsWithUserData: async function (setId) {
         try {

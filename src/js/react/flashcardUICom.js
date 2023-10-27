@@ -24,8 +24,11 @@ function FlashcardApp() {
     const [cardToDelete, setCardToDelete] = useState(null);
     const [likedComments, setLikedComments] = useState({});
     const uid = FlashcardRepo.getCurrentUid();
+    const [userImage, setUserImage] = useState(null);
+
 
     useEffect(() => {
+
         const fetchFlashcards = async () => {
             try {
                 const flashcardData = await FlashcardRepo.getFlashcardItems(setId);
@@ -59,10 +62,27 @@ function FlashcardApp() {
                 console.error("Failed to fetch comments:", error);
             }
         };
+        const fetchCurrentUserImage = async () => {
+            const uid = await FlashcardRepo.getCurrentUid();
+            console.log("uid", uid);
+            try {
 
+                const currentUserImg = await FlashcardRepo.getUserImageURLByUid(uid);
+                // 更新状态
+                setUserImage(currentUserImg);
+            } catch (error) {
+                console.error("Error fetching current user image:", error);
+            }
+        };
+        fetchCurrentUserImage();
         fetchFlashcards();
         fetchComments();
     }, [setId]);
+
+
+
+
+
 
     const fetchComments = async () => {
         try {
@@ -243,10 +263,7 @@ function FlashcardApp() {
                     </div>
                 </div>
 
-                <div style={{
-                    maxHeight: "30%", overflowY: "scroll", backgroundColor: '#fff', borderRadius: '8px',
-                    padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
-                }}>
+                <div style={{ flex: 1, overflowY: 'auto', maxHeight: 'calc(30% - 60px)', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
                     {comments.map((comment, index) => (
                         <div key={index} style={{
                             display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", borderBottom: '1px solid #e0e0e0'
@@ -267,7 +284,7 @@ function FlashcardApp() {
                                 <Button
                                     startIcon={likedComments[comment.commentId] ? <ThumbUpIcon color="primary" /> : <ThumbUpOutlinedIcon />}
                                     onClick={() => {
-                                        console.log("Like button clicked for commentId:", comment.commentId); // Adding console log here
+                                        console.log("Like button clicked for commentId:", comment.commentId);
                                         handleLikeClick(comment.commentId);
                                     }}
                                 >
@@ -276,9 +293,10 @@ function FlashcardApp() {
                             </div>
                         </div>
                     ))}
-                    <div style={{
-                        display: "flex", alignItems: "center", padding: "10px", borderTop: '1px solid #e0e0e0'
-                    }}>
+                </div>
+                <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
+                    <div style={{ display: "flex", alignItems: "center", }}>
+                        <Avatar src={userImage} />
                         <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
                         <IconButton onClick={handleSendComment}>
                             <SendIcon />
@@ -329,7 +347,7 @@ function FlashcardApp() {
                             No
                         </Button>
                         <Button
-                            onClick={confirmDelete} // confirm the deletion when "Yes" is clicked
+                            onClick={confirmDelete}
                             color="primary"
                         >
                             Yes
@@ -339,6 +357,7 @@ function FlashcardApp() {
             </div>
         </ThemeProvider>
     );
+
 
 }
 
