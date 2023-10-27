@@ -11,7 +11,7 @@ import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
 
 import FlashcardApp from './js/react/flashcardUICom';
-
+import PasswordReset from './js/react/PasswordReset';
 import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
 import { signOut } from 'firebase/auth';
