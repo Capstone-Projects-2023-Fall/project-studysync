@@ -12,7 +12,7 @@ import useUser from './js/react/useUser';
 import PasswordReset from './js/react/PasswordReset';
 import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
-import MainQuizPage from './MainQuizPage';
+import MainQuizPage from './js/react/MainQuizPage';
 import { signOut } from 'firebase/auth';
 function App() {
 
@@ -45,6 +45,7 @@ function App() {
     { label: 'StudyTool', link: '/studytool'},
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     {label: 'Profile', link: `/profile/${user && user.uid}` },
+    {label: 'Quiz', link: '/quizmain'}
     //... add other items
   ];
 
