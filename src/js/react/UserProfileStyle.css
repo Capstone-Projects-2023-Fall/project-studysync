@@ -1,0 +1,170 @@
+
+.emp-profile{
+    padding: 3%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    border-radius: 0.5rem;
+    background: #adb9f0;
+}
+.profile-img{
+    text-align: center;
+    margin-top: 20%;
+}
+.profile-img img{
+    width: 70%;
+    height: 100%;
+}
+.profile-img .file {
+    position: relative;
+    overflow: hidden;
+    margin-top: -20%;
+    width: 70%;
+    border: none;
+    border-radius: 0;
+    font-size: 15px;
+    background: #212529b8;
+}
+.profile-img .file input {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+}
+.profile-head h5{
+    color: #333;
+}
+.profile-head h6{
+    color: #0062cc;
+}
+.profile-edit-btn{
+    border: none;
+    border-radius: 1.5rem;
+    width: 70%;
+    padding: 2%;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+}
+.proile-rating{
+    font-size: 16px;
+    color: #495057;
+    margin-top: 5%;
+}
+.proile-rating span{
+    color: #0b0d1f;
+    font-size: 15px;
+    font-weight: 600;
+}
+.profile-head .nav-tabs{
+    margin-bottom:5%;
+}
+.profile-head .nav-tabs .nav-link{
+    font-weight:600;
+    border: none;
+}
+.profile-head .nav-tabs .nav-link.active{
+    border: none;
+    border-bottom:2px solid #0062cc;
+}
+.profile-work{
+    padding: 14%;
+    margin-top: -15%;
+    
+}
+.profile-work p{
+    
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 20px;
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+.profile-work a{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 16px;
+}
+#flashcards {
+    
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 20px;
+}
+#quizzes{
+    font-size: 20px;
+}
+.profile-work ul{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+    list-style: none;
+}
+.profile-work li{
+    margin-bottom: 5%;
+}
+.profile-tab label{
+    
+    font-weight: 600;
+}
+.profile-tab p{
+    font-weight: 600;
+    color: #152029;
+}
+.RemoveFriend{
+    margin-left: 10%;
+    border-color: red;
+    background-color: red;
+    color: white;
+    border-radius: 30%;
+    font-size:x-small;
+    width: 25px;
+}
+.proile-about{
+    font-size: 16px;
+    color: #495057;
+
+}
+
+#ProfileAboutMe{
+    margin-left: 10%;
+    height: 100px;
+    width: 70%;
+}
+
+#home .row{
+    margin-bottom: 4%;
+}
+
+.profile-friends{
+    padding: 5%;
+    margin-top: -15%;
+}
+.profile-friends ul{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+    list-style: none;
+}
+.profile-friends li{
+    margin-bottom: 5%;
+}
+.profile-save-btn{
+
+    border-radius: 20%;
+    color: white;
+    background-color: #2e3278;
+    border: none;
+    margin-right: 20%;        
+}
+.profile-delete-btn{
+  
+    border-radius: 20%;
+    color: white;
+    background-color: red;
+    border: none;
+}

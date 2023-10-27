@@ -7,8 +7,8 @@ import {getAuth} from "firebase/auth";
 import keys from './keys';
 import { UserRepository } from "./js/repositories/UserRepository";
 import { QuizRepository } from "./js/repositories/QuizRepository";
-
-
+import { NotificationRepository } from "./js/repositories/NotificationRepository";
+import { FlashCardRepository } from "./js/repositories/FlashCardRepository";
 const firebaseConfig = {
   apiKey: keys.apiKey,
   authDomain: keys.authDomain,
@@ -27,7 +27,10 @@ export const database = getFirestore(app);
 export const functions = getFunctions(app); 
 
 export const quizRepository = new QuizRepository(database)
-export const userRepository = new UserRepository(database, quizRepository)
+
+export const notificationRepository = new NotificationRepository(database)
+export const flashcardRepository = new FlashCardRepository(database)
+export const userRepository = new UserRepository(database, quizRepository, notificationRepository, flashcardRepository)
 
 
 // export const askGPT = async (prompt) => {

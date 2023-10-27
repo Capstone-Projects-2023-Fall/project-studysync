@@ -16,7 +16,12 @@ import {useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import {createUserWithEmailAndPassword,signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebase';
+
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
+import { userRepository } from '../../firebase';
+
+
 
 function Copyright(props) {
   return (
@@ -48,49 +53,26 @@ const SignUpForm = ()=> {
 
   const handleSubmit = async(event) => {
     event.preventDefault();
-    if (_email === '' || _password === '' || _confirmPassword === '') {
-      alert('One or more fields are empty!');
-      return;
-    }
-    if (_password !== _confirmPassword) {
-      alert('Passwords do not match!');
-      return;
-    }
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, _email, _password);
-      const user = userCredential.user;
-      
-      // Initialize Firestore user document
-      const db = getFirestore();
-      const userRef = doc(db, 'users', user.uid);
-  
-      
-      const defaultUserData = {
-        bio: "",
-        username: `${_firstName} ${_lastName}`,
-        email: user.email,
-        imageURL: "",
-        followers: [],
-        following: [],
-        ownedFlashcards: [],
-        ownedQuizzes: []
-      };
-  
-      await setDoc(userRef, defaultUserData);
-      
-      
-      const placeholderData = { placeholder: true };
-  
-      await setDoc(doc(userRef, 'events', 'placeholder'), placeholderData);
-      await setDoc(doc(userRef, 'notifications', 'placeholder'), placeholderData);
-      await setDoc(doc(userRef, 'sharedFlashcards', 'placeholder'), placeholderData);
-      await setDoc(doc(userRef, 'sharedQuizzes', 'placeholder'), placeholderData);
-      
-      navigate('/');
-    } catch (e) {
-      setError(e.message);
-      alert(error);
-    }
+
+      if(_email == '' || _password == '' || _confirmPassword == ''){
+        alert('One or both of the fields are empty!');
+        return;
+      }
+      if(_password != _confirmPassword){
+        alert('Passwords do not match!');
+        return;
+      }
+        try{
+          const {user} = await createUserWithEmailAndPassword(auth,_email,_password);
+          if(user != null){
+            await userRepository.addUser(_email, "default-username", user.uid)
+          }
+          navigate('/');
+      }catch(e){
+          setError(e.message);
+          alert(error);
+      }
+
   };
 
   return (

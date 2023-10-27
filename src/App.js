@@ -2,28 +2,27 @@ import './App.css';
 /*import {app ,database} from "./firebase.js"*/
 /*import {getAuth, createUserWithEmailAndPassword,
 signInWithEmailAndPassword} from "firebase/auth";*/
-import {useEffect, useState} from "react";
-/*import {collection, addDoc} from 'firebase/firestore';*/
-/*import keys from './keys';*/
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import User from './js/models/user.js'; 
 import DashboardCom from './js/react/DashboardCom.js'; 
 import FlashcardComponent from './js/react/flashcardCom.js'; 
 import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
-import PasswordReset from './js/react/PasswordReset';
+
 import FlashcardApp from './js/react/flashcardUICom';
+
+import UserProfile from './js/react/UserProfilePage';
+import EditUserProfile from './js/react/EditUserProfile';
+import { signOut } from 'firebase/auth';
+import { auth } from './firebase';
+
+
 function App() {
 
   const {user} = useUser();
 
-
-  
-  const handleLogin = () => {
-
-  };
+  const handleLogin = () => {};
 
   const navbarItemsLoggedOut = [
     { label: 'Log in', link: '/login', action: handleLogin },
@@ -31,27 +30,25 @@ function App() {
   ];
 
 
-/*
-  const database_submit= ()=>{
-    
-    //add a collection called users if it does not exists, 
-    //add email and password to users collection if it exists already
-    addDoc(collectionRef,{
-      email: data.email,
-      password: data.password
-    }).then(()=>{
-      alert("Data added");
-    }).catch((err)=>{
-      alert(err.message);
-    })
-  }*/
-
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'StudyTool', link: '/studytool'},
     { label: 'Message', icon: 'message-icon', link: '/messages' },
+    { label: 'Profile', link: `/profile/${user && user.uid}` },
     //... add other items
   ];
+
+  // if(user){
+  //   navbarItemsLoggedIn.push(
+  //     { label:'Logout',action:signOut(auth)}
+  //   )
+  // }
+  // else{
+  //   if(navbarItemsLoggedIn[4]){
+  //     navbarItemsLoggedIn.splice(4,1);
+  //   }
+  // }
+
 
   return (
     <div className="app">
@@ -66,13 +63,13 @@ function App() {
                 : <div className="login-center">Please log in or sign up to continue</div>
             } />
             <Route path='/passwordreset' element={<PasswordReset/>}/>
-            <Route path='/signup' element={<SignUpForm/>}/>            
+            <Route path='/signup' element={<SignUpForm/>}/>  
+            <Route path='/profile/:UserId' element={<UserProfile/>}/>
+            <Route path='/profile/:UserId/edit' element={<EditUserProfile/>}/>
+
         </Routes>
     </div>
 );
-
-
-
 }
 
 export default App;

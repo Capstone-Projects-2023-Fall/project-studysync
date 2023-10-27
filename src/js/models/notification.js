@@ -1,23 +1,19 @@
-/**
- * Represents a notification that can be of various types, e.g., friend request, flashcard reminder.
- */
-export default class Notification {
-    /**
-     * Creates a new notification.
-     * 
-     * @param {string} message - The message or content of the notification.
-     * @param {int} type - The type of the notification.
-     */
-    constructor(message = '', type = 0) {
+   /**Notification Object */
+export class Notification {
+    constructor(event, message = '', id='') {
+        this.event = event
         this.message = message;
-        this.type = type;
+        this.createdAt = new Date().getTime()
+        this.id = id
     }
 
-    /**
-     * Displays the notification.
-     */
-    display() {
-        console.log(`[${this.type}] ${this.message}`);
-    }
+    toJSON() {
+        return {
+          event: this.event,
+          message: this.message,
+          createdAt: this.createdAt,
+          id: this.id,
+        };
+      }
 }
 
