@@ -21,9 +21,9 @@ const  UserProfile = ()=> {
     UserId: UserId, 
     userProfile: profile
   }
-  const serializedData = JSON.stringify(dataToSend);
-const encodedData = encodeURIComponent(serializedData);
-console.log("encoded data is: ", encodedData)
+    const serializedData = JSON.stringify(dataToSend);
+    const encodedData = encodeURIComponent(serializedData);
+
   function editProfile(e){
     e.preventDefault();
     navigate(`/profile/${encodedData}/edit`, );
