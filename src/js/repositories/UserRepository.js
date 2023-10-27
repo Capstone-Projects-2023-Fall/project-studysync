@@ -83,6 +83,39 @@ export class UserRepository{
       return this.getUsers(following)
     }
 
+    /** async get user friends: friends are people who are followers but are in users following list*/
+    async getFriends(id){
+      const followers = await this.getFollowers(id)
+      const following = await this.getFollowing(id)
+
+      return followers.filter((user1)=>{
+        following.some((user2)=> user1.id === user2.id)
+      })
+    }
+
+    /**
+     * 
+     * Get user profile. User profile is made up of
+     * User name, Bio, email, flashcards, friends, quizzes, profession, etc
+     */
+    async getProfile(userId){
+      const user = await this.getUserById(userId)
+      const {id, bio, email, imageUrl, username} = user
+      const flashcards = await this.getOwnedFlashcards(id)
+      const sharedFlashcards = await this.getSharedFlashcards(id)
+  
+      return {
+        id: id, 
+        bio: bio,
+        email: email,
+        imageUrl: imageUrl, 
+        username: username, 
+        name: "John Doe", 
+        flashcards: flashcards, 
+        sharedFlashcards: sharedFlashcards
+      }
+    }
+
     /**Get all notifications of user with id: {id}, returns the ids */
     async getNotifications(id){
       const notificationIds = await getArrayFieldFromCollection(this.database, "users", id, "notifications")
