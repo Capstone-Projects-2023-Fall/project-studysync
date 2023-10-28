@@ -12,10 +12,13 @@ import useUser from './js/react/useUser';
 
 import FlashcardApp from './js/react/flashcardUICom';
 import PasswordReset from './js/react/PasswordReset';
+import QuizList from './js/react/quizCom';
+
 import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebase';
+
 
 
 function App() {
@@ -53,6 +56,7 @@ function App() {
   return (
     <div className="app">
         <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
+        <QuizList/>
         <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/studytool" element={<FlashcardComponent />} />
