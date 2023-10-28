@@ -10,14 +10,18 @@ export default function PositionedMenu({ onDelete, quizId }) {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+  
+  //handle deleting quiz 
   const handleDelete = () => {
     // Call the onDelete function with the quiz ID to delete the quiz
     onDelete(quizId);
     handleClose();
   };
+
   return (
     <div>
       <Button
@@ -27,7 +31,7 @@ export default function PositionedMenu({ onDelete, quizId }) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <MoreVertIcon /> {/* Replace "Actions" with MoreVertIcon */}
+        <MoreVertIcon />
       </Button>
       <Menu
         id="demo-positioned-menu"

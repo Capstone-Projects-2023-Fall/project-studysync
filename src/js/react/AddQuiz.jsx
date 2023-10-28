@@ -47,7 +47,8 @@ function AddQuiz() {
       });
   }, []);
 
-  const uniqueSubjects = [...new Set(quizzes.map((quiz) => quiz.subject))]; // Extract unique subjects
+  // Extract unique subjects
+  const uniqueSubjects = [...new Set(quizzes.map((quiz) => quiz.subject))]; 
 
   const handleAddQuizSubject = () => {
     if (selectedSubject || (dialogStep === 1 && newSubject)) {

@@ -48,6 +48,7 @@ export class QuizRepository{
         return "DOES NOT EXIST"
     }
 
+    //function to deleteQuiz using the captured quiz.id in order to remove the specifc quiz
     async deleteQuiz(quizId) {
       const quizDocRef = doc(this.ref, quizId); // Reference to the specific quiz document
       try {

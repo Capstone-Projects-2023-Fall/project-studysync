@@ -31,6 +31,7 @@ function QuizList() {
       .then((quizzes) => {
         quizzes.forEach((quiz) => {
           if (quiz.dateCreated) {
+            //check the current date of the quiz if exist then retrieve it
             const timestamp = quiz.dateCreated.toDate(); // Convert Firestore timestamp to Date
             quiz.creationDate = timestamp.toLocaleString(); // Convert to a string
           } else {
@@ -44,6 +45,7 @@ function QuizList() {
       });
   }, []);
 
+ //table for store all the quiz data using mui
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -76,7 +78,7 @@ function QuizList() {
   };
   const quizRepository = new QuizRepository(database);
   const handleDeleteQuiz = (quizId) => {
-    
+  //remove the deleted quiz from the database
     quizRepository
     .deleteQuiz(quizId)
     .then(() => {
