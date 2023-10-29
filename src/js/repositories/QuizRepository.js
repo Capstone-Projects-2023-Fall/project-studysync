@@ -1,62 +1,43 @@
-import {collection, getDocs, deleteDoc,doc} from 'firebase/firestore';
-import Quiz from "../models/quiz"
-
+import { getItemById, removeDocumentFromCollection, collection } from "../utils/sharedRepositoryFunctions"
+import { FlashCardRepository } from "./FlashCardRepository"
 /**
  * Utility class to talk to FireStore Quiz Collection [IN PROGRESS]
  */
 export class QuizRepository{
     constructor(database){
         this.database = database
-        this.ref = collection(this.database, "quizzes")
-        this.snapshot = null;
-        this.initializationPromise = this.initializeSnapshot();
-    }
-  
-    async initializeSnapshot() {
-      try {
-          this.snapshot = await this.getSnapshot();
-      } catch (error) {
-          console.error("Error while initializing snapshot: ", error);
-          throw error;
-      }
-    }
-    
-    async getSnapshot() {
-        return await getDocs(this.ref, "quizzes");
-    }
-  
-    async getAllQuizes(){
-      const quizMap = await this.getQuizMap()
-      return Object.values(quizMap)
+        this.flashcardRepository = new FlashCardRepository(database)
     }
 
-    async getQuizMap(){
-      await this.initializationPromise;
-      const quizes = {}
-      this.snapshot.docs.forEach((doc)=>{
-        const quiz = doc.data()
-        quizes[doc.id] = new Quiz(quiz.title, quiz.question, 
-          doc.id, quiz.subject, quiz.author, quiz.dateCreated, quiz.time)
-      })
-      return quizes
+    /** Given a quiz id, fetch the quiz object */
+    async getQuizByid(id){
+        return await getItemById(this.database, id, "quizzes", "quiz")
     }
 
-    async getQuizById(id){
-        await this.initializationPromise;
-        const quizes = await this.getUserMap()
-        if(quizes[id] !== null && quizes[id] !== undefined) return quizes[id]
-        return "DOES NOT EXIST"
+    /** Given a quiz id, delete that quiz */
+    async deleteQuizById(id){
+        return await removeDocumentFromCollection(this.database, id, "quizzes", "quiz")
     }
 
-    //function to deleteQuiz using the captured quiz.id in order to remove the specifc quiz
-    async deleteQuiz(quizId) {
-      const quizDocRef = doc(this.ref, quizId); // Reference to the specific quiz document
-      try {
-          await deleteDoc(quizDocRef);
-      } catch (error) {
-          console.error('Error deleting quiz:', error);
-          throw error;
-      }
-  }
-  }
+    /** Get all quizzes in the database */
+    async getAllQuizzes(){
+        return await getAllItems(this.database, "quizzes")
+    }
 
+    /** TODO: Create  new quiz based on flashcardId. 
+     * quiz param represents the quiz we wish to create
+    */
+    async createQuiz(quiz){
+      try{
+        const flashcardCollection = collection(this.database, "flashcardSets")
+        const flashcardRef = await addDoc(flashcardCollection, flashcardSet.toJSON())
+        await setField(this.database, flashcardRef.id, "flashcardSets","id", flashcardRef.id)
+        /**whenever we create a flashcard, we add it to the list of flashcards for the user
+        who created it */
+        await this.userRepository.addOwnedFlashcard(flashcardSet.authorId, flashcardRef.id)
+        return flashcardRef.id
+    }catch(error){
+        console.log("error adding flashcard set", error)
+    }
+    }
+}
