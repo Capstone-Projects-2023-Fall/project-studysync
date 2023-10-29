@@ -27,20 +27,7 @@ function QuizComponent() {
 
   return (
     <div>
-      {/* Render your quizzes here */}
-      <h2>Quiz:</h2>
       <div>
-        <h3>Subject: </h3>
-        <ul>
-          {quizzes.map((subject) => (
-            <li key={subject} style={{ marginBottom: '10px' }}>
-              <span style={{ display: 'inline-block', width: '150px' }}>{subject}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h3>Quiz Details: </h3>
         <AddQuiz />
         <QuizList />
       </div>
