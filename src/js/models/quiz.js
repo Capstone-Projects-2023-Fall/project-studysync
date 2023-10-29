@@ -14,18 +14,28 @@ export default class Quiz {
             name: this.name,
             authorId: this.authorId,
             createdAt : this.createdAt,
-            flashcardId: this.flashCardId,
+            flashCardId: this.flashCardId,
             sharedWith: this.sharedWith,
-            id: this.id,
+            id: this.authorId,
             quizItems: this.quizItems
         }
     }
 }
 
 export class QuizItem{
-    constructor(question, choices, answerIndex){
+
+    //correct choice index is populated by default
+    constructor(question){
         this.question = question //The question. Based off the flashcard item
-        this.choices = choices  //Array of 4 possible choices
-        this.answerIndex = answerIndex //Index of the correct answer
+        this.choices = ['','','',''] //Array of 4 possible choices, we populate correct choice by default, other choices must be manually added
+        this.answerIndex = Math.floor(Math.random() * 4) //Index of the correct answer [random int between 0 and 3]
+    }
+
+    toJSON(){
+        return{
+            question: this.question,
+            choices: this.choices,
+            answerIndex: this.answerIndex
+        }
     }
 }
