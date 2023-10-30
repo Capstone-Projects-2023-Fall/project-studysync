@@ -104,11 +104,11 @@ export class UserRepository {
 
     console.log("user is ", user)
     console.log("first name is: ", firstName)
-    // const flashcards = await this.getOwnedFlashcards(id)
-    //const sharedFlashcards = await this.getSharedFlashcards(id)
-    //const friends = await this.getFriends(id)
-    //const followers = await this.getFollowers(id)
-    // const following = await this.getFollowing(id)
+    const flashcards = await this.getOwnedFlashcards(id)
+    const sharedFlashcards = await this.getSharedFlashcards(id)
+    const friends = await this.getFriends(id)
+    const followers = await this.getFollowers(id)
+    const following = await this.getFollowing(id)
 
     return {
       id: id,
@@ -116,12 +116,12 @@ export class UserRepository {
       email: email,
       imageURL: imageURL,
       username: username,
-      //friends: friends,
-      //followers: followers,
-      //following: following,
+      friends: friends,
+      followers: followers,
+      following: following,
       name: firstName + " " + lastName,
-      //flashcards: flashcards,
-      //sharedFlashcards: sharedFlashcards,
+      flashcards: flashcards,
+      sharedFlashcards: sharedFlashcards,
       profession: profession,
       phone: phone,
       name: name
