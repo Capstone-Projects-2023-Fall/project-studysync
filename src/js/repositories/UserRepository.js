@@ -101,6 +101,9 @@ export class UserRepository {
   async getProfile(userId) {
     const user = await this.getUserById(userId)
     const { id, bio, email, imageUrl, username, name, profession, phone, firstName, lastName} = user
+
+    console.log("user is ", user)
+    console.log("first name is: ", firstName)
     // const flashcards = await this.getOwnedFlashcards(id)
     //const sharedFlashcards = await this.getSharedFlashcards(id)
     //const friends = await this.getFriends(id)
@@ -113,11 +116,11 @@ export class UserRepository {
       email: email,
       imageUrl: imageUrl,
       username: username,
-      
+      name: "yurrrr",
       //friends: friends,
       //followers: followers,
       //following: following,
-      name: firstName + " " + lastName,
+      name: '',
       //flashcards: flashcards,
       //sharedFlashcards: sharedFlashcards,
       profession: profession,

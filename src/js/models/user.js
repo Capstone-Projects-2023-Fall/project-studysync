@@ -10,10 +10,10 @@ export  default class User {
         this.firstName = firstName
         this.lastName = lastName
         this.email = email;
-        this.name = ''
+        this.name = firstName + " " + lastName
         this.phone = ''
         this.profession = ''
-        this.bio = 'default bio'
+        this.bio = ''
         this.following = []
         this.followers = []
         this.imageUrl = 'default.jpg'
@@ -43,7 +43,9 @@ export  default class User {
         ownedFlashcards : user.sharedFlashcards,
         sharedFlashcards : user.sharedFlashcards,
         notifications: user.notifications,
-        events: user.events
+        events: user.events,
+        name: user.firstName + " " + user.lastName,
+        phone: user.phone
       };
     }
 }

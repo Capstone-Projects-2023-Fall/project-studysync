@@ -65,7 +65,7 @@ const SignUpForm = ()=> {
         try{
           const {user} = await createUserWithEmailAndPassword(auth,_email,_password);
           if(user != null){
-            await userRepository.addUser(_email, "default-username", user.uid)
+            await userRepository.addUser(_email, "default-username", _firstName, _lastName, user.uid)
           }
           navigate('/');
       }catch(e){
