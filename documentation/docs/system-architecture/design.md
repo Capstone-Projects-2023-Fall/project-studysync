@@ -30,7 +30,8 @@ StudySync will be using a Firebase NoSQL database to store all data. The databas
 
 For single properties on a user model such as email, password and name, we will just store it in the user the corresponding collection. For more complex properties such as notifications, followers and following, flashcards and events, we will store the ids of each corresponding field in the user collection and query the respective collection as needed. To be more specific, in the case of notifications, the actual data for notifications will be stored in the Notifications collections, anytime we need to query user notifications, we can do this easily by fetching all the notification ids for that user from the Users collection and then querying the Notifications collection using those ids. This same idea applies to fetching events for Notifications
 
-![StudySync (5)](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/77356776/ba3896cb-671b-4a2f-aaa4-8e74e4f356e0)
+![StudySync (6)](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/77356776/66bc3cef-803b-4fdc-9598-b9b5bea3856a)
+
 
 
 
