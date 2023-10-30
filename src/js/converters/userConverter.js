@@ -4,6 +4,8 @@ export const userConverter = {
         return {
           id : user.id,
           username: user.username,
+          firstName: this.firstName,
+          lastName: this.lastName,
           email: user.email,
           bio: user.bio,
           following: user.following,
@@ -32,6 +34,8 @@ export const userConverter = {
       user.username = data.username;
       user.email = data.email;
         user.bio = data.bio;
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
         user.following = data.following;
         user.followers = data.followers;
         user.imageUrl = data.imageUrl;

@@ -34,6 +34,8 @@ const  UserProfile = ()=> {
     setIsLoading(true)
     //fetch and set user profile upon page load
     userRepository.getProfile(UserId).then((profile)=>{
+        console.log("printing profile")
+        console.log(profile)
         setProfile(profile)
         setIsLoading(false)
     }).catch((error)=>{
@@ -138,12 +140,6 @@ const  UserProfile = ()=> {
                         <div class="tab-content profile-tab" id="myTabContent">
                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <label>User Id:</label>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <p>user-id</p>
-                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
@@ -167,7 +163,6 @@ const  UserProfile = ()=> {
                                             </div>
                                             <div class="col-md-6">
                                                 <p>{profile.phone}</p>
-                                                <p>123-456-7890</p>
                                             </div>
                                         </div>
                                         <div class="row">
