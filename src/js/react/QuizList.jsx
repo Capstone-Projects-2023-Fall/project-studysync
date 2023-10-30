@@ -21,6 +21,17 @@ function QuizList({ selectedSubject }) {
     quizRepository.getAllQuizes()
       .then((quizzes) => {
         const filteredQuizzes = quizzes.filter(quiz => quiz.subject === selectedSubject);
+  
+        // Convert Firestore timestamp to Date string for each quiz
+        filteredQuizzes.forEach(quiz => {
+          if (quiz.dateCreated) {
+            const timestamp = quiz.dateCreated.toDate();
+            quiz.creationDate = timestamp.toLocaleString();
+          } else {
+            quiz.creationDate = '';
+          }
+        });
+  
         setQuizzes(filteredQuizzes);
       })
       .catch((error) => {
