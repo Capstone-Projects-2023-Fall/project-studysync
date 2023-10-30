@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function MainQuizPage() {
-
+    
     const [selectedSubject, setSelectedSubject] = useState(null);
     const [subjects, setSubjects] = useState(['Math', 'English', 'History', 'Music']);
     const [open, setOpen] = useState(false); 
     const [newSubject, setNewSubject] = useState('');
+    const navigate = useNavigate();
 
     // Function to handle adding a new subject
     const handleAddSubject = () => {
@@ -27,12 +29,13 @@ function MainQuizPage() {
                     </Typography>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         {/* Profile Avatar Button */}
-                        <Button onClick={() => { /* navigate to profile page */ }}>
-                            <Avatar alt="User Profile" src="https://via.placeholder.com/40" />
-                        </Button>
+                        <Button onClick={() => navigate('/profile/:UserId')}>
+    <Avatar alt="User Profile" src="https://via.placeholder.com/40" />
+</Button>
+
                         <Button 
                             variant="contained"
-                            // for future leaderboard page implement navigation
+                            // for future leaderboard page, implement navigation
                         >
                             LEADERBOARD
                         </Button>
@@ -63,7 +66,7 @@ function MainQuizPage() {
                 </div>
             </div>
 
-            {/* Dialog for adding a new subject */}
+            {/* Text box for adding a new subject */}
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Add a New Subject</DialogTitle>
                 <DialogContent>
