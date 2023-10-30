@@ -1,5 +1,6 @@
-import UserProfile from './userProfile.js';
 
+
+import UserProfile from './userProfile.js';
 /**
  * Represents a user object.
  */
@@ -16,7 +17,7 @@ export  default class User {
         this.bio = ''
         this.following = []
         this.followers = []
-        this.imageUrl = 'default.jpg'
+        this.imageURL = ''
         this.ownedQuizzes = []
         this.sharedQuizzes = []
         this.ownedFlashcards = []
@@ -24,6 +25,7 @@ export  default class User {
         this.notifications = []
         this.events = []
         this.profile = new UserProfile();
+        this.subjects = []
     }
 
     toJSON(){
@@ -37,7 +39,7 @@ export  default class User {
         bio: user.bio,
         following: user.following,
         followers: user.followers,
-        imageUrl: user.imageUrl,
+        imageURL: user.imageURL,
         ownedQuizzes: user.ownedQuizzes,
         sharedQuizzes: user.sharedQuizzes,
         ownedFlashcards : user.sharedFlashcards,
@@ -45,7 +47,9 @@ export  default class User {
         notifications: user.notifications,
         events: user.events,
         name: user.firstName + " " + user.lastName,
-        phone: user.phone
+        phone: user.phone,
+        subjects: user.subjects,
+        profession: user.profession
       };
     }
 }

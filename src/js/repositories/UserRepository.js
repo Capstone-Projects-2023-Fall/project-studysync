@@ -100,28 +100,28 @@ export class UserRepository {
    */
   async getProfile(userId) {
     const user = await this.getUserById(userId)
-    const { id, bio, email, imageUrl, username, name, profession, phone, firstName, lastName} = user
+    const { id, bio, email, imageURL, username, name, profession, phone, firstName, lastName} = user
 
     console.log("user is ", user)
     console.log("first name is: ", firstName)
-    // const flashcards = await this.getOwnedFlashcards(id)
-    //const sharedFlashcards = await this.getSharedFlashcards(id)
-    //const friends = await this.getFriends(id)
-    //const followers = await this.getFollowers(id)
-    // const following = await this.getFollowing(id)
+    const flashcards = await this.getOwnedFlashcards(id)
+    const sharedFlashcards = await this.getSharedFlashcards(id)
+    const friends = await this.getFriends(id)
+    const followers = await this.getFollowers(id)
+    const following = await this.getFollowing(id)
 
     return {
       id: id,
       bio: bio,
       email: email,
-      imageUrl: imageUrl,
+      imageURL: imageURL,
       username: username,
-      //friends: friends,
-      //followers: followers,
-      //following: following,
+      friends: friends,
+      followers: followers,
+      following: following,
       name: firstName + " " + lastName,
-      //flashcards: flashcards,
-      //sharedFlashcards: sharedFlashcards,
+      flashcards: flashcards,
+      sharedFlashcards: sharedFlashcards,
       profession: profession,
       phone: phone,
       name: name

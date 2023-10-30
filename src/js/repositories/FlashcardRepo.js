@@ -333,7 +333,7 @@ const FlashcardRepo = {
                     content: comment.content,
                     date: comment.date,
                     like: comment.like,
-                    username: userData.username,
+                    username: userData.name,
                     imageURL: userData.imageURL,
                     commentId: commentId
                 });
