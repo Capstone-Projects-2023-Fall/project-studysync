@@ -15,10 +15,10 @@ export class UserRepository {
   }
 
   /**Add a user to the database for the first time with id: uuid*/
-  async addUser(email, username, uuid) {
+  async addUser(email, username, firstName, lastName, uuid) {
     try {
       const userRef = doc(this.database, "users", uuid)
-      await setDoc(userRef, new User(email, username, uuid).toJSON())
+      await setDoc(userRef, new User(email, username, firstName, lastName, uuid).toJSON())
       console.log('Successfully added user to database', username);
     } catch (error) {
       console.log("error adding user", error)
@@ -100,7 +100,7 @@ export class UserRepository {
    */
   async getProfile(userId) {
     const user = await this.getUserById(userId)
-    const { id, bio, email, imageUrl, username, name, profession, phone } = user
+    const { id, bio, email, imageUrl, username, name, profession, phone, firstName, lastName} = user
     // const flashcards = await this.getOwnedFlashcards(id)
     //const sharedFlashcards = await this.getSharedFlashcards(id)
     //const friends = await this.getFriends(id)
@@ -113,10 +113,11 @@ export class UserRepository {
       email: email,
       imageUrl: imageUrl,
       username: username,
+      
       //friends: friends,
       //followers: followers,
       //following: following,
-      name: "John Doe",
+      name: firstName + " " + lastName,
       //flashcards: flashcards,
       //sharedFlashcards: sharedFlashcards,
       profession: profession,

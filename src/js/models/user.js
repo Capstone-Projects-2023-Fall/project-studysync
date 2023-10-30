@@ -4,9 +4,11 @@ import UserProfile from './userProfile.js';
  * Represents a user object.
  */
 export  default class User {
-    constructor(email = '', username='', uuid='') {
+    constructor(email = '', username='', firstName='', lastName='', uuid='') {
         this.id = uuid
         this.username = username;
+        this.firstName = firstName
+        this.lastName = lastName
         this.email = email;
         this.name = ''
         this.phone = ''
@@ -30,6 +32,8 @@ export  default class User {
         id: user.id,
         username: user.username,
         email: user.email,
+        firstName: this.firstName,
+        lastName: this.lastName,
         bio: user.bio,
         following: user.following,
         followers: user.followers,
