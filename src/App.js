@@ -4,8 +4,8 @@ import './App.css';
 signInWithEmailAndPassword} from "firebase/auth";*/
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import DashboardCom from './js/react/DashboardCom.js'; 
-import FlashcardComponent from './js/react/flashcardCom.js'; 
+import DashboardCom from './js/react/DashboardCom.js';
+import FlashcardComponent from './js/react/flashcardCom.js';
 import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
@@ -23,9 +23,9 @@ import { auth } from './firebase';
 
 function App() {
 
-  const {user} = useUser();
+  const { user } = useUser();
 
-  const handleLogin = () => {};
+  const handleLogin = () => { };
 
   const navbarItemsLoggedOut = [
     { label: 'Log in', link: '/login', action: handleLogin },
@@ -35,7 +35,8 @@ function App() {
 
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
-    { label: 'StudyTool', link: '/studytool'},
+    { label: 'Flashcard', link: '/flashcard' },
+    { label: 'Quiz', link: '/quiz' },
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     { label: 'Profile', link: `/profile/${user && user.uid}` },
     //... add other items
@@ -55,25 +56,25 @@ function App() {
 
   return (
     <div className="app">
-        <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
-        <QuizList/>
-        <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/studytool" element={<FlashcardComponent />} />
-            <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
-            <Route path="/" element={
-                user 
-                ? <DashboardCom /> 
-                : <div className="login-center">Please log in or sign up to continue</div>
-            } />
-            <Route path='/passwordreset' element={<PasswordReset/>}/>
-            <Route path='/signup' element={<SignUpForm/>}/>  
-            <Route path='/profile/:UserId' element={<UserProfile/>}/>
-            <Route path='/profile/:data/edit' element={<EditUserProfile/>}/>
+      <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/flashcard" element={<FlashcardComponent />} />
+        <Route path="/quiz" element={<QuizList />} />
+        <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
+        <Route path="/" element={
+          user
+            ? <DashboardCom />
+            : <div className="login-center">Please log in or sign up to continue</div>
+        } />
+        <Route path='/passwordreset' element={<PasswordReset />} />
+        <Route path='/signup' element={<SignUpForm />} />
+        <Route path='/profile/:UserId' element={<UserProfile />} />
+        <Route path='/profile/:data/edit' element={<EditUserProfile />} />
 
-        </Routes>
+      </Routes>
     </div>
-);
+  );
 }
 
 export default App;
