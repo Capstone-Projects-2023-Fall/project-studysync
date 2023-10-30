@@ -20,10 +20,10 @@ const  EditUserProfile = ()=> {
 
 
     const [profile, setProfile] = useState({
-        bio: '',
-        name: '',
-        phone: '',
-        profession: ''
+        bio: userProfile.bio,
+        name: userProfile.name,
+        phone: userProfile.phone,
+        profession: userProfile.profession
       });
     
       // Handle input changes
@@ -96,7 +96,7 @@ const  EditUserProfile = ()=> {
                                             {userProfile.profession}
                                         </h6>
                                         <p class="proile-about"><p>About me :</p> 
-                                            <textarea onChange={handleInputChange} name="bio" value={profile.bio} id='ProfileAboutMe' placeholder='Enter description'></textarea>
+                                            <textarea onChange={handleInputChange} name="bio" value={profile.bio} id='ProfileAboutMe' placeholder={profile.bio} ></textarea>
                                         </p>                                    
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                                     <li class="nav-item">
@@ -134,7 +134,7 @@ const  EditUserProfile = ()=> {
                                                     <label>Name:</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input onChange={handleInputChange} name="name" value={profile.name} id='ProfileName' type='text' placeholder='Name'></input>
+                                                    <input onChange={handleInputChange} name="name" value={profile.name} id='ProfileName' type='text' placeholder={profile.name}></input>
 
                                                 </div>
                                             </div>
@@ -151,7 +151,7 @@ const  EditUserProfile = ()=> {
                                                     <label>Phone:</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input onChange={handleInputChange} name="phone" value={profile.phone} id='ProfilePhoneNum' type='text' placeholder='Phone Number'></input>
+                                                    <input onChange={handleInputChange} name="phone" value={profile.phone} id='ProfilePhoneNum' type='text' placeholder={profile.phone}></input>
 
                                                 </div>
                                             </div>
@@ -160,7 +160,7 @@ const  EditUserProfile = ()=> {
                                                     <label>Profession:</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input onChange={handleInputChange} name="profession" value={profile.profession} id='ProfileProfession' type='text' placeholder='profession'></input>
+                                                    <input onChange={handleInputChange} name="profession" value={profile.profession} id='ProfileProfession' type='text' placeholder={profile.profession} ></input>
                                                 </div>
                                             </div>
                                 </div>
