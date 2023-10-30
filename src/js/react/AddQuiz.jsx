@@ -3,84 +3,67 @@ import { useEffect, useState } from 'react';
 import { collection, addDoc } from 'firebase/firestore';
 import { database } from '../../firebase';
 import { QuizRepository } from '../repositories/QuizRepository';
-import {
-  Button,
-  styled,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  TextField,
-  DialogActions,
-  Select,
-  MenuItem,
-} from '@mui/material';
+import {Button,TableContainer,Paper,Dialog,DialogTitle,DialogContent,DialogContentText,TextField,DialogActions,Select,MenuItem,} from '@mui/material';
 
 function AddQuiz() {
   const [quizzes, setQuizzes] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('');
-  const [newSubject, setNewSubject] = useState(''); // To store the new subject
+  const [newSubject, setNewSubject] = useState(''); //store new object
   const [quizTitle, setQuizTitle] = useState('');
   const [numQuestions, setNumQuestions] = useState(0);
-  const [dialogStep, setDialogStep] = useState(1); // Track the step of the dialog
+  const [dialogStep, setDialogStep] = useState(1); //check step of the daiologs 
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    // Create an instance of QuizRepository
+    //instance for quiz repo
     const quizRepository = new QuizRepository(database);
 
-    // Call the getAllQuizes function to retrieve the quizzes
+    //function to get quizeees
     quizRepository.getAllQuizes()
       .then((quizzes) => {
-        // Update the state with the retrieved quizzes
+        //update the state with the retrieved quizzes
         setQuizzes(quizzes);
       })
       .catch((error) => {
         console.error('Error retrieving quizzes:', error);
       });
-  }, []);
+    },
+     []
+  );
 
-  // Extract unique subjects
+  //getr subject 
   const uniqueSubjects = [...new Set(quizzes.map((quiz) => quiz.subject))]; 
 
   const handleAddQuizSubject = () => {
     if (selectedSubject || (dialogStep === 1 && newSubject)) {
-      setDialogStep(2); // Move to the next step
-    }
-  };
+      setDialogStep(2); //move to the next dialog}
+    };
 
   const handleAddQuiz = () => {
     if (quizTitle && numQuestions > 0) {
       const quizzesCollection = collection(database, 'quizzes');
       let subjectToAdd = dialogStep === 1 ? newSubject : selectedSubject;
-      
       if (subjectToAdd === 'custom') {
         subjectToAdd = newSubject;
       }
   
-      // Capture the current date
+      //capture the current date
       const currentDate = new Date();
   
       addDoc(quizzesCollection, {
         subject: subjectToAdd,
         title: quizTitle,
         question: numQuestions,
-        dateCreated: currentDate, // Insert the current date
-      })
+        dateCreated: currentDate, 
+      }
+      )
         .then((quizDocRef) => {
           console.log('Quiz added with ID: ', quizDocRef.id);
-          setNewSubject(''); // Clear the new subject input
-          setSelectedSubject(''); // Clear the selected subject
+          setNewSubject(''); //clear the new subject input
+          setSelectedSubject(''); //clear the selected subject
           setQuizTitle('');
           setNumQuestions('');
-          setDialogStep(1); // Reset the dialog step
+          setDialogStep(1); //reset the dialog step
           setOpen(false);
         })
         .catch((error) => {
@@ -100,7 +83,7 @@ function AddQuiz() {
       }}
     >
       <TableContainer component={Paper} style={{ maxHeight: '400px', overflowY: 'auto' }}>
-        {/* ... Table structure */}
+        {/* constrcution fo thable*/}
       </TableContainer>
     </div>
 
@@ -123,7 +106,7 @@ function AddQuiz() {
           </DialogTitle>
           <DialogContent>
             {dialogStep === 1 ? (
-              // Subject selection step
+              //subject selection step
               <div>
                 <DialogContentText>
                   Please select the subject for the new quiz or add a new subject:
@@ -138,9 +121,9 @@ function AddQuiz() {
                       {subject}
                     </MenuItem>
                   ))}
-                  <MenuItem value="custom">Add New Subject</MenuItem> {/* Custom Subject option */}
+                  <MenuItem value="custom">Add New Subject</MenuItem> {/*custom Subject option */}
                 </Select>
-                {selectedSubject === 'custom' && ( // Display new subject input when Custom Subject is selected
+                {selectedSubject === 'custom' && ( //display new subject input when Custom Subject is selected
                   <TextField
                     margin="dense"
                     label="New Subject"
@@ -155,7 +138,7 @@ function AddQuiz() {
                     onClick={() => {
                       setOpen(false);
                       setSelectedSubject('');
-                      setNewSubject(''); // Clear the new subject input
+                      setNewSubject(''); //clear the new subject input
                       setQuizTitle('');
                       setNumQuestions('');
                     }}
@@ -169,7 +152,7 @@ function AddQuiz() {
                 </DialogActions>
               </div>
             ) : (
-              // Quiz details step
+              //quiz details step
               <div>
                 <DialogContentText>
                   Please enter the quiz title and number of questions:
@@ -207,5 +190,5 @@ function AddQuiz() {
     </div>
   );
 }
-
+}
 export default AddQuiz;
