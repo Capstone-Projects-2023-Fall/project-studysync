@@ -4,6 +4,8 @@ export const userConverter = {
         return {
           id : user.id,
           username: user.username,
+          firstName: this.firstName,
+          lastName: this.lastName,
           email: user.email,
           bio: user.bio,
           following: user.following,
@@ -14,7 +16,10 @@ export const userConverter = {
           ownedFlashcards : user.sharedFlashcards,
           sharedFlashcards : user.sharedFlashcards,
           notifications: user.notifications,
-          events: user.events
+          events: user.events,
+          phone: user.phone,
+          name: user.name,
+          profession: user.profession
         };
     },
     fromFirestore: (snapshot, options) => {
@@ -29,6 +34,8 @@ export const userConverter = {
       user.username = data.username;
       user.email = data.email;
         user.bio = data.bio;
+        user.firstName = data.firstName;
+        user.lastName = data.lastName;
         user.following = data.following;
         user.followers = data.followers;
         user.imageUrl = data.imageUrl;
@@ -38,6 +45,9 @@ export const userConverter = {
         user.sharedFlashcards = data.sharedFlashcards
         user.notifications = data.notifications
         user.events = data.events
+        user.name = data.name
+        user.profession = data.profession
+        user.phone = data.phone
         return user
   }
   

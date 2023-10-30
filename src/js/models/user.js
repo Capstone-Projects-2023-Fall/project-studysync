@@ -4,11 +4,16 @@ import UserProfile from './userProfile.js';
  * Represents a user object.
  */
 export  default class User {
-    constructor(email = '', username='', uuid='') {
+    constructor(email = '', username='', firstName='', lastName='', uuid='') {
         this.id = uuid
         this.username = username;
+        this.firstName = firstName
+        this.lastName = lastName
         this.email = email;
-        this.bio = 'default bio'
+        this.name = firstName + " " + lastName
+        this.phone = ''
+        this.profession = ''
+        this.bio = ''
         this.following = []
         this.followers = []
         this.imageUrl = 'default.jpg'
@@ -27,6 +32,8 @@ export  default class User {
         id: user.id,
         username: user.username,
         email: user.email,
+        firstName: this.firstName,
+        lastName: this.lastName,
         bio: user.bio,
         following: user.following,
         followers: user.followers,
@@ -36,7 +43,9 @@ export  default class User {
         ownedFlashcards : user.sharedFlashcards,
         sharedFlashcards : user.sharedFlashcards,
         notifications: user.notifications,
-        events: user.events
+        events: user.events,
+        name: user.firstName + " " + user.lastName,
+        phone: user.phone
       };
     }
 }

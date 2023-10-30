@@ -51,7 +51,7 @@
     margin-top: 5%;
 }
 .proile-rating span{
-    color: #0062cc;
+    color: #0b0d1f;
     font-size: 15px;
     font-weight: 600;
 }
@@ -112,7 +112,7 @@
 }
 .profile-tab p{
     font-weight: 600;
-    color: #0062cc;
+    color: #152029;
 }
 .RemoveFriend{
     margin-left: 10%;
@@ -152,4 +152,19 @@
 }
 .profile-friends li{
     margin-bottom: 5%;
+}
+.profile-save-btn{
+
+    border-radius: 20%;
+    color: white;
+    background-color: #2e3278;
+    border: none;
+    margin-right: 20%;        
+}
+.profile-delete-btn{
+  
+    border-radius: 20%;
+    color: white;
+    background-color: red;
+    border: none;
 }
