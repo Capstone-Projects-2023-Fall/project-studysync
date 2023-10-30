@@ -48,7 +48,8 @@ export  default class User {
         events: user.events,
         name: user.firstName + " " + user.lastName,
         phone: user.phone,
-        subjects: user.subjects
+        subjects: user.subjects,
+        profession: user.profession
       };
     }
 }
