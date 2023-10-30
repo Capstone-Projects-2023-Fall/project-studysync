@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, deleteDoc, doc, query, where, getDocs } from 'firebase/firestore';
 import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { database } from '../../firebase';
 import { QuizRepository } from '../repositories/QuizRepository';
+import QuizList from './QuizList';
+import AddQuiz from './AddQuiz';
 
 function MainQuizPage() {
-    
+
     const [selectedSubject, setSelectedSubject] = useState(null);
-    const [open, setOpen] = useState(false); 
+    const [open, setOpen] = useState(false);
     const [subjects, setSubjects] = useState(['Math', 'English', 'History', 'Music']);
     const [newSubject, setNewSubject] = useState('');
     const navigate = useNavigate();
@@ -40,6 +42,19 @@ function MainQuizPage() {
         }
     };
 
+    const handleDeleteSubject = async () => {
+        if (selectedSubject) {
+            const quizzesCollection = collection(database, 'quizzes');
+            const q = query(quizzesCollection, where("subject", "==", selectedSubject));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                deleteDoc(doc.ref);
+            });
+            setSubjects(prevSubjects => prevSubjects.filter(subject => subject !== selectedSubject));
+            setSelectedSubject(null);
+        }
+    };
+
     return (
         <div>
             <AppBar position="static">
@@ -68,16 +83,20 @@ function MainQuizPage() {
                         ))}
                     </List>
                     <Button variant="contained" color="primary" onClick={() => setOpen(true)}>ADD SUBJECT</Button>
+                    <Button variant="contained" color="secondary" onClick={handleDeleteSubject} style={{ marginLeft: '10px' }}>DELETE SUBJECT</Button>
                 </Paper>
 
                 <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                     {selectedSubject && (
                         <>
+                            <h3>Quizzes for {selectedSubject}</h3>
+                            <AddQuiz />
+                            <QuizList selectedSubject={selectedSubject} />
                         </>
                     )}
                 </div>
             </div>
-
+            
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Add a New Subject</DialogTitle>
                 <DialogContent>
@@ -96,8 +115,8 @@ function MainQuizPage() {
                     <Button onClick={handleAddSubject} color="primary">ADD</Button>
                 </DialogActions>
             </Dialog>
-        </div>
+        </div>  
     );
-}
+                    }
 
 export default MainQuizPage;
