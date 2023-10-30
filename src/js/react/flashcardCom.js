@@ -163,10 +163,10 @@ const FlashcardComponent = () => {
   };
 
   const handleEdit = async () => {
-    console.log('handleEdit called');  // 确定函数被调用
+    console.log('handleEdit called');  
 
     if (editedName.trim() === "" || !currentlyEditingTopic) {
-      console.log('Empty edited name or no topic being edited, exiting');  // 检查是否有有效的编辑内容
+      console.log('Empty edited name or no topic being edited, exiting');  
       return;
     }
 
