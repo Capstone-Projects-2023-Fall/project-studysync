@@ -83,7 +83,7 @@ export class UserRepository{
       return this.getUsers(following)
     }
 
-    /** async get user friends: friends are people who are followers but are in users following list*/
+    /** async get user friends: friends are people who are followers and are also in users following list*/
     async getFriends(id){
       const followers = await this.getFollowers(id)
       const following = await this.getFollowing(id)
@@ -100,19 +100,28 @@ export class UserRepository{
      */
     async getProfile(userId){
       const user = await this.getUserById(userId)
-      const {id, bio, email, imageUrl, username} = user
+      const {id, bio, email, imageUrl, username, name, profession, phone} = user
       const flashcards = await this.getOwnedFlashcards(id)
       const sharedFlashcards = await this.getSharedFlashcards(id)
-  
+      const friends = await this.getFriends(id)
+      const followers = await this.getFollowers(id)
+      const following = await this.getFollowing(id)
+
       return {
         id: id, 
         bio: bio,
         email: email,
         imageUrl: imageUrl, 
         username: username, 
+        friends: friends,
+        followers: followers,
+        following :following,
         name: "John Doe", 
         flashcards: flashcards, 
-        sharedFlashcards: sharedFlashcards
+        sharedFlashcards: sharedFlashcards, 
+        profession: profession,
+        phone: phone,
+        name: name
       }
     }
 

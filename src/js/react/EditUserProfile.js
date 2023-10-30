@@ -3,17 +3,46 @@ import './UserProfileStyle.css';
 import { useState,useEffect } from 'react';
 import UserProfileComponent from './UserProfileComponent';
 import useUser from './useUser';
+import { userRepository } from '../../firebase';
 
 const  EditUserProfile = ()=> {
 
     //Replace this with real friends list from database
     const [friends,setFriends] =  useState(["Bob","Joe","Alice","John"]);
-    const {UserId} = useParams();
+    const { data} = useParams();
+    const decodedData = decodeURIComponent(data);
+    const receivedObject = JSON.parse(decodedData);
+
+   const {UserId, userProfile} = receivedObject
+
     const {user} = useUser();
     const navigate = useNavigate();
 
+
+    const [profile, setProfile] = useState({
+        bio: '',
+        name: '',
+        phone: '',
+        profession: ''
+      });
+    
+      // Handle input changes
+      const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setProfile({
+          ...profile,
+          [name]: value,
+        });
+      };
+    
     function saveProfile(){
-        navigate(`/profile/${user && user.uid}`);
+        userRepository.updateNonArrayUserFields(UserId, profile).then((res)=>{
+            console.log("user saved")
+            navigate(`/profile/${user && user.uid}`);
+        }).catch((err)=>{
+            alert("unable to save user profile")
+            console.log("err: ", err)
+        })
     }
 
 
@@ -61,13 +90,13 @@ const  EditUserProfile = ()=> {
                         <div class="col-md-6">
                             <div class="profile-head">
                                         <h5>
-                                            Kshiti Ghelani
+                                            {userProfile.name}
                                         </h5>
                                         <h6>
-                                            Web Developer and Designer
+                                            {userProfile.profession}
                                         </h6>
                                         <p class="proile-about"><p>About me :</p> 
-                                            <textarea id='ProfileAboutMe' placeholder='Enter description'></textarea>
+                                            <textarea onChange={handleInputChange} name="bio" value={profile.bio} id='ProfileAboutMe' placeholder='Enter description'></textarea>
                                         </p>                                    
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                                     <li class="nav-item">
@@ -105,7 +134,7 @@ const  EditUserProfile = ()=> {
                                                     <label>Name:</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input id='ProfileName' type='text' placeholder='Name'></input>
+                                                    <input onChange={handleInputChange} name="name" value={profile.name} id='ProfileName' type='text' placeholder='Name'></input>
 
                                                 </div>
                                             </div>
@@ -114,7 +143,7 @@ const  EditUserProfile = ()=> {
                                                     <label>Email:</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <p>kshitighelani@gmail.com</p>
+                                                    <p>{userProfile.email}</p>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -122,7 +151,7 @@ const  EditUserProfile = ()=> {
                                                     <label>Phone:</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input id='ProfilePhoneNum' type='text' placeholder='Phone Number'></input>
+                                                    <input onChange={handleInputChange} name="phone" value={profile.phone} id='ProfilePhoneNum' type='text' placeholder='Phone Number'></input>
 
                                                 </div>
                                             </div>
@@ -131,7 +160,7 @@ const  EditUserProfile = ()=> {
                                                     <label>Profession:</label>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <input id='ProfileProfession' type='text' placeholder='profession'></input>
+                                                    <input onChange={handleInputChange} name="profession" value={profile.profession} id='ProfileProfession' type='text' placeholder='profession'></input>
                                                 </div>
                                             </div>
                                 </div>

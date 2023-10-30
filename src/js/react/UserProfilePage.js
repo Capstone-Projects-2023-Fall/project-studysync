@@ -2,21 +2,78 @@ import { useNavigate, useParams } from 'react-router-dom';
 import './UserProfileStyle.css';
 import useUser from './useUser';
 import UserProfileComponent from './UserProfileComponent';
-
+import { userRepository } from '../../firebase';
+import { useEffect, useState } from 'react';
 
 const  UserProfile = ()=> {
-
-
   //Replace this with real friends list
   const friends = ["Bob","Joe","Alice","John"];
+
+  const [profile, setProfile] = useState({})
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const {UserId } = useParams();
   const {user} = useUser();
   const navigate = useNavigate();
 
+  const dataToSend = {
+    UserId: UserId, 
+    userProfile: profile
+  }
+    const serializedData = JSON.stringify(dataToSend);
+    const encodedData = encodeURIComponent(serializedData);
+
   function editProfile(e){
     e.preventDefault();
-    navigate(`/profile/${UserId}/edit`);
+    navigate(`/profile/${encodedData}/edit`, );
+  }
+
+  useEffect(()=>{
+    //while awaiting database response, display some loading indication
+    setIsLoading(true)
+    //fetch and set user profile upon page load
+    userRepository.getProfile(UserId).then((profile)=>{
+        setProfile(profile)
+        setIsLoading(false)
+    }).catch((error)=>{
+        //handle the error in the ui
+        setError(error)
+        setIsLoading(false)
+        console.log(error)
+    })
+  }, [])
+
+  if(isLoading){
+    return (
+        <>
+            <head>
+                <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+                <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+                <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>      
+            </head>
+            <div class="container emp-profile">
+                <h2>LOADING PROFILE...</h2>
+            </div>
+            
+        </>
+    )
+  }
+
+  if(error){
+    return(
+        <>
+            <head>
+                <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+                <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+                <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>      
+            </head>
+            <div class="container emp-profile">
+                <h2>ERROR LOADING PROFILE...</h2>
+            </div>
+            
+        </>
+    )
   }
 
 
@@ -40,13 +97,13 @@ const  UserProfile = ()=> {
                     <div class="col-md-6">
                         <div class="profile-head">
                                     <h5>
-                                        Kshiti Ghelani 
+                                        {profile.name} 
                                     </h5>
                                     <h6>
-                                        Web Developer and Designer
+                                    {profile.profession}
                                     </h6>
                                     <p class="proile-rating">About me : <span>
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                                    {profile.bio}
                                       </span></p>
 
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -85,7 +142,7 @@ const  UserProfile = ()=> {
                                                 <label>User Id:</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Kshiti123</p>
+                                                <p>user-id</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -93,7 +150,7 @@ const  UserProfile = ()=> {
                                                 <label>Name:</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Kshiti Ghelani</p>
+                                                <p>{profile.name}</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -101,7 +158,7 @@ const  UserProfile = ()=> {
                                                 <label>Email:</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>kshitighelani@gmail.com</p>
+                                                <p>{profile.email}</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -109,6 +166,7 @@ const  UserProfile = ()=> {
                                                 <label>Phone:</label>
                                             </div>
                                             <div class="col-md-6">
+                                                <p>{profile.phone}</p>
                                                 <p>123-456-7890</p>
                                             </div>
                                         </div>
@@ -117,7 +175,7 @@ const  UserProfile = ()=> {
                                                 <label>Profession:</label>
                                             </div>
                                             <div class="col-md-6">
-                                                <p>Web Developer and Designer</p>
+                                                <p>{profile.profession}</p>
                                             </div>
                                         </div>
                             </div>

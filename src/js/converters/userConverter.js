@@ -14,7 +14,10 @@ export const userConverter = {
           ownedFlashcards : user.sharedFlashcards,
           sharedFlashcards : user.sharedFlashcards,
           notifications: user.notifications,
-          events: user.events
+          events: user.events,
+          phone: user.phone,
+          name: user.name,
+          profession: user.profession
         };
     },
     fromFirestore: (snapshot, options) => {
@@ -38,6 +41,9 @@ export const userConverter = {
         user.sharedFlashcards = data.sharedFlashcards
         user.notifications = data.notifications
         user.events = data.events
+        user.name = data.name
+        user.profession = data.profession
+        user.phone = data.phone
         return user
   }
   
