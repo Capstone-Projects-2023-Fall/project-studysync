@@ -100,7 +100,7 @@ export class UserRepository {
    */
   async getProfile(userId) {
     const user = await this.getUserById(userId)
-    const { id, bio, email, imageUrl, username, name, profession, phone, firstName, lastName} = user
+    const { id, bio, email, imageURL, username, name, profession, phone, firstName, lastName} = user
 
     console.log("user is ", user)
     console.log("first name is: ", firstName)
@@ -114,7 +114,7 @@ export class UserRepository {
       id: id,
       bio: bio,
       email: email,
-      imageUrl: imageUrl,
+      imageURL: imageURL,
       username: username,
       //friends: friends,
       //followers: followers,
