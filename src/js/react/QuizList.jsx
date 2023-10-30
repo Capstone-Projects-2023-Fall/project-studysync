@@ -7,142 +7,76 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Stack from '@mui/material/Stack'; // Added Stack component
-import Button from '@mui/material/Button';
-
 import { useEffect, useState } from 'react';
-import { database } from '../../firebase'; // Import your Firebase configuration
-import { QuizRepository } from '../repositories/QuizRepository'; // Import your QuizRepository class
-
-// Import the PositionedMenu component
+import { database } from '../../firebase';
+import { QuizRepository } from '../repositories/QuizRepository';
 import PositionedMenu from './PositionedMenu';
 
-function QuizList() {
+function QuizList({ selectedSubject }) {
   const [quizzes, setQuizzes] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
 
   useEffect(() => {
-    // Create an instance of QuizRepository
     const quizRepository = new QuizRepository(database);
-
-    // Call the getAllQuizes function to retrieve the quizzes
-    quizRepository
-      .getAllQuizes()
+    quizRepository.getAllQuizes()
       .then((quizzes) => {
-        quizzes.forEach((quiz) => {
-          if (quiz.dateCreated) {
-            //check the current date of the quiz if exist then retrieve it
-            const timestamp = quiz.dateCreated.toDate(); // Convert Firestore timestamp to Date
-            quiz.creationDate = timestamp.toLocaleString(); // Convert to a string
-          } else {
-            quiz.creationDate = '';
-          }
-        });
-        setQuizzes(quizzes);
+        const filteredQuizzes = quizzes.filter(quiz => quiz.subject === selectedSubject);
+        setQuizzes(filteredQuizzes);
       })
       .catch((error) => {
         console.error('Error retrieving quizzes:', error);
       });
-  }, []);
-
- //table for store all the quiz data using mui
-  const StyledTableCell = styled(TableCell)(({ theme }) => ({
-    [`&.${tableCellClasses.head}`]: {
-      backgroundColor: theme.palette.common.black,
-      color: theme.palette.common.white,
-    },
-    [`&.${tableCellClasses.body}`]: {
-      fontSize: 14,
-    },
-  }));
-
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-    // hide last border
-    '&:last-child td, &:last-child th': {
-      border: 0,
-    },
-    '&:hover': {
-      cursor: 'pointer',
-    },
-    // Define CSS transition properties
-    transition: 'background-color 0.3s ease',
-  }));
+  }, [selectedSubject]);
 
   const handleRowClick = (quiz) => {
-    // Handle the click on a row, e.g., show more details or navigate to a new page
     console.log(`Clicked on quiz with ID ${quiz.id}`);
-    console.log(`Quiz Date ${quiz.dateCreated}`);
   };
+
   const quizRepository = new QuizRepository(database);
   const handleDeleteQuiz = (quizId) => {
-  //remove the deleted quiz from the database
-    quizRepository
-    .deleteQuiz(quizId)
-    .then(() => {
-      // Remove the deleted quiz from the state
-      setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz.id !== quizId));
-    })
-    .catch((error) => {
-      console.error('Error deleting quiz:', error);
-    });
+    quizRepository.deleteQuiz(quizId)
+      .then(() => {
+        setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz.id !== quizId));
+      })
+      .catch((error) => {
+        console.error('Error deleting quiz:', error);
+      });
   };
 
   return (
     <div
       style={{
         display: 'flex',
-        maxWidth: '50%',
+        width: '75%',
+        margin: '0 auto',
         justifyContent: 'center',
         alignItems: 'center',
       }}
     >
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} style={{ width: '100%', maxHeight: '75vh', overflow: 'auto' }}>
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell sx={{ width: '20%' }}>List of Quiz</StyledTableCell>
-              <StyledTableCell sx={{ width: '15%' }} align="right">
-                Question&nbsp;(s)
-              </StyledTableCell>
-              <StyledTableCell sx={{ width: '15%' }} align="right">
-                Author
-              </StyledTableCell>
-              <StyledTableCell sx={{ width: '10%' }} align="right">
-                Time Limit&nbsp;(mn)
-              </StyledTableCell>
-              <StyledTableCell sx={{ width: '20%' }} align="right">
-                Date Created
-              </StyledTableCell>
-              <StyledTableCell sx={{ width: '10%' }} align="right">
-                Actions
-              </StyledTableCell>
+              <TableCell sx={{ width: '20%' }}>List of Quiz</TableCell>
+              <TableCell sx={{ width: '15%' }} align="right">Question&nbsp;(s)</TableCell>
+              <TableCell sx={{ width: '15%' }} align="right">Author</TableCell>
+              <TableCell sx={{ width: '10%' }} align="right">Time Limit&nbsp;(mn)</TableCell>
+              <TableCell sx={{ width: '20%' }} align="right">Date Created</TableCell>
+              <TableCell sx={{ width: '10%' }} align="right">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {quizzes.map((quiz) => (
-              <StyledTableRow
-                key={quiz.id}
-                onClick={() => handleRowClick(quiz)}
-                style={{
-                  backgroundColor: selectedRow === quiz.id ? '#333' : 'transparent',
-                }}
-              >
-                <StyledTableCell component="th" scope="row">
-                  {quiz.title}
-                </StyledTableCell>
-                <StyledTableCell align="right">{quiz.question}</StyledTableCell>
-                <StyledTableCell align="right">{quiz.author}</StyledTableCell>
-                <StyledTableCell align="right">{quiz.time}</StyledTableCell>
-                <StyledTableCell align="right">
-                {quiz.creationDate}
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <PositionedMenu onDelete={handleDeleteQuiz} quizId={quiz.id}/> {/* Add the PositionedMenu component */}
-                </StyledTableCell>
-              </StyledTableRow>
+              <TableRow key={quiz.id} onClick={() => handleRowClick(quiz)}>
+                <TableCell component="th" scope="row">{quiz.title}</TableCell>
+                <TableCell align="right">{quiz.question}</TableCell>
+                <TableCell align="right">{quiz.author}</TableCell>
+                <TableCell align="right">{quiz.time}</TableCell>
+                <TableCell align="right">{quiz.creationDate}</TableCell>
+                <TableCell align="right">
+                  <PositionedMenu onDelete={handleDeleteQuiz} quizId={quiz.id} />
+                </TableCell>
+              </TableRow>
             ))}
           </TableBody>
         </Table>
