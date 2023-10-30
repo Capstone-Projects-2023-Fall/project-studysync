@@ -18,7 +18,7 @@ import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
 import { signOut } from 'firebase/auth';
 import { auth } from './firebase';
-
+import MainQuizPage from './js/react/MainQuizPage';
 
 
 function App() {
@@ -36,7 +36,7 @@ function App() {
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'Flashcard', link: '/flashcard' },
-    { label: 'Quiz', link: '/quiz' },
+    { label: 'Quiz', link: '/quizmain' },
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     { label: 'Profile', link: `/profile/${user && user.uid}` },
     //... add other items
@@ -71,7 +71,7 @@ function App() {
         <Route path='/signup' element={<SignUpForm />} />
         <Route path='/profile/:UserId' element={<UserProfile />} />
         <Route path='/profile/:data/edit' element={<EditUserProfile />} />
-
+        <Route path='/quizmain' element={<MainQuizPage />} />
       </Routes>
     </div>
   );
