@@ -47,7 +47,7 @@ export async function addItemToArrayField(db, uuid, itemToAdd, collectionToAdd, 
       const ref= doc(db, collectionToAdd, uuid);
       const item = await getDoc(ref);
       if (!item.exists()) {
-        return `{singleName} with id ${uuid} does not exist`;
+        return `${singleName} with id ${uuid} does not exist`;
       }
       return item.data();
     } catch (error) {
