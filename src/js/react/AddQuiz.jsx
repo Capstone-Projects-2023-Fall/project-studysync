@@ -31,6 +31,7 @@ function AddQuiz() {
   const [numQuestions, setNumQuestions] = useState(0);
   const [dialogStep, setDialogStep] = useState(1); // Track the step of the dialog
   const [open, setOpen] = useState(false);
+  const [timeLimit, setTimeLimit] = useState(0);
 
   useEffect(() => {
     // Create an instance of QuizRepository
@@ -73,6 +74,7 @@ function AddQuiz() {
         title: quizTitle,
         question: numQuestions,
         dateCreated: currentDate, // Insert the current date
+        time: timeLimit, // Save time limit
       })
         .then((quizDocRef) => {
           console.log('Quiz added with ID: ', quizDocRef.id);
@@ -80,6 +82,7 @@ function AddQuiz() {
           setSelectedSubject(''); // Clear the selected subject
           setQuizTitle('');
           setNumQuestions('');
+          setTimeLimit(0); // Reset the time limit
           setDialogStep(1); // Reset the dialog step
           setOpen(false);
         })
@@ -191,6 +194,14 @@ function AddQuiz() {
                   value={numQuestions}
                   onChange={(e) => setNumQuestions(Number(e.target.value))}
                 />
+                 <TextField
+        margin="dense"
+        label="Time Limit (minutes)"
+        type="number"
+        fullWidth
+        value={timeLimit}
+        onChange={(e) => setTimeLimit(Number(e.target.value))}
+      />
                 <DialogActions>
                   <Button onClick={() => setDialogStep(1)} color="primary">
                     Previous
