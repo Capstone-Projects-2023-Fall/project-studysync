@@ -23,7 +23,7 @@ import {
   MenuItem,
 } from '@mui/material';
 
-function AddQuiz() {
+function AddQuiz({ fetchData }) {
   const [quizzes, setQuizzes] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('');
   const [newSubject, setNewSubject] = useState(''); // To store the new subject
@@ -60,7 +60,7 @@ function AddQuiz() {
     if (quizTitle && numQuestions > 0) {
       const quizzesCollection = collection(database, 'quizzes');
       let subjectToAdd = dialogStep === 1 ? newSubject : selectedSubject;
-      
+  
       if (subjectToAdd === 'custom') {
         subjectToAdd = newSubject;
       }
@@ -72,16 +72,19 @@ function AddQuiz() {
         subject: subjectToAdd,
         title: quizTitle,
         question: numQuestions,
-        dateCreated: currentDate, // Insert the current date
+        dateCreated: currentDate,
       })
         .then((quizDocRef) => {
           console.log('Quiz added with ID: ', quizDocRef.id);
-          setNewSubject(''); // Clear the new subject input
-          setSelectedSubject(''); // Clear the selected subject
+          setNewSubject('');
+          setSelectedSubject('');
           setQuizTitle('');
           setNumQuestions('');
-          setDialogStep(1); // Reset the dialog step
+          setDialogStep(1);
           setOpen(false);
+  
+          // Call fetchData to refresh the data
+          fetchData();
         })
         .catch((error) => {
           console.error('Error adding quiz: ', error);
