@@ -1,58 +1,72 @@
-import React, { useEffect, useState } from 'react';
-import { collection, addDoc, deleteDoc, doc, query, where, getDocs } from 'firebase/firestore';
-import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
+import React, { useState } from 'react';
+import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { database } from '../../firebase';
-import { QuizRepository } from '../repositories/QuizRepository';
-import QuizList from './QuizList';
-import AddQuiz from './AddQuiz';
 
+//MainQuizPage component
 function MainQuizPage() {
+    const navigate = useNavigate();//navagfation function for avatar
+    const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);//Current selected question index
+    const [selectedOption, setSelectedOption] = useState(null);//state for selected option by user
+    const [answered, setAnswered] = useState(false);//state to ctrack if question is answer
+    const [anchorEl, setAnchorEl] = useState(null);//state to track current element that the menu is anchored
+    const [menuQuestionIndex, setMenuQuestionIndex] = useState(null);//state for the current question index in the muen 
 
-    const [selectedSubject, setSelectedSubject] = useState(null);
-    const [open, setOpen] = useState(false);
-    const [subjects, setSubjects] = useState(['Math', 'English', 'History', 'Music']);
-    const [newSubject, setNewSubject] = useState('');
-    const navigate = useNavigate();
+    //generate question based on index
+    //generate corrected anser and three random
+    //return question object, question, correct answer and incorrect answer
+    const generateQuestion = (i) => {
+        const correctAnswer = `${2 * (i + 1)}`;
+        const options = [correctAnswer, `${2 * (i + 2)}`, `${2 * (i + 3)}`, `${2 * (i + 4)}`].sort(() => Math.random() - 0.5);
+        return {
+            text: `${i + 1} + ${i + 1}`,
+            options,
+            correct: correctAnswer
+        };
+    }
 
-    useEffect(() => {
-        const quizRepository = new QuizRepository(database);
-        quizRepository.getAllQuizes()
-            .then((quizzes) => {
-                const uniqueSubjects = Array.from(new Set(quizzes.map(quiz => quiz.subject)));
-                setSubjects(uniqueSubjects);
-            })
-            .catch((error) => {
-                console.error('Error retrieving quizzes:', error);
-            });
-    }, []);
+    //store list of question
+    const [questions, setQuestions] = useState(Array.from({ length: 10 }, (_, i) => generateQuestion(i)));
 
-    const handleAddSubject = () => {
-        if (newSubject) {
-            const subjectsCollection = collection(database, 'quizzes');
-            addDoc(subjectsCollection, { subject: newSubject })
-                .then(() => {
-                    setSubjects(prevSubjects => [...prevSubjects, newSubject]);
-                    setNewSubject('');
-                    setOpen(false);
-                })
-                .catch((error) => {
-                    console.error('Error adding new subject:', error);
-                });
-        }
+    const handleMenuOpen = (event, index) => {
+        setAnchorEl(event.currentTarget);
+        setMenuQuestionIndex(index);
     };
 
-    const handleDeleteSubject = async () => {
-        if (selectedSubject) {
-            const quizzesCollection = collection(database, 'quizzes');
-            const q = query(quizzesCollection, where("subject", "==", selectedSubject));
-            const querySnapshot = await getDocs(q);
-            querySnapshot.forEach((doc) => {
-                deleteDoc(doc.ref);
-            });
-            setSubjects(prevSubjects => prevSubjects.filter(subject => subject !== selectedSubject));
-            setSelectedSubject(null);
-        }
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setMenuQuestionIndex(null);
+    };
+
+    const deleteQuestion = () => {
+        setQuestions(prev => prev.filter((_, index) => index !== menuQuestionIndex));
+        handleMenuClose();
+    };
+
+    const editQuestion = () => {
+       
+        console.log('Editing question:', menuQuestionIndex + 1);
+        handleMenuClose();
+    };
+
+    const addQuestion = () => {
+        setQuestions(prev => [...prev, generateQuestion(prev.length)]);
+    };
+
+    const startQuiz = () => {
+        
+    };
+
+    const checkAnswer = (option) => {
+        setSelectedOption(option);
+        setAnswered(true);
+    };
+
+    const getOptionStyle = (option, correct) => {
+        if (!answered) return {};
+        if (option === selectedOption && option === correct) return { backgroundColor: 'green' };
+        if (option === selectedOption) return { backgroundColor: 'red' };
+        if (option !== selectedOption && option === correct) return { backgroundColor: 'green' };
+        return {};
     };
 
     return (
@@ -74,49 +88,78 @@ function MainQuizPage() {
             </AppBar>
 
             <div style={{ display: 'flex', marginTop: '20px' }}>
-                <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto' }}>
-                    <List>
-                        {subjects.map((subject) => (
-                            <ListItem button key={subject} onClick={() => setSelectedSubject(subject)}>
-                                {subject}
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Button variant="contained" color="primary" onClick={() => setOpen(true)}>ADD SUBJECT</Button>
-                    <Button variant="contained" color="secondary" onClick={handleDeleteSubject} style={{ marginLeft: '10px' }}>DELETE SUBJECT</Button>
-                </Paper>
+    <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
+        <List>
+            {questions.map((_, index) => (
+                <ListItem button key={index} onClick={() => { setSelectedQuestionIndex(index); setAnswered(false); setSelectedOption(null); }}>
+                    {`Question ${index + 1}`}
+                    <Button 
+                        style={{ marginLeft: '10px', color: 'black', textTransform: 'none' }} 
+                        onClick={(e) => handleMenuOpen(e, index)}
+                    >
+                        <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '4px' }}>
+                            <span style={{ color: 'black' }}>•</span>
+                            <span style={{ color: 'black' }}>•</span>
+                            <span style={{ color: 'black' }}>•</span>
+                        </div>
+                    </Button>
+                    <Menu
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl) && menuQuestionIndex === index}
+                        onClose={handleMenuClose}
+                    >
+                        <MenuItem onClick={editQuestion}>Edit</MenuItem>
+                        <MenuItem onClick={deleteQuestion}>Delete</MenuItem>
+                    </Menu>
+                </ListItem>
+            ))}
+        </List>
+        <Button variant="contained" color="primary" onClick={addQuestion} style={{ margin: '10px' }}>Add Question</Button>
+    </Paper>
 
                 <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    {selectedSubject && (
+                    {selectedQuestionIndex !== null && (
                         <>
-                            <h3>Quizzes for {selectedSubject}</h3>
-                            <AddQuiz />
-                            <QuizList selectedSubject={selectedSubject} />
+                            <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
+                                {`Question ${selectedQuestionIndex + 1}`}
+                            </Typography>
+                            <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
+                                {questions[selectedQuestionIndex].text}
+                            </Typography>
+                            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '20px' }}>
+                                    {questions[selectedQuestionIndex].options.slice(0, 2).map((option, index) => (
+                                        <Button
+                                            key={index}
+                                            variant="contained"
+                                            style={getOptionStyle(option, questions[selectedQuestionIndex].correct)}
+                                            onClick={() => !answered && checkAnswer(option)}
+                                        >
+                                            {option}
+                                        </Button>
+                                    ))}
+                                </div>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '40px' }}>
+                                    {questions[selectedQuestionIndex].options.slice(2, 4).map((option, index) => (
+                                        <Button
+                                            key={index}
+                                            variant="contained"
+                                            style={getOptionStyle(option, questions[selectedQuestionIndex].correct)}
+                                            onClick={() => !answered && checkAnswer(option)}
+                                        >
+                                            {option}
+                                        </Button>
+                                    ))}
+                                </div>
+                            </div>
+                            <Button variant="contained" color="primary" onClick={startQuiz} style={{ marginTop: '20px' }}>Start the Quiz</Button>
                         </>
                     )}
                 </div>
             </div>
-            
-            <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogTitle>Add a New Subject</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Subject Name"
-                        type="text"
-                        fullWidth
-                        value={newSubject}
-                        onChange={e => setNewSubject(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpen(false)} color="primary">CANCEL</Button>
-                    <Button onClick={handleAddSubject} color="primary">ADD</Button>
-                </DialogActions>
-            </Dialog>
-        </div>  
+        </div>
     );
-                    }
+}
 
 export default MainQuizPage;
