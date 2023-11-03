@@ -1,7 +1,4 @@
 import './App.css';
-/*import {app ,database} from "./firebase.js"*/
-/*import {getAuth, createUserWithEmailAndPassword,
-signInWithEmailAndPassword} from "firebase/auth";*/
 import Navbar from './js/react/Navbar.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DashboardCom from './js/react/DashboardCom.js';
@@ -9,15 +6,12 @@ import FlashcardComponent from './js/react/flashcardCom.js';
 import LoginPage from './js/react/LoginPage';
 import SignUpForm from './js/react/SignUpForm';
 import useUser from './js/react/useUser';
-
 import FlashcardApp from './js/react/flashcardUICom';
 import PasswordReset from './js/react/PasswordReset';
 import QuizList from './js/react/quizCom';
-
 import UserProfile from './js/react/UserProfilePage';
 import EditUserProfile from './js/react/EditUserProfile';
-import { signOut } from 'firebase/auth';
-import { auth } from './firebase';
+import FriendsPage from './js/react/FriendsPage';
 import MainQuizPage from './js/react/MainQuizPage';
 
 
@@ -39,19 +33,11 @@ function App() {
     { label: 'Quiz', link: '/quizmain' },
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     { label: 'Profile', link: `/profile/${user && user.uid}` },
+    {label: 'Friends',link:`/friends/${user && user.uid}`}
     //... add other items
   ];
 
-  // if(user){
-  //   navbarItemsLoggedIn.push(
-  //     { label:'Logout',action:signOut(auth)}
-  //   )
-  // }
-  // else{
-  //   if(navbarItemsLoggedIn[4]){
-  //     navbarItemsLoggedIn.splice(4,1);
-  //   }
-  // }
+
 
 
   return (
@@ -72,6 +58,7 @@ function App() {
         <Route path='/profile/:UserId' element={<UserProfile />} />
         <Route path='/profile/:data/edit' element={<EditUserProfile />} />
         <Route path='/quizmain' element={<MainQuizPage />} />
+        <Route path='/friends/:UserId' element={<FriendsPage/>}/>
       </Routes>
     </div>
   );
