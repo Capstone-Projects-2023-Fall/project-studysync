@@ -7,7 +7,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 
-// Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
 }
@@ -48,6 +47,11 @@ const rows = [
   ),
 ];
 
+const styles={
+  marginButtom: "50%",
+}
+
+
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -55,24 +59,24 @@ function preventDefault(event) {
 export default function Orders() {
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title>Friends</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
             <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell></TableCell>
+            <TableCell align="right"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
+            <TableRow key={row.id} style={styles}>
+              <TableCell >Friend name</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell><button>asd</button></TableCell>
               <TableCell align="right">{`$${row.amount}`}</TableCell>
             </TableRow>
           ))}

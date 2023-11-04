@@ -9,39 +9,36 @@ import PeopleIcon from '@mui/icons-material/People';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import LayersIcon from '@mui/icons-material/Layers';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+
+const styles ={
+  marginBottom:'20%',
+}
+
+
 
 export const mainListItems = (
   <React.Fragment>
-    <ListItemButton>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItemButton>
-    <ListItemButton>
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItemButton>
-    <ListItemButton>
+    <ListItemButton style={styles}>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="Friends" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton style={styles}>
       <ListItemIcon>
-        <BarChartIcon />
+        <PersonAddAltIcon />
       </ListItemIcon>
-      <ListItemText primary="Reports" />
+      <ListItemText primary="Friend Requests" />
     </ListItemButton>
-    <ListItemButton>
+    <ListItemButton style={styles}>
       <ListItemIcon>
-        <LayersIcon />
+        <PeopleOutlineIcon />
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="Followers" />
     </ListItemButton>
+
   </React.Fragment>
 );
 
