@@ -5,6 +5,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
 import Title from './Title';
 
 function createData(id, date, name, shipTo, paymentMethod, amount) {
@@ -48,8 +49,9 @@ const rows = [
 ];
 
 const styles={
-  marginButtom: "50%",
-}
+  paddingTop: '50px',
+  paddingBottom: '50px',
+};
 
 
 function preventDefault(event) {
@@ -63,21 +65,21 @@ export default function Orders() {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
+            <TableCell>Name</TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell></TableCell>
             <TableCell align="right"></TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody >
           {rows.map((row) => (
-            <TableRow key={row.id} style={styles}>
-              <TableCell >Friend name</TableCell>
+            <TableRow key={row.id}>
+              <TableCell>Friend name</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell><button>asd</button></TableCell>
-              <TableCell align="right">{`$${row.amount}`}</TableCell>
+              <TableCell><Button variant="contained">Contained</Button></TableCell>
+              <TableCell align="right"><Button sx={{backgroundColor:'red'}} variant="contained">Remove friend</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
