@@ -10,6 +10,8 @@ function MainQuizPage() {
   const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
   const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
   const [score, setScore] = useState(null);//for score
+  const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
+
 
   //generate question based on index
   const generateQuestion = (i) => {
@@ -108,7 +110,10 @@ function MainQuizPage() {
   //check if quiz completed
   const checkIfQuizIsFinished = () => { 
     const allAnswered = questions.every(question => question.answered); 
-    if (allAnswered) {calculateScore();}
+    if (allAnswered) {
+      calculateScore();
+      setQuizFinished(true);
+    }
   };
 
 
@@ -236,17 +241,34 @@ function MainQuizPage() {
               )}
             </>
           )}
-        </div>
-        {/* Display score if the quiz has finished */}
-{score !== null && (
-  <Typography variant="h4" component="h2">
-    {`Your score: ${score.toFixed(2)}%`}
-  </Typography>
-)}
-
-      </div>
-    </div>
-  );
-}
-
+          </div>
+          {/*display score and return button */}
+          {quizFinished && (
+          <div style={{ textAlign: 'center', marginTop: '20px' }}>
+            <Typography variant="h4" component="h2">
+              {`Your score: ${score.toFixed(2)}%`}
+              </Typography>
+             
+              {/*return button*/}
+              <Button
+              variant="contained"
+              color="primary"
+              onClick={() => {
+                //set the necessary states to initial values to restart the quiz
+                setQuizStarted(false);
+                setQuizFinished(false);
+                setSelectedQuestionIndex(null);
+                setScore(null);
+                setQuestions(Array.from({ length: 10 }, (_, i) => generateQuestion(i))); //regenerate questions if needed
+                navigate('/quizmain');//path to thue maiqn quiz page
+              }}>
+                Return to Quiz
+                </Button>
+                </div>
+                )}
+                </div>
+                </div>
+                );
+              }
+              
 export default MainQuizPage;
