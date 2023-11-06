@@ -10,6 +10,7 @@ function MainQuizPage() {
   const [answered, setAnswered] = useState(false); //state to track if question is answered
   const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
   const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
+  const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
 
   //generate question based on index
   const generateQuestion = (i) => {
@@ -25,8 +26,12 @@ function MainQuizPage() {
   //store list of questions
   const [questions, setQuestions] = useState(Array.from({ length: 10 }, (_, i) => generateQuestion(i)));
 
-  //open menu function
+  //open menu
   const handleMenuOpen = (event, index) => {
+    //prevent opening the menu if the quiz has started
+    if (quizStarted) {
+      return;
+    }
     setAnchorEl(event.currentTarget);
     setMenuQuestionIndex(index);
   };
@@ -39,18 +44,30 @@ function MainQuizPage() {
 
   //delete question function
   const deleteQuestion = () => {
+    if (quizStarted) {
+      console.log("Can't delete questions during an active quiz");
+      return;
+    }
     setQuestions(prev => prev.filter((_, index) => index !== menuQuestionIndex));
     handleMenuClose();
   };
 
   //edit question function
   const editQuestion = () => {
+    if (quizStarted) {
+      console.log("Can't edit questions during an active quiz");
+      return;
+    }
     console.log('Editing question:', menuQuestionIndex + 1);
     handleMenuClose();
   };
 
   //add question
   const addQuestion = () => {
+    if (quizStarted) {
+      console.log("Can't add questions during an active quiz");
+      return;
+    }
     setQuestions(prev => [...prev, generateQuestion(prev.length)]);
   };
 
@@ -65,8 +82,6 @@ function MainQuizPage() {
     setAnswered(true);
   };
 
-  //to track if the quiz has started or not
-  const [quizStarted, setQuizStarted] = useState(false);
 
   //to determine the styles for each option
   const getOptionStyle = (option, correct) => {
@@ -99,7 +114,7 @@ function MainQuizPage() {
       </AppBar>
 
         {/*main container with a flex display*/}
-      <div style={{ display: 'flex', marginTop: '20px' }}>
+        <div style={{ display: 'flex', marginTop: '20px' }}>
         <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
         
         {/*list of questions*/}
@@ -110,9 +125,10 @@ function MainQuizPage() {
               <ListItem button key={index} onClick={() => { setSelectedQuestionIndex(index); setAnswered(false); setSelectedOption(null); }}>
                 {`Question ${index + 1}`}
 
-                {/*button to display options menu (three dots) for each question*/}
+                 {/*button to display options menu (three dots) for each question*/}
                 <Button style={{ marginLeft: '10px', color: 'black', textTransform: 'none' }} 
-                onClick={(e) => handleMenuOpen(e, index)}>
+                        disabled={quizStarted} 
+                        onClick={(e) => handleMenuOpen(e, index)}>
                   <div style={{ display: 'flex', flexDirection: 'column', lineHeight: '4px' }}>
                     <span style={{ color: 'black' }}>•</span>
                     <span style={{ color: 'black' }}>•</span>
@@ -120,7 +136,7 @@ function MainQuizPage() {
                   </div>
                 </Button>
                 
-                {/*dropdown menu to edit or delete a question*/}
+                 {/*dropdown menu to edit or delete a question*/}
                 <Menu
                   anchorEl={anchorEl}
                   keepMounted
@@ -136,7 +152,7 @@ function MainQuizPage() {
 
           {/*Add question button and start the quiz button*/}  
           <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
-            <Button variant="contained" color="primary" onClick={addQuestion}>
+            <Button variant="contained" color="primary" onClick={addQuestion} disabled={quizStarted}>
               Add Question
             </Button>
             {!quizStarted && (
