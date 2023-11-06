@@ -193,13 +193,6 @@ function MainQuizPage() {
                   </div>
                 </>
               )}
-
-              {/*start the quiz button will only be displayed if the quiz hasn't started */}
-              {!quizStarted && (
-                <Button variant="contained" color="primary" onClick={startQuiz} style={{ marginTop: '20px' }}>
-                  Start Quiz
-                </Button>
-              )}
             </>
           )}
         </div>
