@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,} from 'react';
 import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -9,6 +9,7 @@ function MainQuizPage() {
   const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
   const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
   const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
+  const [score, setScore] = useState(null);//for score
 
   //generate question based on index
   const generateQuestion = (i) => {
@@ -82,6 +83,7 @@ function MainQuizPage() {
       const newQuestions = [...prevQuestions];
       newQuestions[selectedQuestionIndex].userAnswer = option;
       newQuestions[selectedQuestionIndex].answered = true;
+      checkIfQuizIsFinished();
       return newQuestions;
     });
   };
@@ -95,7 +97,21 @@ function MainQuizPage() {
     if (option !== question.userAnswer && option === question.correct) return { backgroundColor: 'green' }; 
     return {};
   };
-  
+
+  //calculate and update the score
+  const calculateScore = () => { const correctAnswers = questions.reduce((acc, question) => {
+    return acc + (question.userAnswer === question.correct ? 1 : 0);}, 0);
+    const scorePercentage = (correctAnswers / questions.length) * 100;
+    setScore(scorePercentage);
+  };
+
+  //check if quiz completed
+  const checkIfQuizIsFinished = () => { 
+    const allAnswered = questions.every(question => question.answered); 
+    if (allAnswered) {calculateScore();}
+  };
+
+
 
   return (
     <div>
@@ -221,6 +237,13 @@ function MainQuizPage() {
             </>
           )}
         </div>
+        {/* Display score if the quiz has finished */}
+{score !== null && (
+  <Typography variant="h4" component="h2">
+    {`Your score: ${score.toFixed(2)}%`}
+  </Typography>
+)}
+
       </div>
     </div>
   );
