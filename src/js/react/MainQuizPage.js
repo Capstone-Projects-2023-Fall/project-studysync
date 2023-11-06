@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Menu, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-// MainQuizPage component
+//mainQuizPage component
 function MainQuizPage() {
-  const navigate = useNavigate(); // Navigation function for avatar
-  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); // Current selected question index
-  const [selectedOption, setSelectedOption] = useState(null); // State for selected option by user
-  const [answered, setAnswered] = useState(false); // State to track if question is answered
-  const [anchorEl, setAnchorEl] = useState(null); // State to track current element that the menu is anchored to
-  const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); // State for the current question index in the menu 
+  const navigate = useNavigate(); //navigation function for avatar
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
+  const [selectedOption, setSelectedOption] = useState(null); //state for selected option by user
+  const [answered, setAnswered] = useState(false); //state to track if question is answered
+  const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
+  const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
 
-  // Generate question based on index
+  //generate question based on index
   const generateQuestion = (i) => {
     const correctAnswer = `${2 * (i + 1)}`;
     const options = [correctAnswer, `${2 * (i + 2)}`, `${2 * (i + 3)}`, `${2 * (i + 4)}`].sort(() => Math.random() - 0.5);
@@ -22,62 +22,62 @@ function MainQuizPage() {
     };
   }
 
-  // Store list of questions
+  //store list of questions
   const [questions, setQuestions] = useState(Array.from({ length: 10 }, (_, i) => generateQuestion(i)));
 
-  // Open menu function
+  //open menu function
   const handleMenuOpen = (event, index) => {
     setAnchorEl(event.currentTarget);
     setMenuQuestionIndex(index);
   };
 
-  // Close menu function
+  //close menu function
   const handleMenuClose = () => {
     setAnchorEl(null);
     setMenuQuestionIndex(null);
   };
 
-  // Delete question function
+  //delete question function
   const deleteQuestion = () => {
     setQuestions(prev => prev.filter((_, index) => index !== menuQuestionIndex));
     handleMenuClose();
   };
 
-  // Edit question function
+  //edit question function
   const editQuestion = () => {
     console.log('Editing question:', menuQuestionIndex + 1);
     handleMenuClose();
   };
 
-  // Add question
+  //add question
   const addQuestion = () => {
     setQuestions(prev => [...prev, generateQuestion(prev.length)]);
   };
 
-  // Start quiz button
+  //start quiz button
   const startQuiz = () => {
     setQuizStarted(true);
   };
 
-  // Check if answer is correct
+  //check if answer is correct
   const checkAnswer = (option) => {
     setSelectedOption(option);
     setAnswered(true);
   };
 
-  // To track if the quiz has started or not
+  //to track if the quiz has started or not
   const [quizStarted, setQuizStarted] = useState(false);
 
-  // To determine the styles for each option
+  //to determine the styles for each option
   const getOptionStyle = (option, correct) => {
-    if (!answered) return {}; // When not answered
-    if (option === selectedOption && option === correct) return { backgroundColor: 'green' }; // Selected correct answer
-    if (option === selectedOption) return { backgroundColor: 'red' }; // Selected incorrect answer
-    if (option !== selectedOption && option === correct) return { backgroundColor: 'green' }; // When correct answer not selected show green too
-    return {}; // Default case
+    if (!answered) return {}; //wen not answered
+    if (option === selectedOption && option === correct) return { backgroundColor: 'green' }; //selected correct answer
+    if (option === selectedOption) return { backgroundColor: 'red' }; //selected incorrect answer
+    if (option !== selectedOption && option === correct) return { backgroundColor: 'green' }; //when correct answer not selected show green too
+    return {}; //dfault case
   };
 
-  // Render component
+  //render component
   return (
     
     //start menu container, user profile icon takes user to probfile page and leaderboard button for future implementation
@@ -134,8 +134,17 @@ function MainQuizPage() {
             ))}
           </List>
 
-          {/*button to add a new question*/}
-          <Button variant="contained" color="primary" onClick={addQuestion} style={{ margin: '10px' }}>Add Question</Button>
+          {/*Add question button and start the quiz button*/}  
+          <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
+            <Button variant="contained" color="primary" onClick={addQuestion}>
+              Add Question
+            </Button>
+            {!quizStarted && (
+              <Button variant="contained" color="primary" onClick={startQuiz}>
+                Start Quiz
+              </Button>
+            )}
+          </div>
         </Paper>
         
         {/*right side main content area for question and anser optionns*/}
@@ -151,11 +160,11 @@ function MainQuizPage() {
                 {questions[selectedQuestionIndex].text}
               </Typography>
 
-              {/* Check if the quiz has started before showing options */}
+              {/*check if the quiz has started before showing options */}
               {quizStarted && (
                 <>
 
-                {/* First two options */}
+                {/*first two options */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '20px' }}>
                     {questions[selectedQuestionIndex].options.slice(0, 2).map((option, index) => (
                       <Button
@@ -169,7 +178,7 @@ function MainQuizPage() {
                     ))}
                   </div>
 
-                  {/* Last two options */}
+                  {/*last two options */}
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '40px' }}>
                     {questions[selectedQuestionIndex].options.slice(2, 4).map((option, index) => (
                       <Button
@@ -185,7 +194,7 @@ function MainQuizPage() {
                 </>
               )}
 
-              {/* Start the quiz button will only be displayed if the quiz hasn't started */}
+              {/*start the quiz button will only be displayed if the quiz hasn't started */}
               {!quizStarted && (
                 <Button variant="contained" color="primary" onClick={startQuiz} style={{ marginTop: '20px' }}>
                   Start Quiz
