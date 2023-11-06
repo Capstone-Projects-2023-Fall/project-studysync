@@ -7,6 +7,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import { useNavigate } from 'react-router-dom';
 
+import Quiz from './Quiz'; 
+
 
 const astyle = {
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
@@ -26,6 +28,7 @@ const FlashcardComponent = () => {
   const [dialogType, setDialogType] = useState('subject');
   const [editedName, setEditedName] = useState('');
   const [currentlyEditingTopic, setCurrentlyEditingTopic] = useState(null);
+  const [showQuiz, setShowQuiz] = useState(false);
 
   const navigate = useNavigate();
 
@@ -42,8 +45,19 @@ const FlashcardComponent = () => {
     }
   };
 
-
-
+  //navigate to quiz page by passing flashcardSet ID as parameter
+  const handleQuizClick = async (topicName) => {
+    try {
+      const setId = await FlashcardRepo.getSetIdByTopicName(topicName);
+      if (setId) {
+        navigate(`/quiz/${setId}`);
+      } else {
+        console.error("Unable to fetch set ID for topic:", topicName);
+      }
+    } catch (error) {
+      console.error("Error in handleFlashcardClick:", error);
+    }
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -194,12 +208,7 @@ const FlashcardComponent = () => {
     } catch (error) {
       console.error("Error editing flashcard set name:", error);
     }
-  };
-
-
-
-
-
+  }
 
   return (
     <div style={{ display: 'flex', marginTop: '60px', fontFamily: astyle.fontFamily }}>
@@ -279,6 +288,7 @@ const FlashcardComponent = () => {
               )
             }
             <div style={{ display: 'flex', gap: '10px' }}>
+
               <Button variant="outlined" onClick={() => {
 
                 if (currentlyEditingTopic) {
@@ -292,7 +302,7 @@ const FlashcardComponent = () => {
                 }
               }}>Edit</Button>
               <Button variant="outlined" onClick={() => handleFlashcardClick(topic)}>Flashcard</Button>
-              <Button variant="outlined">Quiz</Button>
+              <Button variant="outlined" onClick={() => handleQuizClick(topic)}>Quiz</Button>
               <Button variant="outlined">AITutor</Button>
               <Button variant="outlined" color="secondary" onClick={() => handleDelete(topic)}>Delete</Button>
             </div>
@@ -329,6 +339,7 @@ const FlashcardComponent = () => {
     </div>
 
   );
-};
+
+            };
 
 export default FlashcardComponent;
