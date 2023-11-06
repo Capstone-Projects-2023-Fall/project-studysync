@@ -248,27 +248,41 @@ function MainQuizPage() {
             <Typography variant="h4" component="h2">
               {`Your score: ${score.toFixed(2)}%`}
               </Typography>
-             
-              {/*return button*/}
-              <Button
-              variant="contained"
-              color="primary"
-              onClick={() => {
-                //set the necessary states to initial values to restart the quiz
-                setQuizStarted(false);
-                setQuizFinished(false);
-                setSelectedQuestionIndex(null);
-                setScore(null);
-                setQuestions(Array.from({ length: 10 }, (_, i) => generateQuestion(i))); //regenerate questions if needed
-                navigate('/quizmain');//path to thue maiqn quiz page
-              }}>
-                Return to Quiz
-                </Button>
-                </div>
-                )}
-                </div>
-                </div>
-                );
-              }
+              
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px' }}>
+               {/*return to Quiz button */}
+               <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  //reset the necessary states to initial values to restart the quiz
+                  setQuizStarted(false);
+                  setQuizFinished(false);
+                  setSelectedQuestionIndex(null);
+                  setScore(null);
+                  setQuestions(Array.from({ length: 10 }, (_, i) => generateQuestion(i))); //regenerate questions if needed
+                  navigate('/quizmain'); 
+                }}
+                style={{ marginBottom: '10px' }} //for layout
+                >
+                  Return to Quiz
+                  </Button>
+                  
+                  {/* Share Score button */}
+                  <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                  console.log("not working yet");
+                }}>
+                  Share Score
+                  </Button>
+                  </div>
+                  </div>
+                  )}
+                  </div>
+                  </div>
+                  );
+                }
               
 export default MainQuizPage;
