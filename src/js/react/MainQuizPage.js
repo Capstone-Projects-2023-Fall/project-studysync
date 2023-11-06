@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-dom';
 function MainQuizPage() {
   const navigate = useNavigate(); //navigation function for avatar
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
-  const [selectedOption, setSelectedOption] = useState(null); //state for selected option by user
-  const [answered, setAnswered] = useState(false); //state to track if question is answered
   const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
   const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
   const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
@@ -19,7 +17,9 @@ function MainQuizPage() {
     return {
       text: `${i + 1} + ${i + 1}`,
       options,
-      correct: correctAnswer
+      correct: correctAnswer,
+      userAnswer: null,
+      answered: false
     };
   }
 
@@ -78,25 +78,29 @@ function MainQuizPage() {
 
   //check if answer is correct
   const checkAnswer = (option) => {
-    setSelectedOption(option);
-    setAnswered(true);
+    setQuestions(prevQuestions => {
+      const newQuestions = [...prevQuestions];
+      newQuestions[selectedQuestionIndex].userAnswer = option;
+      newQuestions[selectedQuestionIndex].answered = true;
+      return newQuestions;
+    });
   };
 
 
   //to determine the styles for each option
-  const getOptionStyle = (option, correct) => {
-    if (!answered) return {}; //wen not answered
-    if (option === selectedOption && option === correct) return { backgroundColor: 'green' }; //selected correct answer
-    if (option === selectedOption) return { backgroundColor: 'red' }; //selected incorrect answer
-    if (option !== selectedOption && option === correct) return { backgroundColor: 'green' }; //when correct answer not selected show green too
-    return {}; //dfault case
+  const getOptionStyle = (option, question) => {
+    if (!question.answered) return {}; 
+    if (option === question.userAnswer && option === question.correct) return { backgroundColor: 'green' }; 
+    if (option === question.userAnswer) return { backgroundColor: 'red' }; 
+    if (option !== question.userAnswer && option === question.correct) return { backgroundColor: 'green' }; 
+    return {};
   };
+  
 
-  //render component
   return (
-    
-    //start menu container, user profile icon takes user to probfile page and leaderboard button for future implementation
     <div>
+
+        {/*AppBar for the main header*/}
       <AppBar position="static">
         <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h4" component="h2" style={{ margin: 0 }}>
@@ -112,20 +116,18 @@ function MainQuizPage() {
           </div>
         </Toolbar>
       </AppBar>
-
-        {/*main container with a flex display*/}
-        <div style={{ display: 'flex', marginTop: '20px' }}>
+      
+      <div style={{ display: 'flex', marginTop: '20px' }}>
         <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
-        
-        {/*list of questions*/}
+          {/*left side bar for all the question*/}
           <List>
 
-            {/*individual question item*/}
+            {/*loop thought to diplay each question*/}
             {questions.map((_, index) => (
-              <ListItem button key={index} onClick={() => { setSelectedQuestionIndex(index); setAnswered(false); setSelectedOption(null); }}>
+              <ListItem button key={index} onClick={() => { setSelectedQuestionIndex(index); }}>
                 {`Question ${index + 1}`}
 
-                 {/*button to display options menu (three dots) for each question*/}
+                {/*option menu the thrre dots to edit and delte the question*/}
                 <Button style={{ marginLeft: '10px', color: 'black', textTransform: 'none' }} 
                         disabled={quizStarted} 
                         onClick={(e) => handleMenuOpen(e, index)}>
@@ -135,8 +137,7 @@ function MainQuizPage() {
                     <span style={{ color: 'black' }}>•</span>
                   </div>
                 </Button>
-                
-                 {/*dropdown menu to edit or delete a question*/}
+            
                 <Menu
                   anchorEl={anchorEl}
                   keepMounted
@@ -150,7 +151,8 @@ function MainQuizPage() {
             ))}
           </List>
 
-          {/*Add question button and start the quiz button*/}  
+
+         {/*Add question and start quiz button*/}
           <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
             <Button variant="contained" color="primary" onClick={addQuestion} disabled={quizStarted}>
               Add Question
@@ -163,50 +165,57 @@ function MainQuizPage() {
           </div>
         </Paper>
         
-        {/*right side main content area for question and anser optionns*/}
+
+        {/*diplay questions and answer options*/}
         <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {selectedQuestionIndex !== null && (
             <>
-
-            {/*display content when a question is selected*/}
               <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
                 {`Question ${selectedQuestionIndex + 1}`}
               </Typography>
               <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
                 {questions[selectedQuestionIndex].text}
               </Typography>
-
-              {/*check if the quiz has started before showing options */}
+              
+              {/*show answeer woptions when quiz is started*/}
               {quizStarted && (
                 <>
-
-                {/*first two options */}
+                    {/*top two options*/}
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '20px' }}>
                     {questions[selectedQuestionIndex].options.slice(0, 2).map((option, index) => (
                       <Button
                         key={index}
                         variant="contained"
-                        style={getOptionStyle(option, questions[selectedQuestionIndex].correct)}
-                        onClick={() => !answered && checkAnswer(option)}
+                        style={getOptionStyle(option, questions[selectedQuestionIndex])}
+                        onClick={() => !questions[selectedQuestionIndex].answered && checkAnswer(option)}
                       >
                         {option}
                       </Button>
                     ))}
                   </div>
 
-                  {/*last two options */}
+                        {/*bottom two option*/}
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '40px' }}>
                     {questions[selectedQuestionIndex].options.slice(2, 4).map((option, index) => (
                       <Button
                         key={index}
                         variant="contained"
-                        style={getOptionStyle(option, questions[selectedQuestionIndex].correct)}
-                        onClick={() => !answered && checkAnswer(option)}
+                        style={getOptionStyle(option, questions[selectedQuestionIndex])}
+                        onClick={() => !questions[selectedQuestionIndex].answered && checkAnswer(option)}
                       >
                         {option}
                       </Button>
                     ))}
                   </div>
+
+                   {/*show result of question*/}     
+                  {questions[selectedQuestionIndex].answered && (
+                    <Typography variant="h5" component="h2">
+                      {questions[selectedQuestionIndex].userAnswer === questions[selectedQuestionIndex].correct
+                        ? "Correct"
+                        : `Incorrect`}
+                    </Typography>
+                  )}
                 </>
               )}
             </>
