@@ -60,6 +60,7 @@ const FlashcardRepo = {
 
             const flashcardId = doc(collection(database, 'flashcards')).id;
             const commentId = doc(collection(database, 'comments')).id;
+            const questionId = doc(collection(database, 'questions')).id;
 
             const initialFlashcardItems = {
                 [flashcardId]: {
@@ -77,6 +78,14 @@ const FlashcardRepo = {
                 },
             };
 
+            const initialQuizItems = {
+                [questionId]: {
+                    question: "Sample Question",
+                    answer: "Sample Answer",
+                    choices: "Choices"
+                },
+            };
+
             const setData = {
                 name: name,
                 createdAt: Timestamp.now(),
@@ -84,6 +93,7 @@ const FlashcardRepo = {
                 subject: subject,
                 sharedWith: [],
                 flashcardItems: initialFlashcardItems,
+                questionItems: initialQuizItems,
                 comments: initialComments
             };
 
@@ -93,6 +103,7 @@ const FlashcardRepo = {
             const uid = this.getCurrentUid();
             if (uid) {
                 await this.addOwnedFlashcardSetToUser(uid, newDocRef.id);
+                await this.addOwnedQuizSetToUser(uid, newDocRef.id);
             }
 
             return newDocRef.id;
@@ -385,6 +396,121 @@ const FlashcardRepo = {
             }
         } catch (error) {
             console.error("Error adding comment:", error);
+            throw error;
+        }
+    },
+
+    // add owned quizzes into the users table using the flashcardSet id
+    addOwnedQuizSetToUser: async function (uid, quizSetId) {
+        try {
+            const userDocRef = doc(database, 'users', uid);
+
+            await updateDoc(userDocRef, {
+                ownedQuizzes: arrayUnion(quizSetId)
+            });
+
+            console.log(`QuizSet ID ${quizSetId} added to user with UID ${uid}`);
+        } catch (error) {
+            console.error("Error adding quizset ID to user:", error);
+            throw error;
+        }
+    },
+
+       // add all question data to the database table called "flashcardSets"
+       addQuizQuestion: async function (setId, question, choices, correctChoiceIndex) {
+        try {
+          const questionId = doc(collection(database, 'questions')).id;
+      
+          const questionData = {
+            question: question,
+            choices: choices,
+            correctChoice: correctChoiceIndex,
+          };
+      
+          const flashcardSetRef = doc(database, 'flashcardSets', setId); // Use 'flashcardSets' collection
+      
+          const snap = await getDoc(flashcardSetRef);
+          const data = snap.data();
+          let questionItems = data.questionItems || {};
+      
+          questionItems[questionId] = questionData;
+          console.log("Adding new question:", questionItems);
+          await updateDoc(flashcardSetRef, {
+            questionItems: questionItems
+          });
+          return questionId;
+        } catch (error) {
+          console.error("Error adding quiz question", error);
+          throw error;
+        }
+      },
+
+      // delete question from the flashcardSets table and from questionItems field
+      deleteQuestion: async function (setId, questionIdToBeDeleted) {
+        try {
+            const flashcardSetRef = doc(database, 'flashcardSets', setId);
+            const snap = await getDoc(flashcardSetRef);
+            const data = snap.data();
+            let questionItems = data.questionItems || {};
+
+            if (questionItems[questionIdToBeDeleted]) {
+
+                delete questionItems[questionIdToBeDeleted];
+
+                await updateDoc(flashcardSetRef, {
+                    questionItems: questionItems
+                });
+                console.log(`Flashcard with ID ${questionIdToBeDeleted} deleted successfully.`);
+            } else {
+                console.log(`Flashcard with ID ${questionIdToBeDeleted} not found.`);
+            }
+
+        } catch (error) {
+            console.error("Error deleting flashcard", error);
+            throw error;
+        }
+    },
+
+    // get all the question data from the database called quizSet
+    getQuestionItems: async function (setId) {
+        try {
+            const setRef = doc(database, 'flashcardSets', setId);
+            const setSnapshot = await getDoc(setRef);
+            const setData = setSnapshot.data();
+            const questionData = setData.questionItems || [];
+            return questionData;
+        } catch (error) {
+            console.error("Error getting flashcard items:", error);
+            throw error;
+        }
+    },
+
+    // update existing question as requested from the user
+    updateQuestion: async function (setId, questionToBeUpdated, newQuestion, newChoices, newCorrectChoiceIndex) {
+        try {
+            const flashcardSetRef = doc(database, 'flashcardSets', setId);
+            const snap = await getDoc(flashcardSetRef);
+            const data = snap.data();
+            // this will retrieve from questionItems field on firebase
+            let questionItems = data.questionItems || {};
+
+            if (questionItems[questionToBeUpdated]) {
+
+                questionItems[questionToBeUpdated] = {
+                    question: newQuestion,
+                    choices: newChoices,
+                    correctChoiceIndex: newCorrectChoiceIndex,
+                };
+
+                await updateDoc(flashcardSetRef, {
+                    questionItems: questionItems
+                });
+                console.log(`Question with ID ${questionToBeUpdated} updated successfully.`);
+            } else {
+                console.log(`Question with ID ${questionToBeUpdated} not found.`);
+            }
+        } catch (error) {
+            console.error("Error updating flashcard", error);
             throw error;
         }
     },

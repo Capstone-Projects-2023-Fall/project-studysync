@@ -20,6 +20,7 @@ import { signOut } from 'firebase/auth';
 import { auth } from './firebase';
 import MainQuizPage from './js/react/MainQuizPage';
 
+import Quiz from './js/react/Quiz.js';
 
 function App() {
 
@@ -60,7 +61,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/flashcard" element={<FlashcardComponent />} />
-        <Route path="/quiz" element={<QuizList />} />
+        <Route path="/quiz/:setId" element={<Quiz />} />
         <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
         <Route path="/" element={
           user

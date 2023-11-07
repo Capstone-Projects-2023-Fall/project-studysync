@@ -1,5 +1,7 @@
-import {collection, getDocs, deleteDoc,doc} from 'firebase/firestore';
 import Quiz from "../models/quiz"
+import { collection, getDocs, getDoc, query, where,
+   setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } 
+   from 'firebase/firestore';
 
 /**
  * Utility class to talk to FireStore Quiz Collection [IN PROGRESS]
