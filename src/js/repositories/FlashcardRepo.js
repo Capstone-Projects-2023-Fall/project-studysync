@@ -485,6 +485,35 @@ const FlashcardRepo = {
         }
     },
 
+    // update existing question as requested from the user
+    updateQuestion: async function (setId, questionToBeUpdated, newQuestion, newChoices, newCorrectChoiceIndex) {
+        try {
+            const flashcardSetRef = doc(database, 'flashcardSets', setId);
+            const snap = await getDoc(flashcardSetRef);
+            const data = snap.data();
+            // this will retrieve from questionItems field on firebase
+            let questionItems = data.questionItems || {};
+
+            if (questionItems[questionToBeUpdated]) {
+
+                questionItems[questionToBeUpdated] = {
+                    question: newQuestion,
+                    choices: newChoices,
+                    correctChoiceIndex: newCorrectChoiceIndex,
+                };
+
+                await updateDoc(flashcardSetRef, {
+                    questionItems: questionItems
+                });
+                console.log(`Question with ID ${questionToBeUpdated} updated successfully.`);
+            } else {
+                console.log(`Question with ID ${questionToBeUpdated} not found.`);
+            }
+        } catch (error) {
+            console.error("Error updating flashcard", error);
+            throw error;
+        }
+    },
 
 };
 

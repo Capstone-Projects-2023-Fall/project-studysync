@@ -12,6 +12,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useParams } from 'react-router-dom';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
+import Question from '../models/question';
 
 const QuizComponent = () => {
 
@@ -19,7 +20,6 @@ const QuizComponent = () => {
   const { setId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
 
   const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
   const [choices, setChoices] = useState(['', '', '', '']); //store choices
   const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null); //capture the correct choice as an array index
   const [questions, setQuizData] = useState([]); //array to hold all questions data
@@ -28,6 +28,13 @@ const QuizComponent = () => {
   const [openDelete, setOpenDelete] = useState(false);
 
   const [editQuestion, setEditQuestion] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+
+  useEffect(() => {
+    if (!openEdit) {
+      resetEditDialog(); 
+    }
+  }, [openEdit]);
 
   useEffect(() => {
     // fetch questions from database
@@ -64,6 +71,7 @@ const QuizComponent = () => {
         setQuestion('');
         setChoices(['', '', '', '']);
         setCorrectChoiceIndex(null);
+
       } catch (error) {
         console.error('Failed to add quiz:', error);
       }
@@ -103,6 +111,51 @@ const handleChoiceChange = (value, index) => {
     setCorrectChoiceIndex(index);
   };
   
+  const handleEditQuestion = (quiz) => {
+    resetEditDialog(); // Reset state when opening the dialog
+    setQuestion(quiz.question)
+    setChoices([...quiz.choices]);
+    setCorrectChoiceIndex(quiz.correctChoiceIndex);
+    setEditQuestion(quiz);
+    setOpenEdit(true);
+};
+
+// const resetChoices = () => {
+//     setChoices(['', '', '', '']);
+//   };
+
+  // Reset state when the "Edit question" dialog is closed
+  const resetEditDialog = () => {
+    setQuestion('');
+    setChoices(['', '', '', '']);
+    setCorrectChoiceIndex(null);
+  };
+  
+
+const handleUpdateQuestion = async () => {
+    if (editQuestion && question && choices.every((choice) => choice !== '')){
+        try {
+            await FlashcardRepo.updateQuestion(setId, editQuestion.questionId, question, choices, correctChoiceIndex);
+
+            const updatedQuiz = questions.map(quiz => {
+                if (quiz.questionId === editQuestion.questionId) {
+                    return { ...quiz, question, choices, correctChoiceIndex};
+                }
+                return quiz;
+            });
+            setQuizData(updatedQuiz);
+            setOpenEdit(false);
+            setEditQuestion(null);
+
+            // Clear input fields and reset state values
+            setQuestion('');
+            setChoices(['', '', '', '']);
+            setCorrectChoiceIndex(null);
+        } catch (error) {
+            console.error("Failed to update flashcard:", error);
+        }
+    }
+};
   
 return (
     <div style={{
@@ -118,7 +171,7 @@ return (
             {questions.map((quiz, index) => (
                     <ListItem button key={index}>
                         {quiz.question}
-                        <IconButton>
+                        <IconButton onClick={() => handleEditQuestion(quiz)}>
                             <EditIcon />
                         </IconButton>
                         <IconButton onClick={() => handleDeleteQuestion(quiz)}>
@@ -131,6 +184,54 @@ return (
                 </Button>
             </List>
         </div>
+
+        <Dialog open={openEdit} onClose={() => { setOpenEdit(false)}}>
+                    <DialogTitle>Edit question</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Question"
+                            fullWidth
+                            value={question}
+                            onChange={(e) => setQuestion(e.target.value)}
+                        />
+                        <div>
+                           {choices.map((choice, index) => (
+                    <div key={index}>
+                        <TextField
+                            label={`Choice ${index + 1}`}
+                            fullWidth
+                            value={choice}
+                            onChange={(e) => handleChoiceChange(e.target.value, index)}
+                        />
+                        <input
+                            type="radio"
+                            name="correctChoice"
+                            value={index}
+                            onChange={handleCorrectChoiceChange}
+                            checked={correctChoiceIndex === index}
+                            />{' '}
+                            Correct
+                    </div>
+                             ))}
+                             </div>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenEdit(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                handleUpdateQuestion();
+                                setOpenEdit(false);
+                            }}
+                            color="primary"
+                        >
+                            Update
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
         {/* create a dialog and capture all the question data         */}
         <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
