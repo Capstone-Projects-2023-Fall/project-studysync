@@ -27,6 +27,7 @@ const QuizComponent = () => {
   const [deleteQuestion, setDeleteQuestion] = useState(null); 
   const [openDelete, setOpenDelete] = useState(false);
 
+  const [editQuestion, setEditQuestion] = useState(null);
 
   useEffect(() => {
     // fetch questions from database
@@ -37,7 +38,6 @@ const QuizComponent = () => {
             const questionsArray = Object.keys(questionData).map(key => {
                 return {
                     question: questionData[key].question,
-                    answer: questionData[key].answer,
                     choices: questionData[key].choices,
                     questionId: key
                 };
@@ -53,17 +53,16 @@ const QuizComponent = () => {
 
   //this methods add quiz and its data to the database
   const handleAddQuestion = async () => {
-    if (question && answer && choices.every((choice) => choice !== '') &&
+    if (question && choices.every((choice) => choice !== '') &&
     correctChoiceIndex !== null) {
 
       try {
-        const newQuiz = await FlashcardRepo.addQuizQuestion(setId, question, answer, choices,correctChoiceIndex);
+        const newQuiz = await FlashcardRepo.addQuizQuestion(setId, question, choices, correctChoiceIndex);
         // Update the quizData state with the new quiz
-        setQuizData((prev) => [...prev, { question, answer, choices, questionId: newQuiz }]);
+        setQuizData((prev) => [...prev, { question, choices, questionId: newQuiz }]);
         // Clear input fields
         setQuestion('');
-        setAnswer('');
-        setChoices('');
+        setChoices(['', '', '', '']);
         setCorrectChoiceIndex(null);
       } catch (error) {
         console.error('Failed to add quiz:', error);
@@ -72,8 +71,8 @@ const QuizComponent = () => {
   };
 
   //this method will handle delete question
-  const handleDeleteQuestion = (card) => {
-    setDeleteQuestion(card);
+  const handleDeleteQuestion = (quiz) => {
+    setDeleteQuestion(quiz);
     setOpenDelete(true);
 };
 
@@ -98,7 +97,6 @@ const handleChoiceChange = (value, index) => {
     updatedChoices[index] = value;
     setChoices(updatedChoices);
   };
-  
 
   const handleCorrectChoiceChange = (e) => {
     const index = parseInt(e.target.value, 10);

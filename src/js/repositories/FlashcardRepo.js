@@ -417,13 +417,12 @@ const FlashcardRepo = {
     },
 
        // add all question data to the database table called "flashcardSets"
-       addQuizQuestion: async function (setId, question, answer, choices, correctChoiceIndex) {
+       addQuizQuestion: async function (setId, question, choices, correctChoiceIndex) {
         try {
           const questionId = doc(collection(database, 'questions')).id;
       
           const questionData = {
             question: question,
-            answer: answer,
             choices: choices,
             correctChoice: correctChoiceIndex,
           };
