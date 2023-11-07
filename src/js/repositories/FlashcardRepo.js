@@ -400,6 +400,7 @@ const FlashcardRepo = {
         }
     },
 
+    // add owned quizzes into the users table using the flashcardSet id
     addOwnedQuizSetToUser: async function (uid, quizSetId) {
         try {
             const userDocRef = doc(database, 'users', uid);
@@ -415,7 +416,7 @@ const FlashcardRepo = {
         }
     },
 
-       // add all question data to the database table called "quizSet"
+       // add all question data to the database table called "flashcardSets"
        addQuizQuestion: async function (setId, question, answer, choices, correctChoiceIndex) {
         try {
           const questionId = doc(collection(database, 'questions')).id;
@@ -445,6 +446,7 @@ const FlashcardRepo = {
         }
       },
 
+      // delete question from the flashcardSets table and from questionItems field
       deleteQuestion: async function (setId, questionIdToBeDeleted) {
         try {
             const flashcardSetRef = doc(database, 'flashcardSets', setId);

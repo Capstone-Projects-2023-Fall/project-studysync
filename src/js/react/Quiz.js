@@ -15,24 +15,21 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const QuizComponent = () => {
 
-  const [subjects, setSubjects] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState(null);
-  const [flashcards, setFlashcards] = useState({});
-
   const [openAdd, setOpenAdd] = useState(false);
-  const { setId } = useParams();
+  const { setId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
 
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [choices, setChoices] = useState(['', '', '', '']); //store choice
-  const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null);
-  const [questions, setQuizData] = useState([]);
+  const [choices, setChoices] = useState(['', '', '', '']); //store choices
+  const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null); //capture the correct choice as an array index
+  const [questions, setQuizData] = useState([]); //array to hold all questions data
 
-  const [deleteQuestion, setDeleteQuestion] = useState(null);
+  const [deleteQuestion, setDeleteQuestion] = useState(null); 
   const [openDelete, setOpenDelete] = useState(false);
 
 
   useEffect(() => {
+    // fetch questions from database
     const fetchQuestions = async () => {
         try {
             const questionData = await FlashcardRepo.getQuestionItems(setId);
@@ -74,11 +71,13 @@ const QuizComponent = () => {
     }
   };
 
+  //this method will handle delete question
   const handleDeleteQuestion = (card) => {
     setDeleteQuestion(card);
     setOpenDelete(true);
 };
 
+//delete the question and update the question data (setQuizData(updateQuiz))
 const confirmDelete = async () => {
     if (deleteQuestion) {
         try {
@@ -93,12 +92,14 @@ const confirmDelete = async () => {
     }
 }
 
+//save the index of the correct answer captured from the user input
 const handleChoiceChange = (value, index) => {
     const updatedChoices = [...choices];
     updatedChoices[index] = value;
     setChoices(updatedChoices);
   };
   
+
   const handleCorrectChoiceChange = (e) => {
     const index = parseInt(e.target.value, 10);
     setCorrectChoiceIndex(index);
@@ -115,6 +116,7 @@ return (
                 width: "30%", borderRight: "1px solid #e0e0e0",
                 borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
             }}>
+            {/* show list of question on the left panel with options to edit or delete */}
             {questions.map((quiz, index) => (
                     <ListItem button key={index}>
                         {quiz.question}
@@ -132,6 +134,7 @@ return (
             </List>
         </div>
 
+        {/* create a dialog and capture all the question data         */}
         <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
                     <DialogTitle>Add a new question</DialogTitle>
                     <DialogContent>
@@ -143,6 +146,7 @@ return (
                             onChange={(e) => setQuestion(e.target.value)}
                         />
                     <div>
+                    {/* allow user to put all answer into multiple choices and select the correct answer */}
                             {choices.map((choice, index) => (
                         <div key={index}>
                             <TextField
@@ -162,7 +166,7 @@ return (
                         </div>
                             ))}
                     </div>
-                    
+                    {/* this diaglog with either add or cancel the adding question process */}
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={() => setOpenAdd(false)} color="primary">
@@ -179,7 +183,7 @@ return (
                         </Button>
                     </DialogActions>
         </Dialog>
-
+               {/* prompt user if they really want to the delete a certain question                  */}
                 <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
                     <DialogTitle>Confirm Deletion</DialogTitle>
                     <DialogContent>
