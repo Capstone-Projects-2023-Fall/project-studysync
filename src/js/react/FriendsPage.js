@@ -17,9 +17,25 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { mainListItems, secondaryListItems } from './FriendsUI/listItems';
+// import { mainListItems } from './FriendsUI/listItems';
 import Deposits from './FriendsUI/Deposits';
 import Orders from './FriendsUI/Orders';
+
+
+
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PeopleIcon from '@mui/icons-material/People';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import LayersIcon from '@mui/icons-material/Layers';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
+import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
+
 
 
 function Copyright(props) {
@@ -72,6 +88,46 @@ export default function FriendsPage() {
     setOpen(!open);
   };
 
+  const styles ={
+    marginBottom:'10%',
+  }
+  const mainListItems = (
+
+    <React.Fragment>
+      <ListItemButton style={styles}>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Friends" />
+      </ListItemButton>
+      <ListItemButton style={styles}>
+        <ListItemIcon>
+          <PersonAddAltIcon />
+        </ListItemIcon>
+        <ListItemText primary="Friend Requests" />
+      </ListItemButton>
+      <ListItemButton style={styles}>
+        <ListItemIcon>
+          <PeopleOutlineIcon />
+        </ListItemIcon>
+        <ListItemText primary="Followers" />
+      </ListItemButton>
+
+    </React.Fragment>
+  
+);
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -110,11 +166,7 @@ export default function FriendsPage() {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
-              {/* Chart */}
 
-              {/* Recent Deposits */}
-
-              {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
                   <Orders />

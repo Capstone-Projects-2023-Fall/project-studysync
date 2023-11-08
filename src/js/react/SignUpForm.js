@@ -69,8 +69,11 @@ const SignUpForm = ()=> {
           }
           navigate('/');
       }catch(e){
-          setError(e.message);
-          alert(error);
+          // setError(e.message);
+          // alert(e.message);
+          if(e.message == "Firebase: Error (auth/email-already-in-use)."){
+            alert("Email already in use!");
+          }
       }
 
   };
