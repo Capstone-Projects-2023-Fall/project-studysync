@@ -69,7 +69,7 @@ const defaultTheme = createTheme();
 
 export default function FriendsPage() {
   const [open, setOpen] = React.useState(true);
-  const [type,setType] = useState('friends');
+  const [type,setType] = useState('Friends');
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -82,21 +82,21 @@ export default function FriendsPage() {
     <React.Fragment>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PeopleIcon />
+          <PeopleIcon onClick={()=>{setType('Friends')}}/>
         </ListItemIcon>
-        <ListItemText primary="Friends" onClick={()=>{setType('friends')}}/>
+        <ListItemText primary="Friends" onClick={()=>{setType('Friends')}}/>
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PersonAddAltIcon />
+          <PersonAddAltIcon onClick={()=>{setType('Friend Requests')}}/>
         </ListItemIcon>
-        <ListItemText primary="Friend Requests" onClick={()=>{setType('requests')}}/>
+        <ListItemText primary="Friend Requests" onClick={()=>{setType('Friend Requests')}}/>
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PeopleOutlineIcon />
+          <PeopleOutlineIcon onClick={()=>{setType('Followers')}}/>
         </ListItemIcon>
-        <ListItemText primary="Followers" onClick={()=>{setType('followers')}}/>
+        <ListItemText primary="Followers" onClick={()=>{setType('Followers')}}/>
       </ListItemButton>
     </React.Fragment>
   );

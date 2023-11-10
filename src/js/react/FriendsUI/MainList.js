@@ -7,6 +7,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Button from '@mui/material/Button';
 import Title from './Title';
+import { userRepository } from '../../../firebase';
+import useUser from '../useUser';
+import { useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+
 
 export function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
@@ -48,68 +53,107 @@ export const rows = [
   ),
 ];
 
-const styles={
-  paddingTop: '50px',
-  paddingBottom: '50px',
-};
 
-
-function friendList(){
-  return(
-    <>
-      <TableCell>Friend name</TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell><Button variant="contained">View Profile</Button></TableCell>
-      <TableCell align="right"><Button sx={{backgroundColor:'red'}} variant="contained">Remove friend</Button></TableCell>    
-    </>
-  )
-}
-function requestList(){
-  return(
-    <>
-      <TableCell>Request from: bob</TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell><Button variant="contained">Accept</Button></TableCell>
-      <TableCell align="right"><Button sx={{backgroundColor:'red'}} variant="contained">Decline</Button></TableCell>    
-    </>
-  )
-}
-function followersList(){
-  return(
-    <>
-      <TableCell>Follwer</TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell><Button variant="contained">View Profile</Button></TableCell>
-      <TableCell align="right"><Button sx={{backgroundColor:'red'}} variant="contained">Block</Button></TableCell>    
-    </>
-  )
-}
-// function showList(type){
-//   if(type == 'friends'){
-//     return friendList;
-//   }else if(type == 'requests'){
-//     return requestList;
-//   }else{
-//     return followersList;
-//   }
-// }
 export default function MainList(props) {
+
+
   let showList = friendList();
+  const {user} = useUser();
+  const {UserId} = useParams();
+
+  
+
   const type = props.type;
-  if(type == 'friends'){
+  if(type == 'Friends'){
     showList = friendList();
-  }else if(type == 'requests'){
+  }else if(type == 'Friend Requests'){
     showList = requestList();
   }else{
     showList = followersList();
+  }  
+
+  // useEffect(()=>{
+  //   console.log(UserId);
+  // },[props])
+
+  // useEffect(()=>{
+  //   userRepository.getFollowers(UserId).then((followers)=>{
+  //     console.log(`Printing followers......`);
+  //     console.log(followers);
+  //   }).catch((e)=>{
+  //     console.log(e);
+  //   })      
+  // },[])
+
+  const styles={
+    paddingTop: '50px',
+    paddingBottom: '50px',
+  };
+  
+  function acceptRequest(){
+    console.log('clicked')
+  }
+  function declineRequest(){
+
+  }
+  function blockFollower(){
+
+  }
+  function removeFriend(){
+
+  }
+  function viewFollower(){
+
+  }
+  function viewFriend(){
+
+  }
+  function friendList(){
+  
+    //get All the friends 
+    // userRepository.getFriends();
+    return(
+      <>
+        <TableCell>Friend name</TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell><Button onClick={()=>viewFriend()} variant="contained">View Profile</Button></TableCell>
+        <TableCell align="right"><Button onClick={()=>removeFriend()} sx={{backgroundColor:'red'}} variant="contained">Remove friend</Button></TableCell>    
+      </>
+    )
+  }
+  function requestList(){
+    return(
+      <>
+        <TableCell>Request from: bob</TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell><Button variant="contained" onClick={()=>acceptRequest()}>Accept</Button></TableCell>
+        <TableCell align="right"><Button onClick={()=>declineRequest()} sx={{backgroundColor:'red'}} variant="contained">Decline</Button></TableCell>    
+      </>
+    )
+  }
+  function followersList(){
+  
+
+
+
+    return(
+      <>
+        <TableCell>Follwer</TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell><Button onClick={()=>viewFollower()} variant="contained">View Profile</Button></TableCell>
+        <TableCell align="right"><Button onClick={()=>blockFollower()} sx={{backgroundColor:'red'}} variant="contained">Block</Button></TableCell>    
+      </>
+    )
   }
 
+
+  
   return (
     <React.Fragment>
-      <Title>Friends type: {props.type}</Title>
+      <Title>{props.type}</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
