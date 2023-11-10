@@ -56,6 +56,11 @@ export const rows = [
 
 export default function MainList(props) {
 
+  useEffect(()=>{
+    console.log('Changed');
+  },[props])
+
+
 
   let showList = friendList();
   const {user} = useUser();
@@ -134,8 +139,14 @@ export default function MainList(props) {
     )
   }
   function followersList(){
-  
-
+    let _followers = [];
+    userRepository.getFollowers(UserId).then((followers)=>{
+      _followers = followers;
+      console.log(`Printing followers......`);
+      console.log(followers);
+    }).catch((e)=>{
+      console.log(e);
+    }) 
 
 
     return(
