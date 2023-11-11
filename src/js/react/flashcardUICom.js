@@ -32,7 +32,7 @@ function FlashcardApp() {
     const [openAIDialog, setOpenAIDialog] = useState(false);
     const [numberOfFlashcards, setNumberOfFlashcards] = useState(1);
     const [topicName, setTopicName] = useState('');
-    const [toicName, setTopcName] = useState('');
+
 
 
     useEffect(() => {
