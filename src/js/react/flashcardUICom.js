@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
+import AIIcon from '@mui/icons-material/AiOutline';
 
 function FlashcardApp() {
     const [term, setTerm] = useState('');
@@ -28,6 +29,9 @@ function FlashcardApp() {
     const [openEdit, setOpenEdit] = useState(false);
     const [cardToEdit, setCardToEdit] = useState(null);
     const uid = FlashcardRepo.getCurrentUid();
+    const [openAIDialog, setOpenAIDialog] = useState(false);
+    const [numberOfFlashcards, setNumberOfFlashcards] = useState(1);
+    const [topicName, setTopicName] = useState('');
 
 
     useEffect(() => {
@@ -78,10 +82,22 @@ function FlashcardApp() {
             }
         };
 
+        const fetchTopicName = async () => {
+
+            const fetchedTopicName = await FlashcardRepo.fetchTopicNameBySetId(setId);
+            setTopicName(fetchedTopicName);
+        };
+
+        if (openAIDialog) {
+            fetchTopicName();
+        }
+
+
         fetchCurrentUserImage();
         fetchFlashcards();
         fetchComments();
-    }, [setId]);
+        fetchTopicName();
+    }, [openAIDialog, setId]);
 
     const fetchComments = async () => {
         try {
@@ -221,6 +237,32 @@ function FlashcardApp() {
         }
     };
 
+    const handleAIClick = () => {
+        setOpenAIDialog(true);
+    };
+
+    const handleGenerateFlashcards = async () => {
+        setOpenAIDialog(false);
+
+        try {
+            // Replace with actual call to the cloud function
+            const generatedFlashcards = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards);
+
+            // Assuming the response is an array of flashcards
+            generatedFlashcards.forEach(async (flashcard) => {
+                const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
+                setCards((prev) => [...prev, { term: flashcard.term, definition: flashcard.definition, flashcardId: newFlashcardId }]);
+            });
+        } catch (error) {
+            console.error("Error generating flashcards with AI:", error);
+        }
+    };
+
+    const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards) => {
+        // Implement the API call to your cloud function
+        // Return the response (expected to be an array of flashcards)
+    };
+
     const theme = createTheme({
         palette: {
             primary: { main: '#007aff' },
@@ -256,6 +298,12 @@ function FlashcardApp() {
                         ))}
                         <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
                             Add
+                        </Button>
+                        <Button
+                            onClick={handleAIClick} // Define this function to handle AI interaction
+                            startIcon={<AIIcon />}
+                        >
+                            AI Assist
                         </Button>
                     </List>
 
@@ -421,6 +469,38 @@ function FlashcardApp() {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog open={openAIDialog} onClose={() => setOpenAIDialog(false)}>
+                    <DialogTitle>Generate Flashcards with AI</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Topic Name"
+                            type="text"
+                            fullWidth
+                            value={topicName}
+                            onChange={(e) => setTopicName(e.target.value)}
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Number of Flashcards"
+                            type="number"
+                            fullWidth
+                            value={numberOfFlashcards}
+                            onChange={(e) => setNumberOfFlashcards(e.target.value)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenAIDialog(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleGenerateFlashcards} color="primary">
+                            Generate
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
             </div>
         </ThemeProvider>
     );
