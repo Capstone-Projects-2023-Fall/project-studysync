@@ -1,0 +1,58 @@
+[debug] [2023-11-11T06:31:57.349Z] ----------------------------------------------------------------------
+[debug] [2023-11-11T06:31:57.350Z] Command:       /opt/homebrew/Cellar/node/20.6.1/bin/node /opt/homebrew/bin/firebase init functions
+[debug] [2023-11-11T06:31:57.351Z] CLI Version:   12.8.1
+[debug] [2023-11-11T06:31:57.351Z] Platform:      darwin
+[debug] [2023-11-11T06:31:57.351Z] Node Version:  v20.6.1
+[debug] [2023-11-11T06:31:57.351Z] Time:          Sat Nov 11 2023 01:31:57 GMT-0500 (Eastern Standard Time)
+[debug] [2023-11-11T06:31:57.351Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-11-11T06:31:57.393Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-11-11T06:31:57.394Z] > authorizing via signed-in user (l412057438@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /Users/l4120/Documents/Temple Classes/Projects in CS/project-studysync
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2023-11-11T06:31:57.396Z] Using project from CLI flag: studysync-a603a
+[debug] [2023-11-11T06:31:57.397Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/studysync-a603a [none]
+[debug] [2023-11-11T06:31:57.718Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/studysync-a603a 200
+[debug] [2023-11-11T06:31:57.719Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/studysync-a603a {"projectId":"studysync-a603a","projectNumber":"219192121920","displayName":"Studysync","name":"projects/studysync-a603a","resources":{"hostingSite":"studysync-a603a","realtimeDatabaseInstance":"studysync-a603a-default-rtdb"},"state":"ACTIVE","etag":"1_aea63eb7-8f35-44b9-8ea5-a30d849116de"}
+[info] i  Using project studysync-a603a (Studysync) 
+[info] 
+=== Functions Setup
+[debug] [2023-11-11T06:31:57.730Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-11-11T06:31:57.730Z] > authorizing via signed-in user (l412057438@gmail.com)
+[debug] [2023-11-11T06:31:57.730Z] [iam] checking project studysync-a603a for permissions ["firebase.projects.get"]
+[debug] [2023-11-11T06:31:57.731Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/studysync-a603a:testIamPermissions [none]
+[debug] [2023-11-11T06:31:57.731Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/studysync-a603a:testIamPermissions x-goog-quota-user=projects/studysync-a603a
+[debug] [2023-11-11T06:31:57.731Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/studysync-a603a:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2023-11-11T06:31:57.921Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/studysync-a603a:testIamPermissions 200
+[debug] [2023-11-11T06:31:57.922Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/studysync-a603a:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2023-11-11T06:31:57.922Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/studysync-a603a/services/cloudfunctions.googleapis.com [none]
+[debug] [2023-11-11T06:31:57.922Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/studysync-a603a/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/studysync-a603a
+[debug] [2023-11-11T06:31:57.925Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/studysync-a603a/services/runtimeconfig.googleapis.com [none]
+[debug] [2023-11-11T06:31:57.925Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/studysync-a603a/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/studysync-a603a
+[debug] [2023-11-11T06:31:58.358Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/studysync-a603a/services/cloudfunctions.googleapis.com 200
+[debug] [2023-11-11T06:31:58.359Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/studysync-a603a/services/cloudfunctions.googleapis.com [omitted]
+[debug] [2023-11-11T06:31:58.359Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/studysync-a603a/services/runtimeconfig.googleapis.com 200
+[debug] [2023-11-11T06:31:58.359Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/studysync-a603a/services/runtimeconfig.googleapis.com [omitted]
+[info] 
+Detected existing codebase(s): default
+

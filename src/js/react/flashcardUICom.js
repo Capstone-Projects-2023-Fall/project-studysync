@@ -10,7 +10,7 @@ import { useParams } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import AIIcon from '@mui/icons-material/AiOutline';
+
 
 function FlashcardApp() {
     const [term, setTerm] = useState('');
@@ -84,7 +84,7 @@ function FlashcardApp() {
 
         const fetchTopicName = async () => {
 
-            const fetchedTopicName = await FlashcardRepo.fetchTopicNameBySetId(setId);
+            const fetchedTopicName = await FlashcardRepo.fetchTopicName(setId);
             setTopicName(fetchedTopicName);
         };
 
@@ -237,30 +237,79 @@ function FlashcardApp() {
         }
     };
 
+    function parseGPTResponse(rawResponse) {
+        try {
+            // Regular expression to find JSON objects in the response
+            const jsonRegex = /{[\s\S]*?}/g;
+            const matches = rawResponse.match(jsonRegex);
+            console.log("Raw JSON matches:", matches);
+    
+            if (!matches) return [];
+    
+            // Parse each JSON string into an object
+            const flashcards = matches.map(jsonString => {
+                try {
+                    return JSON.parse(jsonString);
+                } catch (error) {
+                    console.error("Error parsing individual JSON string:", jsonString, error);
+                    return null; // or some other error handling
+                }
+            }).filter(flashcard => flashcard != null);
+            return flashcards;
+        } catch (error) {
+            console.error("Error parsing GPT response:", error);
+            return [];
+        }
+    }
+      
+
     const handleAIClick = () => {
         setOpenAIDialog(true);
     };
 
     const handleGenerateFlashcards = async () => {
         setOpenAIDialog(false);
-
+    
         try {
-            // Replace with actual call to the cloud function
-            const generatedFlashcards = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards);
-
-            // Assuming the response is an array of flashcards
-            generatedFlashcards.forEach(async (flashcard) => {
+            const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
+            
+            const generatedFlashcards = responseString; // Since the response is already in the expected format
+    
+            const addFlashcardPromises = generatedFlashcards.map(async (flashcard) => {
                 const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
-                setCards((prev) => [...prev, { term: flashcard.term, definition: flashcard.definition, flashcardId: newFlashcardId }]);
+                return { ...flashcard, flashcardId: newFlashcardId };
             });
+    
+            const addedFlashcards = await Promise.all(addFlashcardPromises);
+            setCards(prev => [...prev, ...addedFlashcards]);
+    
         } catch (error) {
-            console.error("Error generating flashcards with AI:", error);
+            console.error("Error generating or adding flashcards with AI:", error);
         }
     };
-
-    const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards) => {
-        // Implement the API call to your cloud function
-        // Return the response (expected to be an array of flashcards)
+    
+    const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName) => {
+        try {
+            const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
+    
+            const response = await fetch(functionUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: `Generate ${numFlashcards} flashcards about ${topicName} with term and definition field in JSON format.` }),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            return parseGPTResponse(data.text); // Assuming the data.text is the string of JSON flashcards
+        } catch (error) {
+            console.error("Error calling cloud function:", error);
+            throw error;
+        }
     };
 
     const theme = createTheme({
@@ -301,7 +350,7 @@ function FlashcardApp() {
                         </Button>
                         <Button
                             onClick={handleAIClick} // Define this function to handle AI interaction
-                            startIcon={<AIIcon />}
+                            startIcon={<AddIcon />}
                         >
                             AI Assist
                         </Button>
