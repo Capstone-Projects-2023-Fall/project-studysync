@@ -154,6 +154,27 @@ const FlashcardRepo = {
         }
     },
 
+    fetchTopicName: async function (setId) {
+        try {
+            const flashcardSetRef = doc(database, 'flashcardSets', setId);
+            const snap = await getDoc(flashcardSetRef);
+    
+            if (snap.exists()) {
+                const flashcardSetData = snap.data();
+                console.log(`Flashcard set with ID ${setId} fetched successfully.`);
+                return flashcardSetData.name; 
+            } else {
+                console.log(`Flashcard set with ID ${setId} not found.`);
+                return null; 
+            }
+    
+        } catch (error) {
+            console.error("Error fetching topic name:", error);
+            throw error;
+        }
+    },
+    
+
 
 
     addFlashcardItem: async function (setId, term, definition) {

@@ -11,6 +11,7 @@ import FlashcardRepo from '../repositories/FlashcardRepo';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 
+
 function FlashcardApp() {
     const [term, setTerm] = useState('');
     const [definition, setDefinition] = useState('');
@@ -28,6 +29,10 @@ function FlashcardApp() {
     const [openEdit, setOpenEdit] = useState(false);
     const [cardToEdit, setCardToEdit] = useState(null);
     const uid = FlashcardRepo.getCurrentUid();
+    const [openAIDialog, setOpenAIDialog] = useState(false);
+    const [numberOfFlashcards, setNumberOfFlashcards] = useState(1);
+    const [topicName, setTopicName] = useState('');
+
 
 
     useEffect(() => {
@@ -78,10 +83,22 @@ function FlashcardApp() {
             }
         };
 
+        const fetchTopicName = async () => {
+
+            const fetchedTopicName = await FlashcardRepo.fetchTopicName(setId);
+            setTopicName(fetchedTopicName);
+        };
+
+        if (openAIDialog) {
+            fetchTopicName();
+        }
+
+
         fetchCurrentUserImage();
         fetchFlashcards();
         fetchComments();
-    }, [setId]);
+        fetchTopicName();
+    }, [openAIDialog, setId]);
 
     const fetchComments = async () => {
         try {
@@ -221,6 +238,81 @@ function FlashcardApp() {
         }
     };
 
+    function parseGPTResponse(rawResponse) {
+        try {
+            // Regular expression to find JSON objects in the response
+            const jsonRegex = /{[\s\S]*?}/g;
+            const matches = rawResponse.match(jsonRegex);
+            console.log("Raw JSON matches:", matches);
+    
+            if (!matches) return [];
+    
+            // Parse each JSON string into an object
+            const flashcards = matches.map(jsonString => {
+                try {
+                    return JSON.parse(jsonString);
+                } catch (error) {
+                    console.error("Error parsing individual JSON string:", jsonString, error);
+                    return null; // or some other error handling
+                }
+            }).filter(flashcard => flashcard != null);
+            return flashcards;
+        } catch (error) {
+            console.error("Error parsing GPT response:", error);
+            return [];
+        }
+    }
+      
+
+    const handleAIClick = () => {
+        setOpenAIDialog(true);
+    };
+
+    const handleGenerateFlashcards = async () => {
+        setOpenAIDialog(false);
+    
+        try {
+            const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
+            
+            const generatedFlashcards = responseString; // Since the response is already in the expected format
+    
+            const addFlashcardPromises = generatedFlashcards.map(async (flashcard) => {
+                const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
+                return { ...flashcard, flashcardId: newFlashcardId };
+            });
+    
+            const addedFlashcards = await Promise.all(addFlashcardPromises);
+            setCards(prev => [...prev, ...addedFlashcards]);
+    
+        } catch (error) {
+            console.error("Error generating or adding flashcards with AI:", error);
+        }
+    };
+    
+    const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName) => {
+        try {
+            const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
+    
+            const response = await fetch(functionUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: `Please create ${numFlashcards}flashcards about ${topicName}. Format each flashcard as JSON with only 'term' and 'definition' fields, no other words in json , i need to parse it with only "term" and "definition"` }),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+    
+            const data = await response.json();
+            return parseGPTResponse(data.text); // Assuming the data.text is the string of JSON flashcards
+        } catch (error) {
+            console.error("Error calling cloud function:", error);
+            throw error;
+        }
+    };
+
     const theme = createTheme({
         palette: {
             primary: { main: '#007aff' },
@@ -256,6 +348,12 @@ function FlashcardApp() {
                         ))}
                         <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
                             Add
+                        </Button>
+                        <Button
+                            onClick={handleAIClick} // Define this function to handle AI interaction
+                            startIcon={<AddIcon />}
+                        >
+                            AI Assist
                         </Button>
                     </List>
 
@@ -421,6 +519,38 @@ function FlashcardApp() {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog open={openAIDialog} onClose={() => setOpenAIDialog(false)}>
+                    <DialogTitle>Generate Flashcards with AI</DialogTitle>
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Topic Name"
+                            type="text"
+                            fullWidth
+                            value={topicName}
+                            onChange={(e) => setTopicName(e.target.value)}
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Number of Flashcards"
+                            type="number"
+                            fullWidth
+                            value={numberOfFlashcards}
+                            onChange={(e) => setNumberOfFlashcards(e.target.value)}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpenAIDialog(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={handleGenerateFlashcards} color="primary">
+                            Generate
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
             </div>
         </ThemeProvider>
     );
