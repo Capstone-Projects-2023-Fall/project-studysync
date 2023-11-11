@@ -298,7 +298,7 @@ function FlashcardApp() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ message: `Generate ${numFlashcards} flashcards about ${topicName} with term and definition field in JSON format.` }),
+                body: JSON.stringify({ message: `Please create ${numFlashcards}flashcards about ${topicName}. Format each flashcard as JSON with only 'term' and 'definition' fields, no other words in json , i need to parse it with only "term" and "definition"` }),
             });
     
             if (!response.ok) {
