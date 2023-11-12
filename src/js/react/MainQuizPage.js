@@ -159,21 +159,15 @@ function MainQuizPage() {
 
   return (
     <div>
-
         {/*AppBar for the main header*/}
         <AppBar position="static">
         <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h4" component="h2" style={{ margin: 0 }}>
             Quiz
           </Typography>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Button onClick={() => navigate('/profile/:UserId')}>
-              <Avatar alt="User Profile" src="https://via.placeholder.com/40" />
-            </Button>
-            <Button variant="contained">
-              LEADERBOARD
-            </Button>
-          </div>
+          <Button variant="contained">
+            LEADERBOARD
+          </Button>
         </Toolbar>
       </AppBar>
       
