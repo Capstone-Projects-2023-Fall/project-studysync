@@ -2,8 +2,8 @@ import React, {useState,useEffect,useCallback} from 'react';
 import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper,Menu, MenuItem } from '@mui/material';
 import {useNavigate } from 'react-router-dom';
 
-  //generate question based on index
-  const generateQuestion = (i) => {
+//generate question based on index
+const generateQuestion = (i) => {
     const correctAnswer = `${2 * (i + 1)}`;
     const options = [correctAnswer, `${2 * (i + 2)}`, `${2 * (i + 3)}`, `${2 * (i + 4)}`].sort(() => Math.random() - 0.5);
     return {
@@ -11,7 +11,6 @@ import {useNavigate } from 'react-router-dom';
       options,
       correct: correctAnswer,
       userAnswer: null,
-      answered: false
     };
   }
 
@@ -127,11 +126,8 @@ function MainQuizPage() {
 
   //check if answer is correct
   const checkAnswer = (option) => {
-    setQuestions(prevQuestions => {
-      const newQuestions = [...prevQuestions];
+    setQuestions(prevQuestions => { const newQuestions = [...prevQuestions];
       newQuestions[selectedQuestionIndex].userAnswer = option;
-      newQuestions[selectedQuestionIndex].answered = true;
-      checkIfQuizIsFinished();
       return newQuestions;
     });
   };
@@ -164,6 +160,12 @@ function MainQuizPage() {
     setQuestions(newQuestions);
     setTimeLeft(calculateInitialTime()); //recalculate time based on the number of new questions
     navigate('/quizmain');
+  };
+
+  //change color of answer when picked
+  const getButtonStyle = (option, questionIndex) => {
+    const isSelected = questions[questionIndex].userAnswer === option;
+    return isSelected ? { backgroundColor: '#1976d2', color: 'red' } : {};
   };
 
   return (
@@ -245,48 +247,48 @@ function MainQuizPage() {
           </div>
         </Paper>
         
-
-        {/*diplay questions and answer options*/}
-        <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {selectedQuestionIndex !== null && (
-            <>
-              <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
-                {`Question ${selectedQuestionIndex + 1}`}
+         {/* Display questions and answer options */}
+         <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {selectedQuestionIndex !== null && (<>
+          {/* Question display */}
+          <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
+            {`Question ${selectedQuestionIndex + 1}`}
+            </Typography>
+            <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
+              {questions[selectedQuestionIndex].text}
               </Typography>
-              <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
-                {questions[selectedQuestionIndex].text}
-              </Typography>
 
-              
                {/*show answeer woptions when quiz is started*/}
                {quizStarted && (
                 <>
                     {/*top two options*/}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '20px' }}>
                     {questions[selectedQuestionIndex].options.slice(0, 2).map((option, index) => (
                       <Button
                         key={index}
-                        variant="contained"   
-                        onClick={() => !questions[selectedQuestionIndex].answered && checkAnswer(option)}
+                        variant="contained"
+                        style={getButtonStyle(option, selectedQuestionIndex)}
+                        onClick={() => checkAnswer(option)}
                       >
                         {option}
                       </Button>
                     ))}
                   </div>
 
-                  {/*bottom two option*/}
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '40px' }}>
                     {questions[selectedQuestionIndex].options.slice(2, 4).map((option, index) => (
                       <Button
                         key={index}
                         variant="contained"
-                        onClick={() => !questions[selectedQuestionIndex].answered && checkAnswer(option)}
+                        style={getButtonStyle(option, selectedQuestionIndex)}
+                        onClick={() => checkAnswer(option)}
                       >
                         {option}
                       </Button>
                     ))}
                   </div></>)}</>)}
                   </div>  
+                  
           
           {/*display score and return button */}
           {quizFinished && (
