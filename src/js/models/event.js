@@ -1,31 +1,59 @@
-import User from './user.js';
-import Dashboard from './dashboard.js';
 
-/**
- * Represents an event, capturing essential details like date and title.
- * can also edit event deatailEvent
- 
- */
+export const EVENT_TYPE = {
+    SHARED_QUIZ: "SHARED QUIZ",
+    NEW_FOLLOWER : "NEW FOLLOWER",
+    UPCOMING_QUIZ: "UPCOMING_QUIZ",
+    SHARED_FLASHCARD: "SHARED_FLASHCARD"
+}
 
 export default class Event {
+    constructor(name, eventType, id){
+        this.createdAt = new Date().getTime()
+        this.name = name
+        this.eventType = eventType
+        this.id = id
 
-    /**
-     * Creates a new Event instance.
-     * 
-     * @param {Date} date - The date of the event.
-     * @param {string} title - The title of the event.
-     */
-    
-    constructor(date, title) {
-        this.date = date;
-        this.title = title;
+        switch (EVENT_TYPE){
+            case EVENT_TYPE.NEW_FOLLOWER:
+                this.newFollowerEvent  = null
+                break
+        }
     }
 
-    /**
-     * Allows for editing the details of the event.
-     */
-    editEvent() {
-        // Logic to edit the event's details
-        console.log('Event details editing interface activated');
+    //This can only be called when the event is a new follower event
+    createNewFollowerEvent(follwerId, followingId){
+        this.newFollowerEvent = new NewFollowerEvent(follwerId, followingId).toJSON();
+        return this.newFollowerEvent
+    }
+
+    toJSON(){
+        const jsonOutput =  {
+            createdAt: this.createdAt,
+            name: this.name,
+            eventType: this.eventType,
+            id: this.id,
+            newFollowerEvent: this.newFollowerEvent
+        }
+
+        switch(this.eventType){
+            case EVENT_TYPE.NEW_FOLLOWER:
+                this.newFollowerEvent = this.newFollowerEvent
+        }
+        return jsonOutput
+
+    }
+}
+
+export class NewFollowerEvent{
+    constructor(followerId, followingId){
+        this.followerId = followerId
+        this.followingId = followingId
+    }
+
+    toJSON(){
+        return{
+            followerId: this.followerId,
+            followingId: this.followingId
+        }
     }
 }

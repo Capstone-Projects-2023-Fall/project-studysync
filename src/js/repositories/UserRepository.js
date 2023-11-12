@@ -2,16 +2,18 @@ import { setDoc, doc } from 'firebase/firestore';
 import { removeItemFromArrayField, updateArrayDocumentFields, addItemToArrayField, getArrayFieldFromCollection, getAllItems, getItemById, removeDocumentFromCollection, updateNonArrayDocumentFields } from '../utils/sharedRepositoryFunctions';
 import { userConverter } from "../converters/userConverter"
 import User from "../models/user"
+import { Notification } from '../models/notification';
 
 /**
  * Utility class to talk to FireStore User Collection [IN PROGRESS]
  */
 export class UserRepository {
-  constructor(database, quizRepository, notificationRepository, flashcardRepository) {
+  constructor(database, quizRepository, notificationRepository, flashcardRepository, eventRepository) {
     this.database = database
     this.quizRepository = quizRepository
     this.notificationRepository = notificationRepository
     this.flashcardRepository = flashcardRepository
+    this.eventRepository = eventRepository
   }
 
   /**Add a user to the database for the first time with id: uuid*/
@@ -173,6 +175,13 @@ export class UserRepository {
 
   async addFollowing(userId, followingId) {
     await addItemToArrayField(this.database, userId, followingId, "users", "following", "following")
+    await this.addFollower(followingId, userId)
+    //create a new event in followingId to indicate that someone followed them. add the event to their notifications
+    const eventId = await this.eventRepository.createNewFollowerEvent(userId, followingId)
+    // //create a new notification with this event
+    const notificationId = await this.notificationRepository.addNotification(new Notification(eventId))
+    // //add this notification to users list of notifications
+    this.addNotification(userId, notificationId)
   }
 
   async removeFollower(userId, followerId) {

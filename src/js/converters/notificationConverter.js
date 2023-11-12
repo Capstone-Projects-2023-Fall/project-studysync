@@ -2,7 +2,6 @@ export const notificationConverter = {
     toFirestore: (notification) => {
         return {
             event: notification.event,
-            message: notification.message,
             createdAt: notification.createdAt,
         };
     },
@@ -14,7 +13,7 @@ export const notificationConverter = {
   };
   
   function setNotification(data){
-    const notification = new Notification(data.event || '', data.message || '');
+    const notification = new Notification(data.eventId);
     notification.createdAt = data.createdAt || ''
     notification.id = data.id
     return notification
