@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import MainList from './FriendsUI/MainList';
+// import MainList from './FriendsUI/MainList';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -21,7 +21,16 @@ import PeopleIcon from '@mui/icons-material/People';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import { useState,useEffect } from 'react';
-
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
+import Title from './FriendsUI/Title';
+import { userRepository } from '../../firebase';
+import useUser from './useUser'; 
+import { useParams } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -68,8 +77,65 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 const defaultTheme = createTheme();
 
 export default function FriendsPage() {
+  const {UserId } = useParams();
   const [open, setOpen] = React.useState(true);
   const [type,setType] = useState('Friends');
+  const [showList,setShowList] = useState([]);
+  const [isLoading,setIsLoading] = useState(false);
+  const [error, setError] = useState(null)  
+  // const [showFriends,setShowFriends] = useState([]);
+  // const [showFollowing,setShowFollowing] = useState([]);
+
+  useEffect(()=>{
+    setIsLoading(true)
+    userRepository.getFriends(UserId).then((friends)=>{
+      console.log(`friends: ${friends}`);
+      setShowList(friends);
+      setIsLoading(false)
+    }).catch((e)=>{
+      setError(e);
+      setIsLoading(false);
+      console.log(`Error: ${e}`);
+    })               
+  },[])
+
+  useEffect(()=>{
+    setIsLoading(true)
+    // console.log(`Changed to: ${type}`);
+    if(type == "Following"){
+      userRepository.getFollowing(UserId).then((_following)=>{
+        setShowList(_following);
+        setIsLoading(false)        
+      }).catch((e)=>{
+        setError(e);
+        setIsLoading(false);        
+        console.log(`Error: ${e}`);
+      })                    
+    }else if(type == "Followers"){
+      userRepository.getFollowers(UserId).then((followers)=>{
+        console.log(`followers: ${followers}`);
+        setShowList(followers);
+        setIsLoading(false)
+
+      }).catch((e)=>{
+        setError(e);
+        setIsLoading(false);        
+        console.log(`Error: ${e}`);
+      })                    
+    }else{
+      userRepository.getFriends(UserId).then((friends)=>{
+        console.log(`friends: ${friends}`);
+        setShowList(friends);
+        setIsLoading(false)
+      }).catch((e)=>{
+        setError(e);
+        setIsLoading(false);        
+        console.log(`Error: ${e}`);
+      })                    
+    }
+  },[type])
+
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -100,6 +166,192 @@ export default function FriendsPage() {
       </ListItemButton>
     </React.Fragment>
   );
+
+
+  function MainList(props) {
+
+
+
+
+
+
+
+    // useEffect(()=>{
+    //   console.log('Changed');
+    // },[props])
+  
+  
+  
+    // // let showList = friendList();
+    // const {user} = useUser();
+    // const {UserId} = useParams();
+    // const friends = ["Sean","Jess"];
+    // const following = ["Sean","Jess"];
+    // const followers = ["Sean","Jess","James"];  
+    
+  
+    // const type = props.type;
+    // function showList(user){
+    //   if(type == 'Following'){
+    //     return followingList(user);
+    //   }else if(type == 'Followers'){
+    //     return followersList(user);
+    //   }else{
+    //     return friendList(user);
+    //   }  
+    // }
+  
+  
+  
+    // const styles={
+    //   paddingTop: '50px',
+    //   paddingBottom: '50px',
+    // };
+    
+    // function acceptRequest(){
+    //   console.log('clicked')
+    // }
+    // function declineRequest(){
+  
+    // }
+    // function blockFollower(){
+  
+    // }
+    // function removeFriend(){
+  
+    // }
+    // function viewFollower(){
+  
+    // }
+    // function viewFriend(){
+  
+    // }
+    // function friendList(user){
+    
+    //   return(
+    //     <>
+    //       <TableCell>{user}</TableCell>
+    //       <TableCell></TableCell>
+    //       <TableCell></TableCell>
+    //       <TableCell><Button onClick={()=>viewFriend()} variant="contained">View Profile</Button></TableCell>
+    //       <TableCell align="right"><Button onClick={()=>removeFriend()} sx={{backgroundColor:'red'}} variant="contained">Remove friend</Button></TableCell>    
+    //     </>
+    //   )
+    // }
+    // function followingList(user){
+    //   return(
+    //     <>
+    //       <TableCell>{user}</TableCell>
+    //       <TableCell></TableCell>
+    //       <TableCell></TableCell>
+    //       <TableCell><Button variant="contained" onClick={()=>acceptRequest()}>Accept</Button></TableCell>
+    //       <TableCell align="right"><Button onClick={()=>declineRequest()} sx={{backgroundColor:'red'}} variant="contained">Decline</Button></TableCell>    
+    //     </>
+    //   )
+    // }
+    // function followersList(user){
+  
+  
+    //   return(
+    //     <>
+    //       <TableCell>{user}</TableCell>
+    //       <TableCell></TableCell>
+    //       <TableCell></TableCell>
+    //       <TableCell><Button onClick={()=>viewFollower()} variant="contained">View Profile</Button></TableCell>
+    //       <TableCell align="right"><Button onClick={()=>blockFollower()} sx={{backgroundColor:'red'}} variant="contained">Block</Button></TableCell>    
+    //     </>
+    //   )
+    // }
+    // function displayList(){
+    //   if(type == 'Following'){
+    //     return following;
+    //   }else if(type == 'Followers'){
+    //     return followers;
+    //   }
+    //   return friends;
+    // }
+  
+    function tableContent(){
+      console.log(`${type} list has ${showList.length} elements`);
+      return(
+        <>
+          {showList.map((user)=>(
+            <TableRow>
+              <TableCell>{user.firstName}</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell><Button  variant="contained">View Profile</Button></TableCell>
+              <TableCell align="right"><Button  sx={{backgroundColor:'red'}} variant="contained">Block</Button></TableCell>                  
+            </TableRow>
+          ))}
+           
+        </>
+      )      
+    }
+    
+
+    if(isLoading){
+      return (
+          <>
+              <head>
+                  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+                  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+                  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>      
+              </head>
+              <div class="container emp-profile">
+                  <h2>LOADING {type}...</h2>
+              </div>
+              
+          </>
+      )
+    }
+
+    if(error){
+      return(
+          <>
+              <head>
+                  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+                  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+                  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>      
+              </head>
+              <div class="container emp-profile">
+                  <h2>ERROR LOADING {type}...</h2>
+              </div>
+              
+          </>
+      )
+    }    
+
+    return (
+      <React.Fragment>
+        <Title> {type}
+          </Title>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              <TableCell align="right"></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody >
+            {/* {displayList().map((user,index) => (
+              <TableRow key={index}>
+                {showList(user)}
+              </TableRow>
+            ))} */}
+            {tableContent()}
+          </TableBody>
+        </Table>
+  
+      </React.Fragment>
+    );
+  }
+
+
+
 
 
   return (
@@ -143,7 +395,8 @@ export default function FriendsPage() {
 
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <MainList type={type}/>
+                  {/* <MainList type={type}/> */}
+                  {MainList()}
                 </Paper>
               </Grid>
             </Grid>
