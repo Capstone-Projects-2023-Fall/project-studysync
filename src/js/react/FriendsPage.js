@@ -270,26 +270,70 @@ export default function FriendsPage() {
     //   }
     //   return friends;
     // }
+    function removeFriend(){
+      console.log(1);
+    }
+    function blockUser(){
+      console.log(2);
+
+    }
+    function viewUser(){
+      console.log(3);
+
+    }
+    function followBack(){
+      console.log(4);
+
+    }
+    function stopFollowing(){
+      console.log(5);
+
+    }
+    function handlebtn1(){
+      if(type == 'Followers'){
+        followBack();
+      }else{
+        viewUser();
+      }
+    }
+    function handlebtn2(){
+      if(type == 'Followers'){
+        blockUser();
+      }else if(type == 'Following'){
+        stopFollowing();
+      }else{
+        removeFriend();
+      }
+    }
   
     function tableContent(){
-      console.log(`${type} list has ${showList.length} elements`);
+      let firstbtn ="";
+      let secondbtn = "";
+      if(type == 'Friend'){
+        firstbtn = "View Profile";
+        secondbtn = "Remove friend";
+      }else if(type == 'Following'){
+        firstbtn = "View Profile";
+        secondbtn = "Stop Following";
+      }else{
+        firstbtn = "Follow Back";
+        secondbtn = "Block";
+      }
       return(
         <>
           {showList.map((user)=>(
-            <TableRow>
+            <TableRow key={user.id}>
               <TableCell>{user.firstName}</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell><Button  variant="contained">View Profile</Button></TableCell>
-              <TableCell align="right"><Button  sx={{backgroundColor:'red'}} variant="contained">Block</Button></TableCell>                  
+              <TableCell><Button onClick={()=>{handlebtn1()}} variant="contained">{firstbtn}</Button></TableCell>
+              <TableCell align="right"><Button  onClick={()=>{handlebtn2()}} sx={{backgroundColor:'red'}} variant="contained">{secondbtn}</Button></TableCell>                  
             </TableRow>
           ))}
            
         </>
       )      
     }
-    
-
     if(isLoading){
       return (
           <>
@@ -301,11 +345,9 @@ export default function FriendsPage() {
               <div class="container emp-profile">
                   <h2>LOADING {type}...</h2>
               </div>
-              
           </>
       )
     }
-
     if(error){
       return(
           <>
@@ -317,11 +359,9 @@ export default function FriendsPage() {
               <div class="container emp-profile">
                   <h2>ERROR LOADING {type}...</h2>
               </div>
-              
           </>
       )
     }    
-
     return (
       <React.Fragment>
         <Title> {type}
