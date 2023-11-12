@@ -13,45 +13,10 @@ import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 
 
-export function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
-}
+const friends = ["Sean","Jess"];
+const following = ["Sean","Jess"];
+const followers = ["Sean","Jess","James"];
 
-export const rows = [
-  createData(
-    0,
-    '16 Mar, 2019',
-    'Elvis Presley',
-    'Tupelo, MS',
-    'VISA ⠀•••• 3719',
-    312.44,
-  ),
-  createData(
-    1,
-    '16 Mar, 2019',
-    'Paul McCartney',
-    'London, UK',
-    'VISA ⠀•••• 2574',
-    866.99,
-  ),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
-  createData(
-    3,
-    '16 Mar, 2019',
-    'Michael Jackson',
-    'Gary, IN',
-    'AMEX ⠀•••• 2000',
-    654.39,
-  ),
-  createData(
-    4,
-    '15 Mar, 2019',
-    'Bruce Springsteen',
-    'Long Branch, NJ',
-    'VISA ⠀•••• 5919',
-    212.79,
-  ),
-];
 
 
 export default function MainList(props) {
@@ -62,33 +27,24 @@ export default function MainList(props) {
 
 
 
-  let showList = friendList();
+  // let showList = friendList();
   const {user} = useUser();
   const {UserId} = useParams();
 
   
 
   const type = props.type;
-  if(type == 'Friends'){
-    showList = friendList();
-  }else if(type == 'Friend Requests'){
-    showList = requestList();
-  }else{
-    showList = followersList();
-  }  
+  function showList(user){
+    if(type == 'Following'){
+      return followingList(user);
+    }else if(type == 'Followers'){
+      return followersList(user);
+    }else{
+      return friendList(user);
+    }  
+  }
 
-  // useEffect(()=>{
-  //   console.log(UserId);
-  // },[props])
 
-  // useEffect(()=>{
-  //   userRepository.getFollowers(UserId).then((followers)=>{
-  //     console.log(`Printing followers......`);
-  //     console.log(followers);
-  //   }).catch((e)=>{
-  //     console.log(e);
-  //   })      
-  // },[])
 
   const styles={
     paddingTop: '50px',
@@ -113,13 +69,11 @@ export default function MainList(props) {
   function viewFriend(){
 
   }
-  function friendList(){
+  function friendList(user){
   
-    //get All the friends 
-    // userRepository.getFriends();
     return(
       <>
-        <TableCell>Friend name</TableCell>
+        <TableCell>{user}</TableCell>
         <TableCell></TableCell>
         <TableCell></TableCell>
         <TableCell><Button onClick={()=>viewFriend()} variant="contained">View Profile</Button></TableCell>
@@ -127,10 +81,10 @@ export default function MainList(props) {
       </>
     )
   }
-  function requestList(){
+  function followingList(user){
     return(
       <>
-        <TableCell>Request from: bob</TableCell>
+        <TableCell>{user}</TableCell>
         <TableCell></TableCell>
         <TableCell></TableCell>
         <TableCell><Button variant="contained" onClick={()=>acceptRequest()}>Accept</Button></TableCell>
@@ -138,20 +92,12 @@ export default function MainList(props) {
       </>
     )
   }
-  function followersList(){
-    let _followers = [];
-    userRepository.getFollowers(UserId).then((followers)=>{
-      _followers = followers;
-      console.log(`Printing followers......`);
-      console.log(followers);
-    }).catch((e)=>{
-      console.log(e);
-    }) 
+  function followersList(user){
 
 
     return(
       <>
-        <TableCell>Follwer</TableCell>
+        <TableCell>{user}</TableCell>
         <TableCell></TableCell>
         <TableCell></TableCell>
         <TableCell><Button onClick={()=>viewFollower()} variant="contained">View Profile</Button></TableCell>
@@ -159,7 +105,14 @@ export default function MainList(props) {
       </>
     )
   }
-
+  function displayList(){
+    if(type == 'Following'){
+      return following;
+    }else if(type == 'Followers'){
+      return followers;
+    }
+    return friends;
+  }
 
   
   return (
@@ -176,9 +129,9 @@ export default function MainList(props) {
           </TableRow>
         </TableHead>
         <TableBody >
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              {showList}
+          {displayList().map((user,index) => (
+            <TableRow key={index}>
+              {showList(user)}
             </TableRow>
           ))}
         </TableBody>

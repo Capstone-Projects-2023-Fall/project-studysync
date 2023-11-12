@@ -88,9 +88,9 @@ export default function FriendsPage() {
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PersonAddAltIcon onClick={()=>{setType('Friend Requests')}}/>
+          <PersonAddAltIcon onClick={()=>{setType('Following')}}/>
         </ListItemIcon>
-        <ListItemText primary="Friend Requests" onClick={()=>{setType('Friend Requests')}}/>
+        <ListItemText primary="Following" onClick={()=>{setType('Following')}}/>
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
