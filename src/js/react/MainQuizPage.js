@@ -96,9 +96,19 @@ function MainQuizPage() {
       console.log("Can't delete questions during an active quiz");
       return;
     }
-    setQuestions(prev => prev.filter((_, index) => index !== menuQuestionIndex));
-    handleMenuClose();
-  };
+
+  //djust the selectedQuestionIndex if necessary
+  if (selectedQuestionIndex !== null) {
+    if (menuQuestionIndex === selectedQuestionIndex) {
+      setSelectedQuestionIndex(null);
+    } 
+    else if (menuQuestionIndex < selectedQuestionIndex) {
+      setSelectedQuestionIndex(prevIndex => prevIndex - 1);}
+  }
+  //update the questions array
+  setQuestions(prev => prev.filter((_, index) => index !== menuQuestionIndex));
+  handleMenuClose();
+};
 
   //edit question function
   const editQuestion = () => {
