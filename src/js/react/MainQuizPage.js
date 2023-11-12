@@ -1,6 +1,6 @@
-import React, { useState,} from 'react';
-import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Menu, MenuItem } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React, {useState,useEffect} from 'react';
+import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper,Avatar,Menu, MenuItem } from '@mui/material';
+import {useNavigate } from 'react-router-dom';
 
 //mainQuizPage component
 function MainQuizPage() {
@@ -11,7 +11,6 @@ function MainQuizPage() {
   const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
   const [score, setScore] = useState(null);//for score
   const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
-
 
   //generate question based on index
   const generateQuestion = (i) => {
@@ -28,6 +27,46 @@ function MainQuizPage() {
 
   //store list of questions
   const [questions, setQuestions] = useState(Array.from({ length: 10 }, (_, i) => generateQuestion(i)));
+  
+  //total time for the timer
+  const [timeLeft, setTimeLeft] = useState(questions.length * 300);
+
+  //tomer functions
+  useEffect(() => {let interval;
+    if (quizStarted && selectedQuestionIndex != null) {
+      interval = setInterval(() => {setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);}, 1000);
+    }
+    return () => clearInterval(interval);},
+     [quizStarted, selectedQuestionIndex]);
+
+  useEffect(() => {
+    if (timeLeft === 0) {if (selectedQuestionIndex < questions.length - 1) {
+      setSelectedQuestionIndex(prevIndex => prevIndex + 1);
+      setTimeLeft(300);}
+      else {setQuizFinished(true);}}}, 
+      [timeLeft, selectedQuestionIndex, questions.length]);
+  
+  const formatTime = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;};
+
+  useEffect(() => {
+    setTimeLeft(questions.length * 300);}, //5 mins for each quesito
+    [questions]);
+
+  //timer will only count down when the quiz has started
+  useEffect(() => {
+    let interval = null;
+    if (quizStarted) {interval = setInterval(() => {
+      setTimeLeft((prevTimeLeft) => {if (prevTimeLeft > 0) return prevTimeLeft - 1;
+        clearInterval(interval);
+        return 0;
+      });}, 
+      1000);}
+      return () => clearInterval(interval);},
+      [quizStarted]);
+   
 
   //open menu
   const handleMenuOpen = (event, index) => {
@@ -122,7 +161,7 @@ function MainQuizPage() {
     <div>
 
         {/*AppBar for the main header*/}
-      <AppBar position="static">
+        <AppBar position="static">
         <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h4" component="h2" style={{ margin: 0 }}>
             Quiz
@@ -197,6 +236,13 @@ function MainQuizPage() {
               <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
                 {questions[selectedQuestionIndex].text}
               </Typography>
+
+              {/*timer display*/}
+            {quizStarted && (
+              <Typography variant="h6" style={{ marginBottom: '10px' }}>
+                Time Left: {formatTime()}
+              </Typography>
+            )}
               
               {/*show answeer woptions when quiz is started*/}
               {quizStarted && (
@@ -215,7 +261,7 @@ function MainQuizPage() {
                     ))}
                   </div>
 
-                        {/*bottom two option*/}
+                  {/*bottom two option*/}
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '40px' }}>
                     {questions[selectedQuestionIndex].options.slice(2, 4).map((option, index) => (
                       <Button
@@ -241,7 +287,15 @@ function MainQuizPage() {
               )}
             </>
           )}
+          
           </div>
+          {/*Timer Display Below Leaderboard when Quiz is Not Started */}
+          {!quizStarted && (
+          <Typography variant="h6" style={{ textAlign: 'center', marginTop: '20px' }}>
+            Total Time for Quiz: {formatTime()}
+            </Typography>
+            )}
+          
           {/*display score and return button */}
           {quizFinished && (
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
