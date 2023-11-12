@@ -136,15 +136,6 @@ function MainQuizPage() {
     });
   };
 
-  //to determine the styles for each option
-  const getOptionStyle = (option, question) => {
-    if (!question.answered) return {}; 
-    if (option === question.userAnswer && option === question.correct) return { backgroundColor: 'green' }; 
-    if (option === question.userAnswer) return { backgroundColor: 'red' }; 
-    if (option !== question.userAnswer && option === question.correct) return { backgroundColor: 'green' }; 
-    return {};
-  };
-
   //calculate and update the score, now also handles unanswered question after user submit,
   const calculateScore = (isSubmitting = false) => {
     const correctAnswers = questions.reduce((acc, question) => {
@@ -267,16 +258,15 @@ function MainQuizPage() {
               </Typography>
 
               
-              {/*show answeer woptions when quiz is started*/}
-              {quizStarted && (
+               {/*show answeer woptions when quiz is started*/}
+               {quizStarted && (
                 <>
                     {/*top two options*/}
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '20px' }}>
                     {questions[selectedQuestionIndex].options.slice(0, 2).map((option, index) => (
                       <Button
                         key={index}
-                        variant="contained"
-                        style={getOptionStyle(option, questions[selectedQuestionIndex])}
+                        variant="contained"   
                         onClick={() => !questions[selectedQuestionIndex].answered && checkAnswer(option)}
                       >
                         {option}
@@ -290,28 +280,14 @@ function MainQuizPage() {
                       <Button
                         key={index}
                         variant="contained"
-                        style={getOptionStyle(option, questions[selectedQuestionIndex])}
                         onClick={() => !questions[selectedQuestionIndex].answered && checkAnswer(option)}
                       >
                         {option}
                       </Button>
                     ))}
-         
-                  </div>
-                   {/*show result of question*/}     
-                  {questions[selectedQuestionIndex].answered && (
-                    <Typography variant="h5" component="h2">
-                      {questions[selectedQuestionIndex].userAnswer === questions[selectedQuestionIndex].correct
-                        ? "Correct"
-                        : `Incorrect`}
-                    </Typography>
-                  )}
-                </>
-              )}
-            </>
-          )}
+                  </div></>)}</>)}
+                  </div>  
           
-          </div>
           {/*display score and return button */}
           {quizFinished && (
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
