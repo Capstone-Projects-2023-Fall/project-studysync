@@ -30,7 +30,8 @@ import Button from '@mui/material/Button';
 import Title from './FriendsUI/Title';
 import { userRepository } from '../../firebase';
 import useUser from './useUser'; 
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import User from '../models/user';
 
 function Copyright(props) {
   return (
@@ -83,8 +84,7 @@ export default function FriendsPage() {
   const [showList,setShowList] = useState([]);
   const [isLoading,setIsLoading] = useState(false);
   const [error, setError] = useState(null)  
-  // const [showFriends,setShowFriends] = useState([]);
-  // const [showFollowing,setShowFollowing] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(()=>{
     setIsLoading(true)
@@ -101,7 +101,6 @@ export default function FriendsPage() {
 
   useEffect(()=>{
     setIsLoading(true)
-    // console.log(`Changed to: ${type}`);
     if(type == "Following"){
       userRepository.getFollowing(UserId).then((_following)=>{
         setShowList(_following);
@@ -135,6 +134,7 @@ export default function FriendsPage() {
     }
   },[type])
 
+  
 
   const toggleDrawer = () => {
     setOpen(!open);
@@ -168,108 +168,15 @@ export default function FriendsPage() {
   );
 
 
-  function MainList(props) {
+  function MainList() {
 
-
-
-
-
-
-
-    // useEffect(()=>{
-    //   console.log('Changed');
-    // },[props])
-  
-  
-  
-    // // let showList = friendList();
-    // const {user} = useUser();
-    // const {UserId} = useParams();
-    // const friends = ["Sean","Jess"];
-    // const following = ["Sean","Jess"];
-    // const followers = ["Sean","Jess","James"];  
-    
-  
-    // const type = props.type;
-    // function showList(user){
-    //   if(type == 'Following'){
-    //     return followingList(user);
-    //   }else if(type == 'Followers'){
-    //     return followersList(user);
-    //   }else{
-    //     return friendList(user);
-    //   }  
-    // }
-  
-  
   
     // const styles={
     //   paddingTop: '50px',
     //   paddingBottom: '50px',
     // };
     
-    // function acceptRequest(){
-    //   console.log('clicked')
-    // }
-    // function declineRequest(){
-  
-    // }
-    // function blockFollower(){
-  
-    // }
-    // function removeFriend(){
-  
-    // }
-    // function viewFollower(){
-  
-    // }
-    // function viewFriend(){
-  
-    // }
-    // function friendList(user){
-    
-    //   return(
-    //     <>
-    //       <TableCell>{user}</TableCell>
-    //       <TableCell></TableCell>
-    //       <TableCell></TableCell>
-    //       <TableCell><Button onClick={()=>viewFriend()} variant="contained">View Profile</Button></TableCell>
-    //       <TableCell align="right"><Button onClick={()=>removeFriend()} sx={{backgroundColor:'red'}} variant="contained">Remove friend</Button></TableCell>    
-    //     </>
-    //   )
-    // }
-    // function followingList(user){
-    //   return(
-    //     <>
-    //       <TableCell>{user}</TableCell>
-    //       <TableCell></TableCell>
-    //       <TableCell></TableCell>
-    //       <TableCell><Button variant="contained" onClick={()=>acceptRequest()}>Accept</Button></TableCell>
-    //       <TableCell align="right"><Button onClick={()=>declineRequest()} sx={{backgroundColor:'red'}} variant="contained">Decline</Button></TableCell>    
-    //     </>
-    //   )
-    // }
-    // function followersList(user){
-  
-  
-    //   return(
-    //     <>
-    //       <TableCell>{user}</TableCell>
-    //       <TableCell></TableCell>
-    //       <TableCell></TableCell>
-    //       <TableCell><Button onClick={()=>viewFollower()} variant="contained">View Profile</Button></TableCell>
-    //       <TableCell align="right"><Button onClick={()=>blockFollower()} sx={{backgroundColor:'red'}} variant="contained">Block</Button></TableCell>    
-    //     </>
-    //   )
-    // }
-    // function displayList(){
-    //   if(type == 'Following'){
-    //     return following;
-    //   }else if(type == 'Followers'){
-    //     return followers;
-    //   }
-    //   return friends;
-    // }
+
     function removeFriend(){
       console.log(1);
     }
@@ -277,30 +184,39 @@ export default function FriendsPage() {
       console.log(2);
 
     }
-    function viewUser(){
-      console.log(3);
-
+    function viewUser(uid){
+      navigate(`/profile/${uid}`);
     }
     function followBack(){
       console.log(4);
 
     }
-    function stopFollowing(){
-      console.log(5);
-
+    function stopFollowing(uid){
+      setIsLoading(true)
+      userRepository.removeFollowing(UserId,uid).then(()=>{
+        console.log(`Stopped Following ${uid}`)
+        setIsLoading(false)
+      }).catch((e)=>{
+        setError(e);
+        console.log(`Error: ${e}`);
+        setIsLoading(false);
+      })
+      const index = showList.findIndex((x)=> x.id === uid)
+      showList.splice(index,1)
+      console.log(`Stopped following: ${showList}`)
     }
-    function handlebtn1(){
+    function handlebtn1(uid){
       if(type == 'Followers'){
         followBack();
       }else{
-        viewUser();
+        viewUser(uid);
       }
     }
-    function handlebtn2(){
+    function handlebtn2(uid){
       if(type == 'Followers'){
         blockUser();
       }else if(type == 'Following'){
-        stopFollowing();
+        stopFollowing(uid);
       }else{
         removeFriend();
       }
@@ -326,8 +242,8 @@ export default function FriendsPage() {
               <TableCell>{user.firstName}</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell><Button onClick={()=>{handlebtn1()}} variant="contained">{firstbtn}</Button></TableCell>
-              <TableCell align="right"><Button  onClick={()=>{handlebtn2()}} sx={{backgroundColor:'red'}} variant="contained">{secondbtn}</Button></TableCell>                  
+              <TableCell><Button onClick={()=>{handlebtn1(user.id)}} variant="contained">{firstbtn}</Button></TableCell>
+              <TableCell align="right"><Button  onClick={()=>{handlebtn2(user.id)}} sx={{backgroundColor:'red'}} variant="contained">{secondbtn}</Button></TableCell>                  
             </TableRow>
           ))}
            
