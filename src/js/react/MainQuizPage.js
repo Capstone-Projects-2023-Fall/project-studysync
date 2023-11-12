@@ -1,5 +1,5 @@
 import React, {useState,useEffect} from 'react';
-import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper,Avatar,Menu, MenuItem } from '@mui/material';
+import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper,Menu, MenuItem } from '@mui/material';
 import {useNavigate } from 'react-router-dom';
 
 //mainQuizPage component
@@ -24,6 +24,12 @@ function MainQuizPage() {
       answered: false
     };
   }
+
+  //for submit
+  const handleSubmit = () => {
+    calculateScore(true);
+    setQuizFinished(true);
+  };
 
   //store list of questions
   const [questions, setQuestions] = useState(Array.from({ length: 10 }, (_, i) => generateQuestion(i)));
@@ -139,10 +145,12 @@ function MainQuizPage() {
     return {};
   };
 
-  //calculate and update the score
-  const calculateScore = () => { const correctAnswers = questions.reduce((acc, question) => {
-    return acc + (question.userAnswer === question.correct ? 1 : 0);}, 0);
-    const scorePercentage = (correctAnswers / questions.length) * 100;
+  //calculate and update the score, now also handles unanswered question after user submit,
+  const calculateScore = (isSubmitting = false) => {
+    const correctAnswers = questions.reduce((acc, question) => {
+      return acc + (question.answered && question.userAnswer === question.correct ? 1 : 0);}, 0);
+    const answeredQuestions = isSubmitting ? questions.length : questions.filter(q => q.answered).length;
+    const scorePercentage = (correctAnswers / answeredQuestions) * 100;
     setScore(scorePercentage);
   };
 
@@ -159,17 +167,34 @@ function MainQuizPage() {
 
   return (
     <div>
-        {/*AppBar for the main header*/}
-        <AppBar position="static">
-        <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h4" component="h2" style={{ margin: 0 }}>
-            Quiz
-          </Typography>
-          <Button variant="contained">
-            LEADERBOARD
-          </Button>
-        </Toolbar>
-      </AppBar>
+    {/*appBar for the main header*/}
+    <AppBar position="static">
+      <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h4" component="h2" style={{ margin: 0 }}>
+          Quiz
+        </Typography>
+        <div style={{ position: 'relative' }}>
+          {quizStarted && !quizFinished && (
+            <>
+              {/*timer display*/}
+              <Typography variant="h6" style={{ marginRight: '20px' }}>
+                Time Left: {formatTime()}
+              </Typography>
+
+              {/*submit button*/}
+              <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '50px', right: '0' }}>
+                Submit Quiz
+              </Button>
+            </>
+          )}
+          {!quizStarted && (
+            <Button variant="contained">
+              LEADERBOARD
+            </Button>
+          )}
+        </div>
+      </Toolbar>
+    </AppBar>
       
       <div style={{ display: 'flex', marginTop: '20px' }}>
         <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
@@ -204,7 +229,7 @@ function MainQuizPage() {
               </ListItem>
             ))}
           </List>
-
+        
 
          {/*Add question and start quiz button*/}
           <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
@@ -231,12 +256,6 @@ function MainQuizPage() {
                 {questions[selectedQuestionIndex].text}
               </Typography>
 
-              {/*timer display*/}
-            {quizStarted && (
-              <Typography variant="h6" style={{ marginBottom: '10px' }}>
-                Time Left: {formatTime()}
-              </Typography>
-            )}
               
               {/*show answeer woptions when quiz is started*/}
               {quizStarted && (
@@ -267,8 +286,8 @@ function MainQuizPage() {
                         {option}
                       </Button>
                     ))}
+         
                   </div>
-
                    {/*show result of question*/}     
                   {questions[selectedQuestionIndex].answered && (
                     <Typography variant="h5" component="h2">
