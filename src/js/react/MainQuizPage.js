@@ -1,16 +1,6 @@
-import React, {useState,useEffect} from 'react';
+import React, {useState,useEffect,useCallback} from 'react';
 import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper,Menu, MenuItem } from '@mui/material';
 import {useNavigate } from 'react-router-dom';
-
-//mainQuizPage component
-function MainQuizPage() {
-  const navigate = useNavigate(); //navigation function for avatar
-  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
-  const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
-  const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
-  const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
-  const [score, setScore] = useState(null);//for score
-  const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
 
   //generate question based on index
   const generateQuestion = (i) => {
@@ -25,54 +15,55 @@ function MainQuizPage() {
     };
   }
 
-  //for submit
-  const handleSubmit = () => {
-    calculateScore(true);
-    setQuizFinished(true);
-  };
-
-  //store list of questions
+//mainQuizPage component
+function MainQuizPage() {
+  const navigate = useNavigate(); //navigation function for avatar
   const [questions, setQuestions] = useState(Array.from({ length: 10 }, (_, i) => generateQuestion(i)));
-  
-  //total time for the timer
-  const [timeLeft, setTimeLeft] = useState(questions.length * 300);
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
+  const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
+  const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
+  const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
+  const [score, setScore] = useState(null);//for score
+  const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
+  const [timeLeft, setTimeLeft] = useState(10 * 5 * 60);//default time
+  const calculateInitialTime = useCallback(() => {
+    return questions.length * 5 * 60; // 5 minutes per question
+  }, [questions.length]);
 
-  //tomer functions
-  useEffect(() => {let interval;
-    if (quizStarted && selectedQuestionIndex != null) {
-      interval = setInterval(() => {setTimeLeft((prevTimeLeft) => prevTimeLeft - 1);}, 1000);
-    }
-    return () => clearInterval(interval);},
-     [quizStarted, selectedQuestionIndex]);
+  //update timeleft when change length of question
+  useEffect(() => {
+    setTimeLeft(calculateInitialTime());
+  }, [calculateInitialTime, questions.length]);
 
   useEffect(() => {
-    if (timeLeft === 0) {if (selectedQuestionIndex < questions.length - 1) {
-      setSelectedQuestionIndex(prevIndex => prevIndex + 1);
-      setTimeLeft(300);}
-      else {setQuizFinished(true);}}}, 
-      [timeLeft, selectedQuestionIndex, questions.length]);
-  
+    let timer = null;
+    if (quizStarted && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(prevTimeLeft => prevTimeLeft - 1);
+      }, 1000);
+    }
+    if (timeLeft === 0 || quizFinished) {
+      clearInterval(timer);
+    }
+    return () => clearInterval(timer);
+  }, [quizStarted, timeLeft, quizFinished]);
+
   const formatTime = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;};
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
 
-  useEffect(() => {
-    setTimeLeft(questions.length * 300);}, //5 mins for each quesito
-    [questions]);
+  //for submit
+  const handleSubmit = () => {
+    //confirmation dialog
+    const confirmSubmit = window.confirm("Are you sure you want to submit the quiz?");
+    if (confirmSubmit) {
+      calculateScore(true);
+      setQuizFinished(true);
+    }
+  };
 
-  //timer will only count down when the quiz has started
-  useEffect(() => {
-    let interval = null;
-    if (quizStarted) {interval = setInterval(() => {
-      setTimeLeft((prevTimeLeft) => {if (prevTimeLeft > 0) return prevTimeLeft - 1;
-        clearInterval(interval);
-        return 0;
-      });}, 
-      1000);}
-      return () => clearInterval(interval);},
-      [quizStarted]);
-   
 
   //open menu
   const handleMenuOpen = (event, index) => {
@@ -93,21 +84,21 @@ function MainQuizPage() {
   //delete question function
   const deleteQuestion = () => {
     if (quizStarted) {
-      console.log("Can't delete questions during an active quiz");
-      return;
+        console.log("Can't delete questions during an active quiz");
+        return;
     }
-
-  //djust the selectedQuestionIndex if necessary
-  if (selectedQuestionIndex !== null) {
-    if (menuQuestionIndex === selectedQuestionIndex) {
-      setSelectedQuestionIndex(null);
-    } 
-    else if (menuQuestionIndex < selectedQuestionIndex) {
-      setSelectedQuestionIndex(prevIndex => prevIndex - 1);}
-  }
-  //update the questions array
-  setQuestions(prev => prev.filter((_, index) => index !== menuQuestionIndex));
-  handleMenuClose();
+    setQuestions(prevQuestions => {
+        //remove the selected question
+        const newQuestions = prevQuestions.filter((_, index) => index !== menuQuestionIndex);
+        //if the deleted question was the one selected or the last in the list, reset the selectedQuestionIndex
+        if (selectedQuestionIndex === menuQuestionIndex || selectedQuestionIndex >= newQuestions.length) {
+          setSelectedQuestionIndex(null);} 
+          else if (menuQuestionIndex < selectedQuestionIndex) {
+            //adjust the selectedQuestionIndex if a question before it was deleted
+          setSelectedQuestionIndex(prevIndex => prevIndex - 1);}
+          return newQuestions;});
+          
+          handleMenuClose();
 };
 
   //edit question function
@@ -145,7 +136,6 @@ function MainQuizPage() {
     });
   };
 
-
   //to determine the styles for each option
   const getOptionStyle = (option, question) => {
     if (!question.answered) return {}; 
@@ -173,7 +163,17 @@ function MainQuizPage() {
     }
   };
 
-
+  //handle return fucntion
+  const handleReturnToQuiz = () => {
+    setQuizStarted(false);
+    setQuizFinished(false);
+    setSelectedQuestionIndex(null);
+    setScore(null);
+    const newQuestions = Array.from({ length: 10 }, (_, i) => generateQuestion(i));
+    setQuestions(newQuestions);
+    setTimeLeft(calculateInitialTime()); //recalculate time based on the number of new questions
+    navigate('/quizmain');
+  };
 
   return (
     <div>
@@ -312,13 +312,6 @@ function MainQuizPage() {
           )}
           
           </div>
-          {/*Timer Display Below Leaderboard when Quiz is Not Started */}
-          {!quizStarted && (
-          <Typography variant="h6" style={{ textAlign: 'center', marginTop: '20px' }}>
-            Total Time for Quiz: {formatTime()}
-            </Typography>
-            )}
-          
           {/*display score and return button */}
           {quizFinished && (
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
@@ -331,15 +324,7 @@ function MainQuizPage() {
                <Button
                 variant="contained"
                 color="primary"
-                onClick={() => {
-                  //reset the necessary states to initial values to restart the quiz
-                  setQuizStarted(false);
-                  setQuizFinished(false);
-                  setSelectedQuestionIndex(null);
-                  setScore(null);
-                  setQuestions(Array.from({ length: 10 }, (_, i) => generateQuestion(i))); //regenerate questions if needed
-                  navigate('/quizmain'); 
-                }}
+                onClick={handleReturnToQuiz}
                 style={{ marginBottom: '10px' }} //for layout
                 >
                   Return to Quiz
