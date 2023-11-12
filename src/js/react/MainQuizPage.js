@@ -53,16 +53,6 @@ function MainQuizPage() {
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  //for submit
-  const handleSubmit = () => {
-    //confirmation dialog
-    const confirmSubmit = window.confirm("Are you sure you want to submit the quiz?");
-    if (confirmSubmit) {
-      calculateScore(true);
-      setQuizFinished(true);
-    }
-  };
-
 
   //open menu
   const handleMenuOpen = (event, index) => {
@@ -126,25 +116,32 @@ function MainQuizPage() {
 
   //check if answer is correct
   const checkAnswer = (option) => {
-    setQuestions(prevQuestions => { const newQuestions = [...prevQuestions];
+    setQuestions(prevQuestions => {
+      const newQuestions = [...prevQuestions];
       newQuestions[selectedQuestionIndex].userAnswer = option;
       return newQuestions;
     });
   };
 
   //calculate and update the score, now also handles unanswered question after user submit,
-  const calculateScore = (isSubmitting = false) => {
+  const calculateScore = () => {
     const correctAnswers = questions.reduce((acc, question) => {
-      return acc + (question.answered && question.userAnswer === question.correct ? 1 : 0);}, 0);
-    const answeredQuestions = isSubmitting ? questions.length : questions.filter(q => q.answered).length;
-    const scorePercentage = (correctAnswers / answeredQuestions) * 100;
+      //Count the number of correct answers
+      return acc + (question.userAnswer === question.correct ? 1 : 0);
+    }, 0);
+    //count the number of answered questions
+    const answeredQuestions = questions.reduce((acc, question) => {
+      return acc + (question.userAnswer !== null ? 1 : 0);
+    }, 0);
+    //calculate the score percentage
+    const scorePercentage = answeredQuestions > 0 ? (correctAnswers / answeredQuestions) * 100 : 0;
     setScore(scorePercentage);
   };
 
-  //check if quiz completed
-  const checkIfQuizIsFinished = () => { 
-    const allAnswered = questions.every(question => question.answered); 
-    if (allAnswered) {
+  //for submit
+  const handleSubmit = () => {
+    const confirmSubmit = window.confirm("Are you sure you want to submit the quiz?");
+    if (confirmSubmit) {
       calculateScore();
       setQuizFinished(true);
     }
