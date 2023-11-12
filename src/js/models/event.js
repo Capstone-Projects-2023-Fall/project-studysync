@@ -21,6 +21,9 @@ export default class Event {
             case EVENT_TYPE.SHARE_QUIZ:
                 this.shareQuizEvent = null
                 break
+            case EVENT_TYPE.SHARE_FLASHCARD:
+                this.shareFlashcardEvent = null
+                break
         }
     }
 
@@ -30,9 +33,16 @@ export default class Event {
         return this.newFollowerEvent
     }
 
+    //This can only be called when the event is a share quiz event
     createShareQuizEvent(sharedBy, sharedWith){
         this.shareQuizEvent = new ShareEvent(sharedBy, sharedWith).toJSON();
         return this.shareQuizEvent
+    }
+
+    //This can only be called when the event is a share flashcard event
+    createShareFlashcardEvent(sharedBy, sharedWith){
+        this.shareQuizEvent = new ShareEvent(sharedBy, sharedWith).toJSON();
+        return this.shareFlashcardEvent
     }
 
     toJSON(){
@@ -40,16 +50,19 @@ export default class Event {
             createdAt: this.createdAt,
             name: this.name,
             eventType: this.eventType,
-            id: this.id,
-            newFollowerEvent: this.newFollowerEvent
+            id: this.id
         }
 
+        //only add one of these fields when they are the event type being used
         switch(this.eventType){
             case EVENT_TYPE.NEW_FOLLOWER:
                 jsonOutput.newFollowerEvent = this.newFollowerEvent
                 break
             case EVENT_TYPE.SHARE_QUIZ:
                 jsonOutput.shareQuizEvent = this.shareQuizEvent
+                break
+            case EVENT_TYPE.SHARE_FLASHCARD:
+                jsonOutput.shareFlashcardEvent = this.shareFlashcardEvent
                 break
         }
         return jsonOutput

@@ -136,17 +136,38 @@ export class UserRepository {
     return notificationIds
   }
 
+  /**get all user events */
   async getEvents(id) {
     const events = await getArrayFieldFromCollection(this.database, "users", id, "events")
     return events
   }
 
+  /**add quiz with quizId to list of quizzes for user with userId */
   async addSharedQuiz(userId, quizId) {
     await addItemToArrayField(this.database, userId, quizId, "users", "sharedQuizzes", "quiz")
   }
 
+  /**user with userId shares quiz with user with id sharedWithId */
+  async shareQuiz(userId, sharedWithId, quizId){
+    await this.addSharedQuiz(sharedWithId, quizId)
+    const eventId = await this.eventRepository.createShareQuizEvent(userId, sharedWithId)
+    const notificationId = await this.notificationRepository.addNotification(new Notification(eventId))
+    this.addEvent(eventId)
+    this.addNotification(sharedWithId, notificationId)
+  }
+
+  /**add flashcard with flashcardId to list of flashcards for user with userId */
   async addSharedFlashcard(userId, flashcardId) {
     await addItemToArrayField(this.database, userId, flashcardId, "users", "flashcards", "flashcard")
+  }
+
+  /**user with userId shares flashcard with user with id sharedWithId */
+  async shareFlashcard(userId, sharedWithId, flashcardId){
+    await this.addSharedQuiz(sharedWithId, flashcardId)
+    const eventId = await this.eventRepository.createShareFlashcardEvent(userId, sharedWithId)
+    const notificationId = await this.notificationRepository.addNotification(new Notification(eventId))
+    this.addEvent(eventId)
+    this.addNotification(sharedWithId, notificationId)
   }
 
   async addOwnedQuiz(userId, quizId) {
@@ -182,6 +203,8 @@ export class UserRepository {
     const notificationId = await this.notificationRepository.addNotification(new Notification(eventId))
     // //add this notification to users list of notifications
     this.addNotification(userId, notificationId)
+    //add event to user events
+    this.addEvent(eventId)
   }
 
   async removeFollower(userId, followerId) {

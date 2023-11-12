@@ -14,12 +14,34 @@ export class EventRepository {
     async createNewFollowerEvent(followerId, followingId){
         const event = new Event(`${followerId} followed ${followingId}`, EVENT_TYPE.NEW_FOLLOWER, uuidv4())
         event.createNewFollowerEvent(followerId, followingId)
+        await this.createEvent(event, EVENT_TYPE.NEW_FOLLOWER)
+    }
+
+    /** Create share quiz event */
+    async createShareQuizEvent(sharedBy, sharedWith){
+        const event = new Event(`${sharedBy} shared quiz with ${sharedWith}`, EVENT_TYPE.SHARE_FLASHCARD, uuidv4())
+        event.createShareQuizEvent(sharedBy, sharedWith)
+        await this.createEvent(event, EVENT_TYPE.SHARE_QUIZ)
+    }
+
+
+    /** Create share flashcard event */
+    async createShareFlashcardEvent(sharedBy, sharedWith){
+        const event = new Event(`${sharedBy} shared flashcard with ${sharedWith}`, EVENT_TYPE.SHARE_FLASHCARD, uuidv4())
+        event.createShareFlashcardEvent(sharedBy, sharedWith)
+        await this.createEvent(event, EVENT_TYPE.SHARE_FLASHCARD)
+    }
+
+
+
+    /**Helper function to create event */
+    async createEvent(event, eventType){
         try{
             const eventsRef = doc(this.database, "events", event.id)
             await setDoc(eventsRef, event.toJSON())
             return event.id
         }catch(error){
-            console.log(`error adding new follower event: ${error}`)
+            console.log(`error adding ${eventType} event: ${error}`)
         }
     }
 
