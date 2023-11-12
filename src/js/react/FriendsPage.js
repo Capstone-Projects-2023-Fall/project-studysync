@@ -170,26 +170,36 @@ export default function FriendsPage() {
 
   function MainList() {
 
-  
-    // const styles={
-    //   paddingTop: '50px',
-    //   paddingBottom: '50px',
-    // };
+
     
 
-    function removeFriend(){
-      console.log(1);
+    function removeFriend(uid){
+      removeFollower(uid);
+      stopFollowing(uid);
     }
-    function blockUser(){
-      console.log(2);
+    function removeFollower(uid){
+      setIsLoading(true)
+      userRepository.removeFollower(UserId,uid).then(()=>{
+        console.log(`Remove ${uid}.`);
+        setIsLoading(false)
 
+      }).catch((e)=>{
+        setError(e);
+        console.log(`Error: ${e}`);          
+        setIsLoading(false)
+      
+      })
     }
     function viewUser(uid){
       navigate(`/profile/${uid}`);
     }
-    function followBack(){
-      console.log(4);
-
+    function followBack(uid){
+      userRepository.addFollowing(UserId,uid).then(()=>{
+        console.log(`Followed ${uid} back!`);
+      }).catch((e)=>{
+        setError(e);
+        console.log(`Error: ${e}`);        
+      })
     }
     function stopFollowing(uid){
       setIsLoading(true)
@@ -199,7 +209,7 @@ export default function FriendsPage() {
       }).catch((e)=>{
         setError(e);
         console.log(`Error: ${e}`);
-        setIsLoading(false);
+        setIsLoading(false)
       })
       const index = showList.findIndex((x)=> x.id === uid)
       showList.splice(index,1)
@@ -207,18 +217,18 @@ export default function FriendsPage() {
     }
     function handlebtn1(uid){
       if(type == 'Followers'){
-        followBack();
+        followBack(uid);
       }else{
         viewUser(uid);
       }
     }
     function handlebtn2(uid){
       if(type == 'Followers'){
-        blockUser();
+        removeFollower(uid);
       }else if(type == 'Following'){
         stopFollowing(uid);
       }else{
-        removeFriend();
+        removeFriend(uid);
       }
     }
   
@@ -233,7 +243,7 @@ export default function FriendsPage() {
         secondbtn = "Stop Following";
       }else{
         firstbtn = "Follow Back";
-        secondbtn = "Block";
+        secondbtn = "Remove Follower";
       }
       return(
         <>
