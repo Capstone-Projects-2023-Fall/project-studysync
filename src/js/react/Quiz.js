@@ -30,6 +30,9 @@ const QuizComponent = () => {
   const [editQuestion, setEditQuestion] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
 
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [showDefinition, setShowDefinition] = useState(false);
+
   useEffect(() => {
     if (!openEdit) {
       resetEditDialog(); 
@@ -55,7 +58,25 @@ const QuizComponent = () => {
         }
     };
 
+    // const fetchFlashcards = async () => {
+    //     try {
+    //         const flashcardData = await FlashcardRepo.getFlashcardItems(setId);
+    //         console.log("fetching flashcards", flashcardData);
+    //         const flashcardsArray = Object.keys(flashcardData).map(key => {
+    //             return {
+    //                 term: flashcardData[key].term,
+    //                 definition: flashcardData[key].definition,
+    //                 flashcardId: key
+    //             };
+    //         });
+    //         setQuizData(flashcardsArray);
+    //     } catch (error) {
+    //         console.error("Failed to fetch flashcards:", error);
+    //     }
+    // }
     fetchQuestions();
+    // fetchFlashcards();
+
 }, [setId]);
 
   //this methods add quiz and its data to the database
@@ -156,6 +177,22 @@ const handleUpdateQuestion = async () => {
         }
     }
 };
+
+const handleShowQuestion = () => {
+    const currentIndex = questions.indexOf(selectedCard);
+    if (currentIndex > 0) {
+        setSelectedCard(questions[currentIndex - 1]);
+        setShowDefinition(false);
+    }
+};
+
+const handleNextCard = () => {
+    const currentIndex = questions.indexOf(selectedCard);
+    if (currentIndex < questions.length - 1) {
+        setSelectedCard(questions[currentIndex + 1]);
+        setShowDefinition(false);
+    }
+};
   
 return (
     <div style={{
@@ -169,7 +206,7 @@ return (
             }}>
             {/* show list of question on the left panel with options to edit or delete */}
             {questions.map((quiz, index) => (
-                    <ListItem button key={index}>
+                    <ListItem button key={index} onClick={() => { setSelectedCard(quiz); setShowDefinition(false); }}>
                         {quiz.question}
                         <IconButton onClick={() => handleEditQuestion(quiz)}>
                             <EditIcon />
@@ -183,6 +220,54 @@ return (
                     Add
                 </Button>
             </List>
+
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
+                        <Typography variant="h6">
+                            {selectedCard ? `${questions.indexOf(selectedCard) + 1}/${questions.length}` : ""}
+                        </Typography>
+                        <div style={{
+                            display: "flex", alignItems: "center", width: "80%", justifyContent: "space-between",
+                            marginTop: '20px', borderRadius: '8px', padding: '10px', backgroundColor: '#fff', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
+                        }}>
+                            <IconButton onClick={handleShowQuestion}>
+                                <ArrowBackIcon />
+                            </IconButton>
+                            <div
+                                style={{
+                                    flex: 1,
+                                    height: "300px",
+                                    border: "1px solid #e0e0e0",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    cursor: "pointer",
+                                    borderRadius: '8px'
+                                }}
+                                onClick={() => setShowDefinition(!showDefinition)}
+                            >
+                                 {selectedCard && (
+                                <div>
+                                    
+                                    <p><Typography variant="h5">Question:{'\n'}</Typography></p> 
+                                    <Typography>{selectedCard.question}</Typography> 
+                                    <p><Typography variant="h5">Answer Choices:</Typography></p>                              
+                                    <ul>
+                                        {selectedCard.choices.map((choice, index) => (
+                                            <li key={index}>{choice}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                 )}
+
+                            </div>
+
+                            <IconButton onClick={handleNextCard}>
+                                <ArrowForwardIcon />
+                            </IconButton>
+                        </div>
+
+             </div>
+
         </div>
 
         <Dialog open={openEdit} onClose={() => { setOpenEdit(false)}}>
