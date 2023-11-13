@@ -49,7 +49,8 @@ function FlashcardApp() {
                     return {
                         term: flashcardData[key].term,
                         definition: flashcardData[key].definition,
-                        flashcardId: key
+                        flashcardId: key,
+                        status: flashcardData[key].status || 'none'
                     };
                 });
                 setCards(flashcardsArray);
