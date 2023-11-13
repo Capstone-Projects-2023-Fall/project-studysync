@@ -311,25 +311,23 @@ function FlashcardApp() {
     };
 
     const handleGenerateFlashcards = async () => {
-        setOpenAIDialog(false);
+    setOpenAIDialog(false);
 
-        try {
-            const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
+    try {
+        const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
+        const generatedFlashcards = responseString;
 
-            const generatedFlashcards = responseString; // Since the response is already in the expected format
-
-            const addFlashcardPromises = generatedFlashcards.map(async (flashcard) => {
-                const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
-                return { ...flashcard, flashcardId: newFlashcardId };
-            });
-
-            const addedFlashcards = await Promise.all(addFlashcardPromises);
-            setCards(prev => [...prev, ...addedFlashcards]);
-
-        } catch (error) {
-            console.error("Error generating or adding flashcards with AI:", error);
+        const addedFlashcards = [];
+        for (const flashcard of generatedFlashcards) {
+            const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
+            addedFlashcards.push({ ...flashcard, flashcardId: newFlashcardId });
         }
-    };
+
+        setCards(prev => [...prev, ...addedFlashcards]);
+    } catch (error) {
+        console.error("Error generating or adding flashcards with AI:", error);
+    }
+};
 
     const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName) => {
         try {
