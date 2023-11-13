@@ -31,15 +31,11 @@ function App() {
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'Flashcard', link: '/flashcard' },
-    { label: 'Quiz', link: '/quizmain' },
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     { label: 'Profile', link: `/profile/${user && user.uid}` },
     {label: 'Friends',link:`/friends/${user && user.uid}`}
     //... add other items
   ];
-
-
-
 
   return (
     <div className="app">

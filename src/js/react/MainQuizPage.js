@@ -196,11 +196,6 @@ function MainQuizPage() {
               </Button>
             </>
           )}
-          {!quizStarted && (
-            <Button variant="contained">
-              LEADERBOARD
-            </Button>
-          )}
         </div>
       </Toolbar>
     </AppBar>

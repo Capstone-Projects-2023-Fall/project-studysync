@@ -217,7 +217,7 @@ return (
       >
         Start Quiz
       </Button>
-      
+
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
                 width: "30%", borderRight: "1px solid #e0e0e0",
@@ -288,6 +288,15 @@ return (
              </div>
 
         </div>
+        {/* Move the "Start Quiz" Button here, below the question preview panel */}
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={startQuiz}
+            style={{ alignSelf: 'center', marginTop: '20px' }} // Center button and add margin on the top
+        >
+            Start Quiz
+        </Button>
 
         <Dialog open={openEdit} onClose={() => { setOpenEdit(false)}}>
                     <DialogTitle>Edit question</DialogTitle>
