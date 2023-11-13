@@ -165,6 +165,16 @@ function MainQuizPage() {
     return isSelected ? { backgroundColor: '#1976d2', color: 'red' } : {};
   };
 
+  //function to determine the style for each question in the sidebar
+  const getQuestionStyle = (index) => {
+    //change color only if the quiz has started and the question has been answered
+    if (quizStarted && questions[index].userAnswer !== null) {
+      return { color: 'green' }; //change this to your preferred color for answered questions
+    } else {
+      return { color: 'black' }; //default color
+    }
+  };
+
   return (
     <div>
     {/*appBar for the main header*/}
@@ -203,7 +213,12 @@ function MainQuizPage() {
 
             {/*loop thought to diplay each question*/}
             {questions.map((_, index) => (
-              <ListItem button key={index} onClick={() => { setSelectedQuestionIndex(index); }}>
+              <ListItem 
+              button 
+              key={index} 
+              onClick={() => setSelectedQuestionIndex(index)}
+              style={getQuestionStyle(index)} //apply the style based on answered state
+            >
                 {`Question ${index + 1}`}
 
                 {/*option menu the thrre dots to edit and delte the question*/}
