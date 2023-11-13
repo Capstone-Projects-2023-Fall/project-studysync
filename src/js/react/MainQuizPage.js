@@ -1,23 +1,14 @@
 import React, {useState,useEffect,useCallback} from 'react';
 import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper,Menu, MenuItem } from '@mui/material';
-import {useNavigate } from 'react-router-dom';
-
-//generate question based on index
-const generateQuestion = (i) => {
-    const correctAnswer = `${2 * (i + 1)}`;
-    const options = [correctAnswer, `${2 * (i + 2)}`, `${2 * (i + 3)}`, `${2 * (i + 4)}`].sort(() => Math.random() - 0.5);
-    return {
-      text: `${i + 1} + ${i + 1}`,
-      options,
-      correct: correctAnswer,
-      userAnswer: null,
-    };
-  }
+import {useNavigate,useParams } from 'react-router-dom';
+import FlashcardRepo from '../repositories/FlashcardRepo';
 
 //mainQuizPage component
 function MainQuizPage() {
-  const navigate = useNavigate(); //navigation function for avatar
-  const [questions, setQuestions] = useState(Array.from({ length: 10 }, (_, i) => generateQuestion(i)));
+
+  const navigate = useNavigate();
+  const { setId } = useParams(); //aroute param to identify the quiz set
+  const [questions, setQuestions] = useState([]); //array to hold question data from database
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
   const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
   const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
@@ -28,6 +19,29 @@ function MainQuizPage() {
   const calculateInitialTime = useCallback(() => {
     return questions.length * 5 * 60; // 5 minutes per question
   }, [questions.length]);
+
+      //fetch questions from the database when the component mounts
+      useEffect(() => {
+        const fetchQuestions = async () => {
+          try {
+            const questionData = await FlashcardRepo.getQuestionItems(setId);
+            const questionsArray = Object.keys(questionData).map(key => ({
+              question: questionData[key].question,
+              choices: questionData[key].choices,
+              correct: questionData[key].correct, //set correct answer
+              userAnswer: null,
+              questionId: key
+             
+            }));
+            setQuestions(questionsArray);
+    console.log(questionsArray); // Log to see the fetched data
+          } catch (error) {
+            console.error("Failed to fetch questions:", error);
+          }
+        };
+    
+        fetchQuestions();
+      }, [setId]);
 
   //update timeleft when change length of question
   useEffect(() => {
@@ -100,14 +114,6 @@ function MainQuizPage() {
     handleMenuClose();
   };
 
-  //add question
-  const addQuestion = () => {
-    if (quizStarted) {
-      console.log("Can't add questions during an active quiz");
-      return;
-    }
-    setQuestions(prev => [...prev, generateQuestion(prev.length)]);
-  };
 
   //start quiz button
   const startQuiz = () => {
@@ -147,17 +153,6 @@ function MainQuizPage() {
     }
   };
 
-  //handle return fucntion
-  const handleReturnToQuiz = () => {
-    setQuizStarted(false);
-    setQuizFinished(false);
-    setSelectedQuestionIndex(null);
-    setScore(null);
-    const newQuestions = Array.from({ length: 10 }, (_, i) => generateQuestion(i));
-    setQuestions(newQuestions);
-    setTimeLeft(calculateInitialTime()); //recalculate time based on the number of new questions
-    navigate('/quizmain');
-  };
 
   //change color of answer when picked
   const getButtonStyle = (option, questionIndex) => {
@@ -242,9 +237,6 @@ function MainQuizPage() {
 
          {/*Add question and start quiz button*/}
           <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
-            <Button variant="contained" color="primary" onClick={addQuestion} disabled={quizStarted}>
-              Add Question
-            </Button>
             {!quizStarted && (
               <Button variant="contained" color="primary" onClick={startQuiz}>
                 Start Quiz
@@ -308,7 +300,6 @@ function MainQuizPage() {
                <Button
                 variant="contained"
                 color="primary"
-                onClick={handleReturnToQuiz}
                 style={{ marginBottom: '10px' }} //for layout
                 >
                   Return to Quiz
