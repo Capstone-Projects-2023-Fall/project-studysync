@@ -33,6 +33,15 @@ const QuizComponent = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [showDefinition, setShowDefinition] = useState(false);
 
+  //hook for navigation
+  const navigate = useNavigate();
+
+  //for navagation start quiz
+  const startQuiz = () => {
+    navigate('/quizmain'); //Navigate to the quiz page
+  };
+
+
   useEffect(() => {
     if (!openEdit) {
       resetEditDialog(); 
@@ -199,6 +208,16 @@ return (
         display: "flex", flexDirection: "column", height: "100vh",
         backgroundColor: '#f9f9f9', padding: '20px'
     }}>
+        {/* Step 3: Add "Start Quiz" Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={startQuiz}
+        style={{ /* your button styles */ }}
+      >
+        Start Quiz
+      </Button>
+      
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
                 width: "30%", borderRight: "1px solid #e0e0e0",
@@ -387,6 +406,7 @@ return (
                 </Dialog>
     
     </div>
+    
 );
 };
 
