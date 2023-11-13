@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
+import { Button, TextField, Typography, Dialog, DialogActions, FormControlLabel, Checkbox, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
@@ -32,7 +32,12 @@ function FlashcardApp() {
     const [openAIDialog, setOpenAIDialog] = useState(false);
     const [numberOfFlashcards, setNumberOfFlashcards] = useState(1);
     const [topicName, setTopicName] = useState('');
-
+    const [selectedButton, setSelectedButton] = useState(null);
+    const [filterOptions, setFilterOptions] = useState({
+        know: false,
+        notSure: false,
+        dontKnow: false
+    });
 
 
     useEffect(() => {
@@ -44,7 +49,8 @@ function FlashcardApp() {
                     return {
                         term: flashcardData[key].term,
                         definition: flashcardData[key].definition,
-                        flashcardId: key
+                        flashcardId: key,
+                        status: flashcardData[key].status || 'none'
                     };
                 });
                 setCards(flashcardsArray);
@@ -162,8 +168,44 @@ function FlashcardApp() {
             setOpenDelete(false);
         }
     }
+    const handleStatusChange = async (setId, flashcardId, newStatus) => {
+        try {
+            await FlashcardRepo.updateCardStatus(setId, flashcardId, newStatus);
+            setCards(cards.map(card => {
+                if (card.flashcardId === flashcardId) {
+                    return { ...card, status: newStatus };
+                }
+                return card;
+            }));
+        } catch (error) {
+            console.error("Failed to update flashcard status:", error);
+        }
+    };
 
+    const handleButtonClick = async (status) => {
+        if (selectedCard) {
+            await handleStatusChange(setId, selectedCard.flashcardId, status);
+            setSelectedButton(status);
+        }
+    };
 
+    const selectCard = (card) => {
+        setSelectedCard(card);
+        setSelectedButton(card.status);
+    };
+    const handleFilterChange = (event) => {
+        setFilterOptions({ ...filterOptions, [event.target.name]: event.target.checked });
+    };
+    const isAnyFilterSelected = filterOptions.know || filterOptions.notSure || filterOptions.dontKnow;
+
+    const filteredCards = isAnyFilterSelected
+        ? cards.filter(card => {
+            if (filterOptions.know && card.status === 'know') return true;
+            if (filterOptions.notSure && card.status === 'notSure') return true;
+            if (filterOptions.dontKnow && card.status === 'dontKnow') return true;
+            return false;
+        })
+        : cards;
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex < cards.length - 1) {
@@ -175,6 +217,9 @@ function FlashcardApp() {
         if (term && definition) {
             try {
                 const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, term, definition);
+                // add the user added flashcard data as quiz question
+                await FlashcardRepo.addQuizQuestion(setId, definition, [term, 'Option 2', 'Option 3', 'Option 4'], 0);
+
                 setCards((prev) => [...prev, { term, definition, flashcardId: newFlashcardId }]);
                 setTerm('');
                 setDefinition('');
@@ -244,9 +289,9 @@ function FlashcardApp() {
             const jsonRegex = /{[\s\S]*?}/g;
             const matches = rawResponse.match(jsonRegex);
             console.log("Raw JSON matches:", matches);
-    
+
             if (!matches) return [];
-    
+
             // Parse each JSON string into an object
             const flashcards = matches.map(jsonString => {
                 try {
@@ -262,37 +307,37 @@ function FlashcardApp() {
             return [];
         }
     }
-      
+
 
     const handleAIClick = () => {
         setOpenAIDialog(true);
     };
 
     const handleGenerateFlashcards = async () => {
-        setOpenAIDialog(false);
-    
-        try {
-            const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
-            
-            const generatedFlashcards = responseString; // Since the response is already in the expected format
-    
-            const addFlashcardPromises = generatedFlashcards.map(async (flashcard) => {
-                const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
-                return { ...flashcard, flashcardId: newFlashcardId };
-            });
-    
-            const addedFlashcards = await Promise.all(addFlashcardPromises);
-            setCards(prev => [...prev, ...addedFlashcards]);
-    
-        } catch (error) {
-            console.error("Error generating or adding flashcards with AI:", error);
+    setOpenAIDialog(false);
+
+    try {
+        const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
+        const generatedFlashcards = responseString;
+
+        const addedFlashcards = [];
+        for (const flashcard of generatedFlashcards) {
+            const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
+            // add the AI generated flashcard data into quiz question
+            await FlashcardRepo.addQuizQuestion(setId, flashcard.definition, [flashcard.term, 'Option 2', 'Option 3', 'Option 4'], 0);
+            addedFlashcards.push({ ...flashcard, flashcardId: newFlashcardId });
         }
-    };
-    
+
+        setCards(prev => [...prev, ...addedFlashcards]);
+    } catch (error) {
+        console.error("Error generating or adding flashcards with AI:", error);
+    }
+};
+
     const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName) => {
         try {
             const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
-    
+
             const response = await fetch(functionUrl, {
                 method: 'POST',
                 headers: {
@@ -300,11 +345,11 @@ function FlashcardApp() {
                 },
                 body: JSON.stringify({ message: `Please create ${numFlashcards}flashcards about ${topicName}. Format each flashcard as JSON with only 'term' and 'definition' fields, no other words in json , i need to parse it with only "term" and "definition"` }),
             });
-    
+
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-    
+
             const data = await response.json();
             return parseGPTResponse(data.text); // Assuming the data.text is the string of JSON flashcards
         } catch (error) {
@@ -330,13 +375,27 @@ function FlashcardApp() {
                 display: "flex", flexDirection: "column", height: "100vh",
                 backgroundColor: '#f9f9f9', padding: '20px'
             }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
+                    <FormControlLabel
+                        control={<Checkbox checked={filterOptions.know} onChange={handleFilterChange} name="know" />}
+                        label="Know"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={filterOptions.notSure} onChange={handleFilterChange} name="notSure" />}
+                        label="Not Sure"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={filterOptions.dontKnow} onChange={handleFilterChange} name="dontKnow" />}
+                        label="Don't Know"
+                    />
+                </div>
                 <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
                     <List style={{
                         width: "30%", borderRight: "1px solid #e0e0e0",
                         borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                     }}>
-                        {cards.map((card, index) => (
-                            <ListItem button key={index} onClick={() => { setSelectedCard(card); setShowDefinition(false); }}>
+                        {filteredCards.map((card, index) => (
+                            <ListItem button key={index} onClick={() => { selectCard(card); setShowDefinition(false); }}>
                                 {card.term}
                                 <IconButton onClick={() => handleEditClick(card)}>
                                     <EditIcon />
@@ -344,13 +403,14 @@ function FlashcardApp() {
                                 <IconButton onClick={() => handleDeleteClick(card)}>
                                     <DeleteIcon />
                                 </IconButton>
+
                             </ListItem>
                         ))}
                         <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
                             Add
                         </Button>
                         <Button
-                            onClick={handleAIClick} // Define this function to handle AI interaction
+                            onClick={handleAIClick}
                             startIcon={<AddIcon />}
                         >
                             AI Assist
@@ -384,9 +444,34 @@ function FlashcardApp() {
                             >
                                 {selectedCard && (showDefinition ? selectedCard.definition : selectedCard.term)}
                             </div>
+
                             <IconButton onClick={handleNextCard}>
                                 <ArrowForwardIcon />
                             </IconButton>
+
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", width: "100%" }}>
+                            <Button
+                                variant="outlined"
+                                style={{ margin: "5px", backgroundColor: selectedButton === 'know' ? 'lightgreen' : '' }}
+                                onClick={() => handleButtonClick('know')}
+                            >
+                                Know
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                style={{ margin: "5px", backgroundColor: selectedButton === 'notSure' ? 'yellow' : '' }}
+                                onClick={() => handleButtonClick('notSure')}
+                            >
+                                Not Sure
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                style={{ margin: "5px", backgroundColor: selectedButton === 'dontKnow' ? 'lightcoral' : '' }}
+                                onClick={() => handleButtonClick('dontKnow')}
+                            >
+                                Don't Know
+                            </Button>
                         </div>
                     </div>
                 </div>
