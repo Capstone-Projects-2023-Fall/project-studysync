@@ -167,10 +167,44 @@ function FlashcardApp() {
             setOpenDelete(false);
         }
     }
-
-    const handleButtonClick = (buttonId) => {
-        setSelectedButton(buttonId);
+    const handleStatusChange = async (setId, flashcardId, newStatus) => {
+        try {
+            await FlashcardRepo.updateCardStatus(setId, flashcardId, newStatus);
+            setCards(cards.map(card => {
+                if (card.flashcardId === flashcardId) {
+                    return { ...card, status: newStatus };
+                }
+                return card;
+            }));
+        } catch (error) {
+            console.error("Failed to update flashcard status:", error);
+        }
     };
+
+    const handleButtonClick = async (status) => {
+        if (selectedCard) {
+            await handleStatusChange(setId, selectedCard.flashcardId, status);
+            setSelectedButton(status);
+        }
+    };
+
+    const selectCard = (card) => {
+        setSelectedCard(card);
+        setSelectedButton(card.status);
+    };
+    const handleFilterChange = (event) => {
+        setFilterOptions({ ...filterOptions, [event.target.name]: event.target.checked });
+    };
+    const isAnyFilterSelected = filterOptions.know || filterOptions.notSure || filterOptions.dontKnow;
+
+    const filteredCards = isAnyFilterSelected
+        ? cards.filter(card => {
+            if (filterOptions.know && card.status === 'know') return true;
+            if (filterOptions.notSure && card.status === 'notSure') return true;
+            if (filterOptions.dontKnow && card.status === 'dontKnow') return true;
+            return false;
+        })
+        : cards;
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex < cards.length - 1) {
@@ -190,23 +224,6 @@ function FlashcardApp() {
             }
         }
     };
-    const selectCard = (card) => {
-        setSelectedCard(card);
-        setSelectedButton(card.status);
-    };
-    const handleFilterChange = (event) => {
-        setFilterOptions({ ...filterOptions, [event.target.name]: event.target.checked });
-    };
-    const isAnyFilterSelected = filterOptions.know || filterOptions.notSure || filterOptions.dontKnow;
-
-    const filteredCards = isAnyFilterSelected
-        ? cards.filter(card => {
-            if (filterOptions.know && card.status === 'know') return true;
-            if (filterOptions.notSure && card.status === 'notSure') return true;
-            if (filterOptions.dontKnow && card.status === 'dontKnow') return true;
-            return false;
-        })
-        : cards;
     const handleLikeClick = async (commentId) => {
         const isLiked = likedComments[commentId] || false;
 
