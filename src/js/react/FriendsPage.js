@@ -32,7 +32,7 @@ import useUser from "./useUser";
 import { useNavigate, useParams } from "react-router-dom";
 import User from "../models/user";
 import { UsersList } from "./SingleUserComponent";
-
+import GroupsIcon from '@mui/icons-material/Groups';
 function Copyright(props) {
   return (
     <Typography
@@ -231,7 +231,7 @@ export default function FriendsPage() {
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PeopleOutlineIcon
+          <GroupsIcon
             onClick={() => {
               setType("Find Friends");
             }}
@@ -319,7 +319,7 @@ export default function FriendsPage() {
     function tableContent() {
       let firstbtn = "";
       let secondbtn = "";
-      if (type == "Friend") {
+      if (type == "Friends") {
         firstbtn = "View Profile";
         secondbtn = "Remove friend";
       } else if (type == "Following") {
