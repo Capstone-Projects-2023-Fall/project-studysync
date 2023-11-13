@@ -28,8 +28,10 @@ export const database = getFirestore(app);
 export const functions = getFunctions(app); 
 
 export const quizRepository = new QuizRepository(database)
+
 export const eventRepository = new EventRepository(database)
-export const notificationRepository = new NotificationRepository(database)
+
+export const notificationRepository = new NotificationRepository(database, eventRepository)
 export const flashcardRepository = new FlashCardRepository(database)
 export const userRepository = new UserRepository(database, quizRepository, notificationRepository, flashcardRepository, eventRepository)
 

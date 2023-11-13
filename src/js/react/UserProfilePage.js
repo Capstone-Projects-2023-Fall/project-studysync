@@ -29,13 +29,17 @@ const  UserProfile = ()=> {
     navigate(`/profile/${encodedData}/edit`, );
   }
 
+  function test(){
+    userRepository.addFollowing("eCamTdAsTrbD2SJrrpzESTZeu0z2", UserId).then(()=>{
+        console.log("success")
+    }).catch(()=>console.log("error"))
+  }
+
   useEffect(()=>{
     //while awaiting database response, display some loading indication
     setIsLoading(true)
     //fetch and set user profile upon page load
     userRepository.getProfile(UserId).then((profile)=>{
-        console.log("printing profile")
-        console.log(profile)
         setProfile(profile)
         setIsLoading(false)
     }).catch((error)=>{
@@ -91,7 +95,7 @@ const  UserProfile = ()=> {
             <form >
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="profile-img">
+                        <div onClick={test} class="profile-img">
                             {profile.imageURL && (<img src={profile.imageURL} alt="" />)}
 
                             {!profile.imageURL && (

@@ -3,8 +3,9 @@ import { addDoc, collection, doc, setDoc } from "firebase/firestore"
 
 export class NotificationRepository{
 
-    constructor(database){
+    constructor(database, eventRepo){
         this.database = database
+        this.eventRepo = eventRepo
     }
 
     async getNotification(id){
@@ -29,6 +30,18 @@ export class NotificationRepository{
             return notificationRef.id;
           }catch(error){
             console.log("error adding notification", error)
+        }
+    }
+
+    async getRawNotification(id){
+        const notification = await this.getNotification(id)
+     
+        const eventId = notification.eventId
+
+        const event = await this.eventRepo.getEventById(eventId)
+        return {
+            message: notification.message, 
+            event: event
         }
     }
 }

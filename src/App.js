@@ -21,6 +21,7 @@ import { auth } from './firebase';
 import MainQuizPage from './js/react/MainQuizPage';
 
 import Quiz from './js/react/Quiz.js';
+import Notifications from './js/react/Notifications';
 
 function App() {
 
@@ -40,6 +41,8 @@ function App() {
     { label: 'Quiz', link: '/quizmain' },
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     { label: 'Profile', link: `/profile/${user && user.uid}` },
+    { label: 'Notifications', link: `/notifications/${user && user.uid}` }
+    
     //... add other items
   ];
 
@@ -73,6 +76,8 @@ function App() {
         <Route path='/profile/:UserId' element={<UserProfile />} />
         <Route path='/profile/:data/edit' element={<EditUserProfile />} />
         <Route path='/quizmain' element={<MainQuizPage />} />
+        <Route path='/notifications/:UserId' element={<Notifications />} />
+
       </Routes>
     </div>
   );

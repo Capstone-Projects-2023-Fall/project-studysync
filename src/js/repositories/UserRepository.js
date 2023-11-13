@@ -104,8 +104,6 @@ export class UserRepository {
     const user = await this.getUserById(userId)
     const { id, bio, email, imageURL, username, name, profession, phone, firstName, lastName} = user
 
-    console.log("user is ", user)
-    console.log("first name is: ", firstName)
     const flashcards = await this.getOwnedFlashcards(id)
     const sharedFlashcards = await this.getSharedFlashcards(id)
     const friends = await this.getFriends(id)
@@ -134,6 +132,17 @@ export class UserRepository {
   async getNotifications(id) {
     const notificationIds = await getArrayFieldFromCollection(this.database, "users", id, "notifications")
     return notificationIds
+  }
+
+  /**Get raw notifications and not just the ids */
+  async getRawNotifications(id){
+    const notificationIds = await this.getNotifications(id)
+    const result = []
+
+    for(const notifId of notificationIds){
+      result.push(await this.notificationRepository.getRawNotification(notifId))
+    }
+    return result
   }
 
   /**get all user events */
@@ -200,11 +209,12 @@ export class UserRepository {
     //create a new event in followingId to indicate that someone followed them. add the event to their notifications
     const eventId = await this.eventRepository.createNewFollowerEvent(userId, followingId)
     // //create a new notification with this event
-    const notificationId = await this.notificationRepository.addNotification(new Notification(eventId))
+    console.log("eventId from banche is: ", eventId)
+    const notificationId = await this.notificationRepository.addNotification(new Notification(eventId, "New Follower"))
     // //add this notification to users list of notifications
-    this.addNotification(userId, notificationId)
+    this.addNotification(followingId, notificationId)
     //add event to user events
-    this.addEvent(eventId)
+    this.addEvent(userId, eventId)
   }
 
   async removeFollower(userId, followerId) {
@@ -223,5 +233,7 @@ export class UserRepository {
     }
     return users
   }
+
+
 }
 

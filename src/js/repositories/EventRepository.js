@@ -14,16 +14,15 @@ export class EventRepository {
     async createNewFollowerEvent(followerId, followingId){
         const event = new Event(`${followerId} followed ${followingId}`, EVENT_TYPE.NEW_FOLLOWER, uuidv4())
         event.createNewFollowerEvent(followerId, followingId)
-        await this.createEvent(event, EVENT_TYPE.NEW_FOLLOWER)
+        return await this.createEvent(event, EVENT_TYPE.NEW_FOLLOWER)
     }
 
     /** Create share quiz event */
     async createShareQuizEvent(sharedBy, sharedWith){
         const event = new Event(`${sharedBy} shared quiz with ${sharedWith}`, EVENT_TYPE.SHARE_FLASHCARD, uuidv4())
         event.createShareQuizEvent(sharedBy, sharedWith)
-        await this.createEvent(event, EVENT_TYPE.SHARE_QUIZ)
+        return await this.createEvent(event, EVENT_TYPE.SHARE_QUIZ)
     }
-
 
     /** Create share flashcard event */
     async createShareFlashcardEvent(sharedBy, sharedWith){
@@ -50,7 +49,7 @@ export class EventRepository {
     }
 
     async getEventById(id){
-        await getItemById(this.database, id, "events", "event")
+        return await getItemById(this.database, id, "events", "event")
     }
 
 }
