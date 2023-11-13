@@ -81,8 +81,8 @@ const FlashcardRepo = {
             const initialQuizItems = {
                 [questionId]: {
                     question: "Sample Question",
-                    answer: "Sample Answer",
-                    choices: "Choices"
+                    choices: ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
+                    correctChoiceIndex: 0
                 },
             };
 
