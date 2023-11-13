@@ -325,22 +325,22 @@ const FlashcardRepo = {
         const snap = await getDoc(flashcardSetRef);
         if (!snap.exists()) {
             console.error("Flashcard set not found");
-            return; // 如果文档不存在，退出函数
+            return; 
         }
 
         const data = snap.data();
         let flashcardItems = data.flashcardItems || {};
 
         if (flashcardItems[flashcardId]) {
-            // 如果找到了指定的 flashcardId，更新其状态
+            
             flashcardItems[flashcardId].status = newStatus;
 
-            // 提交更改
+         
             await updateDoc(flashcardSetRef, {
                 flashcardItems: flashcardItems
             });
         } else {
-            // 如果没有找到指定的 flashcardId，打印错误消息
+            
             console.error("Flashcard not found");
         }
     },
