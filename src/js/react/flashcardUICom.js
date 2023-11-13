@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
+import { Button, TextField, Typography, Dialog, DialogActions, FormControlLabel, Checkbox, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
@@ -32,7 +32,12 @@ function FlashcardApp() {
     const [openAIDialog, setOpenAIDialog] = useState(false);
     const [numberOfFlashcards, setNumberOfFlashcards] = useState(1);
     const [topicName, setTopicName] = useState('');
-
+    const [selectedButton, setSelectedButton] = useState(null);
+    const [filterOptions, setFilterOptions] = useState({
+        know: false,
+        notSure: false,
+        dontKnow: false
+    });
 
 
     useEffect(() => {
@@ -163,7 +168,9 @@ function FlashcardApp() {
         }
     }
 
-
+    const handleButtonClick = (buttonId) => {
+        setSelectedButton(buttonId);
+    };
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex < cards.length - 1) {
@@ -388,11 +395,30 @@ function FlashcardApp() {
                             <IconButton onClick={handleNextCard}>
                                 <ArrowForwardIcon />
                             </IconButton>
+
                         </div>
                         <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", width: "100%" }}>
-                            <Button variant="outlined" style={{ margin: "5px" }}>Know</Button>
-                            <Button variant="outlined" style={{ margin: "5px" }}>Not Sure</Button>
-                            <Button variant="outlined" style={{ margin: "5px" }}>Don't Know</Button>
+                            <Button
+                                variant="outlined"
+                                style={{ margin: "5px", backgroundColor: selectedButton === 'know' ? 'lightgreen' : '' }}
+                                onClick={() => handleButtonClick('know')}
+                            >
+                                Know
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                style={{ margin: "5px", backgroundColor: selectedButton === 'notSure' ? 'yellow' : '' }}
+                                onClick={() => handleButtonClick('notSure')}
+                            >
+                                Not Sure
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                style={{ margin: "5px", backgroundColor: selectedButton === 'dontKnow' ? 'lightcoral' : '' }}
+                                onClick={() => handleButtonClick('dontKnow')}
+                            >
+                                Don't Know
+                            </Button>
                         </div>
                     </div>
                 </div>
