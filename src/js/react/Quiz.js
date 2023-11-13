@@ -252,9 +252,13 @@ return (
                                     <Typography>{selectedCard.question}</Typography> 
                                     <p><Typography variant="h5">Answer Choices:</Typography></p>                              
                                     <ul>
-                                        {selectedCard.choices.map((choice, index) => (
+                                    {Array.isArray(selectedCard.choices) ? (
+                                        selectedCard.choices.map((choice, index) => (
                                             <li key={index}>{choice}</li>
-                                        ))}
+                                        ))
+                                    ) : (
+                                        <li>{selectedCard.choices}</li>
+                                    )}
                                     </ul>
                                 </div>
                                  )}
