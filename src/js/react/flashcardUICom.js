@@ -217,6 +217,9 @@ function FlashcardApp() {
         if (term && definition) {
             try {
                 const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, term, definition);
+                // add the user added flashcard data as quiz question
+                await FlashcardRepo.addQuizQuestion(setId, definition, [term, 'Option 2', 'Option 3', 'Option 4'], 0);
+
                 setCards((prev) => [...prev, { term, definition, flashcardId: newFlashcardId }]);
                 setTerm('');
                 setDefinition('');
@@ -320,6 +323,8 @@ function FlashcardApp() {
         const addedFlashcards = [];
         for (const flashcard of generatedFlashcards) {
             const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
+            // add the AI generated flashcard data into quiz question
+            await FlashcardRepo.addQuizQuestion(setId, flashcard.definition, [flashcard.term, 'Option 2', 'Option 3', 'Option 4'], 0);
             addedFlashcards.push({ ...flashcard, flashcardId: newFlashcardId });
         }
 
