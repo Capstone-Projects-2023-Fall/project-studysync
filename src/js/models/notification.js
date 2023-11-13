@@ -1,19 +1,18 @@
-   /**Notification Object */
+/**Notification Object */
 export class Notification {
-    constructor(event, message = '', id='') {
-        this.event = event
-        this.message = message;
-        this.createdAt = new Date().getTime()
-        this.id = id
-    }
+  constructor(eventId, message, id = "") {
+    this.eventId = eventId;
+    this.createdAt = new Date().getTime();
+    this.message = message;
+    this.id = id;
+  }
 
-    toJSON() {
-        return {
-          event: this.event,
-          message: this.message,
-          createdAt: this.createdAt,
-          id: this.id,
-        };
-      }
+  toJSON() {
+    return {
+      eventId: this.eventId,
+      createdAt: this.createdAt,
+      id: this.id,
+      message: this.message,
+    };
+  }
 }
-
