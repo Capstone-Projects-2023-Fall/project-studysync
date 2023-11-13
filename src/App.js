@@ -46,6 +46,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/flashcard" element={<FlashcardComponent />} />
         <Route path="/quiz/:setId" element={<Quiz />} />
+        <Route path="/quizmain/:setId" element={<MainQuizPage />} />
         <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
         <Route path="/" element={
           user
@@ -56,7 +57,7 @@ function App() {
         <Route path='/signup' element={<SignUpForm />} />
         <Route path='/profile/:UserId' element={<UserProfile />} />
         <Route path='/profile/:data/edit' element={<EditUserProfile />} />
-        <Route path='/quizmain' element={<MainQuizPage />} />
+        <Route path="/quizmain/:setId" element={<MainQuizPage />} />
         <Route path='/friends/:UserId' element={<FriendsPage/>}/>
         <Route path='/notifications/:UserId' element={<Notification/>}/>
       </Routes>
