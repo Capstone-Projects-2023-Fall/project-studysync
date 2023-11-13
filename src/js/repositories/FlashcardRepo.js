@@ -65,7 +65,8 @@ const FlashcardRepo = {
             const initialFlashcardItems = {
                 [flashcardId]: {
                     term: "Sample Term",
-                    definition: "Sample Definition"
+                    definition: "Sample Definition",
+                    status: ""
                 },
             };
 
@@ -158,22 +159,22 @@ const FlashcardRepo = {
         try {
             const flashcardSetRef = doc(database, 'flashcardSets', setId);
             const snap = await getDoc(flashcardSetRef);
-    
+
             if (snap.exists()) {
                 const flashcardSetData = snap.data();
                 console.log(`Flashcard set with ID ${setId} fetched successfully.`);
-                return flashcardSetData.name; 
+                return flashcardSetData.name;
             } else {
                 console.log(`Flashcard set with ID ${setId} not found.`);
-                return null; 
+                return null;
             }
-    
+
         } catch (error) {
             console.error("Error fetching topic name:", error);
             throw error;
         }
     },
-    
+
 
 
 
@@ -185,6 +186,7 @@ const FlashcardRepo = {
             const cardData = {
                 term: term,
                 definition: definition,
+                status: ""
             };
 
             const flashcardSetRef = doc(database, 'flashcardSets', setId);
@@ -318,6 +320,30 @@ const FlashcardRepo = {
             throw error;
         }
     },
+    updateCardStatus: async function (setId, flashcardId, newStatus) {
+        const flashcardSetRef = doc(database, 'flashcardSets', setId);
+        const snap = await getDoc(flashcardSetRef);
+        if (!snap.exists()) {
+            console.error("Flashcard set not found");
+            return; 
+        }
+
+        const data = snap.data();
+        let flashcardItems = data.flashcardItems || {};
+
+        if (flashcardItems[flashcardId]) {
+            
+            flashcardItems[flashcardId].status = newStatus;
+
+         
+            await updateDoc(flashcardSetRef, {
+                flashcardItems: flashcardItems
+            });
+        } else {
+            
+            console.error("Flashcard not found");
+        }
+    },
 
 
     getSetIdByTopicName: async function (topicName) {
@@ -437,37 +463,37 @@ const FlashcardRepo = {
         }
     },
 
-       // add all question data to the database table called "flashcardSets"
-       addQuizQuestion: async function (setId, question, choices, correctChoiceIndex) {
+    // add all question data to the database table called "flashcardSets"
+    addQuizQuestion: async function (setId, question, choices, correctChoiceIndex) {
         try {
-          const questionId = doc(collection(database, 'questions')).id;
-      
-          const questionData = {
-            question: question,
-            choices: choices,
-            correctChoice: correctChoiceIndex,
-          };
-      
-          const flashcardSetRef = doc(database, 'flashcardSets', setId); // Use 'flashcardSets' collection
-      
-          const snap = await getDoc(flashcardSetRef);
-          const data = snap.data();
-          let questionItems = data.questionItems || {};
-      
-          questionItems[questionId] = questionData;
-          console.log("Adding new question:", questionItems);
-          await updateDoc(flashcardSetRef, {
-            questionItems: questionItems
-          });
-          return questionId;
-        } catch (error) {
-          console.error("Error adding quiz question", error);
-          throw error;
-        }
-      },
+            const questionId = doc(collection(database, 'questions')).id;
 
-      // delete question from the flashcardSets table and from questionItems field
-      deleteQuestion: async function (setId, questionIdToBeDeleted) {
+            const questionData = {
+                question: question,
+                choices: choices,
+                correctChoice: correctChoiceIndex,
+            };
+
+            const flashcardSetRef = doc(database, 'flashcardSets', setId); // Use 'flashcardSets' collection
+
+            const snap = await getDoc(flashcardSetRef);
+            const data = snap.data();
+            let questionItems = data.questionItems || {};
+
+            questionItems[questionId] = questionData;
+            console.log("Adding new question:", questionItems);
+            await updateDoc(flashcardSetRef, {
+                questionItems: questionItems
+            });
+            return questionId;
+        } catch (error) {
+            console.error("Error adding quiz question", error);
+            throw error;
+        }
+    },
+
+    // delete question from the flashcardSets table and from questionItems field
+    deleteQuestion: async function (setId, questionIdToBeDeleted) {
         try {
             const flashcardSetRef = doc(database, 'flashcardSets', setId);
             const snap = await getDoc(flashcardSetRef);

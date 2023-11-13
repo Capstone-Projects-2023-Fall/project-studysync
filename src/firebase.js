@@ -1,14 +1,15 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {getFirestore} from 'firebase/firestore';
-import { httpsCallable,getFunctions } from 'firebase/functions'
-import {getAuth} from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { httpsCallable, getFunctions } from "firebase/functions";
+import { getAuth } from "firebase/auth";
 
-import keys from './keys';
+import keys from "./keys";
 import { UserRepository } from "./js/repositories/UserRepository";
 import { QuizRepository } from "./js/repositories/QuizRepository";
 import { NotificationRepository } from "./js/repositories/NotificationRepository";
 import { FlashCardRepository } from "./js/repositories/FlashCardRepository";
+import { EventRepository } from "./js/repositories/EventRepository";
 const firebaseConfig = {
   apiKey: keys.apiKey,
   authDomain: keys.authDomain,
@@ -16,7 +17,7 @@ const firebaseConfig = {
   storageBucket: keys.storageBucket,
   messagingSenderId: keys.messagingSenderId,
   appId: keys.appId,
-  measurementId: keys.measurementId
+  measurementId: keys.measurementId,
 };
 
 // Initialize Firebase
@@ -24,14 +25,24 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const database = getFirestore(app);
-export const functions = getFunctions(app); 
+export const functions = getFunctions(app);
 
-export const quizRepository = new QuizRepository(database)
+export const quizRepository = new QuizRepository(database);
 
-export const notificationRepository = new NotificationRepository(database)
-export const flashcardRepository = new FlashCardRepository(database)
-export const userRepository = new UserRepository(database, quizRepository, notificationRepository, flashcardRepository)
+export const eventRepository = new EventRepository(database);
 
+export const notificationRepository = new NotificationRepository(
+  database,
+  eventRepository
+);
+export const flashcardRepository = new FlashCardRepository(database);
+export const userRepository = new UserRepository(
+  database,
+  quizRepository,
+  notificationRepository,
+  flashcardRepository,
+  eventRepository
+);
 
 // export const askGPT = async (prompt) => {
 //   const askGPTFunction = httpsCallable(functions, 'askGPT');
@@ -43,4 +54,3 @@ export const userRepository = new UserRepository(database, quizRepository, notif
 //     throw error;
 //   }
 // };
-

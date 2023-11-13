@@ -15,6 +15,7 @@ import FriendsPage from './js/react/FriendsPage';
 import MainQuizPage from './js/react/MainQuizPage';
 
 import Quiz from './js/react/Quiz.js';
+import Notification from './js/react/Notification';
 
 function App() {
 
@@ -34,7 +35,8 @@ function App() {
     { label: 'Quiz', link: '/quizmain' },
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     { label: 'Profile', link: `/profile/${user && user.uid}` },
-    {label: 'Friends',link:`/friends/${user && user.uid}`}
+    {label: 'Friends',link:`/friends/${user && user.uid}`},
+    {label: 'Notifications',link:`/notifications/${user && user.uid}`}
     //... add other items
   ];
 
@@ -60,6 +62,7 @@ function App() {
         <Route path='/profile/:data/edit' element={<EditUserProfile />} />
         <Route path='/quizmain' element={<MainQuizPage />} />
         <Route path='/friends/:UserId' element={<FriendsPage/>}/>
+        <Route path='/notifications/:UserId' element={<Notification/>}/>
       </Routes>
     </div>
   );
