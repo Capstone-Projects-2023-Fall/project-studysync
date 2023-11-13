@@ -1,20 +1,9 @@
-import React, { useState,} from 'react';
-import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Avatar, Menu, MenuItem } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React, {useState,useEffect,useCallback} from 'react';
+import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper,Menu, MenuItem } from '@mui/material';
+import {useNavigate } from 'react-router-dom';
 
-//mainQuizPage component
-function MainQuizPage() {
-  const navigate = useNavigate(); //navigation function for avatar
-  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
-  const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
-  const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
-  const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
-  const [score, setScore] = useState(null);//for score
-  const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
-
-
-  //generate question based on index
-  const generateQuestion = (i) => {
+//generate question based on index
+const generateQuestion = (i) => {
     const correctAnswer = `${2 * (i + 1)}`;
     const options = [correctAnswer, `${2 * (i + 2)}`, `${2 * (i + 3)}`, `${2 * (i + 4)}`].sort(() => Math.random() - 0.5);
     return {
@@ -22,12 +11,48 @@ function MainQuizPage() {
       options,
       correct: correctAnswer,
       userAnswer: null,
-      answered: false
     };
   }
 
-  //store list of questions
+//mainQuizPage component
+function MainQuizPage() {
+  const navigate = useNavigate(); //navigation function for avatar
   const [questions, setQuestions] = useState(Array.from({ length: 10 }, (_, i) => generateQuestion(i)));
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
+  const [anchorEl, setAnchorEl] = useState(null); //state to track current element that the menu is anchored to
+  const [menuQuestionIndex, setMenuQuestionIndex] = useState(null); //state for the current question index in the menu 
+  const [quizStarted, setQuizStarted] = useState(false); //to track if the quiz has started or not
+  const [score, setScore] = useState(null);//for score
+  const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
+  const [timeLeft, setTimeLeft] = useState(10 * 5 * 60);//default time
+  const calculateInitialTime = useCallback(() => {
+    return questions.length * 5 * 60; // 5 minutes per question
+  }, [questions.length]);
+
+  //update timeleft when change length of question
+  useEffect(() => {
+    setTimeLeft(calculateInitialTime());
+  }, [calculateInitialTime, questions.length]);
+
+  useEffect(() => {
+    let timer = null;
+    if (quizStarted && timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(prevTimeLeft => prevTimeLeft - 1);
+      }, 1000);
+    }
+    if (timeLeft === 0 || quizFinished) {
+      clearInterval(timer);
+    }
+    return () => clearInterval(timer);
+  }, [quizStarted, timeLeft, quizFinished]);
+
+  const formatTime = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  };
+
 
   //open menu
   const handleMenuOpen = (event, index) => {
@@ -48,12 +73,22 @@ function MainQuizPage() {
   //delete question function
   const deleteQuestion = () => {
     if (quizStarted) {
-      console.log("Can't delete questions during an active quiz");
-      return;
+        console.log("Can't delete questions during an active quiz");
+        return;
     }
-    setQuestions(prev => prev.filter((_, index) => index !== menuQuestionIndex));
-    handleMenuClose();
-  };
+    setQuestions(prevQuestions => {
+        //remove the selected question
+        const newQuestions = prevQuestions.filter((_, index) => index !== menuQuestionIndex);
+        //if the deleted question was the one selected or the last in the list, reset the selectedQuestionIndex
+        if (selectedQuestionIndex === menuQuestionIndex || selectedQuestionIndex >= newQuestions.length) {
+          setSelectedQuestionIndex(null);} 
+          else if (menuQuestionIndex < selectedQuestionIndex) {
+            //adjust the selectedQuestionIndex if a question before it was deleted
+          setSelectedQuestionIndex(prevIndex => prevIndex - 1);}
+          return newQuestions;});
+          
+          handleMenuClose();
+};
 
   //edit question function
   const editQuestion = () => {
@@ -84,59 +119,91 @@ function MainQuizPage() {
     setQuestions(prevQuestions => {
       const newQuestions = [...prevQuestions];
       newQuestions[selectedQuestionIndex].userAnswer = option;
-      newQuestions[selectedQuestionIndex].answered = true;
-      checkIfQuizIsFinished();
       return newQuestions;
     });
   };
 
-
-  //to determine the styles for each option
-  const getOptionStyle = (option, question) => {
-    if (!question.answered) return {}; 
-    if (option === question.userAnswer && option === question.correct) return { backgroundColor: 'green' }; 
-    if (option === question.userAnswer) return { backgroundColor: 'red' }; 
-    if (option !== question.userAnswer && option === question.correct) return { backgroundColor: 'green' }; 
-    return {};
-  };
-
-  //calculate and update the score
-  const calculateScore = () => { const correctAnswers = questions.reduce((acc, question) => {
-    return acc + (question.userAnswer === question.correct ? 1 : 0);}, 0);
-    const scorePercentage = (correctAnswers / questions.length) * 100;
+  //calculate and update the score, now also handles unanswered question after user submit,
+  const calculateScore = () => {
+    const correctAnswers = questions.reduce((acc, question) => {
+      //Count the number of correct answers
+      return acc + (question.userAnswer === question.correct ? 1 : 0);
+    }, 0);
+    //count the number of answered questions
+    const answeredQuestions = questions.reduce((acc, question) => {
+      return acc + (question.userAnswer !== null ? 1 : 0);
+    }, 0);
+    //calculate the score percentage
+    const scorePercentage = answeredQuestions > 0 ? (correctAnswers / answeredQuestions) * 100 : 0;
     setScore(scorePercentage);
   };
 
-  //check if quiz completed
-  const checkIfQuizIsFinished = () => { 
-    const allAnswered = questions.every(question => question.answered); 
-    if (allAnswered) {
+  //for submit
+  const handleSubmit = () => {
+    const confirmSubmit = window.confirm("Are you sure you want to submit the quiz?");
+    if (confirmSubmit) {
       calculateScore();
       setQuizFinished(true);
     }
   };
 
+  //handle return fucntion
+  const handleReturnToQuiz = () => {
+    setQuizStarted(false);
+    setQuizFinished(false);
+    setSelectedQuestionIndex(null);
+    setScore(null);
+    const newQuestions = Array.from({ length: 10 }, (_, i) => generateQuestion(i));
+    setQuestions(newQuestions);
+    setTimeLeft(calculateInitialTime()); //recalculate time based on the number of new questions
+    navigate('/quizmain');
+  };
 
+  //change color of answer when picked
+  const getButtonStyle = (option, questionIndex) => {
+    const isSelected = questions[questionIndex].userAnswer === option;
+    return isSelected ? { backgroundColor: '#1976d2', color: 'red' } : {};
+  };
+
+  //function to determine the style for each question in the sidebar
+  const getQuestionStyle = (index) => {
+    if (quizStarted && questions[index].userAnswer !== null) {
+      return { color: 'green' }; //change this to your preferred color for answered questions
+    } else {
+      return { color: 'black' }; //default color
+    }
+  };
 
   return (
     <div>
+    {/*appBar for the main header*/}
+    <AppBar position="static">
+      <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h4" component="h2" style={{ margin: 0 }}>
+          Quiz
+        </Typography>
+        <div style={{ position: 'relative' }}>
+          {quizStarted && !quizFinished && (
+            <>
+              {/*timer display*/}
+              <Typography variant="h6" style={{ marginRight: '20px' }}>
+                Time Left: {formatTime()}
+              </Typography>
 
-        {/*AppBar for the main header*/}
-      <AppBar position="static">
-        <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h4" component="h2" style={{ margin: 0 }}>
-            Quiz
-          </Typography>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Button onClick={() => navigate('/profile/:UserId')}>
-              <Avatar alt="User Profile" src="https://via.placeholder.com/40" />
-            </Button>
+              {/*submit button*/}
+              <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '50px', right: '0' }}>
+                Submit Quiz
+              </Button>
+            </>
+          )}
+          {!quizStarted && (
             <Button variant="contained">
               LEADERBOARD
             </Button>
-          </div>
-        </Toolbar>
-      </AppBar>
+          )}
+        </div>
+      </Toolbar>
+    </AppBar>
       
       <div style={{ display: 'flex', marginTop: '20px' }}>
         <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
@@ -145,7 +212,12 @@ function MainQuizPage() {
 
             {/*loop thought to diplay each question*/}
             {questions.map((_, index) => (
-              <ListItem button key={index} onClick={() => { setSelectedQuestionIndex(index); }}>
+              <ListItem 
+              button 
+              key={index} 
+              onClick={() => setSelectedQuestionIndex(index)}
+              style={getQuestionStyle(index)} //apply the style based on answered state
+            >
                 {`Question ${index + 1}`}
 
                 {/*option menu the thrre dots to edit and delte the question*/}
@@ -171,7 +243,7 @@ function MainQuizPage() {
               </ListItem>
             ))}
           </List>
-
+        
 
          {/*Add question and start quiz button*/}
           <div style={{ display: 'flex', justifyContent: 'space-between', margin: '10px' }}>
@@ -186,62 +258,49 @@ function MainQuizPage() {
           </div>
         </Paper>
         
+         {/* Display questions and answer options */}
+         <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {selectedQuestionIndex !== null && (<>
+          {/* Question display */}
+          <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
+            {`Question ${selectedQuestionIndex + 1}`}
+            </Typography>
+            <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
+              {questions[selectedQuestionIndex].text}
+              </Typography>
 
-        {/*diplay questions and answer options*/}
-        <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {selectedQuestionIndex !== null && (
-            <>
-              <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
-                {`Question ${selectedQuestionIndex + 1}`}
-              </Typography>
-              <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
-                {questions[selectedQuestionIndex].text}
-              </Typography>
-              
-              {/*show answeer woptions when quiz is started*/}
-              {quizStarted && (
+               {/*show answeer woptions when quiz is started*/}
+               {quizStarted && (
                 <>
                     {/*top two options*/}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '20px' }}>
                     {questions[selectedQuestionIndex].options.slice(0, 2).map((option, index) => (
                       <Button
                         key={index}
                         variant="contained"
-                        style={getOptionStyle(option, questions[selectedQuestionIndex])}
-                        onClick={() => !questions[selectedQuestionIndex].answered && checkAnswer(option)}
+                        style={getButtonStyle(option, selectedQuestionIndex)}
+                        onClick={() => checkAnswer(option)}
                       >
                         {option}
                       </Button>
                     ))}
                   </div>
 
-                        {/*bottom two option*/}
                   <div style={{ display: 'flex', justifyContent: 'space-between', width: '50%', marginBottom: '40px' }}>
                     {questions[selectedQuestionIndex].options.slice(2, 4).map((option, index) => (
                       <Button
                         key={index}
                         variant="contained"
-                        style={getOptionStyle(option, questions[selectedQuestionIndex])}
-                        onClick={() => !questions[selectedQuestionIndex].answered && checkAnswer(option)}
+                        style={getButtonStyle(option, selectedQuestionIndex)}
+                        onClick={() => checkAnswer(option)}
                       >
                         {option}
                       </Button>
                     ))}
-                  </div>
-
-                   {/*show result of question*/}     
-                  {questions[selectedQuestionIndex].answered && (
-                    <Typography variant="h5" component="h2">
-                      {questions[selectedQuestionIndex].userAnswer === questions[selectedQuestionIndex].correct
-                        ? "Correct"
-                        : `Incorrect`}
-                    </Typography>
-                  )}
-                </>
-              )}
-            </>
-          )}
-          </div>
+                  </div></>)}</>)}
+                  </div>  
+                  
+          
           {/*display score and return button */}
           {quizFinished && (
           <div style={{ textAlign: 'center', marginTop: '20px' }}>
@@ -254,15 +313,7 @@ function MainQuizPage() {
                <Button
                 variant="contained"
                 color="primary"
-                onClick={() => {
-                  //reset the necessary states to initial values to restart the quiz
-                  setQuizStarted(false);
-                  setQuizFinished(false);
-                  setSelectedQuestionIndex(null);
-                  setScore(null);
-                  setQuestions(Array.from({ length: 10 }, (_, i) => generateQuestion(i))); //regenerate questions if needed
-                  navigate('/quizmain'); 
-                }}
+                onClick={handleReturnToQuiz}
                 style={{ marginBottom: '10px' }} //for layout
                 >
                   Return to Quiz
