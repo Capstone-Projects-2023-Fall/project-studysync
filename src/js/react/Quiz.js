@@ -38,7 +38,7 @@ const QuizComponent = () => {
 
   //for navagation start quiz
   const startQuiz = () => {
-    navigate('/quizmain'); //Navigate to the quiz page
+    navigate(`/quizmain/${setId}`); //Navigate to the quiz page with setId
   };
 
 
