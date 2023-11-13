@@ -167,7 +167,6 @@ function MainQuizPage() {
 
   //function to determine the style for each question in the sidebar
   const getQuestionStyle = (index) => {
-    //change color only if the quiz has started and the question has been answered
     if (quizStarted && questions[index].userAnswer !== null) {
       return { color: 'green' }; //change this to your preferred color for answered questions
     } else {
