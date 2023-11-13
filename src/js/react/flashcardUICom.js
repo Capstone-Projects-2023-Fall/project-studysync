@@ -190,6 +190,23 @@ function FlashcardApp() {
             }
         }
     };
+    const selectCard = (card) => {
+        setSelectedCard(card);
+        setSelectedButton(card.status);
+    };
+    const handleFilterChange = (event) => {
+        setFilterOptions({ ...filterOptions, [event.target.name]: event.target.checked });
+    };
+    const isAnyFilterSelected = filterOptions.know || filterOptions.notSure || filterOptions.dontKnow;
+
+    const filteredCards = isAnyFilterSelected
+        ? cards.filter(card => {
+            if (filterOptions.know && card.status === 'know') return true;
+            if (filterOptions.notSure && card.status === 'notSure') return true;
+            if (filterOptions.dontKnow && card.status === 'dontKnow') return true;
+            return false;
+        })
+        : cards;
     const handleLikeClick = async (commentId) => {
         const isLiked = likedComments[commentId] || false;
 
@@ -337,13 +354,27 @@ function FlashcardApp() {
                 display: "flex", flexDirection: "column", height: "100vh",
                 backgroundColor: '#f9f9f9', padding: '20px'
             }}>
+                <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
+                    <FormControlLabel
+                        control={<Checkbox checked={filterOptions.know} onChange={handleFilterChange} name="know" />}
+                        label="Know"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={filterOptions.notSure} onChange={handleFilterChange} name="notSure" />}
+                        label="Not Sure"
+                    />
+                    <FormControlLabel
+                        control={<Checkbox checked={filterOptions.dontKnow} onChange={handleFilterChange} name="dontKnow" />}
+                        label="Don't Know"
+                    />
+                </div>
                 <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
                     <List style={{
                         width: "30%", borderRight: "1px solid #e0e0e0",
                         borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                     }}>
-                        {cards.map((card, index) => (
-                            <ListItem button key={index} onClick={() => { setSelectedCard(card); setShowDefinition(false); }}>
+                        {filteredCards.map((card, index) => (
+                            <ListItem button key={index} onClick={() => { selectCard(card); setShowDefinition(false); }}>
                                 {card.term}
                                 <IconButton onClick={() => handleEditClick(card)}>
                                     <EditIcon />
@@ -351,13 +382,14 @@ function FlashcardApp() {
                                 <IconButton onClick={() => handleDeleteClick(card)}>
                                     <DeleteIcon />
                                 </IconButton>
+
                             </ListItem>
                         ))}
                         <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
                             Add
                         </Button>
                         <Button
-                            onClick={handleAIClick} // Define this function to handle AI interaction
+                            onClick={handleAIClick}
                             startIcon={<AddIcon />}
                         >
                             AI Assist
