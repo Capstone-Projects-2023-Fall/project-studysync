@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, TextField, Typography, Dialog, DialogActions, FormControlLabel, Checkbox, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
+import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
@@ -32,12 +32,7 @@ function FlashcardApp() {
     const [openAIDialog, setOpenAIDialog] = useState(false);
     const [numberOfFlashcards, setNumberOfFlashcards] = useState(1);
     const [topicName, setTopicName] = useState('');
-    const [selectedButton, setSelectedButton] = useState(null);
-    const [filterOptions, setFilterOptions] = useState({
-        know: false,
-        notSure: false,
-        dontKnow: false
-    });
+
 
 
     useEffect(() => {
@@ -49,8 +44,7 @@ function FlashcardApp() {
                     return {
                         term: flashcardData[key].term,
                         definition: flashcardData[key].definition,
-                        flashcardId: key,
-                        status: flashcardData[key].status || 'none'
+                        flashcardId: key
                     };
                 });
                 setCards(flashcardsArray);
@@ -168,44 +162,8 @@ function FlashcardApp() {
             setOpenDelete(false);
         }
     }
-    const handleStatusChange = async (setId, flashcardId, newStatus) => {
-        try {
-            await FlashcardRepo.updateCardStatus(setId, flashcardId, newStatus);
-            setCards(cards.map(card => {
-                if (card.flashcardId === flashcardId) {
-                    return { ...card, status: newStatus };
-                }
-                return card;
-            }));
-        } catch (error) {
-            console.error("Failed to update flashcard status:", error);
-        }
-    };
 
-    const handleButtonClick = async (status) => {
-        if (selectedCard) {
-            await handleStatusChange(setId, selectedCard.flashcardId, status);
-            setSelectedButton(status);
-        }
-    };
 
-    const selectCard = (card) => {
-        setSelectedCard(card);
-        setSelectedButton(card.status);
-    };
-    const handleFilterChange = (event) => {
-        setFilterOptions({ ...filterOptions, [event.target.name]: event.target.checked });
-    };
-    const isAnyFilterSelected = filterOptions.know || filterOptions.notSure || filterOptions.dontKnow;
-
-    const filteredCards = isAnyFilterSelected
-        ? cards.filter(card => {
-            if (filterOptions.know && card.status === 'know') return true;
-            if (filterOptions.notSure && card.status === 'notSure') return true;
-            if (filterOptions.dontKnow && card.status === 'dontKnow') return true;
-            return false;
-        })
-        : cards;
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex < cards.length - 1) {
@@ -372,27 +330,13 @@ function FlashcardApp() {
                 display: "flex", flexDirection: "column", height: "100vh",
                 backgroundColor: '#f9f9f9', padding: '20px'
             }}>
-                <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
-                    <FormControlLabel
-                        control={<Checkbox checked={filterOptions.know} onChange={handleFilterChange} name="know" />}
-                        label="Know"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox checked={filterOptions.notSure} onChange={handleFilterChange} name="notSure" />}
-                        label="Not Sure"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox checked={filterOptions.dontKnow} onChange={handleFilterChange} name="dontKnow" />}
-                        label="Don't Know"
-                    />
-                </div>
                 <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
                     <List style={{
                         width: "30%", borderRight: "1px solid #e0e0e0",
                         borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                     }}>
-                        {filteredCards.map((card, index) => (
-                            <ListItem button key={index} onClick={() => { selectCard(card); setShowDefinition(false); }}>
+                        {cards.map((card, index) => (
+                            <ListItem button key={index} onClick={() => { setSelectedCard(card); setShowDefinition(false); }}>
                                 {card.term}
                                 <IconButton onClick={() => handleEditClick(card)}>
                                     <EditIcon />
@@ -400,14 +344,13 @@ function FlashcardApp() {
                                 <IconButton onClick={() => handleDeleteClick(card)}>
                                     <DeleteIcon />
                                 </IconButton>
-
                             </ListItem>
                         ))}
                         <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
                             Add
                         </Button>
                         <Button
-                            onClick={handleAIClick}
+                            onClick={handleAIClick} // Define this function to handle AI interaction
                             startIcon={<AddIcon />}
                         >
                             AI Assist
@@ -445,30 +388,11 @@ function FlashcardApp() {
                             <IconButton onClick={handleNextCard}>
                                 <ArrowForwardIcon />
                             </IconButton>
-
                         </div>
                         <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", width: "100%" }}>
-                            <Button
-                                variant="outlined"
-                                style={{ margin: "5px", backgroundColor: selectedButton === 'know' ? 'lightgreen' : '' }}
-                                onClick={() => handleButtonClick('know')}
-                            >
-                                Know
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                style={{ margin: "5px", backgroundColor: selectedButton === 'notSure' ? 'yellow' : '' }}
-                                onClick={() => handleButtonClick('notSure')}
-                            >
-                                Not Sure
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                style={{ margin: "5px", backgroundColor: selectedButton === 'dontKnow' ? 'lightcoral' : '' }}
-                                onClick={() => handleButtonClick('dontKnow')}
-                            >
-                                Don't Know
-                            </Button>
+                            <Button variant="outlined" style={{ margin: "5px" }}>Know</Button>
+                            <Button variant="outlined" style={{ margin: "5px" }}>Not Sure</Button>
+                            <Button variant="outlined" style={{ margin: "5px" }}>Don't Know</Button>
                         </div>
                     </div>
                 </div>
