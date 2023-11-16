@@ -334,7 +334,7 @@ export default function FriendsPage() {
           {showList.map((user) => (
             <TableRow key={user.id}>
               <TableCell>
-                {user.firstName || user.name || user.email || user.id}{" "}
+                { user.name || user.firstName || user.email || user.id}{" "}
               </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
@@ -419,11 +419,6 @@ export default function FriendsPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {displayList().map((user,index) => (
-              <TableRow key={index}>
-                {showList(user)}
-              </TableRow>
-            ))} */}
               {tableContent()}
             </TableBody>
           </Table>

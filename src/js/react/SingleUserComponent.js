@@ -26,7 +26,8 @@ export default function SingleUserComponent(props) {
           />
         </ListItemAvatar>
         <ListItemText
-          primary={user.firstName || user.email || user.username}
+          primary={ user.name || user.firstName || user.email || user.id}
+
           secondary={
             <React.Fragment>
               <Typography
