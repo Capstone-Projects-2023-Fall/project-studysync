@@ -16,6 +16,9 @@ import TextField from "@mui/material/TextField";
 
 export default function SingleUserComponent(props) {
   const { user, shouldFollow, handleFollowOrUnfollow } = props;
+
+  const [_user,setUser] = useState()
+
   return (
     <>
       <ListItem alignItems="flex-start">

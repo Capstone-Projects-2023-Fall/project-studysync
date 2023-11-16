@@ -33,23 +33,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import User from "../models/user";
 import { UsersList } from "./SingleUserComponent";
 import GroupsIcon from '@mui/icons-material/Groups';
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="#">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 
 const drawerWidth = 240;
 
@@ -81,6 +67,8 @@ const Drawer = styled(MuiDrawer, {
 
 const defaultTheme = createTheme();
 
+
+
 export default function FriendsPage() {
   const { UserId } = useParams();
   const [open, setOpen] = React.useState(true);
@@ -92,6 +80,8 @@ export default function FriendsPage() {
   const [users, setUsers] = useState([]);
   const [userStr, setUserStr] = useState("");
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -186,7 +176,7 @@ export default function FriendsPage() {
     <React.Fragment>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PeopleIcon
+          <GroupsIcon
             onClick={() => {
               setType("Friends");
             }}
@@ -201,7 +191,7 @@ export default function FriendsPage() {
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PersonAddAltIcon
+          <PeopleOutlineRoundedIcon
             onClick={() => {
               setType("Following");
             }}
@@ -216,7 +206,7 @@ export default function FriendsPage() {
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PeopleOutlineIcon
+          <EmojiPeopleRoundedIcon
             onClick={() => {
               setType("Followers");
             }}
@@ -231,7 +221,7 @@ export default function FriendsPage() {
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <GroupsIcon
+          <SearchRoundedIcon
             onClick={() => {
               setType("Find Friends");
             }}
@@ -470,7 +460,6 @@ export default function FriendsPage() {
                 </Paper>
               </Grid>
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
       </Box>
