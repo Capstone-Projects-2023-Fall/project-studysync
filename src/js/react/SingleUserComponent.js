@@ -16,9 +16,6 @@ import TextField from "@mui/material/TextField";
 
 export default function SingleUserComponent(props) {
   const { user, shouldFollow, handleFollowOrUnfollow } = props;
-
-  const [_user,setUser] = useState()
-
   return (
     <>
       <ListItem alignItems="flex-start">
@@ -29,8 +26,7 @@ export default function SingleUserComponent(props) {
           />
         </ListItemAvatar>
         <ListItemText
-          primary={ user.name || user.firstName || user.email || user.id}
-
+          primary={user.name ||user.firstName || user.email || user.username}
           secondary={
             <React.Fragment>
               <Typography
@@ -64,8 +60,7 @@ const SearchBar = ({ onSearch }) => {
 };
 
 export function UsersList(props) {
-  //   const [users, setUsers] = useState([]);
-  const { currUser, users, userStr } = props;
+  const { currUser, users, userStr ,updateFind,setUpdateFind} = props;
   const currUserId = currUser.id;
 
   const [filteredData, setFilteredData] = useState(users || []);

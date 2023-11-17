@@ -36,6 +36,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
+import ErrorPage from "./ErrorPage";
 
 const drawerWidth = 240;
 
@@ -80,6 +81,7 @@ export default function FriendsPage() {
   const [users, setUsers] = useState([]);
   const [userStr, setUserStr] = useState("");
   const navigate = useNavigate();
+  const {user} = useUser();
 
 
 
@@ -237,6 +239,8 @@ export default function FriendsPage() {
     </React.Fragment>
   );
 
+ 
+
   function MainList() {
     function removeFriend(uid) {
       removeFollower(uid);
@@ -390,6 +394,8 @@ export default function FriendsPage() {
         </>
       );
     }
+
+
     return (
       <React.Fragment>
         <Title> {type}</Title>
@@ -416,6 +422,12 @@ export default function FriendsPage() {
       </React.Fragment>
     );
   }
+
+  if(!user || (user && user.uid != UserId)){
+    return <ErrorPage code="401"/>
+  }
+
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -455,7 +467,6 @@ export default function FriendsPage() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  {/* <MainList type={type}/> */}
                   {MainList()}
                 </Paper>
               </Grid>
