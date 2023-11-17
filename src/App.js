@@ -15,7 +15,6 @@ import FriendsPage from './js/react/FriendsPage';
 import MainQuizPage from './js/react/MainQuizPage';
 import Quiz from './js/react/Quiz.js';
 import Notification from './js/react/Notification';
-import ErrorPage from './js/react/ErrorPage.js';
 
 function App() {
 
@@ -63,7 +62,6 @@ function App() {
         <Route path='/quizmain' element={<MainQuizPage />} />
         <Route path='/socials/:UserId' element={<FriendsPage/>}/>
         <Route path='/notifications/:UserId' element={<Notification/>}/>
-        <Route path='/error/:code' element={<ErrorPage />} />
       </Routes>
     </div>
   );
