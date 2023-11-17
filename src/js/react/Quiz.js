@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
+import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
@@ -13,6 +13,8 @@ import { useParams } from 'react-router-dom';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import Question from '../models/question';
+
+import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 
 const QuizComponent = () => {
 
@@ -32,6 +34,8 @@ const QuizComponent = () => {
 
   const [selectedCard, setSelectedCard] = useState(null);
   const [showDefinition, setShowDefinition] = useState(false);
+
+  const [openGenerate, setOpenGenerateAI] = useState(false);
 
   useEffect(() => {
     if (!openEdit) {
@@ -193,6 +197,55 @@ const handleNextCard = () => {
         setShowDefinition(false);
     }
 };
+
+const handleOpenGenerateAI = () => {
+    setOpenGenerateAI(true);
+};
+
+const handleCloseGenerateAI = () => {
+    setOpenGenerateAI(false);
+};
+
+// const callYourCloudFunctionToGenerateQuestion = async (numFlashcards, topicName) => {
+//     try {
+//         const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
+
+//         const response = await fetch(functionUrl, {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({ message: `Please create ${numFlashcards}flashcards about ${topicName}. Format each flashcard as JSON with only 'term' and 'definition' fields, no other words in json , i need to parse it with only "term" and "definition"` }),
+//         });
+
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+
+//         const data = await response.json();
+//         return parseGPTResponse(data.text); // Assuming the data.text is the string of JSON flashcards
+//     } catch (error) {
+//         console.error("Error calling cloud function:", error);
+//         throw error;
+//     }
+// };
+
+// const handleAIGenerated = async () => {
+
+//     try {
+//         const newQuiz = await FlashcardRepo.addQuizQuestion(setId, question, choices, correctChoiceIndex);
+//         // Update the quizData state with the new quiz
+//         setQuizData((prev) => [...prev, { question, choices, questionId: newQuiz }]);
+//         // Clear input fields
+//         setQuestion('');
+//         setChoices(['', '', '', '']);
+//         setCorrectChoiceIndex(null);
+
+//       } catch (error) {
+//         console.error('Failed to add generated quiz:', error);
+//       }
+
+// }
   
 return (
     <div style={{
@@ -216,9 +269,12 @@ return (
                         </IconButton>
                     </ListItem>
             ))}
-                <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
+            <Stack direction="row" spacing={2} >
+                <Button onClick={() => setOpenAdd(true)}  variant="outlined" startIcon={<AddIcon />}>
                     Add
                 </Button>
+                <Button variant="contained" endIcon= {<SmartToyOutlinedIcon/>} onClick={handleOpenGenerateAI}>Generate Question</Button>
+            </Stack>
             </List>
 
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
@@ -370,7 +426,7 @@ return (
                             Add
                         </Button>
                     </DialogActions>
-        </Dialog>
+                 </Dialog>
                {/* prompt user if they really want to the delete a certain question                  */}
                 <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
                     <DialogTitle>Confirm Deletion</DialogTitle>
@@ -389,9 +445,26 @@ return (
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                <Dialog
+                    open={openGenerate}
+                    onClose={handleCloseGenerateAI}
+            
+                >
+                    <DialogTitle>{"AI Q/A Generated Tool"}</DialogTitle>
+                    <DialogContent>
+                    <DialogContentText>
+                        Let our latest powerful AI tools to generate your questions and answers according
+                        to the contents of your flashcards in order to improve your learning. 
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleCloseGenerateAI}>Disagree</Button>
+                    </DialogActions>
+                </Dialog>
     
     </div>
-);
+    );
 };
 
 export default QuizComponent;
