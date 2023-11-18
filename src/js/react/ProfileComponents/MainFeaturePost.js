@@ -5,9 +5,19 @@ import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import Box from '@mui/material/Box';
+import useUser from '../useUser';
+import { useParams } from 'react-router-dom';
+import { userRepository } from '../../../firebase';
 
 function MainFeaturedPost(props) {
-  const { post } = props;
+    const { post } = props;
+    const {user} = useUser();
+    const {UserId} = useParams();
+
+
+
+
+
 
   return (
     <Paper
@@ -44,12 +54,12 @@ function MainFeaturedPost(props) {
             }}
           >
             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-              {post.title}
+              {post.Name}
             </Typography>
             <Typography variant="h5" color="inherit" paragraph>
-              {post.description}
+              {post.profession}
             </Typography>
-            <Link variant="subtitle1" href="#">
+            <Link variant="subtitle1" href={post.cardlink}>
               {post.linkText}
             </Link>
           </Box>

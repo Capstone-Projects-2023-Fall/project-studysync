@@ -12,7 +12,9 @@ import FeaturedPost from './ProfileComponents/FeaturedPost';
 import Main from './ProfileComponents/Main';
 import Sidebar from './ProfileComponents/Sidebar';
 import Footer from './ProfileComponents/Footer';
-
+import { userRepository } from '../../firebase';
+import { useState ,useEffect} from 'react';
+import { useParams } from 'react-router-dom';
 
 
 
@@ -30,14 +32,26 @@ const sections = [
     { title: 'Travel', url: '#' },
   ];
   
-  const mainFeaturedPost = {
+  function mainFeaturedPost(profile){
+
+    return{  
     title: 'Title of a longer featured blog post',
     description:
       "Multiple lines of text that form the lede, informing new readers quickly and efficiently about what's most interesting in this post's contents.",
     image: 'https://source.unsplash.com/random?wallpapers',
     imageText: 'main image description',
-    linkText: 'Continue reading…',
-  };
+    linkText: 'View flashcards',
+    Name: profile.name,
+    bio: profile.bio,
+    imageURL: profile.imageURL,
+    profession: profile.profession,
+    phone: profile.phone,
+    friends: profile.friends,
+    email: profile.email,
+    id: profile.id,
+    cardlink: `/flashcard-ui/${profile.id}`
+    }
+};
   
   const featuredPosts = [
     {
@@ -88,13 +102,68 @@ const sections = [
   const defaultTheme = createTheme();
   
   export default function UserProfile() {
+
+    const [profile,setProfile] = useState({});
+    const [isLoading,setIsLoading] = useState(false);
+    const [error,setError] = useState(null);
+    const {UserId} = useParams();
+
+  useEffect(()=>{
+    setIsLoading(true)
+    //fetch and set user profile upon page load
+    userRepository.getProfile(UserId).then((profile)=>{
+        console.log("printing profile")
+        console.log(profile)
+        setProfile(profile)
+        setIsLoading(false)
+    }).catch((error)=>{
+        //handle the error in the ui
+        setError(error)
+        setIsLoading(false)
+        console.log(error)
+    })
+  }, [])
+
+
+
+    if(isLoading){
+    return (
+        <>
+            <head>
+                <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+                <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+                <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>      
+            </head>
+            <div class="container emp-profile">
+                <h2>LOADING PROFILE...</h2>
+            </div>
+            
+        </>
+    )
+  }
+
+  if(error){
+    return(
+        <>
+            <head>
+                <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css"/>
+                <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+                <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>      
+            </head>
+            <div class="container emp-profile">
+                <h2>ERROR LOADING PROFILE...</h2>
+            </div>
+            
+        </>
+    )
+  }
+
     return (
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
         <Container maxWidth="lg">
-          <Header title="Blog" sections={sections} />
           <main>
-            <MainFeaturedPost post={mainFeaturedPost} />
+            <MainFeaturedPost post={mainFeaturedPost(profile)} />
             <Grid container spacing={4}>
               {featuredPosts.map((post) => (
                 <FeaturedPost key={post.title} post={post} />
