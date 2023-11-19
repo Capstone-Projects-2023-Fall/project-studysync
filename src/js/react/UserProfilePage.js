@@ -53,20 +53,18 @@ const sections = [
     }
 };
   
-  const featuredPosts = [
+  const featuredPosts = (user) =>[
     {
-      title: 'Featured post',
-      date: 'Nov 12',
+      title: 'Quiz',
       description:
-        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+        `Check out ${user.name}'s quizzes`,
       image: 'https://source.unsplash.com/random?wallpapers',
       imageLabel: 'Image Text',
     },
     {
-      title: 'Post title',
-      date: 'Nov 11',
+      title: 'FlashCards',
       description:
-        'This is a wider card with supporting text below as a natural lead-in to additional content.',
+        `Check out ${user.name} flash cards`,
       image: 'https://source.unsplash.com/random?wallpapers',
       imageLabel: 'Image Text',
     },
@@ -170,8 +168,8 @@ const sections = [
           <main>
             <MainFeaturedPost post={mainFeaturedPost(profile)} />
             <Grid container spacing={4}>
-              {featuredPosts.map((post) => (
-                <FeaturedPost key={post.title} post={post} />
+              {featuredPosts(profile).map((post,index) => (
+                <FeaturedPost key={index} post={post} UserId={UserId}/>
               ))}
             </Grid>
             <Grid container spacing={5} sx={{ mt: 3 }}>
