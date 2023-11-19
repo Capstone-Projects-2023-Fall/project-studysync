@@ -563,20 +563,27 @@ const FlashcardRepo = {
         }
     },
 
-    // get all the question data from the database called quizSet
-    getQuestionItems: async function (setId) {
+    // get all the quiz titles from its flashcard sets
+    getQuizTitle: async function (flashcardSetId) {
         try {
-            const setRef = doc(database, 'flashcardSets', setId);
-            const setSnapshot = await getDoc(setRef);
-            const setData = setSnapshot.data();
-            const questionData = setData.questionItems || [];
-            return questionData;
+            const quizzesRef = collection(database, 'flashcardSets');
+            // Retrieve all quizzes from the flashcard set using the flashcard id
+            const querySnapshot = await getDocs(query(quizzesRef, where('flashcardSetId', '==', flashcardSetId)));
+    
+            const quizTitles = [];
+            querySnapshot.forEach((doc) => {
+                const quizData = doc.data();
+                quizTitles.push(quizData.quizName);
+            });
+            return quizTitles;
+
         } catch (error) {
-            console.error("Error getting flashcard items:", error);
+            console.error("Error getting quiz titles:", error);
             throw error;
         }
     },
 
+    // this will create new quiz by referencing to the flashcardsets id
     createNewQuiz: async function (flashcardSetId, quizTitle) {
         try {
             // Get the flashcard set reference
@@ -599,12 +606,12 @@ const FlashcardRepo = {
                     question: "Sample Question",
                     choices: ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
                     correctChoiceIndex: 0,
-                    quizName: quizTitle
                 },
             };
     
             const setData = {
                 name: flashcardTopicName,   //Add the flashcard topic name to the data
+                quizName: quizTitle,    // Add a quiz title to each quiz
                 createdAt: Timestamp.now(),
                 authorId: this.getCurrentUid(),
                 subject: flashcardSubject,
