@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+import './ProfileStyles.css';
+
 // import Markdown from './Markdown';
 
 function Main(props) {
-  const { posts, title } = props;
+  const { userDescription, title } = props;
 
   return (
     <Grid
@@ -23,7 +25,12 @@ function Main(props) {
         {title}
       </Typography>
       <Divider />
-
+      <div className='user-about'>
+        <div className='bio'>Bio: {userDescription.bio}</div>
+        <div className='email'>Email: {userDescription.email}</div>
+        <div className='phone'>Phone: {userDescription.phone}</div>
+      </div>
+      
     </Grid>
   );
 }

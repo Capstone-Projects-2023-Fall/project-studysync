@@ -1,0 +1,17 @@
+.viewFlash{
+    color: white;
+}
+.viewFlash:visited{
+    color: white;
+}
+
+.user-about{
+    word-wrap: break-word;
+    padding-top: 4%;
+}
+.email{
+    padding-top: 3%;
+}
+.phone{
+    padding-top: 3%;
+}

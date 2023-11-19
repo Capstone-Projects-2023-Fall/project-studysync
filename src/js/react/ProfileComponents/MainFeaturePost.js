@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import useUser from '../useUser';
 import { useParams } from 'react-router-dom';
 import { userRepository } from '../../../firebase';
+import './ProfileStyles.css';
+
 
 function MainFeaturedPost(props) {
     const { post } = props;
@@ -20,6 +22,8 @@ function MainFeaturedPost(props) {
 
 
   return (
+
+    
     <Paper
       sx={{
         position: 'relative',
@@ -59,7 +63,7 @@ function MainFeaturedPost(props) {
             <Typography variant="h5" color="inherit" paragraph>
               {post.profession}
             </Typography>
-            <Link variant="subtitle1" href={post.cardlink}>
+            <Link variant="subtitle1" href={post.cardlink} className='viewFlash'>
               {post.linkText}
             </Link>
           </Box>

@@ -72,7 +72,6 @@ const sections = [
     },
   ];
   
-  const posts = [];
   
   const sidebar = {
     title: 'About',
@@ -158,6 +157,12 @@ const sections = [
     )
   }
 
+  const userDescription = {
+    bio: profile.bio,
+    email: profile.email,
+    phone: profile.phone 
+  }
+
     return (
       <ThemeProvider theme={defaultTheme}>
         <CssBaseline />
@@ -170,12 +175,13 @@ const sections = [
               ))}
             </Grid>
             <Grid container spacing={5} sx={{ mt: 3 }}>
-              <Main title="From the firehose" posts={posts} />
+              <Main title="About" userDescription={userDescription} />
               <Sidebar
                 title={sidebar.title}
-                description={sidebar.description}
+                description={profile.bio}
                 archives={sidebar.archives}
                 social={sidebar.social}
+                imageURL={profile.imageURL != '' ? profile.imageURL : 'https://source.unsplash.com/random?wallpapers'}
               />
             </Grid>
           </main>
