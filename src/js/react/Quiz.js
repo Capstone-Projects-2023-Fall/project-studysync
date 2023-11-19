@@ -13,6 +13,7 @@ import { useParams } from 'react-router-dom';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import Question from '../models/question';
+import QuizList from './QuizList';
 
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 
@@ -36,6 +37,9 @@ const QuizComponent = () => {
   const [showDefinition, setShowDefinition] = useState(false);
 
   const [openGenerate, setOpenGenerateAI] = useState(false);
+
+  const [openQuiz, setOpenQuiz] = useState(false);
+  const [quizTitle, setQuizTitle] = useState('');
 
   useEffect(() => {
     if (!openEdit) {
@@ -206,6 +210,19 @@ const handleCloseGenerateAI = () => {
     setOpenGenerateAI(false);
 };
 
+const handleCreateQuiz = async () => {
+    try {
+        const uid = FlashcardRepo.getCurrentUid();
+      // Call your createNewQuiz function from FlashcardRepo
+      const newQuizId = await FlashcardRepo.createNewQuiz(setId, quizTitle);
+
+      // Optionally, you can do something with the new quiz ID
+
+      await FlashcardRepo.addOwnedQuizSetToUser(uid, newQuizId);
+    } catch (error) {
+      console.error('Error creating quiz:', error);
+    }
+  };
 // const callYourCloudFunctionToGenerateQuestion = async (numFlashcards, topicName) => {
 //     try {
 //         const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
@@ -252,6 +269,7 @@ return (
         display: "flex", flexDirection: "column", height: "100vh",
         backgroundColor: '#f9f9f9', padding: '20px'
     }}>
+    <QuizList/>
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
                 width: "30%", borderRight: "1px solid #e0e0e0",
@@ -274,6 +292,7 @@ return (
                     Add
                 </Button>
                 <Button variant="contained" endIcon= {<SmartToyOutlinedIcon/>} onClick={handleOpenGenerateAI}>Generate Question</Button>
+                <Button variant="outlined" onClick={() => setOpenQuiz(true)}>Create a New Quiz</Button>
             </Stack>
             </List>
 
@@ -427,6 +446,33 @@ return (
                         </Button>
                     </DialogActions>
                  </Dialog>
+
+                <Dialog open={openQuiz} onClose={() => setOpenQuiz(false)}>
+                    <DialogTitle>Please Enter Your Quiz Title</DialogTitle>
+                        <DialogContent>
+                    <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Quiz Title"
+                            fullWidth
+                            onChange={(e) => setQuizTitle(e.target.value)}
+                        />
+                        </DialogContent>
+                        <DialogActions>
+                        <Button onClick={() => setOpenQuiz(false)} color="primary">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                handleCreateQuiz();
+                                setOpenQuiz(false);
+                            }}
+                            color="primary"
+                        >
+                            Confirm
+                        </Button>
+                    </DialogActions>
+                </Dialog>
                {/* prompt user if they really want to the delete a certain question                  */}
                 <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
                     <DialogTitle>Confirm Deletion</DialogTitle>

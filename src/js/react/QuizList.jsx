@@ -1,99 +1,87 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { useEffect, useState } from 'react';
-import { database } from '../../firebase';
-import { QuizRepository } from '../repositories/QuizRepository';
-import PositionedMenu from './PositionedMenu';
+import React, { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import QuizIcon from '@mui/icons-material/Quiz';
 
-function QuizList({ selectedSubject }) {
-  const [quizzes, setQuizzes] = useState([]);
-  const [selectedRow, setSelectedRow] = useState(null);
+export default function QuizList() {
+  const [state, setState] = React.useState({
+    left: false,
+  });
 
-  useEffect(() => {
-    const quizRepository = new QuizRepository(database);
-    quizRepository.getAllQuizes()
-      .then((quizzes) => {
-        const filteredQuizzes = quizzes.filter(quiz => quiz.subject === selectedSubject);
-  
-        // Convert Firestore timestamp to Date string for each quiz
-        filteredQuizzes.forEach(quiz => {
-          if (quiz.dateCreated) {
-            const timestamp = quiz.dateCreated.toDate();
-            quiz.creationDate = timestamp.toLocaleString();
-          } else {
-            quiz.creationDate = '';
-          }
+  const [quizList, setQuizList] = useState([]);
+
+  useEffect(() =>{
+    const fetchQuizTitle = async () => {
+      try{
+        const quizDate = await FlashcardRepo.getQuestionItems(setId);
+        console.log("fetching question", questionData);
+        const questionsArray = Object.keys(questionData).map(key => {
+            return {
+                question: questionData[key].question,
+                choices: questionData[key].choices,
+                questionId: key
+            };
         });
-  
-        setQuizzes(filteredQuizzes);
-      })
-      .catch((error) => {
-        console.error('Error retrieving quizzes:', error);
-      });
-  }, [selectedSubject]);
+        setQuizData(questionsArray);
+    } catch (error) {
+        console.error("Failed to fetch flashcards:", error);
+    }
+};
+  })
 
-  const handleRowClick = (quiz) => {
-    console.log(`Clicked on quiz with ID ${quiz.id}`);
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
   };
 
-  const quizRepository = new QuizRepository(database);
-  const handleDeleteQuiz = (quizId) => {
-    quizRepository.deleteQuiz(quizId)
-      .then(() => {
-        setQuizzes((prevQuizzes) => prevQuizzes.filter((quiz) => quiz.id !== quizId));
-      })
-      .catch((error) => {
-        console.error('Error deleting quiz:', error);
-      });
-  };
+  const list = (anchor) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <h3>List of Quiz</h3>
+      <Divider/>
+      <List>
+        {quizList.map((quiz, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <QuizIcon/>
+              </ListItemIcon>
+              <ListItemText primary={quiz.quizTitle} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        width: '75%',
-        margin: '0 auto',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <TableContainer component={Paper} style={{ width: '100%', maxHeight: '75vh', overflow: 'auto' }}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ width: '20%' }}>List of Quiz</TableCell>
-              <TableCell sx={{ width: '15%' }} align="right">Question&nbsp;(s)</TableCell>
-              <TableCell sx={{ width: '15%' }} align="right">Author</TableCell>
-              <TableCell sx={{ width: '10%' }} align="right">Time Limit&nbsp;(mn)</TableCell>
-              <TableCell sx={{ width: '20%' }} align="right">Date Created</TableCell>
-              <TableCell sx={{ width: '10%' }} align="right">Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {quizzes.map((quiz) => (
-              <TableRow key={quiz.id} onClick={() => handleRowClick(quiz)}>
-                <TableCell component="th" scope="row">{quiz.title}</TableCell>
-                <TableCell align="right">{quiz.question}</TableCell>
-                <TableCell align="right">{quiz.author}</TableCell>
-                <TableCell align="right">{quiz.time}</TableCell>
-                <TableCell align="right">{quiz.creationDate}</TableCell>
-                <TableCell align="right">
-                  <PositionedMenu onDelete={handleDeleteQuiz} quizId={quiz.id} />
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+    <div>
+      {['left'].map((anchor) => (
+        <React.Fragment key={anchor}>
+        <Button variant="contained" onClick={toggleDrawer(anchor, true)}>Quiz List</Button>
+          <Drawer
+            anchor={anchor}
+            open={state[anchor]}
+            onClose={toggleDrawer(anchor, false)}
+          >
+            {list(anchor)}
+          </Drawer>
+        </React.Fragment>
+      ))}
     </div>
   );
 }
-
-export default QuizList;
