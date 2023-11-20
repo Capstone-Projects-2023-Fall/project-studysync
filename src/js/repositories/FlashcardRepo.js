@@ -57,7 +57,7 @@ const FlashcardRepo = {
 
     createFlashcardSet: async function ({ name, subject }) {
         try {
-
+    
             const flashcardId = doc(collection(database, 'flashcards')).id;
             const commentId = doc(collection(database, 'comments')).id;
             const questionId = doc(collection(database, 'questions')).id;
@@ -93,6 +93,7 @@ const FlashcardRepo = {
                 authorId: this.getCurrentUid(),
                 subject: subject,
                 sharedWith: [],
+                quizName: "Default Quiz",
                 flashcardItems: initialFlashcardItems,
                 questionItems: initialQuizItems,
                 comments: initialComments
@@ -563,7 +564,7 @@ const FlashcardRepo = {
     },
 
     // get all the quiz titles from its flashcard sets
-    getQuizTitle: async function (flashcardSetId) {
+    getQuizTitleFromFlashcardSet: async function (flashcardSetId) {
         try {
             const quizzesRef = collection(database, 'flashcardSets');
             // Retrieve all quizzes from the flashcard set using the flashcard id
@@ -610,6 +611,18 @@ const FlashcardRepo = {
         }
     },
 
+  
+    getSetIdByQuizId: async function (quizId) {
+        try {
+            const setDoc = await getDoc(doc(database, 'flashcardSets', quizId));
+            const data = setDoc.data();
+            return data?.flashcardSetId || '';
+            
+        } catch (error) {
+            console.error("Error fetching flashcard set:", error);
+            return null;
+        }
+    },
     // this will create new quiz by referencing to the flashcardsets id
     createNewQuiz: async function (flashcardSetId, quizTitle) {
         try {

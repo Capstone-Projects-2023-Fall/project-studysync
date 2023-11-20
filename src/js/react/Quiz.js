@@ -53,7 +53,7 @@ const QuizComponent = () => {
     // fetch questions from database
     const fetchQuestions = async () => {
         try {
-            const questionData = await FlashcardRepo.getQuestionItems(setId);
+            const questionData = await FlashcardRepo.getQuestionItems(quizId);
             console.log("fetching question", questionData);
             const questionsArray = Object.keys(questionData).map(key => {
                 return {
@@ -69,7 +69,7 @@ const QuizComponent = () => {
     };
     fetchQuestions();
 
-}, [setId]);
+}, [quizId]);
 
   //this methods add quiz and its data to the database
   const handleAddQuestion = async () => {
@@ -77,7 +77,7 @@ const QuizComponent = () => {
     correctChoiceIndex !== null) {
 
       try {
-        const newQuiz = await FlashcardRepo.addQuizQuestion(setId, question, choices, correctChoiceIndex);
+        const newQuiz = await FlashcardRepo.addQuizQuestion(quizId, question, choices, correctChoiceIndex);
         // Update the quizData state with the new quiz
         setQuizData((prev) => [...prev, { question, choices, questionId: newQuiz }]);
         // Clear input fields
@@ -101,7 +101,7 @@ const QuizComponent = () => {
 const confirmDelete = async () => {
     if (deleteQuestion) {
         try {
-            await FlashcardRepo.deleteQuestion(setId, deleteQuestion.questionId);
+            await FlashcardRepo.deleteQuestion(quizId, deleteQuestion.questionId);
             const updatedQuiz = questions.filter(quiz => quiz.questionId !== deleteQuestion.questionId);
             setQuizData(updatedQuiz);
             setDeleteQuestion(null);
@@ -148,7 +148,7 @@ const handleChoiceChange = (value, index) => {
 const handleUpdateQuestion = async () => {
     if (editQuestion && question && choices.every((choice) => choice !== '')){
         try {
-            await FlashcardRepo.updateQuestion(setId, editQuestion.questionId, question, choices, correctChoiceIndex);
+            await FlashcardRepo.updateQuestion(quizId, editQuestion.questionId, question, choices, correctChoiceIndex);
 
             const updatedQuiz = questions.map(quiz => {
                 if (quiz.questionId === editQuestion.questionId) {

@@ -51,7 +51,6 @@ function App() {
         <Route path="/flashcard" element={<FlashcardComponent />} />
         <Route path="/quizFlash/:setId/quiz/:quizId" element={<Quiz />} />
         <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
-        <Route path="/quiz/:setId/:quizId" element={<Quiz />} />
         <Route path="/" element={
           user
             ? <DashboardCom />

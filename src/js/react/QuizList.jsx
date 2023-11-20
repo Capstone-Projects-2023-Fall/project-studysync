@@ -18,15 +18,28 @@ function QuizList() {
   });
 
   const [quizList, setQuizList] = useState([]); // store the quiz title that retreived from database
-  const { setId } = useParams();  // retrieve the flashcard set in order to go to a certain quiz
+  const { setId, quizId } = useParams();  // retrieve the flashcard set in order to go to a certain quiz
   const navigate = useNavigate();
+  const [currentQuiz, setCurrentQuiz] = useState(null); // capture the current quizID in order to show by def
 
   useEffect(() => {
     const fetchQuizTitle = async () => {
       try{
-        const quizData = await FlashcardRepo.getQuizTitle(setId);
+        const quizData = await FlashcardRepo.getQuizTitleFromFlashcardSet(setId);
         console.log("Fetching Quiz Title:", quizData);
         setQuizList(quizData);
+
+        // If quizId is available, set it as the current open quiz
+        if (quizId) {
+          setCurrentQuiz(quizId);
+          console.log("Current Quiz ID: ", quizId);
+        } else if (quizData.length > 0) {
+          // If no specific quizId is provided, navigate to the first quiz in the list by default
+          const firstQuizId = await FlashcardRepo.getQuizTitleId(quizData[0]);
+          const firstSetId = await FlashcardRepo.getSetIdByQuizId(firstQuizId);
+          navigate(`/quizFlash/${firstSetId}/quiz/${firstQuizId}`);
+          setCurrentQuiz(firstQuizId);
+        }
 
     } catch (error) {
         console.error("Failed to fetch flashcards:", error);
@@ -41,11 +54,13 @@ function QuizList() {
   const handleQuizTitleClick = async (quizName) => {
       try {
         const quizId = await FlashcardRepo.getQuizTitleId(quizName);
-        if (quizId) {
+        const setId = await FlashcardRepo.getSetIdByQuizId(quizId);
+
+        if (quizId && setId) {
           console.log("Your Set Id is: ", setId);
           console.log("Your Quiz Id is: ", quizId);
-          console.log("Navigating to: ", `/quiz/${setId}/${quizId}`);
-          // navigate(`/flashcard-ui/${setId}/${quizId}`);
+          console.log("Navigating to: ", `/quizFlash/${setId}/quiz/${quizId}`);
+          navigate(`/quizFlash/${setId}/quiz/${quizId}`);
         } else {
           console.error("Unable to fetch set ID for topic:", quizName);
         }
@@ -73,6 +88,17 @@ function QuizList() {
       <h3>List of Quiz</h3>
       <Divider/>
       <List>
+      {/* Button for the current open quiz */}
+      {currentQuiz && (
+          <ListItem key={currentQuiz} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <QuizIcon/>
+              </ListItemIcon>
+              <ListItemText primary={`Default Quiz`} />
+            </ListItemButton>
+          </ListItem>
+        )}
       {quizList.map((quizTitle) => (
           <ListItem key={quizTitle} disablePadding>
             <ListItemButton onClick= {() => handleQuizTitleClick(quizTitle)}>

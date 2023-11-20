@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FlashcardRepo from '../repositories/FlashcardRepo';
-import { useNavigate } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 
 import Quiz from './Quiz'; 
 
@@ -29,6 +29,8 @@ const FlashcardComponent = () => {
   const [editedName, setEditedName] = useState('');
   const [currentlyEditingTopic, setCurrentlyEditingTopic] = useState(null);
   const [showQuiz, setShowQuiz] = useState(false);
+  const { setId, quizId } = useParams();
+
 
   const navigate = useNavigate();
 
