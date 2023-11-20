@@ -1,6 +1,5 @@
 import { database, auth } from '../../firebase';
 import { collection, getDocs, getDoc, query, where, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
-import { increment } from 'firebase/firestore';
 
 const FlashcardRepo = {
 
@@ -580,6 +579,34 @@ const FlashcardRepo = {
         } catch (error) {
             console.error("Error getting quiz titles:", error);
             throw error;
+        }
+    },
+
+    // get quiz id by using the quiz name
+    getQuizTitleId: async function (quizName) {
+        try {
+            const querySnapshot = await getDocs(query(collection(database, 'flashcardSets'), where('quizName', '==', quizName)));
+            if (!querySnapshot.empty) {
+                return querySnapshot.docs[0].id;
+            }
+            return null;
+        } catch (error) {
+            console.error("Error fetching set ID by topic name:", error);
+            return null;
+        }
+    },
+
+    // get quiz id by using topic name
+    getQuizIdByTopicName: async function (topicName) {
+        try {
+            const querySnapshot = await getDocs(query(collection(database, 'flashcardSets'), where('name', '==', topicName)));
+            if (!querySnapshot.empty) {
+                return querySnapshot.docs[0].id;
+            }
+            return null;
+        } catch (error) {
+            console.error("Error fetching set ID by topic name:", error);
+            return null;
         }
     },
 

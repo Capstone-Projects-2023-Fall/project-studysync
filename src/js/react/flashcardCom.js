@@ -49,8 +49,11 @@ const FlashcardComponent = () => {
   const handleQuizClick = async (topicName) => {
     try {
       const setId = await FlashcardRepo.getSetIdByTopicName(topicName);
+      const quizId = await FlashcardRepo.getQuizIdByTopicName(topicName);
       if (setId) {
-        navigate(`/quiz/${setId}`);
+        console.log("SetId: ", setId);
+        console.log("QuizId: ", quizId);
+        navigate(`/quizFlash/${setId}/quiz/${quizId}`);
       } else {
         console.error("Unable to fetch set ID for topic:", topicName);
       }

@@ -20,7 +20,7 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 const QuizComponent = () => {
 
   const [openAdd, setOpenAdd] = useState(false);
-  const { setId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
+  const { setId, quizId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
 
   const [question, setQuestion] = useState('');
   const [choices, setChoices] = useState(['', '', '', '']); //store choices
@@ -40,6 +40,8 @@ const QuizComponent = () => {
 
   const [openQuiz, setOpenQuiz] = useState(false);
   const [quizTitle, setQuizTitle] = useState('');
+  const [quizzes, setQuizzes] = useState({}); //array to hold all questions data
+  
 
   useEffect(() => {
     if (!openEdit) {
@@ -65,25 +67,7 @@ const QuizComponent = () => {
             console.error("Failed to fetch flashcards:", error);
         }
     };
-
-    // const fetchFlashcards = async () => {
-    //     try {
-    //         const flashcardData = await FlashcardRepo.getFlashcardItems(setId);
-    //         console.log("fetching flashcards", flashcardData);
-    //         const flashcardsArray = Object.keys(flashcardData).map(key => {
-    //             return {
-    //                 term: flashcardData[key].term,
-    //                 definition: flashcardData[key].definition,
-    //                 flashcardId: key
-    //             };
-    //         });
-    //         setQuizData(flashcardsArray);
-    //     } catch (error) {
-    //         console.error("Failed to fetch flashcards:", error);
-    //     }
-    // }
     fetchQuestions();
-    // fetchFlashcards();
 
 }, [setId]);
 
@@ -212,57 +196,20 @@ const handleCloseGenerateAI = () => {
 
 const handleCreateQuiz = async () => {
     try {
-        const uid = FlashcardRepo.getCurrentUid();
-      // Call your createNewQuiz function from FlashcardRepo
-      const newQuizId = await FlashcardRepo.createNewQuiz(setId, quizTitle);
-
-      // Optionally, you can do something with the new quiz ID
-
-      await FlashcardRepo.addOwnedQuizSetToUser(uid, newQuizId);
+      const uid = FlashcardRepo.getCurrentUid();
+  
+      if (uid && quizTitle) {
+        // Call your createNewQuiz function from FlashcardRepo
+        const newQuizId = await FlashcardRepo.createNewQuiz(setId, quizTitle);
+  
+        console.log("You want to add: ", quizTitle);
+        // Add the newly created quiz to the user's owned quiz sets
+        await FlashcardRepo.addOwnedQuizSetToUser(uid, newQuizId);
+      }
     } catch (error) {
       console.error('Error creating quiz:', error);
     }
   };
-// const callYourCloudFunctionToGenerateQuestion = async (numFlashcards, topicName) => {
-//     try {
-//         const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
-
-//         const response = await fetch(functionUrl, {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({ message: `Please create ${numFlashcards}flashcards about ${topicName}. Format each flashcard as JSON with only 'term' and 'definition' fields, no other words in json , i need to parse it with only "term" and "definition"` }),
-//         });
-
-//         if (!response.ok) {
-//             throw new Error(`HTTP error! Status: ${response.status}`);
-//         }
-
-//         const data = await response.json();
-//         return parseGPTResponse(data.text); // Assuming the data.text is the string of JSON flashcards
-//     } catch (error) {
-//         console.error("Error calling cloud function:", error);
-//         throw error;
-//     }
-// };
-
-// const handleAIGenerated = async () => {
-
-//     try {
-//         const newQuiz = await FlashcardRepo.addQuizQuestion(setId, question, choices, correctChoiceIndex);
-//         // Update the quizData state with the new quiz
-//         setQuizData((prev) => [...prev, { question, choices, questionId: newQuiz }]);
-//         // Clear input fields
-//         setQuestion('');
-//         setChoices(['', '', '', '']);
-//         setCorrectChoiceIndex(null);
-
-//       } catch (error) {
-//         console.error('Failed to add generated quiz:', error);
-//       }
-
-// }
   
 return (
     <div style={{

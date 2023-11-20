@@ -10,29 +10,50 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import QuizIcon from '@mui/icons-material/Quiz';
 import FlashcardRepo from '../repositories/FlashcardRepo';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-export default function QuizList() {
+function QuizList() {
   const [state, setState] = React.useState({
     left: false,
   });
 
   const [quizList, setQuizList] = useState([]); // store the quiz title that retreived from database
   const { setId } = useParams();  // retrieve the flashcard set in order to go to a certain quiz
+  const navigate = useNavigate();
 
-  useEffect(() =>{
+  useEffect(() => {
     const fetchQuizTitle = async () => {
       try{
         const quizData = await FlashcardRepo.getQuizTitle(setId);
         console.log("Fetching Quiz Title:", quizData);
-        
         setQuizList(quizData);
+
     } catch (error) {
         console.error("Failed to fetch flashcards:", error);
     }
     };
-    fetchQuizTitle();
+  
+      fetchQuizTitle();
+  
   }, [setId]);
+
+  //navigate to quiz page by passing flashcardSet ID as parameter
+  const handleQuizTitleClick = async (quizName) => {
+      try {
+        const quizId = await FlashcardRepo.getQuizTitleId(quizName);
+        if (quizId) {
+          console.log("Your Set Id is: ", setId);
+          console.log("Your Quiz Id is: ", quizId);
+          console.log("Navigating to: ", `/quiz/${setId}/${quizId}`);
+          // navigate(`/flashcard-ui/${setId}/${quizId}`);
+        } else {
+          console.error("Unable to fetch set ID for topic:", quizName);
+        }
+      } catch (error) {
+        console.error("Error in handleFlashcardClick:", error);
+      }
+  
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -54,7 +75,7 @@ export default function QuizList() {
       <List>
       {quizList.map((quizTitle) => (
           <ListItem key={quizTitle} disablePadding>
-            <ListItemButton>
+            <ListItemButton onClick= {() => handleQuizTitleClick(quizTitle)}>
               <ListItemIcon>
                 <QuizIcon/>
               </ListItemIcon>
@@ -83,3 +104,4 @@ export default function QuizList() {
     </div>
   );
 }
+export default QuizList;
