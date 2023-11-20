@@ -26,9 +26,9 @@ function Main(props) {
       </Typography>
       <Divider />
       <div className='user-about'>
-        <div className='bio'>Bio: {userDescription.bio}</div>
-        <div className='email'>Email: {userDescription.email}</div>
-        <div className='phone'>Phone: {userDescription.phone}</div>
+        {userDescription.bio && <div className='bio'>Bio: {userDescription.bio}</div>}
+        {userDescription.email && <div className='email'>Email: {userDescription.email}</div>}
+        {userDescription.phone && <div className='phone'>Phone: {userDescription.phone}</div>}
       </div>
       
     </Grid>

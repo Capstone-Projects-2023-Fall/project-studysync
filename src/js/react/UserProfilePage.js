@@ -104,6 +104,9 @@ const sections = [
     const [isLoading,setIsLoading] = useState(false);
     const [error,setError] = useState(null);
     const {UserId} = useParams();
+    const [friends,setFriends] = useState([]);
+    const [following,setFollowing] = useState([]);
+    const [followers, setFollowers] = useState([]);
 
   useEffect(()=>{
     setIsLoading(true)
@@ -119,6 +122,27 @@ const sections = [
         setIsLoading(false)
         console.log(error)
     })
+    userRepository.getFriends(UserId).then((friends)=>{
+        console.log(`Print friends: ${friends}`);
+        setFriends(friends);
+    }).catch((e)=>{
+        console.log(`Error: ${e}`);
+        setError(error)
+    })
+    userRepository.getFollowing(UserId).then((_following)=>{
+      console.log(`Print following: ${_following}`);
+      setFollowing(_following);
+    }).catch((e)=>{
+        console.log(`Error: ${e}`);
+        setError(error)
+    })
+    userRepository.getFollowers(UserId).then((_followers)=>{
+      console.log(`Print followers: ${followers}`);
+      setFollowers(_followers);
+    }).catch((e)=>{
+        console.log(`Error: ${e}`);
+        setError(error)
+    })      
   }, [])
 
 
@@ -179,14 +203,17 @@ const sections = [
                 description={profile.bio}
                 archives={sidebar.archives}
                 social={sidebar.social}
-                imageURL={profile.imageURL != '' ? profile.imageURL : 'https://source.unsplash.com/random?wallpapers'}
+                imageURL={profile.imageURL != '' ? profile.imageURL : 'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/b0b4c759-ad9c-4425-a9f4-ab89e2fd9837/de8cefl-35c0bc59-59b9-42ab-b19f-5c73828bb78e.png/v1/fit/w_512,h_512,q_70,strp/blank_youtube_profile_pic_by_redballbomb_de8cefl-375w-2x.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTEyIiwicGF0aCI6IlwvZlwvYjBiNGM3NTktYWQ5Yy00NDI1LWE5ZjQtYWI4OWUyZmQ5ODM3XC9kZThjZWZsLTM1YzBiYzU5LTU5YjktNDJhYi1iMTlmLTVjNzM4MjhiYjc4ZS5wbmciLCJ3aWR0aCI6Ijw9NTEyIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.hqiBNaqF1Cgdy2pNAPbUiUMF-KUtVBZkYsEKoxF3Dxc'}
+                friends={friends}
+                followers={followers}
+                following={following}
               />
             </Grid>
           </main>
         </Container>
         <Footer
-          title="Footer"
-          description="Something here to give the footer a purpose!"
+          title=""
+          description=""
         />
       </ThemeProvider>
     );

@@ -9,7 +9,11 @@ import CardMedia from '@mui/material/CardMedia';
 
 
 function Sidebar(props) {
-  const { archives, description, social, title,imageURL } = props;
+  const { archives, description, social, title,imageURL,friends,following,followers} = props;
+  const friendLink = (id)=>{
+    return `/profile/${id}` ;
+  }
+
 
   return (
     <Grid item xs={12} md={4}>
@@ -21,30 +25,30 @@ function Sidebar(props) {
             alt="Profile image"
           />
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-        Archives
+        Friends
       </Typography>
-      {archives.map((archive) => (
-        <Link display="block" variant="body1" href={archive.url} key={archive.title}>
-          {archive.title}
+      
+      {friends.map((friend) => (
+        <Link display="block" variant="body1" href={friendLink(friend.id)} key={friend.id}>
+          {friend.name}
         </Link>
       ))}
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
-        Social
+        Followers
       </Typography>
-      {social.map((network) => (
-        <Link
-          display="block"
-          variant="body1"
-          href="#"
-          key={network.name}
-          sx={{ mb: 0.5 }}
-        >
-          <Stack direction="row" spacing={1} alignItems="center">
-            <network.icon />
-            <span>{network.name}</span>
-          </Stack>
+      {followers.map((follower) => (
+        <Link display="block" variant="body1" href={friendLink(follower.id)} key={follower.id}>
+          {follower.name}
         </Link>
       ))}
+      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+        Following
+      </Typography>
+      {following.map((following) => (
+        <Link display="block" variant="body1" href={friendLink(following.id)} key={following.id}>
+          {following.name}
+        </Link>
+      ))}      
     </Grid>
   );
 }
