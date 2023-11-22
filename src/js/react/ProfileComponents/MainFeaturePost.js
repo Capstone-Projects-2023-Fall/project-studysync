@@ -9,18 +9,88 @@ import useUser from '../useUser';
 import { useParams } from 'react-router-dom';
 import { userRepository } from '../../../firebase';
 import './ProfileStyles.css';
-
-
+import { Button } from '@mui/material';
+import { useEffect ,useState} from 'react';
+import TextField from '@mui/material/TextField';
 function MainFeaturedPost(props) {
-    const { post } = props;
+    const { post ,edit,setEdit} = props;
     const {user} = useUser();
     const {UserId} = useParams();
+    const [btn,setBtn] = useState('');
+    const [name,SetName] = useState('');
+    const [profession,setProfession] = useState('');
+    const [username,setUsername] = useState('');
 
+    useEffect(()=>{
+      setBtn('edit');
+      SetName(post.Name);
+      setProfession(post.profession);
+      setUsername(post.username);
+    },[])
 
+    useEffect(()=>{
+      if(btn == 'edit'){
+        setBtn('save');
+      }else{
+        setBtn('edit');
+      }
+      
+    },[edit])
 
+    function editBtn(){
+      if(edit == false){
+        setEdit(true)
+      }else{
+        setEdit(false)
+      }
+    }
+    
+    const nameText = ()=>{
 
-
-
+      if(btn == 'edit'){
+        return(
+          <>{name}</>
+        )
+      }else{
+        return(
+          <div className='MainFeature'>
+          <label className='name-label'>Enter first name</label>
+          <input className='nameInput' type="text"  placeholder='Your name' 
+            value={name} onChange={(e)=>SetName(e.target.value)}/>
+          </div>
+        )
+      }
+    }
+    const professionText=()=>{
+      if(btn == 'edit'){
+        return(
+          <>{profession}</>
+        )
+      }else{
+        return(
+          <div >
+          <label className='profession-label'>Enter profession</label>
+          <input className='professionInput' type="text"  placeholder='Student'
+            value={profession} onChange={(e)=> setProfession(e.target.value)}/>
+          </div>
+        )
+      }
+    }
+    const usernameText=()=>{
+      if(btn == 'edit'){
+        return(
+          <>{username}</>
+        )
+      }else{
+        return(
+          <div >
+          <label className='username-label'>Enter username</label>
+          <input className='usernameInput' type="text"  placeholder='username'
+            value={username} onChange={(e)=>setUsername(e.target.value)}/>
+          </div>
+        )
+      }
+    }
   return (
 
     
@@ -36,7 +106,6 @@ function MainFeaturedPost(props) {
         backgroundImage: `url(${post.image})`,
       }}
     >
-      {/* Increase the priority of the hero background image */}
       {<img style={{ display: 'none' }} src={post.image} alt={post.imageText} />}
       <Box
         sx={{
@@ -58,12 +127,17 @@ function MainFeaturedPost(props) {
             }}
           >
             <Typography component="h1" variant="h3" color="inherit" gutterBottom>
-              {post.Name}
+              {nameText()}
             </Typography>
             <Typography variant="h5" color="inherit" paragraph>
-              {post.profession}
+              {professionText()}
             </Typography>
-
+            <Typography variant="h5" color="inherit" paragraph>
+              {usernameText()}
+            </Typography>            
+            {(user && user.uid == UserId) && <Button variant="contained" href="#contained-buttons" onClick={()=> editBtn()}>
+              {btn}
+            </Button>}
           </Box>
         </Grid>
       </Grid>

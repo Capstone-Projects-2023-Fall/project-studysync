@@ -15,3 +15,56 @@
 .phone{
     padding-top: 3%;
 }
+.profile-image{
+    margin-top: 2%;
+}
+.description-btn{
+    margin-top: 2%;
+}
+.name-label{
+    font-size: 23px;
+}
+.profession-label{
+    font-size: 23px;
+}
+.nameInput{
+    border-radius: 18px;
+    margin-left: 5%;    
+    width: 50%;
+    height: 30px;
+}
+.professionInput{
+    border-radius: 18px;
+    margin-left: 5%;
+    width: 50%;
+    height: 30px;    
+}
+.bioInput{
+    border-radius: 18px;
+    margin-left: 5%;
+    width: 50%;
+    height: 30px;        
+}
+.phoneInput{
+    border-radius: 18px;
+    margin-left: 5%;
+    width: 50%;
+    height: 30px;          
+}
+.usernameInput{
+    border-radius: 18px;
+    margin-left: 5%;
+    width: 50%;
+    height: 30px;    
+}
+.username-label{
+    font-size: 23px;
+
+}
+input[type="text"]{
+    font-size: 17px;
+    padding-left: 1%;
+}
+.phoneEdit{
+    padding-top: 2%;
+}

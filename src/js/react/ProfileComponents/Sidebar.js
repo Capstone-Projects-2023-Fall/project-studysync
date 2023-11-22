@@ -6,24 +6,41 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import CardMedia from '@mui/material/CardMedia';
-
+import { Button } from '@mui/material';
+import useUser from '../useUser';
+import { useParams } from 'react-router-dom';
+import './ProfileStyles.css';
 
 function Sidebar(props) {
   const { archives, description, social, title,imageURL,friends,following,followers} = props;
+  const {user} = useUser();
+  const {UserId} = useParams();
+
   const friendLink = (id)=>{
     return `/profile/${id}` ;
+  }
+
+  const imageBtn= ()=>{
+    if(user && user.uid == UserId){
+      return(
+        <Button variant="contained" href="#contained-buttons"  >
+          Change Image
+        </Button>      
+      )      
+    }
   }
 
 
   return (
     <Grid item xs={12} md={4}>
 
-        <CardMedia
-            component="img"
-            sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-            image={imageURL}
-            alt="Profile image"
-          />
+      <CardMedia
+          component="img"
+          sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
+          image={imageURL}
+          alt="Profile image"
+        />
+      <div className='profile-image'>{imageBtn()}</div>        
       <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
         Friends
       </Typography>

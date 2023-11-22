@@ -4,10 +4,12 @@ import '../../css/Navbar.css';
 import useUser from './useUser';
 import {signOut} from 'firebase/auth';
 import { auth } from '../../firebase';
-
+import { useNavigate } from 'react-router-dom';
 function Navbar({ items }) {
 
   const {user} = useUser();
+  const navigate = useNavigate();
+
 
   
   return (
@@ -17,7 +19,10 @@ function Navbar({ items }) {
 
       {items.map((item, index) => 
         <div key={index} className="nav-item">
-          {item.link ? <Link to={item.link} onClick={item.action}>{item.label}</Link> : item.label}
+          {item.link ?
+           <Link to={item.link} onClick={item.action}>{item.label}
+           </Link> : item.label
+          }
           {item.submenu && 
             <div className="submenu"> 
               {item.submenu.map((subItem, subIndex) => <Link key={subIndex} to={subItem.link}>{subItem.label}</Link>)}

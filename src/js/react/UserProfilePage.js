@@ -49,7 +49,8 @@ const sections = [
     friends: profile.friends,
     email: profile.email,
     id: profile.id,
-    cardlink: `/flashcard-ui/${profile.id}`
+    cardlink: `/flashcard-ui/${profile.id}`,
+    username: profile.username
     }
 };
   
@@ -107,45 +108,51 @@ const sections = [
     const [friends,setFriends] = useState([]);
     const [following,setFollowing] = useState([]);
     const [followers, setFollowers] = useState([]);
+    const [edit,setEdit] = useState();
 
-  useEffect(()=>{
-    setIsLoading(true)
-    //fetch and set user profile upon page load
-    userRepository.getProfile(UserId).then((profile)=>{
-        console.log("printing profile")
-        console.log(profile)
-        setProfile(profile)
-        setIsLoading(false)
-    }).catch((error)=>{
-        //handle the error in the ui
-        setError(error)
-        setIsLoading(false)
-        console.log(error)
-    })
-    userRepository.getFriends(UserId).then((friends)=>{
-        console.log(`Print friends: ${friends}`);
-        setFriends(friends);
-    }).catch((e)=>{
-        console.log(`Error: ${e}`);
-        setError(error)
-    })
-    userRepository.getFollowing(UserId).then((_following)=>{
-      console.log(`Print following: ${_following}`);
-      setFollowing(_following);
-    }).catch((e)=>{
-        console.log(`Error: ${e}`);
-        setError(error)
-    })
-    userRepository.getFollowers(UserId).then((_followers)=>{
-      console.log(`Print followers: ${followers}`);
-      setFollowers(_followers);
-    }).catch((e)=>{
-        console.log(`Error: ${e}`);
-        setError(error)
-    })      
-  }, [])
+   
 
+    useEffect(()=>{
+      setIsLoading(true)
+      //fetch and set user profile upon page load
+      userRepository.getProfile(UserId).then((profile)=>{
+          console.log("printing profile")
+          console.log(profile)
+          setProfile(profile)
+          setIsLoading(false)
+      }).catch((error)=>{
+          //handle the error in the ui
+          setError(error)
+          setIsLoading(false)
+          console.log(error)
+      })
+      userRepository.getFriends(UserId).then((friends)=>{
+          console.log(`Print friends: ${friends}`);
+          setFriends(friends);
+      }).catch((e)=>{
+          console.log(`Error: ${e}`);
+          setError(error)
+      })
+      userRepository.getFollowing(UserId).then((_following)=>{
+        console.log(`Print following: ${_following}`);
+        setFollowing(_following);
+      }).catch((e)=>{
+          console.log(`Error: ${e}`);
+          setError(error)
+      })
+      userRepository.getFollowers(UserId).then((_followers)=>{
+        console.log(`Print followers: ${followers}`);
+        setFollowers(_followers);
+      }).catch((e)=>{
+          console.log(`Error: ${e}`);
+          setError(error)
+      })    
+      setEdit(false)  
+    }, [])
 
+    useEffect(()=>{
+      console.log(`Edit changed to ${edit}`)
+    },[edit])
 
     if(isLoading){
     return (
@@ -190,14 +197,14 @@ const sections = [
         <CssBaseline />
         <Container maxWidth="lg">
           <main>
-            <MainFeaturedPost post={mainFeaturedPost(profile)} />
+            <MainFeaturedPost post={mainFeaturedPost(profile)} edit={edit} setEdit={setEdit}/>
             <Grid container spacing={4}>
               {featuredPosts(profile).map((post,index) => (
                 <FeaturedPost key={index} post={post} UserId={UserId}/>
               ))}
             </Grid>
             <Grid container spacing={5} sx={{ mt: 3 }}>
-              <Main title="About" userDescription={userDescription} />
+              <Main title="About" edit={edit} setEdit={setEdit} userDescription={userDescription} />
               <Sidebar
                 title={sidebar.title}
                 description={profile.bio}
@@ -207,6 +214,9 @@ const sections = [
                 friends={friends}
                 followers={followers}
                 following={following}
+                bio={profile.bio}
+                phone={profile.phone}
+                email={profile.email}
               />
             </Grid>
           </main>
