@@ -13,31 +13,40 @@ import { useEffect, useState } from "react";
 import { SearchComponent } from "./SearchComponent";
 import SingleUserComponent from "./SingleUserComponent";
 import { UsersList } from "./SingleUserComponent";
+import useUser from "./useUser";
 
 export default function Notification() {
-  const { UserId } = useParams();
+  const { user } = useUser();
 
   const [notifications, setNotifications] = useState([]);
   const [myData, setMyData] = useState([]);
   const [currUser, setCurrUser] = useState(null);
 
+  // useEffect(() => {
+  //   const fetchProfile = async () => {
+  //     try {
+  //       const res = await userRepository.getProfile(UserId);
+  //       setCurrUser(res);
+  //     } catch (error) {
+  //       console.error("Error fetching user profile:", error);
+  //     }
+  //   };
+
+  //   fetchProfile();
+  //   userRepository.getRawNotifications(UserId).then((notifs) => {
+  //     console.log("notifs are: ", notifs);
+  //     setNotifications(notifs);
+  //   });
+  // }, [UserId]); // Include UserId in the dependency array if it might change
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await userRepository.getProfile(UserId);
-        setCurrUser(res);
-      } catch (error) {
-        console.error("Error fetching user profile:", error);
-      }
-    };
-
-    fetchProfile();
-    userRepository.getRawNotifications(UserId).then((notifs) => {
-      console.log("notifs are: ", notifs);
-      setNotifications(notifs);
-    });
-  }, [UserId]); // Include UserId in the dependency array if it might change
-
+    if (user != null) {
+      console.log("userId is: ", user.uid);
+      userRepository.getRawNotifications(user.uid).then((res) => {
+        console.log("banche notifications are: ", res);
+      });
+    }
+  });
   const data = [
     {
       id: 1,
@@ -52,7 +61,55 @@ export default function Notification() {
       author: "Quiz: Intro To CS",
     },
     {
-      id: 3,
+      id: 35665676,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 3353656,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 345546,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 36767,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 356565,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 31221,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 31212121,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 312132,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 112,
       name: "Mike posted a new FlashcardSet",
       avatar: "/static/images/avatar/3.jpg",
       author: "Biology Study Set",
