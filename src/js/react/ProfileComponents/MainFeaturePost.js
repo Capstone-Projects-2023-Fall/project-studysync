@@ -25,7 +25,11 @@ function MainFeaturedPost(props) {
       setBtn('edit');
       SetName(post.Name);
       setProfession(post.profession);
-      setUsername(post.username);
+      if(post.username == 'default-username'){
+        setUsername('');
+      }else{
+        setUsername(post.username);
+      } 
     },[])
 
     useEffect(()=>{
