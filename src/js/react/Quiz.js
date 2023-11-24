@@ -37,8 +37,8 @@ const QuizComponent = () => {
   const [showDefinition, setShowDefinition] = useState(false);
 
   const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
-  const [topicName, setTopicName] = useState('');
-  const [numberOfQuestions, setNumOfQuestions] = useState(1);
+  const [topicName, setTopicName] = useState(''); //capture the topic name from user entry
+  const [numberOfQuestions, setNumOfQuestions] = useState(1); //capture the number of quesiton from user entry, default is set to 1
 
   const [openQuiz, setOpenQuiz] = useState(false);
   const [quizTitle, setQuizTitle] = useState('');
@@ -183,6 +183,7 @@ const handleNextCard = () => {
     }
 };
 
+// this function allow the user to create a new quiz
 const handleCreateQuiz = async () => {
     try {
       const uid = FlashcardRepo.getCurrentUid();
@@ -200,7 +201,6 @@ const handleCreateQuiz = async () => {
     }
   };
 
-  
 const handleOpenGenerateAI = () => {
     setOpenGenerateAI(true);
 };
@@ -230,6 +230,7 @@ function parseGPTResponse(rawResponse) {
     }
 }
 
+// this function allows user to generate new quiz question through the help of AI
 const handleGenerateAIQuestion = async () => {
     setOpenGenerateAI(false);
 
@@ -240,8 +241,6 @@ const handleGenerateAIQuestion = async () => {
         const addedQuestions = [];
         for (const question of generatedQuestions) {
             const newQuestionId = await FlashcardRepo.addQuizQuestion(quizId, question.question, question.choices, question.correctChoiceIndex);
-            // // add the AI generated flashcard data into quiz question
-            // await FlashcardRepo.addQuizQuestion(quizId, flashcard.definition, [flashcard.term, 'Option 2', 'Option 3', 'Option 4'], 0);
             addedQuestions.push({ ...question, questionId: newQuestionId });
         }
 
@@ -251,6 +250,7 @@ const handleGenerateAIQuestion = async () => {
     }
 };
 
+// a cloud function to make POST request to ChatGPT for to generate user requested questions
 const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName) => {
     try {
         const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
