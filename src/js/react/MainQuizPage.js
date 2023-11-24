@@ -1,6 +1,6 @@
 import React, {useState,useEffect,useCallback} from 'react';
 import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper} from '@mui/material';
-import {useParams } from 'react-router-dom';
+import {useParams,useNavigate} from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 
 //mainQuizPage component
@@ -12,7 +12,7 @@ function MainQuizPage() {
   const [score, setScore] = useState(null);//for score
   const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
   const [timeLeft, setTimeLeft] = useState(10 * 5 * 60);//default time
-  
+  const navigate = useNavigate();//navigation
   
   
   const calculateInitialTime = useCallback(() => {
@@ -50,6 +50,7 @@ function MainQuizPage() {
         };
       });
       setQuestions(questionsArray);
+      setSelectedQuestionIndex(0);
       setTimeLeft(questionsArray.length * 5 * 60); //5 minutes per question
     } catch (error) {
       console.error("Failed to fetch questions:", error);
@@ -101,20 +102,16 @@ function MainQuizPage() {
   });
 };
 
-  //calculate score
-  const calculateScore = () => {
-    const correctAnswers = questions.reduce((acc, question) => {
-      //Count the number of correct answers
-      return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
-    }, 0);
-    //count the number of answered questions
-    const answeredQuestions = questions.reduce((acc, question) => {
-      return acc + (question.userAnswer !== null ? 1 : 0);
-    }, 0);
-    //calculate the score percentage
-    const scorePercentage = answeredQuestions > 0 ? (correctAnswers / answeredQuestions) * 100 : 0;
-    setScore(scorePercentage);
-  };
+const calculateScore = () => {
+  const correctAnswers = questions.reduce((acc, question) => {
+    // Count the number of correct answers
+    return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
+  }, 0);
+
+  // Calculate the score percentage based on the total number of questions
+  const scorePercentage = (correctAnswers / questions.length) * 100;
+  setScore(scorePercentage);
+};
 
   //for submit
   const handleSubmit = () => {
@@ -125,12 +122,34 @@ function MainQuizPage() {
     }
   };
 
-  //mark option with color when seleted
+  //for previous button
+  const handlePrevious = () => {
+    setSelectedQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0));
+  };
+  
+  //for next button
+  const handleNext = () => {
+    setSelectedQuestionIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
+  };
+
+  //back button 
+  const handleBack = () => {
+    navigate('/flashcard'); // Navigate to the flashcards page (adjust the path as needed)
+  };
+
+  //mark options
   const getButtonStyle = (choiceIndex, questionIndex) => {
-    const question = questions[questionIndex];
-    //add a check to ensure userAnswer is not null before comparing
-    const isSelected = question.userAnswer !== null && choiceIndex === question.userAnswer;
-    return isSelected ? { backgroundColor: '#1976d2', color: 'red' } : {};
+    if (questions.length > 0) {
+      const question = questions[questionIndex];
+      const isSelected = question.userAnswer !== null && choiceIndex === question.userAnswer;
+      const isCorrect = quizFinished && choiceIndex === question.correctChoice;
+      if (isCorrect) {
+        return { backgroundColor: 'green', color: 'white' };
+      } else if (isSelected) {
+        return { backgroundColor: '#1976d2', color: 'red' };
+      }
+    }
+    return {};
   };
   
 
@@ -145,7 +164,7 @@ function MainQuizPage() {
 
   return (
     <div>
-      {/* AppBar for the main header */}
+      {/*appBar for the main header */}
       <AppBar position="static">
         <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h4" component="h2" style={{ margin: 0 }}>
@@ -154,12 +173,12 @@ function MainQuizPage() {
           <div style={{ position: 'relative' }}>
             {!quizFinished && (
               <>
-                {/* Timer display */}
+                {/*timer display */}
                 <Typography variant="h6" style={{ marginRight: '20px' }}>
                   Time Left: {formatTime()}
                 </Typography>
     
-                {/* Submit button */}
+                {/*submit button */}
                 <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '50px', right: '0' }}>
                   Submit Quiz
                 </Button>
@@ -170,7 +189,7 @@ function MainQuizPage() {
       </AppBar>
     
       <div style={{ display: 'flex', marginTop: '20px' }}>
-        {/* Sidebar for questions */}
+        {/*sidebar for questions */}
         <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
           <List>
             {questions.map((_, index) => (
@@ -186,11 +205,11 @@ function MainQuizPage() {
           </List>
         </Paper>
     
-        {/* Main content area for displaying questions and answer options */}
+        {/*main content area for displaying questions and answer options */}
         <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {selectedQuestionIndex !== null && questions[selectedQuestionIndex] && (
             <>
-              {/* Question display */}
+              {/*question display */}
               <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
                 {`Question ${selectedQuestionIndex + 1}`}
               </Typography>
@@ -198,7 +217,7 @@ function MainQuizPage() {
                 {questions[selectedQuestionIndex].question}
               </Typography>
   
-              {/* Answer options */}
+              {/*answer options */}
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
@@ -211,6 +230,7 @@ function MainQuizPage() {
                     variant="contained"
                     style={getButtonStyle(index, selectedQuestionIndex)}
                     onClick={() => checkAnswer(index)}
+                    disabled={quizFinished}
                   >
                     {choice}
                   </Button>
@@ -220,27 +240,52 @@ function MainQuizPage() {
           )}
         </div>
       </div>
+
+      {/*previous and next buttons */}
+      <div style={{ marginTop: '30px' }}>
+        <Button variant="contained" color="primary" onClick={handlePrevious} disabled={selectedQuestionIndex === 0}>
+          Previous
+        </Button>
+        
+        <Button variant="contained" color="primary" onClick={handleNext} disabled={selectedQuestionIndex === questions.length - 1} style={{ marginLeft: '10px' }}>
+          Next
+        </Button>
+        </div>
       
-      {/* Display score and return button */}
+      {/*display score and button group*/}
       {quizFinished && (
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <Typography variant="h4" component="h2">
             {`Your score: ${score ? score.toFixed(2) : 0}%`}
           </Typography>
           
-          {/* Share Score button */}
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              console.log("Share score functionality not implemented yet");
-            }}
-          >
-            Share Score
-          </Button>
+          {/*button group*/}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+            {/*share score button */}
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                console.log("Share score functionality not implemented yet");
+              }}
+              style={{ marginBottom: '10px' }} 
+            >
+              Share Score
+            </Button>
+
+            {/*back button */}
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleBack}
+            >
+              Back
+            </Button>
+          </div>
         </div>
       )}
     </div>
   );
-          }
-  export default MainQuizPage;
+}
+
+export default MainQuizPage;
