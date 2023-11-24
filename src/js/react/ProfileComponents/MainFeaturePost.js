@@ -11,7 +11,7 @@ import { userRepository } from '../../../firebase';
 import './ProfileStyles.css';
 import { Button } from '@mui/material';
 import { useEffect ,useState} from 'react';
-import TextField from '@mui/material/TextField';
+
 function MainFeaturedPost(props) {
     const { post ,edit,setEdit} = props;
     const {user} = useUser();
@@ -45,6 +45,15 @@ function MainFeaturedPost(props) {
       if(edit == false){
         setEdit(true)
       }else{
+        if(username == ''){
+          setUsername('default-username');
+        }
+        userRepository.saveUserProfile(UserId,{name: name,
+          username: username, profession: profession}).then(()=>{
+            console.log('Saved information to the database.')
+            }).catch(()=>{
+              console.log('Error in saving data in header.')
+            })
         setEdit(false)
       }
     }
