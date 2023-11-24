@@ -48,7 +48,7 @@ function QuizList() {
   
       fetchQuizTitle();
   
-  }, [setId]);
+  }, [setId, quizId, navigate]);
 
   //navigate to quiz page by passing flashcardSet ID as parameter
   const handleQuizTitleClick = async (quizName) => {
@@ -70,6 +70,23 @@ function QuizList() {
   
   };
 
+  //navigate to the defualt quiz page by passing flashcardSet ID as parameter
+  const handleDefaultQuizClick = async () => {
+    try {
+      if (setId) {
+        console.log("Your Set Id is: ", setId);
+        console.log("Your Quiz Id is: ", setId);
+        console.log("Navigating to: ", `/quizFlash/${setId}/quiz/${setId}`);
+        navigate(`/quizFlash/${setId}/quiz/${setId}`);
+      } else {
+        console.error("Unable to fetch set ID for topic:");
+      }
+    } catch (error) {
+      console.error("Error in handleFlashcardClick:", error);
+    }
+
+};
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
@@ -90,7 +107,7 @@ function QuizList() {
       <List>
       {/* Button for the current open quiz */}
       {currentQuiz && (
-          <ListItem key={currentQuiz} disablePadding>
+          <ListItem key={currentQuiz} disablePadding onClick= {() => handleDefaultQuizClick()}>
             <ListItemButton>
               <ListItemIcon>
                 <QuizIcon/>
