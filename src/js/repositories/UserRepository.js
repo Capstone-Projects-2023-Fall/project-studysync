@@ -297,7 +297,6 @@ export class UserRepository {
     const notificationId = await this.notificationRepository.addNotification(
       new Notification(eventId)
     );
-    this.addEvent(eventId);
     this.addNotification(sharedWithId, notificationId);
     return true;
   }
@@ -389,19 +388,19 @@ export class UserRepository {
         "following"
       );
       await this.addFollower(followingId, userId);
-      //create a new event in followingId to indicate that someone followed them. add the event to their notifications
-      const eventId = await this.eventRepository.createNewFollowerEvent(
-        userId,
-        followingId
-      );
-      // //create a new notification with this event
-      const notificationId = await this.notificationRepository.addNotification(
-        new Notification(eventId, "New Follower")
-      );
-      // //add this notification to users list of notifications
-      this.addNotification(followingId, notificationId);
-      //add event to user events
-      this.addEvent(userId, eventId);
+      // //create a new event in followingId to indicate that someone followed them. add the event to their notifications
+      // const eventId = await this.eventRepository.createNewFollowerEvent(
+      //   userId,
+      //   followingId
+      // );
+      // // //create a new notification with this event
+      // const notificationId = await this.notificationRepository.addNotification(
+      //   new Notification(eventId)
+      // );
+      // // //add this notification to users list of notifications
+      // this.addNotification(followingId, notificationId);
+      // //add event to user events
+      // this.addEvent(userId, eventId);
     } catch (error) {
       console.error(`error while adding following is: ${error}`);
       return false;
@@ -437,21 +436,29 @@ export class UserRepository {
   }
 
   /**
-   * userId stops folloing followingId
-   * followingId losses userId as a follower
-   */
-  async stopFollowing(userId, followingId) {
-    await this.removeFollowing(userId, followingId);
-    await this.removeFollower(followingId, userId);
-  }
-
-  /**
    * userId starts folloing followingId
    * followingId gains userId as a follower
    */
   async startFollowing(userId, followingId) {
     await this.addFollowing(userId, followingId);
     await this.addFollower(followingId, userId);
+    const eventId = await this.eventRepository.createNewFollowerEvent(
+      userId,
+      followingId
+    );
+    const notificationId = await this.notificationRepository.addNotification(
+      new Notification(eventId)
+    );
+    this.addNotification(followingId, notificationId);
+  }
+
+  /**
+   * userId stops folloing followingId
+   * followingId losses userId as a follower
+   */
+  async stopFollowing(userId, followingId) {
+    await this.removeFollowing(userId, followingId);
+    await this.removeFollower(followingId, userId);
   }
 
   //Given a list of user ids, get the actual user representation objects

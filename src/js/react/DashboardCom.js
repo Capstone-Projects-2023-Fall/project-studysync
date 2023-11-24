@@ -1,16 +1,12 @@
 import useUser from "./useUser";
+import Recents from "./Recents";
+const DashboardCom = () => {
+  return (
+    <div>
+      This is the dashboard.
+      <Recents></Recents>
+    </div>
+  );
+};
 
-
-const  DashboardCom = ()=> {
-
-
-    return (
-
-      <div>
-        This is the dashboard. 
-      </div>
-    );
-  }
-  
-  export default DashboardCom;
-  
+export default DashboardCom;
