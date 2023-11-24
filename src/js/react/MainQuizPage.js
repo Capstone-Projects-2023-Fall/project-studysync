@@ -1,6 +1,6 @@
 import React, {useState,useEffect,useCallback} from 'react';
 import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper} from '@mui/material';
-import {useParams } from 'react-router-dom';
+import {useParams,useNavigate} from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 
 //mainQuizPage component
@@ -12,7 +12,7 @@ function MainQuizPage() {
   const [score, setScore] = useState(null);//for score
   const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
   const [timeLeft, setTimeLeft] = useState(10 * 5 * 60);//default time
-  
+  const navigate = useNavigate();//navigation
   
   
   const calculateInitialTime = useCallback(() => {
@@ -132,6 +132,11 @@ const calculateScore = () => {
     setSelectedQuestionIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
   };
 
+  //back button 
+  const handleBack = () => {
+    navigate('/flashcard'); // Navigate to the flashcards page (adjust the path as needed)
+  };
+
   //mark option with color when seleted
   const getButtonStyle = (choiceIndex, questionIndex) => {
     if (questions.length > 0) {
@@ -241,26 +246,40 @@ const calculateScore = () => {
         </Button>
         </div>
       
-      {/*display score and return button */}
+      {/*display score and button group*/}
       {quizFinished && (
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <Typography variant="h4" component="h2">
             {`Your score: ${score ? score.toFixed(2) : 0}%`}
           </Typography>
           
-          {/*share Score button */}
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => {
-              console.log("Share score functionality not implemented yet");
-            }}
-          >
-            Share Score
-          </Button>
+          {/*button group*/}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+            {/*share score button */}
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => {
+                console.log("Share score functionality not implemented yet");
+              }}
+              style={{ marginBottom: '10px' }} 
+            >
+              Share Score
+            </Button>
+
+            {/*back button */}
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={handleBack}
+            >
+              Back
+            </Button>
+          </div>
         </div>
       )}
     </div>
   );
-          }
-  export default MainQuizPage;
+}
+
+export default MainQuizPage;
