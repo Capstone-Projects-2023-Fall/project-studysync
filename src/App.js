@@ -32,16 +32,12 @@ function App() {
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'Flashcard', link: '/flashcard' },
-    { label: 'Quiz', link: '/quizmain' },
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     { label: 'Profile', link: `/profile/${user && user.uid}` },
     {label: 'Friends',link:`/friends/${user && user.uid}`},
     {label: 'Notifications',link:`/notifications/${user && user.uid}`}
     //... add other items
   ];
-
-
-
 
   return (
     <div className="app">
@@ -50,6 +46,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/flashcard" element={<FlashcardComponent />} />
         <Route path="/quiz/:setId" element={<Quiz />} />
+        <Route path="/quizmain/:setId" element={<MainQuizPage />} />
         <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
         <Route path="/" element={
           user
@@ -60,7 +57,7 @@ function App() {
         <Route path='/signup' element={<SignUpForm />} />
         <Route path='/profile/:UserId' element={<UserProfile />} />
         <Route path='/profile/:data/edit' element={<EditUserProfile />} />
-        <Route path='/quizmain' element={<MainQuizPage />} />
+        <Route path="/quizmain/:setId" element={<MainQuizPage />} />
         <Route path='/friends/:UserId' element={<FriendsPage/>}/>
         <Route path='/notifications/:UserId' element={<Notification/>}/>
       </Routes>
