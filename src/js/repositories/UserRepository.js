@@ -440,4 +440,27 @@ export class UserRepository {
     }
     return users;
   }
+
+  //Given a user id, pass in an object to save profile
+  /**
+   *
+   * Eg saveProfile(123, {friends:['mike', 'john'], firstName:"Joe", bio: "SWE at Amaxzon"})
+   * In this example, we add mike and john to user(123) list of firends and edit their bio and firstName
+   * Awlays make sure the keys you are passing into the updatedProfile match the keys in the database
+   */
+  async saveUserProfile(userId, updatedProfile) {
+    let arrayFields = {};
+    let nonArrayFields = {};
+
+    for (const key in updatedProfile) {
+      if (Array.isArray(updatedProfile[key])) {
+        arrayFields[key] = updatedProfile[key];
+      } else {
+        nonArrayFields[key] = updatedProfile[key];
+      }
+    }
+
+    await this.updateArrayUserFields(userId, arrayFields);
+    await this.updateNonArrayUserFields(userId, nonArrayFields);
+  }
 }

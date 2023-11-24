@@ -36,6 +36,7 @@ const QuizComponent = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [showDefinition, setShowDefinition] = useState(false);
 
+
   const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
   const [topicName, setTopicName] = useState(''); //capture the topic name from user entry
   const [numberOfQuestions, setNumOfQuestions] = useState(1); //capture the number of quesiton from user entry, default is set to 1
@@ -44,6 +45,16 @@ const QuizComponent = () => {
   const [quizTitle, setQuizTitle] = useState('');
 
   
+
+  //hook for navigation
+  const navigate = useNavigate();
+
+  //for navagation start quiz
+  const startQuiz = () => {
+    navigate(`/quizmain/${setId}`); //Navigate to the quiz page with setId
+  };
+
+
   useEffect(() => {
     if (!openEdit) {
       resetEditDialog(); 
@@ -284,7 +295,19 @@ return (
         display: "flex", flexDirection: "column", height: "100vh",
         backgroundColor: '#f9f9f9', padding: '20px'
     }}>
+  
     <QuizList/>
+
+        {/* Step 3: Add "Start Quiz" Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={startQuiz}
+        style={{ /* your button styles */ }}
+      >
+        Start Quiz
+      </Button>
+
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
                 width: "30%", borderRight: "1px solid #e0e0e0",
@@ -363,6 +386,15 @@ return (
              </div>
 
         </div>
+        {/* Move the "Start Quiz" Button here, below the question preview panel */}
+        <Button
+            variant="contained"
+            color="primary"
+            onClick={startQuiz}
+            style={{ alignSelf: 'center', marginTop: '20px' }} // Center button and add margin on the top
+        >
+            Start Quiz
+        </Button>
 
         <Dialog open={openEdit} onClose={() => { setOpenEdit(false)}}>
                     <DialogTitle>Edit question</DialogTitle>
@@ -539,7 +571,9 @@ return (
                 </Dialog>
     
     </div>
-    );
+    
+);
+
 };
 
 export default QuizComponent;
