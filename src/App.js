@@ -26,9 +26,15 @@ function App() {
     { label: 'Sign Up', link: '/signup' },
   ];
 
+
   const navbarItemsLoggedIn = [
     { label: 'Dashboard', link: '/dashboard' },
     { label: 'Flashcard', link: '/flashcard' },
+<<<<<<< HEAD
+=======
+    { label: 'Quiz', link: '/quizmain' },
+   
+>>>>>>> parent of 81268df (cleaned code)
     { label: 'Profile', link: `/profile/${user && user.uid}` },
     {label: 'Socials',link:`/socials/${user && user.uid}`},
     {label: 'Notifications',link:`/notifications/${user && user.uid}`}
