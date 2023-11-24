@@ -122,6 +122,16 @@ const calculateScore = () => {
     }
   };
 
+  //for previous button
+  const handlePrevious = () => {
+    setSelectedQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0));
+  };
+  
+  //for next button
+  const handleNext = () => {
+    setSelectedQuestionIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
+  };
+
   //mark option with color when seleted
   const getButtonStyle = (choiceIndex, questionIndex) => {
     if (questions.length > 0) {
@@ -144,7 +154,7 @@ const calculateScore = () => {
 
   return (
     <div>
-      {/* AppBar for the main header */}
+      {/*appBar for the main header */}
       <AppBar position="static">
         <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="h4" component="h2" style={{ margin: 0 }}>
@@ -153,12 +163,12 @@ const calculateScore = () => {
           <div style={{ position: 'relative' }}>
             {!quizFinished && (
               <>
-                {/* Timer display */}
+                {/*timer display */}
                 <Typography variant="h6" style={{ marginRight: '20px' }}>
                   Time Left: {formatTime()}
                 </Typography>
     
-                {/* Submit button */}
+                {/*submit button */}
                 <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '50px', right: '0' }}>
                   Submit Quiz
                 </Button>
@@ -169,7 +179,7 @@ const calculateScore = () => {
       </AppBar>
     
       <div style={{ display: 'flex', marginTop: '20px' }}>
-        {/* Sidebar for questions */}
+        {/*sidebar for questions */}
         <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
           <List>
             {questions.map((_, index) => (
@@ -185,11 +195,11 @@ const calculateScore = () => {
           </List>
         </Paper>
     
-        {/* Main content area for displaying questions and answer options */}
+        {/*main content area for displaying questions and answer options */}
         <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           {selectedQuestionIndex !== null && questions[selectedQuestionIndex] && (
             <>
-              {/* Question display */}
+              {/*question display */}
               <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
                 {`Question ${selectedQuestionIndex + 1}`}
               </Typography>
@@ -197,7 +207,7 @@ const calculateScore = () => {
                 {questions[selectedQuestionIndex].question}
               </Typography>
   
-              {/* Answer options */}
+              {/*answer options */}
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
@@ -219,15 +229,26 @@ const calculateScore = () => {
           )}
         </div>
       </div>
+
+      {/*previous and next buttons */}
+      <div style={{ marginTop: '30px' }}>
+        <Button variant="contained" color="primary" onClick={handlePrevious} disabled={selectedQuestionIndex === 0}>
+          Previous
+        </Button>
+        
+        <Button variant="contained" color="primary" onClick={handleNext} disabled={selectedQuestionIndex === questions.length - 1} style={{ marginLeft: '10px' }}>
+          Next
+        </Button>
+        </div>
       
-      {/* Display score and return button */}
+      {/*display score and return button */}
       {quizFinished && (
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <Typography variant="h4" component="h2">
             {`Your score: ${score ? score.toFixed(2) : 0}%`}
           </Typography>
           
-          {/* Share Score button */}
+          {/*share Score button */}
           <Button
             variant="contained"
             color="secondary"
