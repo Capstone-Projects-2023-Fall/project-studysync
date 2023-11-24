@@ -101,20 +101,16 @@ function MainQuizPage() {
   });
 };
 
-  //calculate score
-  const calculateScore = () => {
-    const correctAnswers = questions.reduce((acc, question) => {
-      //Count the number of correct answers
-      return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
-    }, 0);
-    //count the number of answered questions
-    const answeredQuestions = questions.reduce((acc, question) => {
-      return acc + (question.userAnswer !== null ? 1 : 0);
-    }, 0);
-    //calculate the score percentage
-    const scorePercentage = answeredQuestions > 0 ? (correctAnswers / answeredQuestions) * 100 : 0;
-    setScore(scorePercentage);
-  };
+const calculateScore = () => {
+  const correctAnswers = questions.reduce((acc, question) => {
+    // Count the number of correct answers
+    return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
+  }, 0);
+
+  // Calculate the score percentage based on the total number of questions
+  const scorePercentage = (correctAnswers / questions.length) * 100;
+  setScore(scorePercentage);
+};
 
   //for submit
   const handleSubmit = () => {
