@@ -26,7 +26,7 @@ export default function SingleUserComponent(props) {
           />
         </ListItemAvatar>
         <ListItemText
-          primary={user.firstName || user.email || user.username}
+          primary={user.name ||user.firstName || user.email || user.username}
           secondary={
             <React.Fragment>
               <Typography
@@ -60,8 +60,7 @@ const SearchBar = ({ onSearch }) => {
 };
 
 export function UsersList(props) {
-  //   const [users, setUsers] = useState([]);
-  const { currUser, users, userStr } = props;
+  const { currUser, users, userStr ,updateFind,setUpdateFind} = props;
   const currUserId = currUser.id;
 
   const [filteredData, setFilteredData] = useState(users || []);

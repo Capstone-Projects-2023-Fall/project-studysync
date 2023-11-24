@@ -33,23 +33,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import User from "../models/user";
 import { UsersList } from "./SingleUserComponent";
 import GroupsIcon from '@mui/icons-material/Groups';
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="#">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import EmojiPeopleRoundedIcon from '@mui/icons-material/EmojiPeopleRounded';
+import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
+import ErrorPage from "./ErrorPage";
 
 const drawerWidth = 240;
 
@@ -81,6 +68,8 @@ const Drawer = styled(MuiDrawer, {
 
 const defaultTheme = createTheme();
 
+
+
 export default function FriendsPage() {
   const { UserId } = useParams();
   const [open, setOpen] = React.useState(true);
@@ -92,6 +81,9 @@ export default function FriendsPage() {
   const [users, setUsers] = useState([]);
   const [userStr, setUserStr] = useState("");
   const navigate = useNavigate();
+  const {user} = useUser();
+
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -186,7 +178,7 @@ export default function FriendsPage() {
     <React.Fragment>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PeopleIcon
+          <GroupsIcon
             onClick={() => {
               setType("Friends");
             }}
@@ -201,7 +193,7 @@ export default function FriendsPage() {
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PersonAddAltIcon
+          <PeopleOutlineRoundedIcon
             onClick={() => {
               setType("Following");
             }}
@@ -216,7 +208,7 @@ export default function FriendsPage() {
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <PeopleOutlineIcon
+          <EmojiPeopleRoundedIcon
             onClick={() => {
               setType("Followers");
             }}
@@ -231,7 +223,7 @@ export default function FriendsPage() {
       </ListItemButton>
       <ListItemButton style={styles}>
         <ListItemIcon>
-          <GroupsIcon
+          <SearchRoundedIcon
             onClick={() => {
               setType("Find Friends");
             }}
@@ -246,6 +238,8 @@ export default function FriendsPage() {
       </ListItemButton>
     </React.Fragment>
   );
+
+ 
 
   function MainList() {
     function removeFriend(uid) {
@@ -334,7 +328,7 @@ export default function FriendsPage() {
           {showList.map((user) => (
             <TableRow key={user.id}>
               <TableCell>
-                {user.firstName || user.name || user.email || user.id}{" "}
+                { user.name || user.firstName || user.email || user.id}{" "}
               </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
@@ -400,6 +394,8 @@ export default function FriendsPage() {
         </>
       );
     }
+
+
     return (
       <React.Fragment>
         <Title> {type}</Title>
@@ -419,11 +415,6 @@ export default function FriendsPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {displayList().map((user,index) => (
-              <TableRow key={index}>
-                {showList(user)}
-              </TableRow>
-            ))} */}
               {tableContent()}
             </TableBody>
           </Table>
@@ -431,6 +422,12 @@ export default function FriendsPage() {
       </React.Fragment>
     );
   }
+
+  if(!user || (user && user.uid != UserId)){
+    return <ErrorPage code="401"/>
+  }
+
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -470,12 +467,10 @@ export default function FriendsPage() {
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: "flex", flexDirection: "column" }}>
-                  {/* <MainList type={type}/> */}
                   {MainList()}
                 </Paper>
               </Grid>
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
       </Box>
