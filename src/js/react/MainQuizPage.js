@@ -137,14 +137,19 @@ const calculateScore = () => {
     navigate('/flashcard'); // Navigate to the flashcards page (adjust the path as needed)
   };
 
-  //mark option with color when seleted
+  //mark options
   const getButtonStyle = (choiceIndex, questionIndex) => {
     if (questions.length > 0) {
-    const question = questions[questionIndex];
-    //add a check to ensure userAnswer is not null before comparing
-    const isSelected = question.userAnswer !== null && choiceIndex === question.userAnswer;
-    return isSelected ? { backgroundColor: '#1976d2', color: 'red' } : {};
+      const question = questions[questionIndex];
+      const isSelected = question.userAnswer !== null && choiceIndex === question.userAnswer;
+      const isCorrect = quizFinished && choiceIndex === question.correctChoice;
+      if (isCorrect) {
+        return { backgroundColor: 'green', color: 'white' };
+      } else if (isSelected) {
+        return { backgroundColor: '#1976d2', color: 'red' };
+      }
     }
+    return {};
   };
   
 
@@ -225,6 +230,7 @@ const calculateScore = () => {
                     variant="contained"
                     style={getButtonStyle(index, selectedQuestionIndex)}
                     onClick={() => checkAnswer(index)}
+                    disabled={quizFinished}
                   >
                     {choice}
                   </Button>
