@@ -36,13 +36,14 @@ const QuizComponent = () => {
   const [selectedCard, setSelectedCard] = useState(null);
   const [showDefinition, setShowDefinition] = useState(false);
 
-  const [openGenerate, setOpenGenerateAI] = useState(false);
+  const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
+  const [topicName, setTopicName] = useState('');
+  const [numberOfQuestions, setNumOfQuestions] = useState(1);
 
   const [openQuiz, setOpenQuiz] = useState(false);
   const [quizTitle, setQuizTitle] = useState('');
-  const [quizzes, setQuizzes] = useState({}); //array to hold all questions data
-  
 
+  
   useEffect(() => {
     if (!openEdit) {
       resetEditDialog(); 
@@ -133,10 +134,6 @@ const handleChoiceChange = (value, index) => {
     setOpenEdit(true);
 };
 
-// const resetChoices = () => {
-//     setChoices(['', '', '', '']);
-//   };
-
   // Reset state when the "Edit question" dialog is closed
   const resetEditDialog = () => {
     setQuestion('');
@@ -186,14 +183,6 @@ const handleNextCard = () => {
     }
 };
 
-const handleOpenGenerateAI = () => {
-    setOpenGenerateAI(true);
-};
-
-const handleCloseGenerateAI = () => {
-    setOpenGenerateAI(false);
-};
-
 const handleCreateQuiz = async () => {
     try {
       const uid = FlashcardRepo.getCurrentUid();
@@ -210,6 +199,85 @@ const handleCreateQuiz = async () => {
       console.error('Error creating quiz:', error);
     }
   };
+
+  
+const handleOpenGenerateAI = () => {
+    setOpenGenerateAI(true);
+};
+
+function parseGPTResponse(rawResponse) {
+    try {
+        // Regular expression to find JSON objects in the response
+        const jsonRegex = /{[\s\S]*?}/g;
+        const matches = rawResponse.match(jsonRegex);
+        console.log("Raw JSON matches:", matches);
+
+        if (!matches) return [];
+
+        // Parse each JSON string into an object
+        const questions = matches.map(jsonString => {
+            try {
+                return JSON.parse(jsonString);
+            } catch (error) {
+                console.error("Error parsing individual JSON string:", jsonString, error);
+                return null; // or some other error handling
+            }
+        }).filter(question => question != null);
+        return questions;
+    } catch (error) {
+        console.error("Error parsing GPT response:", error);
+        return [];
+    }
+}
+
+const handleGenerateAIQuestion = async () => {
+    setOpenGenerateAI(false);
+
+    try {
+        const responseString = await callYourCloudFunctionToGenerateQuestions(numberOfQuestions, topicName);
+        const generatedQuestions = responseString;
+
+        const addedQuestions = [];
+        for (const question of generatedQuestions) {
+            const newQuestionId = await FlashcardRepo.addQuizQuestion(quizId, question.question, question.choices, question.correctChoiceIndex);
+            // // add the AI generated flashcard data into quiz question
+            // await FlashcardRepo.addQuizQuestion(quizId, flashcard.definition, [flashcard.term, 'Option 2', 'Option 3', 'Option 4'], 0);
+            addedQuestions.push({ ...question, questionId: newQuestionId });
+        }
+
+        setQuizData(prev => [...prev, ...addedQuestions]);
+    } catch (error) {
+        console.error("Error generating or adding question with AI:", error);
+    }
+};
+
+const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName) => {
+    try {
+        const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
+
+        const response = await fetch(functionUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+                body: JSON.stringify({ message: `Please create ${numQuestions} quiz question 
+                along with 4 multiple choices answer with one correct answerabout ${topicName}. 
+                Format each question as JSON with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
+                as an index to the correct choice no other words in json , i need to parse it with only "question", "choices", and "correctChoiceIndex".
+                Please make sure questions are not repetitive.` }),
+        });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return parseGPTResponse(data.text); // Assuming the data.text is the string of JSON flashcards
+        } catch (error) {
+            console.error("Error calling cloud function:", error);
+            throw error;
+        }
+};
   
 return (
     <div style={{
@@ -439,20 +507,34 @@ return (
                     </DialogActions>
                 </Dialog>
 
-                <Dialog
+                <Dialog 
                     open={openGenerate}
-                    onClose={handleCloseGenerateAI}
-            
+                    onClose={() => setOpenGenerateAI(false)}
                 >
                     <DialogTitle>{"AI Q/A Generated Tool"}</DialogTitle>
                     <DialogContent>
                     <DialogContentText>
-                        Let our latest powerful AI tools to generate your questions and answers according
-                        to the contents of your flashcards in order to improve your learning. 
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            label="Topic Name"
+                            type="text"
+                            fullWidth
+                            value={topicName}
+                            onChange={(e) => setTopicName(e.target.value)}
+                        />
+                        <TextField
+                            margin="dense"
+                            label="Number of Question(s)"
+                            type="number"
+                            fullWidth
+                            value={numberOfQuestions}
+                            onChange={(e) => setNumOfQuestions(e.target.value)}
+                        />
                     </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                    <Button onClick={handleCloseGenerateAI}>Disagree</Button>
+                    <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button>
                     </DialogActions>
                 </Dialog>
     
