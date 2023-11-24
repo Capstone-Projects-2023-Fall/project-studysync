@@ -3,18 +3,26 @@ import { Link } from "react-router-dom";
 import "../../css/Navbar.css";
 import useUser from "./useUser";
 import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, userRepository } from "../../firebase";
 import NotificationBadge from "./NotificationBadge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Notification from "./Notification";
 
 function Navbar({ items }) {
   const { user } = useUser();
   const [isNotificationPanelOpen, setIsNotificationPanelOpen] = useState(false);
-
+  const [count, setCount] = useState(0);
   const toggleNotificationPanel = () => {
     setIsNotificationPanelOpen(!isNotificationPanelOpen);
   };
+
+  useEffect(() => {
+    if (user != null) {
+      userRepository.getNotificationCount(user.uid).then((res) => {
+        setCount(res);
+      });
+    }
+  }, [user]);
 
   return (
     <nav className="navbar">
@@ -48,11 +56,13 @@ function Navbar({ items }) {
             Logout
           </a>
         )}
-        {user && <NotificationBadge onClick={toggleNotificationPanel} />}
+        {user && (
+          <NotificationBadge count={count} onClick={toggleNotificationPanel} />
+        )}
       </div>
 
       {/* Notification Panel */}
-      {isNotificationPanelOpen && (
+      {user && isNotificationPanelOpen && (
         <div
           className="notification-panel"
           style={{
@@ -60,7 +70,7 @@ function Navbar({ items }) {
             top: "60px" /* Adjust this value based on your navbar's height */,
             right: "20px" /* Positioning the panel on the right */,
             width: "30%" /* Adjust the width as needed */,
-            height: "70%",
+            height: "60%",
             backgroundColor: "white",
             border: "1px solid #ccc",
             boxShadow: " 0 2px 8px rgba(0,0,0,0.15)",

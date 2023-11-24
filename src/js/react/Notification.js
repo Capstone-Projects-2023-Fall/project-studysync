@@ -14,39 +14,16 @@ import { SearchComponent } from "./SearchComponent";
 import SingleUserComponent from "./SingleUserComponent";
 import { UsersList } from "./SingleUserComponent";
 import useUser from "./useUser";
+import Pagination from "@mui/material/Pagination";
 
 export default function Notification() {
-  const { user } = useUser();
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 8; // You can adjust this value as needed
 
-  const [notifications, setNotifications] = useState([]);
-  const [myData, setMyData] = useState([]);
-  const [currUser, setCurrUser] = useState(null);
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
 
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     try {
-  //       const res = await userRepository.getProfile(UserId);
-  //       setCurrUser(res);
-  //     } catch (error) {
-  //       console.error("Error fetching user profile:", error);
-  //     }
-  //   };
-
-  //   fetchProfile();
-  //   userRepository.getRawNotifications(UserId).then((notifs) => {
-  //     console.log("notifs are: ", notifs);
-  //     setNotifications(notifs);
-  //   });
-  // }, [UserId]); // Include UserId in the dependency array if it might change
-
-  useEffect(() => {
-    if (user != null) {
-      console.log("userId is: ", user.uid);
-      userRepository.getRawNotifications(user.uid).then((res) => {
-        console.log("banche notifications are: ", res);
-      });
-    }
-  });
   const data = [
     {
       id: 1,
@@ -109,7 +86,31 @@ export default function Notification() {
       author: "Biology Study Set",
     },
     {
-      id: 112,
+      id: 111112,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 123222212,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 1232166312,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 1232312,
+      name: "Mike posted a new FlashcardSet",
+      avatar: "/static/images/avatar/3.jpg",
+      author: "Biology Study Set",
+    },
+    {
+      id: 11232,
       name: "Mike posted a new FlashcardSet",
       avatar: "/static/images/avatar/3.jpg",
       author: "Biology Study Set",
@@ -120,34 +121,40 @@ export default function Notification() {
   return (
     <div>
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-        {data.map((item) => (
-          <React.Fragment key={item.id}>
-            <ListItem alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar alt={item.author} src={item.avatar} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={item.name}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      sx={{ display: "inline" }}
-                      component="span"
-                      variant="body2"
-                      color="text.primary"
-                    >
-                      {item.author}
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
-            <Divider variant="inset" component="li" />
-          </React.Fragment>
-        ))}
+        {data
+          .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+          .map((item) => (
+            <React.Fragment key={item.id}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar>
+                  <Avatar alt={item.author} src={item.avatar} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={item.name}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      >
+                        {item.author}
+                      </Typography>
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+              <Divider variant="inset" component="li" />
+            </React.Fragment>
+          ))}
       </List>
-
-      {/* <SingleUserComponent user={{ username: "Toey", n: "Jane Doeski" }} /> */}
+      <Pagination
+        count={Math.ceil(data.length / itemsPerPage)}
+        page={page}
+        onChange={handleChangePage}
+        color="primary"
+      />
     </div>
   );
 }

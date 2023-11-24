@@ -32,7 +32,9 @@ import useUser from "./useUser";
 import { useNavigate, useParams } from "react-router-dom";
 import User from "../models/user";
 import { UsersList } from "./SingleUserComponent";
-import GroupsIcon from '@mui/icons-material/Groups';
+import GroupsIcon from "@mui/icons-material/Groups";
+import TextField from "@mui/material/TextField";
+import SingleUserComponent from "./SingleUserComponent";
 function Copyright(props) {
   return (
     <Typography
@@ -89,9 +91,14 @@ export default function FriendsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currUser, setCurrUser] = useState(null);
+  const [currFollowing, setCurrFollowing] = useState(0);
+  const [currFollowers, setCurrFollowers] = useState(0);
   const [users, setUsers] = useState([]);
   const [userStr, setUserStr] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
+
   const navigate = useNavigate();
+  const currUserId = UserId;
 
   useEffect(() => {
     setIsLoading(true);
@@ -141,17 +148,19 @@ export default function FriendsPage() {
       userRepository
         .getAllUsers()
         .then((res) => {
-          console.log("all users are: ", res);
-          setShowList([]);
           setIsLoading(false);
           setUsers(res);
+          setFilteredData(res.filter((item) => item.id != UserId));
           setUserStr(JSON.stringify(res));
         })
         .catch(() => console.log("error fetching all users"));
 
-      userRepository.getProfile(UserId).then((res) => {
+      userRepository.getUserById(currUserId).then((res) => {
         setCurrUser(res);
         setIsLoading(false);
+        console.log("currUser is: ", res);
+        setCurrFollowing(res.following.length);
+        setCurrFollowers(res.followers.length);
       });
     } else {
       userRepository
@@ -167,17 +176,11 @@ export default function FriendsPage() {
           console.log(`Error: ${e}`);
         });
     }
-  }, [type, userStr]);
+  }, [type, currFollowing, currFollowers]);
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
-
-  function updateUserCount() {
-    userRepository.getAllUsers().then((res) => {
-      setUserStr(JSON.stringify(res));
-    });
-  }
 
   const styles = {
     marginBottom: "10%",
@@ -287,7 +290,6 @@ export default function FriendsPage() {
         .then(() => {
           console.log(`Stopped Following ${uid}`);
           setIsLoading(false);
-          updateUserCount();
         })
         .catch((e) => {
           setError(e);
@@ -297,7 +299,6 @@ export default function FriendsPage() {
       const index = showList.findIndex((x) => x.id === uid);
       showList.splice(index, 1);
       console.log(`Stopped following: ${showList}`);
-      updateUserCount();
     }
     function handlebtn1(uid) {
       if (type == "Followers") {
@@ -315,6 +316,56 @@ export default function FriendsPage() {
         removeFriend(uid);
       }
     }
+
+    async function handleFollowOrUnfollow(userId) {
+      // const user = await userRepository.getUserById(userId);
+      const shouldFollow = !currUser.following.includes(userId);
+      if (shouldFollow) {
+        return await followUser(userId);
+      } else {
+        await unfollowUser(userId);
+        return;
+      }
+    }
+
+    async function unfollowUser(userToUnfollowId) {
+      await userRepository.stopFollowing(currUser.id, userToUnfollowId);
+      const updatedObject = {
+        ...currUser,
+        following: currUser.following.filter(
+          (item) => item.id !== userToUnfollowId
+        ),
+      };
+      setCurrUser(updatedObject);
+      setCurrFollowing(currFollowing - 1);
+    }
+
+    async function followUser(userToFollowId) {
+      await userRepository.startFollowing(currUser.id, userToFollowId);
+      const updatedObject = {
+        ...currUser,
+        followers: [...currUser.followers, userToFollowId],
+      };
+      setCurrUser(updatedObject);
+      setCurrFollowers(currFollowers + 1);
+    }
+
+    const handleSearch = (searchTerm) => {
+      const filtered = users.filter((item) => {
+        if (item.name != null) {
+          return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+        }
+        if (item.firstName != null) {
+          return item.firstName
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase());
+        }
+        if (item.email != null) {
+          return item.email.toLowerCase().includes(searchTerm.toLowerCase());
+        }
+      });
+      setFilteredData(filtered);
+    };
 
     function tableContent() {
       let firstbtn = "";
@@ -404,7 +455,17 @@ export default function FriendsPage() {
       <React.Fragment>
         <Title> {type}</Title>
         {type == "Find Friends" && currUser != null && (
-          <UsersList userStr={userStr} currUser={currUser} users={users} />
+          <div>
+            <SearchBar onSearch={handleSearch} />
+            {filteredData.map((user) => (
+              <SingleUserComponent
+                handleFollowOrUnfollow={() => handleFollowOrUnfollow(user.id)}
+                key={user.id}
+                user={user}
+                shouldFollow={!currUser.following.includes(user.id)}
+              />
+            ))}
+          </div>
         )}
 
         {type != "Find Friends" && (
@@ -418,14 +479,7 @@ export default function FriendsPage() {
                 <TableCell align="right"></TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
-              {/* {displayList().map((user,index) => (
-              <TableRow key={index}>
-                {showList(user)}
-              </TableRow>
-            ))} */}
-              {tableContent()}
-            </TableBody>
+            <TableBody>{tableContent()}</TableBody>
           </Table>
         )}
       </React.Fragment>
@@ -482,3 +536,14 @@ export default function FriendsPage() {
     </ThemeProvider>
   );
 }
+
+const SearchBar = ({ onSearch }) => {
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value;
+    onSearch(searchTerm);
+  };
+
+  return (
+    <TextField label="Search" variant="outlined" onChange={handleSearch} />
+  );
+};

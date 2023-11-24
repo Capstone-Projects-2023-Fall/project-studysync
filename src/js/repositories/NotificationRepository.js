@@ -59,7 +59,7 @@ export class NotificationRepository {
     }
   }
 
-  async getRawNotification(id) {
+  async getNotificationById(id) {
     const notification = await this.getNotification(id);
 
     const eventId = notification.eventId;

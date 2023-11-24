@@ -127,23 +127,6 @@ export class UserRepository {
     return this.getUsers(followers);
   }
 
-  async getFollowingIds(id) {
-    return await getArrayFieldFromCollection(
-      this.database,
-      "users",
-      id,
-      "following"
-    );
-  }
-
-  async getFollowersIds(id) {
-    return await getArrayFieldFromCollection(
-      this.database,
-      "users",
-      id,
-      "followers"
-    );
-  }
   /**Get all following of user with id: {id} */
   async getFollowing(id) {
     const following = await getArrayFieldFromCollection(
@@ -160,20 +143,31 @@ export class UserRepository {
     const followers = await this.getFollowersIds(id);
     const following = await this.getFollowingIds(id);
 
-    console.log("following: ", following);
-    console.log("folowers: ", followers);
-
-    // const res = followers.filter((user1) => {
-    //   following.some((user2) => user1.id === user2.id);
-    // });
-    const res = [];
+    const friendIds = [];
     for (const item of followers) {
-      console.log("bool: ", following.includes(item));
       if (following.includes(item)) {
-        res.push(item);
+        friendIds.push(item);
       }
     }
-    return this.getUsers(res);
+    return this.getUsers(friendIds);
+  }
+
+  async getFollowingIds(id) {
+    return await getArrayFieldFromCollection(
+      this.database,
+      "users",
+      id,
+      "following"
+    );
+  }
+
+  async getFollowersIds(id) {
+    return await getArrayFieldFromCollection(
+      this.database,
+      "users",
+      id,
+      "followers"
+    );
   }
 
   /**
@@ -221,7 +215,7 @@ export class UserRepository {
   }
 
   /**Get all notifications of user with id: {id}, returns the ids */
-  async getNotifications(id) {
+  async getNotificationIds(id) {
     const notificationIds = await getArrayFieldFromCollection(
       this.database,
       "users",
@@ -232,13 +226,13 @@ export class UserRepository {
   }
 
   /**Get raw notifications and not just the ids */
-  async getRawNotifications(id) {
-    const notificationIds = await this.getNotifications(id);
+  async getNotifications(id) {
+    const notificationIds = await this.getNotificationIds(id);
     const result = [];
 
     for (const notifId of notificationIds) {
       result.push(
-        await this.notificationRepository.getRawNotification(notifId)
+        await this.notificationRepository.getNotificationById(notifId)
       );
     }
     return result;
@@ -305,6 +299,15 @@ export class UserRepository {
     );
     this.addEvent(eventId);
     this.addNotification(sharedWithId, notificationId);
+    return true;
+  }
+
+  /**user with userId shares flashcard with users in listOfUserIds sharedWithId */
+  async shareFlashcard(userId, listOfUserIds, flashcardId) {
+    for (const id of listOfUserIds) {
+      await this.shareFlashcard(userId, id, flashcardId);
+    }
+    return true;
   }
 
   async addOwnedQuiz(userId, quizId) {
@@ -373,6 +376,7 @@ export class UserRepository {
     );
   }
 
+  /**Whenever userId follows followingId, followingId gains a new follower which is userId */
   async addFollowing(userId, followingId) {
     console.log(`incoming data: ${userId}, ${followingId}`);
     try {
@@ -432,6 +436,24 @@ export class UserRepository {
     );
   }
 
+  /**
+   * userId stops folloing followingId
+   * followingId losses userId as a follower
+   */
+  async stopFollowing(userId, followingId) {
+    await this.removeFollowing(userId, followingId);
+    await this.removeFollower(followingId, userId);
+  }
+
+  /**
+   * userId starts folloing followingId
+   * followingId gains userId as a follower
+   */
+  async startFollowing(userId, followingId) {
+    await this.addFollowing(userId, followingId);
+    await this.addFollower(followingId, userId);
+  }
+
   //Given a list of user ids, get the actual user representation objects
   async getUsers(userIds) {
     const users = [];
@@ -462,5 +484,28 @@ export class UserRepository {
 
     await this.updateArrayUserFields(userId, arrayFields);
     await this.updateNonArrayUserFields(userId, nonArrayFields);
+  }
+
+  async incrementNewNotifications(userId) {
+    const user = await this.getUserById(userId);
+
+    await this.updateNonArrayUserFields(userId, {
+      newNotifications: user.newNotifications + 1,
+    });
+
+    return user.newNotifications + 1;
+  }
+
+  async getNotificationCount(userId) {
+    const user = await this.getUserById(userId);
+
+    return user.newNotifications;
+  }
+
+  async setNotificationCountoZero(userId) {
+    await this.updateNonArrayUserFields(userId, {
+      newNotifications: 0,
+    });
+    return 0;
   }
 }
