@@ -8,8 +8,7 @@ import useUser from '../useUser';
 import { useState,useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Button } from '@mui/material';
-
-// import Markdown from './Markdown';
+import { userRepository } from '../../../firebase';
 
 function Main(props) {
   const { userDescription, title, flag } = props;
@@ -40,6 +39,11 @@ function Main(props) {
     if(edit == false){
       setEdit(true)
     }else{
+      userRepository.saveUserProfile(UserId,{bio:_bio,phone: _phone}).then(()=>{
+          console.log('Saved information to the database.')
+          }).catch(()=>{
+            console.log('Error in saving data in Main Section.')
+          })      
       setEdit(false)
     }
   }
