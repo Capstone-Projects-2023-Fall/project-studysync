@@ -50,6 +50,7 @@ function MainQuizPage() {
         };
       });
       setQuestions(questionsArray);
+      setSelectedQuestionIndex(0);
       setTimeLeft(questionsArray.length * 5 * 60); //5 minutes per question
     } catch (error) {
       console.error("Failed to fetch questions:", error);
@@ -123,10 +124,12 @@ const calculateScore = () => {
 
   //mark option with color when seleted
   const getButtonStyle = (choiceIndex, questionIndex) => {
+    if (questions.length > 0) {
     const question = questions[questionIndex];
     //add a check to ensure userAnswer is not null before comparing
     const isSelected = question.userAnswer !== null && choiceIndex === question.userAnswer;
     return isSelected ? { backgroundColor: '#1976d2', color: 'red' } : {};
+    }
   };
   
 
