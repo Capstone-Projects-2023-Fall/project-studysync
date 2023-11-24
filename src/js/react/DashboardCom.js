@@ -1,16 +1,14 @@
 import useUser from "./useUser";
-
-
+import WelcomePage from "./WelcomePage";
 const  DashboardCom = ()=> {
 
-
-    return (
-
-      <div>
-        This is the dashboard. 
-      </div>
-    );
+  const {user} = useUser();
+  if(!user){
+    <WelcomePage />
+  }else{
+    return(<> Logged in</>)
   }
+}
   
   export default DashboardCom;
   

@@ -30,7 +30,7 @@ function App() {
 
 
   const navbarItemsLoggedIn = [
-    { label: 'Dashboard', link: '/dashboard' },
+    { label: 'Dashboard', link: '/' },
     { label: 'Flashcard', link: '/flashcard' },
     { label: 'Message', icon: 'message-icon', link: '/messages' },
     { label: 'Profile', link: `/profile/${user && user.uid}` },
