@@ -5,7 +5,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FlashcardRepo from '../repositories/FlashcardRepo';
-import { useNavigate } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 
 import Quiz from './Quiz'; 
 
@@ -29,6 +29,8 @@ const FlashcardComponent = () => {
   const [editedName, setEditedName] = useState('');
   const [currentlyEditingTopic, setCurrentlyEditingTopic] = useState(null);
   const [showQuiz, setShowQuiz] = useState(false);
+  const { setId, quizId } = useParams();
+
 
   const navigate = useNavigate();
 
@@ -49,8 +51,11 @@ const FlashcardComponent = () => {
   const handleQuizClick = async (topicName) => {
     try {
       const setId = await FlashcardRepo.getSetIdByTopicName(topicName);
+      const quizId = await FlashcardRepo.getQuizIdByTopicName(topicName);
       if (setId) {
-        navigate(`/quiz/${setId}`);
+        console.log("SetId: ", setId);
+        console.log("QuizId: ", quizId);
+        navigate(`/quizFlash/${setId}/quiz/${quizId}`);
       } else {
         console.error("Unable to fetch set ID for topic:", topicName);
       }

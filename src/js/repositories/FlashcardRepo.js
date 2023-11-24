@@ -57,7 +57,7 @@ const FlashcardRepo = {
 
     createFlashcardSet: async function ({ name, subject }) {
         try {
-
+    
             const flashcardId = doc(collection(database, 'flashcards')).id;
             const commentId = doc(collection(database, 'comments')).id;
             const questionId = doc(collection(database, 'questions')).id;
@@ -93,6 +93,7 @@ const FlashcardRepo = {
                 authorId: this.getCurrentUid(),
                 subject: subject,
                 sharedWith: [],
+                quizName: "Default Quiz",
                 flashcardItems: initialFlashcardItems,
                 questionItems: initialQuizItems,
                 comments: initialComments
@@ -558,6 +559,117 @@ const FlashcardRepo = {
             }
         } catch (error) {
             console.error("Error updating flashcard", error);
+            throw error;
+        }
+    },
+
+    // get all the quiz titles from its flashcard sets
+    getQuizTitleFromFlashcardSet: async function (flashcardSetId) {
+        try {
+            const quizzesRef = collection(database, 'flashcardSets');
+            // Retrieve all quizzes from the flashcard set using the flashcard id
+            const querySnapshot = await getDocs(query(quizzesRef, where('flashcardSetId', '==', flashcardSetId)));
+    
+            const quizTitles = [];
+            querySnapshot.forEach((doc) => {
+                const quizData = doc.data();
+                quizTitles.push(quizData.quizName);
+            });
+            return quizTitles;
+
+        } catch (error) {
+            console.error("Error getting quiz titles:", error);
+            throw error;
+        }
+    },
+
+    // get quiz id by using the quiz name
+    getQuizTitleId: async function (quizName) {
+        try {
+            const querySnapshot = await getDocs(query(collection(database, 'flashcardSets'), where('quizName', '==', quizName)));
+            if (!querySnapshot.empty) {
+                return querySnapshot.docs[0].id;
+            }
+            return null;
+        } catch (error) {
+            console.error("Error fetching set ID by topic name:", error);
+            return null;
+        }
+    },
+
+    // get quiz id by using topic name
+    getQuizIdByTopicName: async function (topicName) {
+        try {
+            const querySnapshot = await getDocs(query(collection(database, 'flashcardSets'), where('name', '==', topicName)));
+            if (!querySnapshot.empty) {
+                return querySnapshot.docs[0].id;
+            }
+            return null;
+        } catch (error) {
+            console.error("Error fetching set ID by topic name:", error);
+            return null;
+        }
+    },
+
+  
+    getSetIdByQuizId: async function (quizId) {
+        try {
+            const setDoc = await getDoc(doc(database, 'flashcardSets', quizId));
+            const data = setDoc.data();
+            return data?.flashcardSetId || '';
+            
+        } catch (error) {
+            console.error("Error fetching flashcard set:", error);
+            return null;
+        }
+    },
+    // this will create new quiz by referencing to the flashcardsets id
+    createNewQuiz: async function (flashcardSetId, quizTitle) {
+        try {
+            // Get the flashcard set reference
+            const flashcardSetRef = doc(database, 'flashcardSets', flashcardSetId);
+    
+            // Get the current flashcard set data
+            const flashcardSetSnapshot = await getDoc(flashcardSetRef);
+            const flashcardSetData = flashcardSetSnapshot.data();
+    
+            // Extract topic name and subject from flashcard set data
+            const flashcardTopicName = flashcardSetData.name;
+            const flashcardSubject = flashcardSetData.subject;
+    
+            // Generate a new quiz ID
+            const quizId = doc(collection(database, 'quizzes')).id;
+    
+            // Create the initial quiz item
+            const initialQuizItems = {
+                [quizId]: {
+                    question: "Sample Question",
+                    choices: ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
+                    correctChoiceIndex: 0,
+                },
+            };
+    
+            const setData = {
+                name: flashcardTopicName,   //Add the flashcard topic name to the data
+                quizName: quizTitle,    // Add a quiz title to each quiz
+                createdAt: Timestamp.now(),
+                authorId: this.getCurrentUid(),
+                subject: flashcardSubject,
+                flashcardSetId: flashcardSetId, // Add the flashcard set ID to the data
+                questionItems: initialQuizItems,
+            };
+    
+            const newDocRef = await addDoc(collection(database, 'flashcardSets'), setData);
+            console.log("New Quiz is created with ID:", newDocRef.id);
+    
+            const uid = this.getCurrentUid();
+            if (uid) {
+                await this.addOwnedQuizSetToUser(uid, newDocRef.id);
+            }
+    
+            return newDocRef.id;
+        } catch (error) {
+            console.error("Error creating flashcard set:", error);
             throw error;
         }
     },

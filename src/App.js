@@ -45,7 +45,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/flashcard" element={<FlashcardComponent />} />
-        <Route path="/quiz/:setId" element={<Quiz />} />
+        <Route path="/quizFlash/:setId/quiz/:quizId" element={<Quiz />} />
         <Route path="/quizmain/:setId" element={<MainQuizPage />} />
         <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
         <Route path="/" element={
