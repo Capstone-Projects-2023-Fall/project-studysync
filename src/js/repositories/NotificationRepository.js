@@ -68,6 +68,7 @@ export class NotificationRepository {
         return {
             id: id,
             event: event,
+            createdAt: notification.createdAt,
         };
     }
 }

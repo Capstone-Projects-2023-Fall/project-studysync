@@ -24,10 +24,9 @@ export default function Notification() {
     const { user, isLoading } = useUser();
 
     React.useEffect(() => {
-        console.log(isLoading, user);
         if (!isLoading && user != null && user.uid) {
             userRepository.getNotifications(user.uid).then((result) => {
-                console.log("result is: ", result);
+                result.reverse();
                 setNotifications(result);
             });
         }
@@ -37,43 +36,20 @@ export default function Notification() {
         setPage(newPage);
     };
 
-    let d = [];
+    let data = [];
     if (notifications.length > 0) {
-        console.log("notificartions are: ", notifications);
         for (const notification of notifications) {
             switch (notification.event.eventType) {
                 case EVENT_TYPE.NEW_FOLLOWER:
-                    d.push(createNewFollowerEvent(notification));
+                    data.push(createNewFollowerEvent(notification));
             }
         }
     }
 
-    console.log("d is: ", d);
-    const data = [
-        {
-            id: 1,
-            name: "New Follower!",
-            avatar: "/static/images/avatar/1.jpg",
-            author: "Mike12334 followed you 10m ago",
-        },
-        {
-            id: 2,
-            name: "Jane Shared a quiz with you!",
-            avatar: "/static/images/avatar/2.jpg",
-            author: "Quiz: Intro To CS",
-        },
-        {
-            id: 36767,
-            name: "Mike posted a new FlashcardSet",
-            avatar: "/static/images/avatar/3.jpg",
-            author: "Biology Study Set",
-        },
-    ];
-
     return (
         <div>
             <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-                {d
+                {data
                     .slice((page - 1) * itemsPerPage, page * itemsPerPage)
                     .map((item) => (
                         <React.Fragment key={item.id}>
@@ -98,6 +74,19 @@ export default function Notification() {
                                                 color="text.primary"
                                             >
                                                 {item.author}
+                                            </Typography>
+                                            &nbsp;&nbsp;&nbsp;
+                                            &nbsp;&nbsp;&nbsp;
+                                            <Typography
+                                                sx={{
+                                                    display: "inline",
+                                                    marginLeft: "auto",
+                                                    color: "rgba(0, 0, 0, 0.54)", // Light grey color
+                                                }}
+                                                component="span"
+                                                variant="body2"
+                                            >
+                                                {item.when}
                                             </Typography>
                                         </React.Fragment>
                                     }
@@ -128,15 +117,6 @@ const styles = {
     },
 };
 
-async function getUserById(userId) {
-    try {
-        const user = await userRepository.getUserById(userId);
-        return user;
-    } catch (error) {
-        return error;
-    }
-}
-
 function createNewFollowerEvent(notification) {
     let data = {
         id: uuidv4(),
@@ -144,10 +124,25 @@ function createNewFollowerEvent(notification) {
     };
     data.author = notification.userFrom.name + " followed you!";
     data.avatar = notification.userFrom.imageURL;
+    data.when = timeAgo(notification.createdAt);
     return data;
 }
 
-function createSharedQuizEvent(notification) {
-    try {
-    } catch (erorr) {}
+function createSharedQuizEvent(notification) {}
+
+function timeAgo(timestamp) {
+    const seconds = (Date.now() - timestamp) / 1000;
+
+    if (seconds < 60) {
+        return `${Math.floor(seconds)}s`;
+    } else if (seconds < 3600) {
+        const minutes = Math.floor(seconds / 60);
+        return `${minutes}m`;
+    } else if (seconds < 86400) {
+        const hours = Math.floor(seconds / 3600);
+        return `${hours}h`;
+    } else {
+        const days = Math.floor(seconds / 86400);
+        return `${days}d`;
+    }
 }

@@ -239,7 +239,6 @@ export class UserRepository {
         for (const notifId of notificationIds) {
             let notification =
                 await this.notificationRepository.getNotificationById(notifId);
-            console.log("notification is: ", notification);
             let userFromId = null;
             let userFrom = null;
             const event = await this.eventRepository.getEventById(
