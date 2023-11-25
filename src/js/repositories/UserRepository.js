@@ -467,6 +467,17 @@ export class UserRepository {
         );
     }
 
+    async removeNotificationById(userId, notificationId) {
+        await removeItemFromArrayField(
+            this.database,
+            userId,
+            notificationId,
+            "users",
+            "notifications",
+            "notification"
+        );
+    }
+
     /**
      * userId starts folloing followingId
      * followingId gains userId as a follower
@@ -492,6 +503,20 @@ export class UserRepository {
     async stopFollowing(userId, followingId) {
         await this.removeFollowing(userId, followingId);
         await this.removeFollower(followingId, userId);
+
+        //Delete follow notification if a user unfollows another user
+        const notifications = await this.getNotifications(followingId);
+        for (const notificartion of notifications) {
+            if (
+                notificartion.event.eventType == EVENT_TYPE.NEW_FOLLOWER &&
+                notificartion.userFrom.id == userId
+            ) {
+                await this.removeNotificationById(
+                    followingId,
+                    notificartion.id
+                );
+            }
+        }
     }
 
     //Given a list of user ids, get the actual user representation objects
