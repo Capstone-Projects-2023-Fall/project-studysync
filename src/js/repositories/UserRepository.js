@@ -493,6 +493,7 @@ export class UserRepository {
                 new Notification(eventId)
             );
         this.addNotification(followingId, notificationId);
+        this.incrementNewNotifications(followingId);
     }
 
     /**
