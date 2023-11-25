@@ -297,17 +297,6 @@ return (
     }}>
   
     <QuizList/>
-
-        {/* Step 3: Add "Start Quiz" Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={startQuiz}
-        style={{ /* your button styles */ }}
-      >
-        Start Quiz
-      </Button>
-
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
                 width: "30%", borderRight: "1px solid #e0e0e0",
@@ -386,12 +375,12 @@ return (
              </div>
 
         </div>
-        {/* Move the "Start Quiz" Button here, below the question preview panel */}
+        {/*start quiz button*/}
         <Button
             variant="contained"
             color="primary"
             onClick={startQuiz}
-            style={{ alignSelf: 'center', marginTop: '20px' }} // Center button and add margin on the top
+            style={{ alignSelf: 'center', marginTop: '20px' }} 
         >
             Start Quiz
         </Button>
