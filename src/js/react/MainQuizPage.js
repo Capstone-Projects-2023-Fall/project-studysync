@@ -187,11 +187,6 @@ const calculateScore = () => {
                 <Typography variant="h6" style={{ marginRight: '20px' }}>
                   Time Left: {formatTime()}
                 </Typography>
-    
-                {/*submit button */}
-                <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '50px', right: '0' }}>
-                  Submit Quiz
-                </Button>
               </>
             )}
           </div>
@@ -237,6 +232,11 @@ const calculateScore = () => {
               <Typography variant="h6" component="h2" style={{ marginBottom: '30px' }}>
                 {questions[selectedQuestionIndex].question}
               </Typography>
+
+              {/*submit button */}
+              <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '150px', right: '20' }}>
+                  Submit Quiz
+                </Button>
   
               {/*answer options */}
               <div style={{
@@ -251,7 +251,7 @@ const calculateScore = () => {
                     variant="contained"
                     style={getButtonStyle(index, selectedQuestionIndex)}
                     onClick={() => checkAnswer(index)}
-                    disabled={quizFinished}
+                    disabled={quizFinished || isPaused}
                   >
                     {choice}
                   </Button>
