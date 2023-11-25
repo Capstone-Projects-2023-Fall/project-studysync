@@ -12,6 +12,7 @@ import {
 import { userConverter } from "../converters/userConverter";
 import User from "../models/user";
 import { Notification } from "../models/notification";
+import { EVENT_TYPE } from "../models/event";
 
 /**
  * Utility class to talk to FireStore User Collection [IN PROGRESS]
@@ -231,9 +232,32 @@ export class UserRepository {
     const result = [];
 
     for (const notifId of notificationIds) {
-      result.push(
-        await this.notificationRepository.getNotificationById(notifId)
-      );
+      // result.push(
+      //   await this.notificationRepository.getNotificationById(notifId)
+      // );
+      let notification = await this.notificationRepository.getNotificationById(notifId)
+      let userFromId = null;
+      let userFrom = null;
+      const event = await this.eventRepository.getEventById(notification.eventId)
+      switch (event.eventType) {
+        case EVENT_TYPE.NEW_FOLLOWER:
+          userFromId = event.newFollowerEvent.followerId
+          break;
+        case EVENT_TYPE.SHARE_QUIZ:
+          userFromId = event.shareQuizEvent.sharedBy
+          break;
+        case EVENT_TYPE.SHARE_FLASHCARD:
+          userFromId = event.shareFlashcardEvent.sharedBy
+          break;
+        default: 
+          break;
+      }
+  
+      if(userFromId != null){
+        userFrom = await this.getUserById(userFromId)
+        notification.userFrom = userFrom
+      }
+      result.push(notification)
     }
     return result;
   }

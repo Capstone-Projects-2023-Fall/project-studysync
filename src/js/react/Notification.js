@@ -1,24 +1,15 @@
 import * as React from "react";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import { useNavigate, useParams } from "react-router-dom";
-import Avatar from "@mui/material/Avatar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import { notificationRepository, userRepository } from "../../firebase";
-import { useEffect, useState } from "react";
-import { SearchComponent } from "./SearchComponent";
-import SingleUserComponent from "./SingleUserComponent";
-import { UsersList } from "./SingleUserComponent";
+import { useState } from "react";
+import { Pagination, Typography, Avatar, ListItemAvatar, List, ListItemText, Divider, ListItem } from "@mui/material";
 import useUser from "./useUser";
-import Pagination from "@mui/material/Pagination";
+import { userRepository } from "../../firebase";
 
 export default function Notification() {
   const [page, setPage] = useState(1);
   const itemsPerPage = 8; // You can adjust this value as needed
+
+  const [notifications, setNotifications] = useState([])
+  const { user } = useUser()
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -54,6 +45,7 @@ export default function Notification() {
       name: "Mike posted a new FlashcardSet",
       avatar: "/static/images/avatar/3.jpg",
       author: "Biology Study Set",
+      read: "true"
     },
     {
       id: 36767,
@@ -118,6 +110,15 @@ export default function Notification() {
     // Add more data as needed
   ];
 
+  React.useEffect(() => {
+    if (user != null) {
+      userRepository.getNotifications(user.uid).then((result) => {
+        console.log("result is: ", result)
+        setNotifications(result)
+      })
+    }
+  }, [])
+
   return (
     <div>
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -125,7 +126,7 @@ export default function Notification() {
           .slice((page - 1) * itemsPerPage, page * itemsPerPage)
           .map((item) => (
             <React.Fragment key={item.id}>
-              <ListItem alignItems="flex-start">
+              <ListItem alignItems="flex-start" sx={styles.listItem}>
                 <ListItemAvatar>
                   <Avatar alt={item.author} src={item.avatar} />
                 </ListItemAvatar>
@@ -158,3 +159,40 @@ export default function Notification() {
     </div>
   );
 }
+
+
+const styles = {
+  listItem: {
+    cursor: "pointer",
+    "&:hover": {
+      backgroundColor: "#f5f5f5", // Light grey background on hover
+    },
+  }
+}
+
+async function getUserById(userId){
+  try{
+    const user = await userRepository.getUserById(userId);
+    return user
+  }catch(error){
+    return error
+  }
+}
+
+async function createNewFollowerEvent(notification){
+  try{
+    
+  }catch(erorr){
+
+  }
+}
+
+async function createSharedQuizEvent(notification){
+  try{
+
+  }catch(erorr){
+
+  }
+}
+
+

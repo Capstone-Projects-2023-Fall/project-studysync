@@ -14,8 +14,11 @@ import EditUserProfile from "./js/react/EditUserProfile";
 import FriendsPage from "./js/react/FriendsPage";
 import MainQuizPage from "./js/react/MainQuizPage";
 
+
+
 import Quiz from "./js/react/Quiz.js";
 import Notification from "./js/react/Notification";
+
 
 function App() {
   const { user } = useUser();
@@ -39,6 +42,7 @@ function App() {
 
   return (
     <div className="app">
+
       <Navbar items={user ? navbarItemsLoggedIn : navbarItemsLoggedOut} />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
