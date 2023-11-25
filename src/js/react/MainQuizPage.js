@@ -13,11 +13,21 @@ function MainQuizPage() {
   const [quizFinished, setQuizFinished] = useState(false);//check if quiz is done for return to quiz page button
   const [timeLeft, setTimeLeft] = useState(10 * 5 * 60);//default time
   const navigate = useNavigate();//navigation
-  
+  const [isPaused, setIsPaused] = useState(false);//pause quiz
   
   const calculateInitialTime = useCallback(() => {
     return questions.length * 5 * 60; //5 minutes per question
   }, [questions.length]);
+
+  //for pausing
+  const handlePause = () => {
+    setIsPaused(true);
+  };
+  
+  //for resume
+  const handleResume = () => {
+    setIsPaused(false);
+  };
 
   
   //for randomly diplay answer option so each time they not in the same spot
@@ -67,16 +77,16 @@ function MainQuizPage() {
 
   useEffect(() => {
     let timer = null;
-    if (timeLeft > 0) {
+    if (timeLeft > 0 && !isPaused && !quizFinished) {
       timer = setInterval(() => {
         setTimeLeft(prevTimeLeft => prevTimeLeft - 1);
       }, 1000);
-    }
-    if (timeLeft === 0 || quizFinished) {
+    } else {
       clearInterval(timer);
     }
     return () => clearInterval(timer);
-  }, [timeLeft, quizFinished]);
+  }, [timeLeft, isPaused, quizFinished]);
+  
 
   const formatTime = () => {
     const minutes = Math.floor(timeLeft / 60);
@@ -185,6 +195,17 @@ const calculateScore = () => {
               </>
             )}
           </div>
+          {/*pause and resume button*/}
+          {!quizFinished && !isPaused && (
+          <Button variant="contained" color="primary" onClick={handlePause}>
+            Pause Quiz
+            </Button>
+            )}
+            {!quizFinished && isPaused && (
+            <Button variant="contained" color="primary" onClick={handleResume}>
+              Resume Quiz
+              </Button>
+              )}
         </Toolbar>
       </AppBar>
     
