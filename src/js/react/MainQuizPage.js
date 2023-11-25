@@ -1,5 +1,5 @@
 import React, {useState,useEffect,useCallback} from 'react';
-import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper} from '@mui/material';
+import {AppBar, Toolbar, Typography, Button, List, ListItem,Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
 import {useParams,useNavigate} from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 
@@ -14,15 +14,34 @@ function MainQuizPage() {
   const [timeLeft, setTimeLeft] = useState(10 * 5 * 60);//default time
   const navigate = useNavigate();//navigation
   const [isPaused, setIsPaused] = useState(false);//pause quiz
+  const [openDialog, setOpenDialog] = useState(false);//for dialog
+
   
   const calculateInitialTime = useCallback(() => {
     return questions.length * 5 * 60; //5 minutes per question
   }, [questions.length]);
 
+  //open dialog
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+  
+  //close dialog
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+  
+  //confirm pause
+  const handleConfirmPause = () => {
+    setIsPaused(true);
+    handleCloseDialog();
+  };
+  
+
   //for pausing
   const handlePause = () => {
-    setIsPaused(true);
-  };
+    handleOpenDialog();
+  };  
   
   //for resume
   const handleResume = () => {
@@ -162,7 +181,6 @@ const calculateScore = () => {
     return {};
   };
   
-
   //function to determine the style for each question in the sidebar,answered and not answered
   const getQuestionStyle = (index) => {
     if (questions[index].userAnswer !== null) {
@@ -190,6 +208,10 @@ const calculateScore = () => {
               </>
             )}
           </div>
+          {/*submit button */}
+          <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '100px', right: '0' }}>
+                  Submit Quiz
+                </Button>
           {/*pause and resume button*/}
           {!quizFinished && !isPaused && (
           <Button variant="contained" color="primary" onClick={handlePause}>
@@ -232,11 +254,6 @@ const calculateScore = () => {
               <Typography variant="h6" component="h2" style={{ marginBottom: '30px' }}>
                 {questions[selectedQuestionIndex].question}
               </Typography>
-
-              {/*submit button */}
-              <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '150px', right: '20' }}>
-                  Submit Quiz
-                </Button>
   
               {/*answer options */}
               <div style={{
@@ -305,8 +322,30 @@ const calculateScore = () => {
           </div>
         </div>
       )}
-    </div>
-  );
-}
+      
+      {/*pause quiz dialog*/}
+      <Dialog
+      open={openDialog}
+      onClose={handleCloseDialog}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">{"Pause Quiz"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to pause the quiz?
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+            <Button onClick={handleConfirmPause} color="primary" autoFocus>
+              Yes
+              </Button>
+              <Button onClick={handleCloseDialog} color="primary">
+              No
+              </Button>
+              </DialogActions>
+              </Dialog>
+              </div>
+              );
+            }
 
 export default MainQuizPage;
