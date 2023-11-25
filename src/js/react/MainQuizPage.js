@@ -209,19 +209,31 @@ const calculateScore = () => {
             )}
           </div>
           {/*submit button */}
-          <Button variant="contained" color="primary" onClick={handleSubmit} style={{ position: 'absolute', top: '100px', right: '0' }}>
-                  Submit Quiz
-                </Button>
+          <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSubmit}
+          style={{ position: 'absolute', top: '100px', right: '0' }}
+          disabled={isPaused}>
+            Submit Quiz
+          </Button>
+
           {/*pause and resume button*/}
           {!quizFinished && !isPaused && (
-          <Button variant="contained" color="primary" onClick={handlePause}>
+          <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={handlePause}>
             Pause Quiz
-            </Button>
+          </Button>
             )}
-            {!quizFinished && isPaused && (
-            <Button variant="contained" color="primary" onClick={handleResume}>
-              Resume Quiz
-              </Button>
+          {!quizFinished && isPaused && (
+          <Button 
+          variant="contained" 
+          color="primary" 
+          onClick={handleResume}>
+            Resume Quiz
+          </Button>
               )}
         </Toolbar>
       </AppBar>
