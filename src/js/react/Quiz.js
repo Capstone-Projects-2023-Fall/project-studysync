@@ -5,6 +5,7 @@ import FlashcardRepo from '../repositories/FlashcardRepo';
 import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';//quotation mark 
 import SendIcon from '@mui/icons-material/Send';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -44,6 +45,13 @@ const QuizComponent = () => {
   const [quizTitle, setQuizTitle] = useState('');
 
   const [isQuizPaused, setIsQuizPaused] = useState(false);
+  const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz infor
+  //calculation time limit
+  const calculateTimeLimit = () => {
+    return questions.length * 5;
+    };
+
+
 
   useEffect(() => {
     //check if the quiz is paused
@@ -75,7 +83,7 @@ const QuizComponent = () => {
   }, [openEdit]);
 
   useEffect(() => {
-    // fetch questions from database
+    //fetch questions from database
     const fetchQuestions = async () => {
         try {
             const questionData = await FlashcardRepo.getQuestionItems(quizId);
@@ -315,6 +323,16 @@ return (
                 width: "30%", borderRight: "1px solid #e0e0e0",
                 borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
             }}>
+                
+            {/*quiz info button*/}
+                <Button
+                variant="outlined"
+                startIcon={<FormatQuoteIcon />}
+                onClick={() => setOpenQuizInfo(true)}
+                style={{ alignSelf: 'center', marginTop: '20px', marginLeft: '10px' }}>
+                    Quiz Info
+                </Button>
+
             {/* show list of question on the left panel with options to edit or delete */}
             {questions.map((quiz, index) => (
                     <ListItem button key={index} onClick={() => { setSelectedCard(quiz); setShowDefinition(false); }}>
@@ -582,11 +600,23 @@ return (
                     <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button>
                     </DialogActions>
                 </Dialog>
-    
-    </div>
-    
-);
-
-};
+                
+                {/*diaglos show quiz infomatio*/}
+                <Dialog open={openQuizInfo} onClose={() => setOpenQuizInfo(false)}>
+                    <DialogTitle>Quiz Information</DialogTitle>
+                    <DialogContent>
+                        <Typography>Question number: {questions.length}</Typography>
+                        <Typography>Time Limit: {calculateTimeLimit()} minutes</Typography>
+                        </DialogContent>
+                        {/*close info display*/}
+                        <DialogActions>
+                            <Button onClick={() => setOpenQuizInfo(false)} color="primary">
+                                Close
+                                </Button>
+                                </DialogActions>
+                                </Dialog>
+                                </div>
+                                );
+            };
 
 export default QuizComponent;
