@@ -15,24 +15,25 @@ function MainQuizPage() {
   const navigate = useNavigate();//navigation
   const [isPaused, setIsPaused] = useState(false);//pause quiz
   const [openDialog, setOpenDialog] = useState(false);//for dialog
-  const LOCAL_STORAGE_QUIZ_KEY = 'quizPaused';
+  const LOCAL_STORAGE_QUIZ_KEY = 'quizPaused';//saved key
 
 
-  
+  //handle time, each quiz 5 mins
   const calculateInitialTime = useCallback(() => {
-    return questions.length * 5 * 60; //5 minutes per question
+    return questions.length * 5 * 60; 
   }, [questions.length]);
+
 
   //open dialog
   const handleOpenDialog = () => {
     setOpenDialog(true);
   };
   
+
   //close dialog
   const handleCloseDialog = () => {
     setOpenDialog(false);
   };
-  
   
 
   //for pausing
@@ -40,21 +41,21 @@ function MainQuizPage() {
     handleOpenDialog();
   };
   
-  //confirm pause
-  // In MainQuizPage.js inside the handleConfirmPause function
-const handleConfirmPause = () => {
-  const quizState = {
-    selectedQuestionIndex,
-    questions,
-    timeLeft
-  };
-  localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ setId, paused: true, quizState }));
-  setIsPaused(true);
-  handleCloseDialog();
-};
 
-  
-  //for resume
+  //confirm pause
+  const handleConfirmPause = () => {
+    const quizState = {
+      selectedQuestionIndex,
+      questions,
+      timeLeft
+    };
+    localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ setId, paused: true, quizState }));
+    setIsPaused(true);
+    handleCloseDialog();
+  };
+
+
+  //for resume, with saved status
   const handleResume = () => {
     setIsPaused(false);
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
@@ -68,7 +69,6 @@ const handleConfirmPause = () => {
   };
   
 
-  
   //for randomly diplay answer option so each time they not in the same spot
   const shuffleChoices = useCallback((choices) => {
     for (let i = choices.length - 1; i > 0; i--) {
@@ -78,43 +78,45 @@ const handleConfirmPause = () => {
       return choices;
     }, []);
 
-// In MainQuizPage.js at the beginning of the component
-useEffect(() => {
-  const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-  if (savedState && savedState.setId === setId) {
-    setIsPaused(savedState.paused);
-    setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
-    setQuestions(savedState.quizState.questions);
-    setTimeLeft(savedState.quizState.timeLeft);
-  }
-}, [setId]);
+
+  //save
+  useEffect(() => {
+    const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
+    if (savedState && savedState.setId === setId) {
+      setIsPaused(savedState.paused);
+      setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
+      setQuestions(savedState.quizState.questions);
+      setTimeLeft(savedState.quizState.timeLeft);
+    }
+  }, [setId]);
 
 
-useEffect(() => {
-  const fetchQuestions = async () => {
-    try {
-      const questionData = await FlashcardRepo.getQuestionItems(setId);
-      const questionsArray = Object.keys(questionData).map(key => {
+  //fetch question from database, include questions and answers
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const questionData = await FlashcardRepo.getQuestionItems(setId);
+        const questionsArray = Object.keys(questionData).map(key => {
         const correctAnswerIndex = questionData[key].correctChoice;
         const correctAnswer = questionData[key].choices[correctAnswerIndex];
         const shuffledChoices = shuffleChoices([...questionData[key].choices]);
         const newCorrectIndex = shuffledChoices.indexOf(correctAnswer);
-        return {
-          ...questionData[key],
-          choices: shuffledChoices,
-          correctChoice: newCorrectIndex,
-          userAnswer: null
-        };
-      });
-      setQuestions(questionsArray);
-      setSelectedQuestionIndex(0);
-      setTimeLeft(questionsArray.length * 5 * 60);
-    } catch (error) {
-      console.error("Failed to fetch questions:", error);
-    }
-  };
-  fetchQuestions();
-}, [setId, shuffleChoices]);
+          return {
+            ...questionData[key],
+            choices: shuffledChoices,
+            correctChoice: newCorrectIndex,
+            userAnswer: null
+          };
+        });
+        setQuestions(questionsArray);
+        setSelectedQuestionIndex(0);
+        setTimeLeft(questionsArray.length * 5 * 60);
+      } catch (error) {
+        console.error("Failed to fetch questions:", error);
+      }
+    };
+    fetchQuestions();}, 
+    [setId, shuffleChoices]);
   
 
   //update timeleft when change length of question
@@ -135,12 +137,14 @@ useEffect(() => {
   }, [timeLeft, isPaused, quizFinished]);
   
 
+  //time format
   const formatTime = () => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
   
+
   //check if answer is correct
   const checkAnswer = (choiceIndex) => {
     setQuestions(prevQuestions => {
@@ -157,43 +161,48 @@ useEffect(() => {
       return question;
     });
   });
-};
+  };
 
-const calculateScore = () => {
-  const correctAnswers = questions.reduce((acc, question) => {
-    // Count the number of correct answers
+
+  //calculate score
+  const calculateScore = () => {const correctAnswers = questions.reduce((acc, question) => {
+    //Count the number of correct answers
     return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
   }, 0);
-
-  // Calculate the score percentage based on the total number of questions
+  //calculate the score percentage based on the total number of questions
   const scorePercentage = (correctAnswers / questions.length) * 100;
   setScore(scorePercentage);
 };
 
-  //for submit
+
+  //for submit quiz
   const handleSubmit = () => {
     const confirmSubmit = window.confirm("Are you sure you want to submit the quiz?");
     if (confirmSubmit) {
-      calculateScore();
-      setQuizFinished(true);
-      localStorage.removeItem('quizPaused');
-    }
-  };
+        calculateScore();
+        setQuizFinished(true);
+        localStorage.removeItem('quizPaused');
+      }
+    };
+ 
 
   //for previous button
   const handlePrevious = () => {
     setSelectedQuestionIndex(prevIndex => Math.max(prevIndex - 1, 0));
   };
   
+
   //for next button
   const handleNext = () => {
     setSelectedQuestionIndex(prevIndex => Math.min(prevIndex + 1, questions.length - 1));
   };
 
+
   //back button 
   const handleBack = () => {
-    navigate('/flashcard'); // Navigate to the flashcards page (adjust the path as needed)
+    navigate('/flashcard'); //navigate to the flashcards page
   };
+
 
   //mark options
   const getButtonStyle = (choiceIndex, questionIndex) => {
@@ -210,6 +219,7 @@ const calculateScore = () => {
     return {};
   };
   
+
   //function to determine the style for each question in the sidebar,answered and not answered
   const getQuestionStyle = (index) => {
     if (questions[index].userAnswer !== null) {
@@ -218,6 +228,7 @@ const calculateScore = () => {
       return { color: 'black' };
     }
   };
+
 
   return (
     <div>
@@ -366,14 +377,15 @@ const calculateScore = () => {
       
       {/*pause quiz dialog*/}
       <Dialog
-      open={openDialog}
-      onClose={handleCloseDialog}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description">
-        <DialogTitle id="alert-dialog-title">{"Pause Quiz"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Are you sure you want to pause the quiz?
+        open={openDialog}
+        onClose={handleCloseDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+        
+          <DialogTitle id="alert-dialog-title">{"Pause Quiz"}</DialogTitle>
+            <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Are you sure you want to pause the quiz?
             </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -390,3 +402,6 @@ const calculateScore = () => {
             }
 
 export default MainQuizPage;
+
+      
+      
