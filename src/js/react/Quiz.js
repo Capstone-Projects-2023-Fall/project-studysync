@@ -14,7 +14,6 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import Question from '../models/question';
 import QuizList from './QuizList';
-
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 
 const QuizComponent = () => {
@@ -44,7 +43,20 @@ const QuizComponent = () => {
   const [openQuiz, setOpenQuiz] = useState(false);
   const [quizTitle, setQuizTitle] = useState('');
 
-  
+  const [isQuizPaused, setIsQuizPaused] = useState(false);
+
+  useEffect(() => {
+    //check if the quiz is paused
+    const pausedState = JSON.parse(localStorage.getItem('quizPaused'));
+    if (pausedState && pausedState.setId === setId) {
+      setIsQuizPaused(true);
+    }
+  }, []);
+
+  //resumae quiz navigate back to saved quiz
+  const handleResumeQuiz = () => {
+    navigate(`/quizmain/${setId}`);
+  };
 
   //hook for navigation
   const navigate = useNavigate();
@@ -52,6 +64,7 @@ const QuizComponent = () => {
   //for navagation start quiz
   const startQuiz = () => {
     navigate(`/quizmain/${setId}`); //Navigate to the quiz page with setId
+    localStorage.removeItem('quizPaused');//if start new quiz, delete saved progress
   };
 
 
@@ -384,6 +397,17 @@ return (
         >
             Start Quiz
         </Button>
+        
+        {isQuizPaused && (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleResumeQuiz}
+          style={{ alignSelf: 'center', marginTop: '20px' }}
+        >
+          Resume Quiz
+        </Button>
+        )}
 
         <Dialog open={openEdit} onClose={() => { setOpenEdit(false)}}>
                     <DialogTitle>Edit question</DialogTitle>
