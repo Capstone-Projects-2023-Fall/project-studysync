@@ -79,7 +79,7 @@ export class UserRepository {
     }
 
     /**Get all owned quizzes owned by user with id: {id} */
-    async getOwnedQuizzes(id) {
+    async getOwnedQuizzesIds(id) {
         const ownedQuizzes = await getArrayFieldFromCollection(
             this.database,
             "users",
@@ -87,6 +87,15 @@ export class UserRepository {
             "ownedQuizzes"
         );
         return ownedQuizzes;
+    }
+
+    async getOwnedQuizzes(userId) {
+        const quizIds = await this.getOwnedQuizzesIds(userId);
+        const result = [];
+        for (const id of quizIds) {
+            result.push(await this.quizRepository.getQuizBy_Id(id));
+        }
+        return result;
     }
 
     /**Get all quizzes shared by user with id: {id} */
@@ -241,6 +250,8 @@ export class UserRepository {
                 await this.notificationRepository.getNotificationById(notifId);
             let userFromId = null;
             let userFrom = null;
+            let quiz = null;
+            let quizId = null;
             const event = await this.eventRepository.getEventById(
                 notification.event.id
             );
@@ -250,6 +261,7 @@ export class UserRepository {
                     break;
                 case EVENT_TYPE.SHARE_QUIZ:
                     userFromId = event.shareQuizEvent.sharedBy;
+                    quizId = event.shareQuizEvent.itemId;
                     break;
                 case EVENT_TYPE.SHARE_FLASHCARD:
                     userFromId = event.shareFlashcardEvent.sharedBy;
@@ -261,6 +273,11 @@ export class UserRepository {
             if (userFromId != null) {
                 userFrom = await this.getUserById(userFromId);
                 notification.userFrom = userFrom;
+            }
+
+            if (quizId != null) {
+                quiz = await this.quizRepository.getQuizBy_Id(quizId);
+                notification.quiz = quiz;
             }
             result.push(notification);
         }
@@ -292,17 +309,22 @@ export class UserRepository {
 
     /**user with userId shares quiz with user with id sharedWithId */
     async shareQuiz(userId, sharedWithId, quizId) {
+        console.log("Incoming to share quiz: ", userId, sharedWithId, quizId);
         await this.addSharedQuiz(sharedWithId, quizId);
         const eventId = await this.eventRepository.createShareQuizEvent(
             userId,
-            sharedWithId
+            sharedWithId,
+            quizId
         );
+        console.log("event id is: ", eventId);
         const notificationId =
             await this.notificationRepository.addNotification(
                 new Notification(eventId)
             );
-        this.addEvent(eventId);
+        this.addEvent(sharedWithId, eventId);
         this.addNotification(sharedWithId, notificationId);
+        console.log("notification id is: ", notificationId);
+        return true;
     }
 
     /**add flashcard with flashcardId to list of flashcards for user with userId */

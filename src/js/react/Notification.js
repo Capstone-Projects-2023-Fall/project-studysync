@@ -42,10 +42,17 @@ export default function Notification() {
             switch (notification.event.eventType) {
                 case EVENT_TYPE.NEW_FOLLOWER:
                     data.push(createNewFollowerEvent(notification));
+                    break;
+                case EVENT_TYPE.SHARE_QUIZ:
+                    data.push(createSharedQuizEvent(notification));
+                    break;
+                default:
+                    break;
             }
         }
     }
 
+    console.log("data is: ", data);
     return (
         <div>
             <List sx={{ width: "100%", bgcolor: "background.paper" }}>
@@ -128,7 +135,22 @@ function createNewFollowerEvent(notification) {
     return data;
 }
 
-function createSharedQuizEvent(notification) {}
+// {
+//     id: 356565,
+//     name: "Mike posted a new FlashcardSet",
+//     avatar: "/static/images/avatar/3.jpg",
+//     author: "Biology Study Set",
+//   },
+function createSharedQuizEvent(notification) {
+    let data = {
+        id: uuidv4(),
+        name: `${notification.userFrom.name} shared a Quiz with you!`,
+    };
+    data.author = notification.quiz.title;
+    data.avatar = notification.userFrom.imageURL;
+    data.when = timeAgo(notification.createdAt);
+    return data;
+}
 
 function timeAgo(timestamp) {
     const seconds = (Date.now() - timestamp) / 1000;

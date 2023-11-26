@@ -15,14 +15,58 @@ import {
 } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import React from "react";
+import { useEffect, useState } from "react";
+import { userRepository } from "../../firebase";
+import useUser from "./useUser";
 
 export default function MySets() {
     const [tab, setTab] = React.useState(0);
+    const [ownedQuizzes, setOwnedQuizzes] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [ownedFlashcards, setOwnedFlashcards] = useState([]);
+    const [selectedFlashcardId, setSelectedFlashcardId] = useState(null); // Track the selected flashcard ID
 
     const handleTabChange = (event, newValue) => {
         setTab(newValue);
     };
+
+    const handleShareClick = (flashcardId) => {
+        // Open the modal
+        setSelectedFlashcardId(flashcardId);
+    };
+
+    const handleShare = (selectedFlashcardId, selectedUsers) => {
+        // Implement the logic to handle sharing
+        console.log("Shared Selected Card!", selectedFlashcardId);
+        console.log("shared selected users: ", selectedUsers);
+        for (const user of selectedUsers) {
+            userRepository
+                .shareQuiz(
+                    "bOJOSp8Xa0N80s576Ol19PirqH12",
+                    user,
+                    selectedFlashcardId
+                )
+                .then((res) => {
+                    console.log("res is: ", res);
+                })
+                .catch((err) => {
+                    console.log("err is: ", err);
+                });
+        }
+        // Close the modal or perform any other necessary actions
+        setSelectedFlashcardId(null);
+    };
     const recents = [1, 2, 3];
+
+    useEffect(() => {
+        userRepository
+            .getOwnedQuizzes("bOJOSp8Xa0N80s576Ol19PirqH12")
+            .then((res) => {
+                console.log("owned quizzes are: ", res);
+                setOwnedQuizzes(res);
+            });
+        userRepository.getAllUsers().then((res) => setUsers(res));
+    }, []);
     return (
         <>
             <Tabs
@@ -37,8 +81,18 @@ export default function MySets() {
 
             {tab === 0 && (
                 <div style={styles.containerStyle}>
-                    {[1, 2, 3, 4, 5].map((item) => (
-                        <FlashCardSet key={item} />
+                    {ownedQuizzes.map((item) => (
+                        <FlashCardSet
+                            key={item.id}
+                            author="me"
+                            title={item.title}
+                            terms={`${item.question} questions`}
+                            users={users}
+                            onShareClick={() => handleShareClick(item.id)}
+                            onShare={(selectedUsers) =>
+                                handleShare(item.id, selectedUsers)
+                            }
+                        />
                     ))}
                 </div>
             )}
@@ -53,25 +107,44 @@ export default function MySets() {
     );
 }
 
-function FlashCardSet() {
+function FlashCardSet({ author, title, terms, users, onShareClick, onShare }) {
     const [open, setOpen] = React.useState(false);
-    const handleStudyClick = () => {
-        // Implement the logic to open the card for study
-        console.log("Study clicked");
-    };
-    const handleShareClick = () => {
-        setOpen(true);
-    };
+    const [checkedItems, setCheckedItems] = useState([]);
+
+    // const handleShareClick = () => {
+    //     setOpen(true);
+    // };
 
     const handleClose = () => {
         setOpen(false);
     };
+    const handleShareClick = () => {
+        setOpen(true);
+        // Call the parent component's onShareClick function
+        onShareClick();
+    };
 
     const handleShare = () => {
-        // Implement the logic to handle sharing
-        console.log("Shared!");
+        // Call the parent component's onShare function with the selected flashcard ID and checked users
+        onShare(checkedItems);
         handleClose();
     };
+
+    // const handleShare = () => {
+    //     // Implement the logic to handle sharing
+    //     console.log("Shared!", checkedItems);
+    //     handleClose();
+    // };
+    const handleCheckboxChange = (userId) => {
+        if (checkedItems.includes(userId)) {
+            // If the user is already checked, uncheck them
+            setCheckedItems((prev) => prev.filter((id) => id !== userId));
+        } else {
+            // If the user is not checked, check them
+            setCheckedItems((prev) => [...prev, userId]);
+        }
+    };
+
     return (
         <Paper
             elevation={3}
@@ -83,10 +156,10 @@ function FlashCardSet() {
         >
             <div>
                 <Typography variant="heading4">
-                    What do the best college students do?
+                    {title || "What do the best college students do?"}
                 </Typography>
                 <Typography variant="body2" style={styles.flashcardInfo}>
-                    20 terms
+                    {terms || "20 Terms"}
                 </Typography>
             </div>
 
@@ -98,7 +171,9 @@ function FlashCardSet() {
                 }}
             >
                 <Avatar alt={"Michael Jordan"} src={"bankusrc"} />
-                <Typography variant="body2">Michael Scott</Typography>
+                <Typography variant="body2">
+                    {author || "Mike Scott"}
+                </Typography>
                 <Button
                     variant="contained"
                     color="primary"
@@ -119,19 +194,21 @@ function FlashCardSet() {
                     >
                         <List>
                             {/* Replace the following with your actual list of users */}
-                            {[
-                                "User1",
-                                "User2",
-                                "User3",
-                                "Banku",
-                                "fufu",
-                                "Damius",
-                                "tranchis",
-                                "mantis",
-                            ].map((user) => (
-                                <ListItem key={user}>
-                                    <ListItemText primary={user} />
-                                    <Checkbox />
+                            {users.map((user) => (
+                                <ListItem key={user.id}>
+                                    <ListItemText
+                                        primary={
+                                            user.name ||
+                                            user.firstName ||
+                                            user.email
+                                        }
+                                    />
+                                    <Checkbox
+                                        onChange={() =>
+                                            handleCheckboxChange(user.id)
+                                        }
+                                        checked={checkedItems.includes(user.id)}
+                                    />
                                 </ListItem>
                             ))}
                         </List>
