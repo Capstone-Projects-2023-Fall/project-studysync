@@ -83,7 +83,7 @@ const QuizComponent = () => {
   }, [openEdit]);
 
   useEffect(() => {
-    // fetch questions from database
+    //fetch questions from database
     const fetchQuestions = async () => {
         try {
             const questionData = await FlashcardRepo.getQuestionItems(quizId);
@@ -323,6 +323,16 @@ return (
                 width: "30%", borderRight: "1px solid #e0e0e0",
                 borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
             }}>
+                
+            {/*quiz info button*/}
+                <Button
+                variant="outlined"
+                startIcon={<FormatQuoteIcon />}
+                onClick={() => setOpenQuizInfo(true)}
+                style={{ alignSelf: 'center', marginTop: '20px', marginLeft: '10px' }}>
+                    Quiz Info
+                </Button>
+
             {/* show list of question on the left panel with options to edit or delete */}
             {questions.map((quiz, index) => (
                     <ListItem button key={index} onClick={() => { setSelectedCard(quiz); setShowDefinition(false); }}>
@@ -404,16 +414,6 @@ return (
             style={{ alignSelf: 'center', marginTop: '20px' }} 
         >
             Start Quiz
-        </Button>
-        
-        {/*quiz info button*/}
-        <Button
-            variant="outlined"
-        startIcon={<FormatQuoteIcon />}
-        onClick={() => setOpenQuizInfo(true)}
-        style={{ alignSelf: 'center', marginTop: '20px', marginLeft: '10px' }}
-        >
-            Quiz Info
         </Button>
         
         {isQuizPaused && (
@@ -605,10 +605,8 @@ return (
                 <Dialog open={openQuizInfo} onClose={() => setOpenQuizInfo(false)}>
                     <DialogTitle>Quiz Information</DialogTitle>
                     <DialogContent>
-                        <Typography>Number of Questions: {questions.length}</Typography>
+                        <Typography>Question number: {questions.length}</Typography>
                         <Typography>Time Limit: {calculateTimeLimit()} minutes</Typography>
-                        <Typography>Owner: {/* Add owner's name here */}</Typography>
-                        <Typography>Creation Date: {/* Add quiz creation date here */}</Typography>
                         </DialogContent>
                         {/*close info display*/}
                         <DialogActions>
