@@ -15,6 +15,8 @@ function MainQuizPage() {
   const navigate = useNavigate();//navigation
   const [isPaused, setIsPaused] = useState(false);//pause quiz
   const [openDialog, setOpenDialog] = useState(false);//for dialog
+  const LOCAL_STORAGE_QUIZ_KEY = 'quizPaused';
+
 
   
   const calculateInitialTime = useCallback(() => {
@@ -31,22 +33,40 @@ function MainQuizPage() {
     setOpenDialog(false);
   };
   
-  //confirm pause
-  const handleConfirmPause = () => {
-    setIsPaused(true);
-    handleCloseDialog();
-  };
   
 
   //for pausing
   const handlePause = () => {
     handleOpenDialog();
-  };  
+  };
+  
+  //confirm pause
+  // In MainQuizPage.js inside the handleConfirmPause function
+const handleConfirmPause = () => {
+  const quizState = {
+    selectedQuestionIndex,
+    questions,
+    timeLeft
+  };
+  localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ setId, paused: true, quizState }));
+  setIsPaused(true);
+  handleCloseDialog();
+};
+
   
   //for resume
   const handleResume = () => {
     setIsPaused(false);
+    const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
+    if (savedState && savedState.setId === setId) {
+      setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
+      setQuestions(savedState.quizState.questions);
+      setTimeLeft(savedState.quizState.timeLeft);
+    } else {
+      console.log('No saved quiz state found');
+    }
   };
+  
 
   
   //for randomly diplay answer option so each time they not in the same spot
@@ -58,36 +78,44 @@ function MainQuizPage() {
       return choices;
     }, []);
 
+// In MainQuizPage.js at the beginning of the component
+useEffect(() => {
+  const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
+  if (savedState && savedState.setId === setId) {
+    setIsPaused(savedState.paused);
+    setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
+    setQuestions(savedState.quizState.questions);
+    setTimeLeft(savedState.quizState.timeLeft);
+  }
+}, [setId]);
 
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        const questionData = await FlashcardRepo.getQuestionItems(setId);
-        const questionsArray = Object.keys(questionData).map(key => {
-        //find the correct choice using the index provided by correctChoice
+
+useEffect(() => {
+  const fetchQuestions = async () => {
+    try {
+      const questionData = await FlashcardRepo.getQuestionItems(setId);
+      const questionsArray = Object.keys(questionData).map(key => {
         const correctAnswerIndex = questionData[key].correctChoice;
         const correctAnswer = questionData[key].choices[correctAnswerIndex];
-        //shuffle the choices
         const shuffledChoices = shuffleChoices([...questionData[key].choices]);
-        //after shuffling, find the new index of the correct answer
         const newCorrectIndex = shuffledChoices.indexOf(correctAnswer);
         return {
           ...questionData[key],
           choices: shuffledChoices,
-          correctChoice: newCorrectIndex, //update correctChoice to the new index after shuffling
-          userAnswer: null //initialize userAnswer
+          correctChoice: newCorrectIndex,
+          userAnswer: null
         };
       });
       setQuestions(questionsArray);
       setSelectedQuestionIndex(0);
-      setTimeLeft(questionsArray.length * 5 * 60); //5 minutes per question
+      setTimeLeft(questionsArray.length * 5 * 60);
     } catch (error) {
       console.error("Failed to fetch questions:", error);
     }
   };
-    fetchQuestions();}, 
-    [setId, shuffleChoices]);
-    
+  fetchQuestions();
+}, [setId, shuffleChoices]);
+  
 
   //update timeleft when change length of question
   useEffect(() => {
@@ -148,6 +176,7 @@ const calculateScore = () => {
     if (confirmSubmit) {
       calculateScore();
       setQuizFinished(true);
+      localStorage.removeItem('quizPaused');
     }
   };
 
@@ -232,7 +261,7 @@ const calculateScore = () => {
           variant="contained" 
           color="primary" 
           onClick={handleResume}>
-            Resume Quiz
+            resume
           </Button>
               )}
         </Toolbar>
