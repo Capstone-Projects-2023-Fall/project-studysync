@@ -674,6 +674,7 @@ const FlashcardRepo = {
         }
     },
 
+    // this will update the quiz title in the database accordingly
     updateQuizTitle: async function (quizId, newTitle) {
         try {
             const flashcardSetRef = doc(database, 'flashcardSets', quizId);

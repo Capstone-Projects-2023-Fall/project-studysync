@@ -1,43 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import QuizIcon from '@mui/icons-material/Quiz';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import { useParams, useNavigate } from 'react-router-dom';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
+import {
+  Box,
+  Drawer,
+  Button,
+  List,
+  Divider,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  TextField,
+  IconButton,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import QuizIcon from '@mui/icons-material/Quiz';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 function QuizList() {
   const [state, setState] = React.useState({
     left: false,
   });
 
+  const navigate = useNavigate();
   const [quizList, setQuizList] = useState([]); // store the quiz title that retreived from database
   const { setId, quizId } = useParams();  // retrieve the flashcard set in order to go to a certain quiz
-  const navigate = useNavigate();
   
   const [currentQuiz, setCurrentQuiz] = useState(null); // capture the current quizID in order to show by def
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-
- const [currentlyEditingTopic, setCurrentlyEditingTopic] = useState(null); // store the quiz title for user editting
- const [editedName, setEditedName] = useState(''); // store the user input which is the edited quiz title
+  const [currentlyEditingTitle, setCurrentlyEditingTitle] = useState(null); // store the quiz title for user editting
+  const [editedTitle, setEditedTitle] = useState(''); // store the user input which is the edited quiz title
 
 
   useEffect(() => {
@@ -121,8 +122,8 @@ function QuizList() {
   const handleClick = (event, title) => {
     // prevent the drawer from closing when the MoreVertIcon is clicked
     event.stopPropagation();
-    setCurrentlyEditingTopic(title);
-    setEditedName(title);
+    setCurrentlyEditingTitle(title);
+    setEditedTitle(title);
     setAnchorEl(event.currentTarget);
     console.log("You have clicked on: ", title);
   };
@@ -148,27 +149,27 @@ function QuizList() {
   const handleEditQuizTitle = async () => {
     console.log('handleEdit called');  
 
-    if (editedName.trim() === "" || !currentlyEditingTopic) {
+    if (editedTitle.trim() === "" || !currentlyEditingTitle) {
       console.log('Empty edited name or no topic being edited, exiting');  
       return;
     }
 
     try {
 
-      const quizId = await FlashcardRepo.getQuizTitleId(currentlyEditingTopic);
+      const quizId = await FlashcardRepo.getQuizTitleId(currentlyEditingTitle);
       console.log('Quiz ID by quiz title:', quizId);
 
       // Update the Firebase database
-      await FlashcardRepo.updateQuizTitle(quizId, editedName.trim());
+      await FlashcardRepo.updateQuizTitle(quizId, editedTitle.trim());
 
       // Update the local state
-      const updatedQuizTitle = quizList.map(t => t === currentlyEditingTopic ? editedName.trim() : t);
+      const updatedQuizTitle = quizList.map(t => t === currentlyEditingTitle ? editedTitle.trim() : t);
       console.log('Updated Quiz Title:', updatedQuizTitle);
 
       setQuizList(updatedQuizTitle);
 
-      setCurrentlyEditingTopic(null);
-      setEditedName('');
+      setCurrentlyEditingTitle(null);
+      setEditedTitle('');
 
 
     } catch (error) {
@@ -179,7 +180,7 @@ function QuizList() {
 
   // this handler will delete the quiz
   const handleDeleteQuiz = async () => {
-    console.log("Are you sure you want to delete this? ", currentlyEditingTopic);
+    console.log("Are you sure you want to delete this? ", currentlyEditingTitle);
   };
  
     const list = (anchor) => (
@@ -274,8 +275,8 @@ function QuizList() {
             margin="dense"               
             label="Enter a New Quiz Title"                
             fullWidth                
-            value={editedName}                
-            onChange={(e) => setEditedName(e.target.value)}                
+            value={editedTitle}                
+            onChange={(e) => setEditedTitle(e.target.value)}                
           />
         </DialogContent>
         <DialogActions>
