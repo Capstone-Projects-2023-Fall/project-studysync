@@ -29,6 +29,7 @@ import Chart from './DashboardUI/Chart';
 import Friends from './DashboardUI/Friends';
 import Orders from './DashboardUI/Orders';
 import {useState,useEffect} from 'react';
+import { userRepository } from '../../firebase';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -42,65 +43,34 @@ function Copyright(props) {
   );
 }
 
-const drawerWidth = 240;
 
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    '& .MuiDrawer-paper': {
-      position: 'relative',
-      whiteSpace: 'nowrap',
-      width: drawerWidth,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-      boxSizing: 'border-box',
-      ...(!open && {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-          width: theme.spacing(9),
-        },
-      }),
-    },
-  }),
-);
-
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function DashboardCom() {
 
     const {user} = useUser();
+    const [userId,setUserId] = useState(null);
     const [isLoading,setIsLoading] = useState(false);
     const [error,setError ]= useState(null);
+    const [friends,setFriends] = useState([]);
+    
 
-    //Welcome page for non logged in users
-    if(!user){
-      return(<WelcomePage />)
-    }
+
+    useEffect(()=>{
+      if(user){
+        setIsLoading(true);
+        userRepository.getFriends(user.uid).then((friends)=>{
+          setFriends(friends);
+          setIsLoading(false);
+        }).catch((e)=>{
+          console.log(e);
+          setError(e);
+          setIsLoading(false);
+        })        
+      }
+    },[])
+
+
 
     if(error){
       console.log(error);
@@ -134,13 +104,15 @@ export default function DashboardCom() {
         </>        
       )
     }
-
+    //Welcome page for non logged in users
+    if(!user){
+      return(<WelcomePage />)
+    }
 
   return (
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
- 
         <Box
           component="main"
           sx={{
@@ -154,8 +126,8 @@ export default function DashboardCom() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4}}>
+            <Grid container spacing={5}>
               {/* Chart */}
               <Grid item xs={12} md={8} lg={9}>
                 <Paper
@@ -169,7 +141,7 @@ export default function DashboardCom() {
                   <Chart />
                 </Paper>
               </Grid>
-              {/* Recent Deposits */}
+              {/* Friends */}
               <Grid item xs={12} md={4} lg={3}>
                 <Paper
                   sx={{
@@ -179,7 +151,7 @@ export default function DashboardCom() {
                     height: 240,
                   }}
                 >
-                  <Friends setIsLoading={setIsLoading} setError={setError}/>
+                  <Friends friends={friends}/>
                 </Paper>
               </Grid>
               {/* Recent Orders */}

@@ -5,46 +5,44 @@ import Title from './Title';
 import { userRepository } from '../../../firebase';
 import {useEffect,useState} from 'react';
 import useUser from '../useUser';
+import './Friends.css';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+
+
 function preventDefault(event) {
   event.preventDefault();
 }
 
 export default function Friends(props) {
     
-    const {user} = useUser();
-    const {userId,setUserId} = useState('');
-    const {friends,setFriends} = useState([]);
-    const {followers,setFollowers} = useState([]);
-    const {setIsLoading, setError} = props;
+  const {friends} = props;
+  //List only 4 friends
+  const _friends = friends.slice(0,3);
 
-    useEffect(()=>{
-        if(user){
-            setUserId(user.uid);
-        }
-        setIsLoading(true);
-        userRepository.getFollowers(userId).then((friends)=>{
-          setFriends(friends);
-          setIsLoading(false);
-        }).catch((e)=>{
-          setError(e);
-          setIsLoading(false);
-        })
-    },[])
-
+  const link =(id)=>{
+    return (
+      `/profile/${id}`
+    )
+  }
   return (
     <React.Fragment>
-      <Title>Recent Deposits</Title>
-      <Typography component="p" variant="h4">
-        $3,024.00
-      </Typography>
-      <Typography color="text.secondary" sx={{ flex: 1 }}>
-        on 15 March, 2019
-      </Typography>
-      <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
-        </Link>
-      </div>
+      <Title>Friends</Title>
+      <Table size='small'>
+        <TableBody>
+          {_friends.map((friend)=>(
+            <TableRow key={friend.id}>
+              <TableCell><a id='Friend-link' href={link(friend.id)}>{friend.name}</a></TableCell>
+            </TableRow>
+          ))}
+      
+        </TableBody>
+      
+      </Table>
+
     </React.Fragment>
   );
 }
