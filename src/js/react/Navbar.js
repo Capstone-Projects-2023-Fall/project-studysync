@@ -1,13 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "../../css/Navbar.css";
 import useUser from "./useUser";
 import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 import { auth, userRepository } from "../../firebase";
 import NotificationBadge from "./NotificationBadge";
 import { useState, useEffect } from "react";
 import Notification from "./Notification";
-
 function Navbar({ items }) {
     const { user } = useUser();
     const [isNotificationPanelOpen, setIsNotificationPanelOpen] =
@@ -31,13 +31,21 @@ function Navbar({ items }) {
         }
     }, [user]);
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // Filter out the 'Profile' tab if the URL contains 'profile'
+    const filteredItems = items.filter(
+        (item) => !location.pathname.includes("profile")
+    );
+
     return (
         <nav className="navbar">
             <Link to="/" className="brand">
                 StudySync
             </Link>
             <div className="nav-items">
-                {items.map((item, index) => (
+                {filteredItems.map((item, index) => (
                     <div key={index} className="nav-item">
                         {item.link ? (
                             <Link to={item.link} onClick={item.action}>
@@ -46,7 +54,6 @@ function Navbar({ items }) {
                         ) : (
                             item.label
                         )}
-
                         {item.submenu && (
                             <div className="submenu">
                                 {item.submenu.map((subItem, subIndex) => (
@@ -60,9 +67,11 @@ function Navbar({ items }) {
                 ))}
                 {user && (
                     <a id="logout-btn" onClick={() => signOut(auth)}>
+                        {" "}
                         Logout
                     </a>
                 )}
+
                 {user && (
                     <NotificationBadge
                         count={count}

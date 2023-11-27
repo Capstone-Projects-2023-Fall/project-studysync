@@ -10,11 +10,8 @@ import FlashcardApp from "./js/react/flashcardUICom";
 import PasswordReset from "./js/react/PasswordReset";
 import QuizList from "./js/react/quizCom";
 import UserProfile from "./js/react/UserProfilePage";
-import EditUserProfile from "./js/react/EditUserProfile";
 import FriendsPage from "./js/react/FriendsPage";
 import MainQuizPage from "./js/react/MainQuizPage";
-import MySets from "./js/react/MySets.js";
-
 import Quiz from "./js/react/Quiz.js";
 import Notification from "./js/react/Notification";
 
@@ -31,11 +28,9 @@ function App() {
     const navbarItemsLoggedIn = [
         { label: "Dashboard", link: "/dashboard" },
         { label: "Flashcard", link: "/flashcard" },
-        { label: "Quiz", link: "/quizmain" },
-        { label: "Message", icon: "message-icon", link: "/messages" },
         { label: "Profile", link: `/profile/${user && user.uid}` },
-        { label: "Friends", link: `/friends/${user && user.uid}` },
-        { label: "My Sets", link: `/mysets/${user && user.uid}` },
+        { label: "Socials", link: `/socials/${user && user.uid}` },
+        { label: "Notifications", link: `/notifications/${user && user.uid}` },
         //... add other items
     ];
 
@@ -45,7 +40,11 @@ function App() {
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/flashcard" element={<FlashcardComponent />} />
-                <Route path="/quiz/:setId" element={<Quiz />} />
+                <Route
+                    path="/quizFlash/:setId/quiz/:quizId"
+                    element={<Quiz />}
+                />
+                <Route path="/quizmain/:setId" element={<MainQuizPage />} />
                 <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
                 <Route
                     path="/"
@@ -62,13 +61,13 @@ function App() {
                 <Route path="/passwordreset" element={<PasswordReset />} />
                 <Route path="/signup" element={<SignUpForm />} />
                 <Route path="/profile/:UserId" element={<UserProfile />} />
-                <Route
-                    path="/profile/:data/edit"
-                    element={<EditUserProfile />}
-                />
                 <Route path="/quizmain" element={<MainQuizPage />} />
-                <Route path="/friends/:UserId" element={<FriendsPage />} />
-                <Route path="/mysets/:UserId" element={<MySets />} />
+                <Route path="/socials/:UserId" element={<FriendsPage />} />
+                <Route path="/quizmain/:setId" element={<MainQuizPage />} />
+                <Route
+                    path="/notifications/:UserId"
+                    element={<Notification />}
+                />
             </Routes>
         </div>
     );
