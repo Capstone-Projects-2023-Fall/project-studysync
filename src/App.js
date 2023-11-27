@@ -8,12 +8,11 @@ import SignUpForm from "./js/react/SignUpForm";
 import useUser from "./js/react/useUser";
 import FlashcardApp from "./js/react/flashcardUICom";
 import PasswordReset from "./js/react/PasswordReset";
-import QuizList from "./js/react/quizCom";
 import UserProfile from "./js/react/UserProfilePage";
 import FriendsPage from "./js/react/FriendsPage";
 import MainQuizPage from "./js/react/MainQuizPage";
 import Quiz from "./js/react/Quiz.js";
-import Notification from "./js/react/Notification";
+import MySets from "./js/react/MySets.js";
 
 function App() {
     const { user } = useUser();
@@ -30,7 +29,7 @@ function App() {
         { label: "Flashcard", link: "/flashcard" },
         { label: "Profile", link: `/profile/${user && user.uid}` },
         { label: "Socials", link: `/socials/${user && user.uid}` },
-        { label: "Notifications", link: `/notifications/${user && user.uid}` },
+        { label: "My Sets", link: `/mysets/${user && user.uid}` },
         //... add other items
     ];
 
@@ -64,10 +63,7 @@ function App() {
                 <Route path="/quizmain" element={<MainQuizPage />} />
                 <Route path="/socials/:UserId" element={<FriendsPage />} />
                 <Route path="/quizmain/:setId" element={<MainQuizPage />} />
-                <Route
-                    path="/notifications/:UserId"
-                    element={<Notification />}
-                />
+                <Route path="/mysets/:UserId" element={<MySets />} />
             </Routes>
         </div>
     );
