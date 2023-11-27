@@ -93,7 +93,7 @@ export class UserRepository {
         const quizIds = await this.getOwnedQuizzesIds(userId);
         const result = [];
         for (const id of quizIds) {
-            result.push(await this.quizRepository.getQuizBy_Id(id));
+            result.push(await this.quizRepository.get_QuizById(id));
         }
         return result;
     }
@@ -343,6 +343,7 @@ export class UserRepository {
             );
         this.addEvent(sharedWithId, eventId);
         this.addNotification(sharedWithId, notificationId);
+        this.incrementNewNotifications(sharedWithId);
         return true;
     }
 
@@ -372,6 +373,7 @@ export class UserRepository {
             );
         this.addEvent(sharedWithId, eventId);
         this.addNotification(sharedWithId, notificationId);
+        this.incrementNewNotifications(sharedWithId);
         return true;
     }
 

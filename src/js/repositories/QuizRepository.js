@@ -31,6 +31,31 @@ export class QuizRepository {
         return await getAllItems(this.database, "quizzes", null);
     }
 
+    //Updated version
+    async get_AllQuizzes() {
+        const collectionRef = collection(this.database, "quizzes");
+        try {
+            const querySnapshot = await getDocs(collectionRef);
+            const documents = querySnapshot.docs.map((d) => ({
+                id: d.id,
+                ...d.data(),
+            }));
+
+            return documents;
+        } catch (error) {
+            console.error("Error:", error);
+            return []; // Return an empty array or handle the error as needed
+        }
+    }
+    //Updated version
+    async get_QuizById(id) {
+        const flashcardSets = await this.get_AllQuizzes();
+        for (const flashcardSet of flashcardSets) {
+            if (flashcardSet.id == id) return flashcardSet;
+        }
+        throw new Error(`Quiz with id: ${id} does not exist`);
+    }
+
     async getQuizBy_Id(quizId) {
         return await getItemById(this.database, quizId, "quizzes", "user");
     }
