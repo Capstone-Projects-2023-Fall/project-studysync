@@ -12,7 +12,7 @@ export default class Event {
         this.eventType = eventType;
         this.id = id;
 
-        switch (EVENT_TYPE) {
+        switch (eventType) {
             case EVENT_TYPE.NEW_FOLLOWER:
                 this.newFollowerEvent = null;
                 break;
@@ -21,6 +21,8 @@ export default class Event {
                 break;
             case EVENT_TYPE.SHARE_FLASHCARD:
                 this.shareFlashcardEvent = null;
+                break;
+            default:
                 break;
         }
     }
@@ -46,7 +48,7 @@ export default class Event {
 
     //This can only be called when the event is a share flashcard event
     createShareFlashcardEvent(sharedBy, sharedWith, flashcardId) {
-        this.shareQuizEvent = new ShareEvent(
+        this.shareFlashcardEvent = new ShareEvent(
             sharedBy,
             sharedWith,
             flashcardId

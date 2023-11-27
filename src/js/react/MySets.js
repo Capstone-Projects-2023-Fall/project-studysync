@@ -25,48 +25,71 @@ export default function MySets() {
     const [users, setUsers] = useState([]);
     const [ownedFlashcards, setOwnedFlashcards] = useState([]);
     const [selectedFlashcardId, setSelectedFlashcardId] = useState(null); // Track the selected flashcard ID
-
+    const [selectedQuizId, setSelectedQuizId] = useState(null);
+    const { user, isLoading } = useUser();
     const handleTabChange = (event, newValue) => {
         setTab(newValue);
     };
 
-    const handleShareClick = (flashcardId) => {
+    const handleShareClick = (id, isFlashcard) => {
+        if (isFlashcard) {
+            setSelectedFlashcardId(id);
+            return;
+        }
         // Open the modal
-        setSelectedFlashcardId(flashcardId);
+        setSelectedQuizId(id);
     };
 
-    const handleShare = (selectedFlashcardId, selectedUsers) => {
-        // Implement the logic to handle sharing
-        console.log("Shared Selected Card!", selectedFlashcardId);
+    const handleShare = (selectedId, selectedUsers, isFlashcard) => {
+        if (isFlashcard) {
+            for (const user of selectedUsers) {
+                userRepository
+                    .shareFlashcard(
+                        "bOJOSp8Xa0N80s576Ol19PirqH12",
+                        user,
+                        selectedId
+                    )
+                    .then((res) => {
+                        console.log("Share Flashcard Success: ", res);
+                    })
+                    .catch((err) => {
+                        console.log("Share Flashcard Failure: ", err);
+                    });
+            }
+            setSelectedFlashcardId(null);
+            console.log("Shared Selected Card!", selectedFlashcardId);
+            console.log("shared selected users: ", selectedUsers);
+            return;
+        }
+        // Implement the logic to handle sharing quizzes
+        console.log("Shared Selected Card!", selectedQuizId);
         console.log("shared selected users: ", selectedUsers);
+
         for (const user of selectedUsers) {
             userRepository
-                .shareQuiz(
-                    "bOJOSp8Xa0N80s576Ol19PirqH12",
-                    user,
-                    selectedFlashcardId
-                )
+                .shareQuiz("bOJOSp8Xa0N80s576Ol19PirqH12", user, selectedId)
                 .then((res) => {
-                    console.log("res is: ", res);
+                    console.log("Share Quiz Success: ", res);
                 })
                 .catch((err) => {
-                    console.log("err is: ", err);
+                    console.log("Share Quiz Failure: ", err);
                 });
         }
-        // Close the modal or perform any other necessary actions
-        setSelectedFlashcardId(null);
+        setSelectedQuizId(null);
     };
-    const recents = [1, 2, 3];
 
     useEffect(() => {
-        userRepository
-            .getOwnedQuizzes("bOJOSp8Xa0N80s576Ol19PirqH12")
-            .then((res) => {
-                console.log("owned quizzes are: ", res);
+        if (user != null) {
+            userRepository.getOwnedQuizzes(user.uid).then((res) => {
                 setOwnedQuizzes(res);
             });
-        userRepository.getAllUsers().then((res) => setUsers(res));
-    }, []);
+
+            userRepository.getOwnedFlashcards(user.uid).then((res) => {
+                setOwnedFlashcards(res);
+            });
+            userRepository.getAllUsers().then((res) => setUsers(res));
+        }
+    }, [isLoading, user]);
     return (
         <>
             <Tabs
@@ -88,9 +111,11 @@ export default function MySets() {
                             title={item.title}
                             terms={`${item.question} questions`}
                             users={users}
-                            onShareClick={() => handleShareClick(item.id)}
+                            onShareClick={() =>
+                                handleShareClick(item.id, false)
+                            }
                             onShare={(selectedUsers) =>
-                                handleShare(item.id, selectedUsers)
+                                handleShare(item.id, selectedUsers, false)
                             }
                         />
                     ))}
@@ -98,8 +123,20 @@ export default function MySets() {
             )}
             {tab === 1 && (
                 <div style={styles.containerStyle}>
-                    {recents.map((item) => (
-                        <FlashCardSet key={item} />
+                    {ownedFlashcards.map((item) => (
+                        <FlashCardSet
+                            key={item.id}
+                            users={users}
+                            author="me"
+                            title={item.name}
+                            terms={`${
+                                Object.keys(item.flashcardItems).length
+                            } terms`}
+                            onShareClick={() => handleShareClick(item.id, true)}
+                            onShare={(selectedUsers) =>
+                                handleShare(item.id, selectedUsers, true)
+                            }
+                        />
                     ))}
                 </div>
             )}
@@ -130,11 +167,6 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare }) {
         handleClose();
     };
 
-    // const handleShare = () => {
-    //     // Implement the logic to handle sharing
-    //     console.log("Shared!", checkedItems);
-    //     handleClose();
-    // };
     const handleCheckboxChange = (userId) => {
         if (checkedItems.includes(userId)) {
             // If the user is already checked, uncheck them

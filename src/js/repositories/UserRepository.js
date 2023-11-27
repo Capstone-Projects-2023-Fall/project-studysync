@@ -110,14 +110,26 @@ export class UserRepository {
     }
 
     /**Get all owned flashcards owned by user with id: {id} */
-    async getOwnedFlashcards(id) {
-        const ownedFlashcards = await getArrayFieldFromCollection(
+    async getOwnedFlashcardsIds(id) {
+        const ownedFlashcardsIds = await getArrayFieldFromCollection(
             this.database,
             "users",
             id,
             "ownedFlashcards"
         );
-        return await this.flashcardRepository.getFlashcards(ownedFlashcards);
+        return ownedFlashcardsIds;
+    }
+
+    async getOwnedFlashcards(id) {
+        const ownedFlashcardsIds = await this.getOwnedFlashcardsIds(id);
+        let result = [];
+
+        for (const flashId of ownedFlashcardsIds) {
+            result.push(
+                await this.flashcardRepository.getFlashcardSetBy_Id(flashId)
+            );
+        }
+        return result;
     }
 
     /**Get all flashcards shared by user with id: {id} */
@@ -252,6 +264,8 @@ export class UserRepository {
             let userFrom = null;
             let quiz = null;
             let quizId = null;
+            let flashcardId = null;
+            let flashcard = null;
             const event = await this.eventRepository.getEventById(
                 notification.event.id
             );
@@ -265,6 +279,7 @@ export class UserRepository {
                     break;
                 case EVENT_TYPE.SHARE_FLASHCARD:
                     userFromId = event.shareFlashcardEvent.sharedBy;
+                    flashcardId = event.shareFlashcardEvent.itemId;
                     break;
                 default:
                     break;
@@ -278,6 +293,13 @@ export class UserRepository {
             if (quizId != null) {
                 quiz = await this.quizRepository.getQuizBy_Id(quizId);
                 notification.quiz = quiz;
+            }
+
+            if (flashcardId != null) {
+                flashcard = await this.flashcardRepository.getFlashcardSetBy_Id(
+                    flashcardId
+                );
+                notification.flashcard = flashcard;
             }
             result.push(notification);
         }
@@ -309,21 +331,18 @@ export class UserRepository {
 
     /**user with userId shares quiz with user with id sharedWithId */
     async shareQuiz(userId, sharedWithId, quizId) {
-        console.log("Incoming to share quiz: ", userId, sharedWithId, quizId);
         await this.addSharedQuiz(sharedWithId, quizId);
         const eventId = await this.eventRepository.createShareQuizEvent(
             userId,
             sharedWithId,
             quizId
         );
-        console.log("event id is: ", eventId);
         const notificationId =
             await this.notificationRepository.addNotification(
                 new Notification(eventId)
             );
         this.addEvent(sharedWithId, eventId);
         this.addNotification(sharedWithId, notificationId);
-        console.log("notification id is: ", notificationId);
         return true;
     }
 
@@ -334,33 +353,35 @@ export class UserRepository {
             userId,
             flashcardId,
             "users",
-            "flashcards",
+            "sharedFlashcards",
             "flashcard"
         );
     }
 
     /**user with userId shares flashcard with user with id sharedWithId */
     async shareFlashcard(userId, sharedWithId, flashcardId) {
-        await this.addSharedQuiz(sharedWithId, flashcardId);
+        await this.addSharedFlashcard(sharedWithId, flashcardId);
         const eventId = await this.eventRepository.createShareFlashcardEvent(
             userId,
-            sharedWithId
+            sharedWithId,
+            flashcardId
         );
         const notificationId =
             await this.notificationRepository.addNotification(
                 new Notification(eventId)
             );
+        this.addEvent(sharedWithId, eventId);
         this.addNotification(sharedWithId, notificationId);
         return true;
     }
 
-    /**user with userId shares flashcard with users in listOfUserIds sharedWithId */
-    async shareFlashcard(userId, listOfUserIds, flashcardId) {
-        for (const id of listOfUserIds) {
-            await this.shareFlashcard(userId, id, flashcardId);
-        }
-        return true;
-    }
+    // /**user with userId shares flashcard with users in listOfUserIds sharedWithId */
+    // async shareFlashcard(userId, listOfUserIds, flashcardId) {
+    //     for (const id of listOfUserIds) {
+    //         await this.shareFlashcard(userId, id, flashcardId);
+    //     }
+    //     return true;
+    // }
 
     async addOwnedQuiz(userId, quizId) {
         await addItemToArrayField(
@@ -379,7 +400,7 @@ export class UserRepository {
             userId,
             flashcardId,
             "users",
-            "flashcards",
+            "ownedFlashcards",
             "flashcard"
         );
     }
@@ -430,7 +451,6 @@ export class UserRepository {
 
     /**Whenever userId follows followingId, followingId gains a new follower which is userId */
     async addFollowing(userId, followingId) {
-        console.log(`incoming data: ${userId}, ${followingId}`);
         try {
             await addItemToArrayField(
                 this.database,
@@ -463,7 +483,6 @@ export class UserRepository {
     }
 
     async removeFollower(userId, followerId) {
-        console.log("incoming data is: ", followerId);
         await removeItemFromArrayField(
             this.database,
             userId,

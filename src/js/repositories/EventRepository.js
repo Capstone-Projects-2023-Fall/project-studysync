@@ -32,14 +32,14 @@ export class EventRepository {
     }
 
     /** Create share flashcard event */
-    async createShareFlashcardEvent(sharedBy, sharedWith) {
+    async createShareFlashcardEvent(sharedBy, sharedWith, itemId) {
         const event = new Event(
             `${sharedBy} shared flashcard with ${sharedWith}`,
             EVENT_TYPE.SHARE_FLASHCARD,
             uuidv4()
         );
-        event.createShareFlashcardEvent(sharedBy, sharedWith);
-        await this.createEvent(event, EVENT_TYPE.SHARE_FLASHCARD);
+        event.createShareFlashcardEvent(sharedBy, sharedWith, itemId);
+        return await this.createEvent(event, EVENT_TYPE.SHARE_FLASHCARD);
     }
 
     /**Helper function to create event */
