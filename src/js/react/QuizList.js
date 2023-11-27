@@ -11,26 +11,34 @@ import ListItemText from '@mui/material/ListItemText';
 import QuizIcon from '@mui/icons-material/Quiz';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import { useParams, useNavigate } from 'react-router-dom';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@mui/material/TextField';
 
 function QuizList() {
   const [state, setState] = React.useState({
     left: false,
   });
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  const [currentQuizMenu, setCurrentQuizMenu] = React.useState(null);
-  const [quizMenu, setQuizMenu] = React.useState(null);
-
   const [quizList, setQuizList] = useState([]); // store the quiz title that retreived from database
   const { setId, quizId } = useParams();  // retrieve the flashcard set in order to go to a certain quiz
   const navigate = useNavigate();
+  
   const [currentQuiz, setCurrentQuiz] = useState(null); // capture the current quizID in order to show by def
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+
+ const [currentlyEditingTopic, setCurrentlyEditingTopic] = useState(null); // store the quiz title for user editting
+ const [editedName, setEditedName] = useState(''); // store the user input which is the edited quiz title
+
 
   useEffect(() => {
     const fetchQuizTitle = async () => {
@@ -102,112 +110,146 @@ function QuizList() {
       return;
     }
 
+        // check if the dialog is open, and if yes, do not close the drawer
+    if (isDialogOpen) {
+      return;
+    }
     setState({ ...state, [anchor]: open });
   };
 
-  // handle the MoreVertIcon when clicked
-  const handleClick = (event, menuType) => {
-    // stop the event propagation to prevent the drawer from closing
+  // capture the quiz title data when the user clicked
+  const handleClick = (event, title) => {
+    // prevent the drawer from closing when the MoreVertIcon is clicked
     event.stopPropagation();
-  
+    setCurrentlyEditingTopic(title);
+    setEditedName(title);
     setAnchorEl(event.currentTarget);
-  
-    // set the appropriate menu state based on the type
-    if (menuType === 'currentQuiz') {
-      setCurrentQuizMenu(event.currentTarget);
-    } else if (menuType === 'quiz') {
-      setQuizMenu(event.currentTarget);
-    }
+    console.log("You have clicked on: ", title);
   };
-
-  const handleClose = (menuType) => {
+ 
+  // set the Anchor to null
+  const handleClose = () => {
     setAnchorEl(null);
-
-    // close the appropriate menu based on the type
-    if (menuType === 'currentQuiz') {
-      setCurrentQuizMenu(null);
-    } else if (menuType === 'quiz') {
-      setQuizMenu(null);
-    }
   };
 
-  const list = (anchor) => (
-    <Box
-      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <h3>List of Quiz</h3>
-      <Divider/>
-      <List>
-      {/* Button for the current open quiz */}
-      {currentQuiz && (
-          <ListItem key={currentQuiz} disablePadding onClick= {() => handleDefaultQuizClick()}>
-            <ListItemButton>
-              <ListItemIcon>
-                <QuizIcon/>
-              </ListItemIcon>
-              <ListItemText primary={`Default Quiz`} />
+  const [isDialogOpen, setDialogOpen] = useState(false);
+
+  // handle the dialog when open
+  const handleOpenDialog = () => {
+    setDialogOpen(true);
+  };
+
+  // handle the dialog when closed
+  const handleCloseDialog = () => {
+    setDialogOpen(false);
+  };
+
+  // this handler will edit the quiz title
+  const handleEditQuizTitle = async () => {
+    console.log('handleEdit called');  
+
+    if (editedName.trim() === "" || !currentlyEditingTopic) {
+      console.log('Empty edited name or no topic being edited, exiting');  
+      return;
+    }
+
+    try {
+
+      const quizId = await FlashcardRepo.getQuizTitleId(currentlyEditingTopic);
+      console.log('Quiz ID by quiz title:', quizId);
+
+      // Update the Firebase database
+      await FlashcardRepo.updateQuizTitle(quizId, editedName.trim());
+
+      // Update the local state
+      const updatedQuizTitle = quizList.map(t => t === currentlyEditingTopic ? editedName.trim() : t);
+      console.log('Updated Quiz Title:', updatedQuizTitle);
+
+      setQuizList(updatedQuizTitle);
+
+      setCurrentlyEditingTopic(null);
+      setEditedName('');
+
+
+    } catch (error) {
+      console.error("Error editing flashcard set name:", error);
+    }
+    handleCloseDialog();
+  };
+
+  // this handler will delete the quiz
+  const handleDeleteQuiz = async () => {
+    console.log("Are you sure you want to delete this? ", currentlyEditingTopic);
+  };
+ 
+    const list = (anchor) => (
+      <Box
+        sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+        role="presentation"
+        onClick={toggleDrawer(anchor, false)}
+        onKeyDown={toggleDrawer(anchor, false)}
+      >
+        <h3>List of Quiz</h3>
+        <Divider/>
+        <List>
+        {/* Button for the current open quiz */}
+        {currentQuiz && (
+            <ListItem key={currentQuiz} disablePadding onClick= {() => handleDefaultQuizClick()}>
+              <ListItemButton>
+                <ListItemIcon>
+                  <QuizIcon/>
+                </ListItemIcon>
+                <ListItemText primary={`Default Quiz`} />
+              </ListItemButton>
               <IconButton
-                  id="current-quiz-button"
-                  aria-controls={currentQuizMenu ? 'current-quiz-menu' : undefined}
+                  id="quiz-dropdown-button"
+                  aria-controls={open ? 'quiz-dropdown-menu' : undefined}
                   aria-haspopup="true"
-                  aria-expanded={Boolean(currentQuizMenu)}
-                  onClick={(event) => handleClick(event, 'currentQuiz')}
-              >
-                <MoreVertIcon />
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={(event) => handleClick(event, 'Default Quiz')}>
+                <MoreVertIcon/>
               </IconButton>
-                <Menu
-                  id="current-quiz-menu"
-                  anchorEl={currentQuizMenu}
-                  open={Boolean(currentQuizMenu)}
-                  onClose={() => handleClose('currentQuiz')}
-                  MenuListProps={{
-                    'aria-labelledby': 'current-quiz-button',
-                  }}
-                >
-                  <MenuItem onClick={() => handleClose('currentQuiz')}>Profile</MenuItem>
-                  <MenuItem onClick={() => handleClose('currentQuiz')}>My account</MenuItem>
-                </Menu>
-            </ListItemButton>
-          </ListItem>
-        )}
-      {quizList.map((quizTitle) => (
-          <ListItem key={quizTitle} disablePadding>
-            <ListItemButton onClick= {() => handleQuizTitleClick(quizTitle)}>
-              <ListItemIcon>
-                <QuizIcon/>
-              </ListItemIcon>
-              <ListItemText primary={quizTitle} />
+            </ListItem>
+          )}
+        {quizList.map((quizTitle) => (
+            <ListItem key={quizTitle} disablePadding>
+              <ListItemButton onClick= {() => handleQuizTitleClick(quizTitle)}>
+                <ListItemIcon>
+                  <QuizIcon/>
+                </ListItemIcon>
+                <ListItemText primary={quizTitle} />
+              </ListItemButton>
               <IconButton
-                  id={`quiz-button-${quizTitle}`}
-                  aria-controls={quizMenu ? `quiz-menu-${quizTitle}` : undefined}
+                  id="quiz-dropdown-button"
+                  aria-controls={open ? 'quiz-dropdown-menu' : undefined}
                   aria-haspopup="true"
-                  aria-expanded={Boolean(quizMenu)}
-                  onClick={(event) => handleClick(event, 'quiz')}
-                >
-                <MoreVertIcon />
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={(event) => handleClick(event, quizTitle)}>
+                <MoreVertIcon/>
               </IconButton>
-                <Menu
-                  id={`quiz-menu-${quizTitle}`}
-                  anchorEl={quizMenu}
-                  open={Boolean(quizMenu)}
-                  onClose={() => handleClose('quiz')}
-                  MenuListProps={{
-                    'aria-labelledby': `quiz-button-${quizTitle}`,
-                  }}
+            </ListItem>
+            ))}
+            <Menu
+                    id="quiz-dropdown-menu"
+                    aria-labelledby="quiz-dropdown-button"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
                 >
-                  <MenuItem onClick={() => handleClose('quiz')}>Rename</MenuItem>
-                  <MenuItem onClick={() => handleClose('quiz')}>Delete</MenuItem>
-                  <MenuItem onClick={() => handleClose('quiz')}>Share</MenuItem>
+                  <MenuItem
+                     onClick={() => {
+                      handleOpenDialog();
+                      handleClose();
+                      }}>Rename</MenuItem>
+                  <MenuItem onClick={() => {
+                      handleDeleteQuiz();
+                      handleClose();
+                      }}>Delete</MenuItem>
+                  <MenuItem onClick={handleClose}>Share</MenuItem>
                 </Menu>
-            </ListItemButton>
-          </ListItem>
-          ))}
-      </List>
-    </Box>
-  );
+        </List>
+      </Box>
+    );   
 
   return (
     <div>
@@ -216,13 +258,35 @@ function QuizList() {
         <Button variant="contained" onClick={toggleDrawer(anchor, true)}>Quiz List</Button>
           <Drawer
             anchor={anchor}
-            open={state[anchor]}
+            open={state[anchor] || isDialogOpen}
             onClose={toggleDrawer(anchor, false)}
           >
             {list(anchor)}
           </Drawer>
         </React.Fragment>
       ))}
+
+      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+        <DialogTitle>Confirmation</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus                
+            margin="dense"               
+            label="Enter a New Quiz Title"                
+            fullWidth                
+            value={editedName}                
+            onChange={(e) => setEditedName(e.target.value)}                
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleEditQuizTitle} color="primary">
+            Save
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

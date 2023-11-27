@@ -674,6 +674,29 @@ const FlashcardRepo = {
         }
     },
 
+    updateQuizTitle: async function (quizId, newTitle) {
+        try {
+            const flashcardSetRef = doc(database, 'flashcardSets', quizId);
+            const snap = await getDoc(flashcardSetRef);
+
+
+            if (snap.exists()) {
+
+                await updateDoc(flashcardSetRef, {
+                    quizName: newTitle
+                });
+                console.log(`Flashcard set with ID ${quizId} updated successfully with new name: ${newTitle}.`);
+            } else {
+                console.log(`Flashcard set with ID ${quizId} not found.`);
+            }
+
+        } catch (error) {
+            console.error("Error updating flashcard set name:", error);
+            throw error;
+        }
+    },
+ 
+
 };
 
 export default FlashcardRepo;
