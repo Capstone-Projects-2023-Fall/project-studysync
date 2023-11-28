@@ -82,7 +82,7 @@ const FlashcardComponent = () => {
           const userSubjects = await FlashcardRepo.getUserSubjects(uid);
           console.log("Fetched user subjects:", userSubjects);
 
-          setSubjects(userSubjects); // 确保此处正确设置subjects数组
+          setSubjects(userSubjects);
 
           const ownedFlashcardSetIds = await FlashcardRepo.getUserFlashcardSets(uid);
           console.log("Fetched flashcard set IDs:", ownedFlashcardSetIds);
@@ -257,7 +257,7 @@ const FlashcardComponent = () => {
         </Button>
       </Paper>
 
-      {/* 右侧 Flashcard Sets */}
+      {/* right Flashcard Sets */}
       <div style={{ flexGrow: 1, padding: '20px', marginLeft: '260px', backgroundColor: astyle.colors.secondary }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2>{selectedSubject}</h2>
