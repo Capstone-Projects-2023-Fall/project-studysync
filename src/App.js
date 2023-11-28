@@ -25,7 +25,7 @@ function App() {
     ];
 
     const navbarItemsLoggedIn = [
-        { label: "Dashboard", link: "/dashboard" },
+        { label: "Dashboard", link: "/" },
         { label: "Flashcard", link: "/flashcard" },
         { label: "Profile", link: `/profile/${user && user.uid}` },
         { label: "Socials", link: `/socials/${user && user.uid}` },

@@ -1,0 +1,9 @@
+#Friend-link{
+    color: black;
+}
+#Friend-link:visited{
+    color: black;
+}
+#Friend-link:hover, :active{
+    color: blue;
+}
