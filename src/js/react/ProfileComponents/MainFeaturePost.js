@@ -19,17 +19,11 @@ function MainFeaturedPost(props) {
     const [btn,setBtn] = useState('');
     const [name,SetName] = useState('');
     const [profession,setProfession] = useState('');
-    const [username,setUsername] = useState('');
 
     useEffect(()=>{
       setBtn('edit');
       SetName(post.Name);
       setProfession(post.profession);
-      if(post.username == 'default-username'){
-        setUsername('');
-      }else{
-        setUsername(post.username);
-      } 
     },[])
 
     useEffect(()=>{
@@ -45,11 +39,9 @@ function MainFeaturedPost(props) {
       if(edit == false){
         setEdit(true)
       }else{
-        if(username == ''){
-          setUsername('default-username');
-        }
+
         userRepository.saveUserProfile(UserId,{name: name,
-          username: username, profession: profession}).then(()=>{
+          profession: profession}).then(()=>{
             console.log('Saved information to the database.')
             }).catch(()=>{
               console.log('Error in saving data in header.')
@@ -62,12 +54,12 @@ function MainFeaturedPost(props) {
 
       if(btn == 'edit'){
         return(
-          <>{name}</>
+          <>{name == '' ? "User doesn't have a name yet" : name}</>
         )
       }else{
         return(
           <div className='MainFeature'>
-          <label className='name-label'>Enter first name</label>
+          <label className='name-label'>Enter name</label>
           <input className='nameInput' type="text"  placeholder='Your name' 
             value={name} onChange={(e)=>SetName(e.target.value)}/>
           </div>
@@ -89,21 +81,7 @@ function MainFeaturedPost(props) {
         )
       }
     }
-    const usernameText=()=>{
-      if(btn == 'edit'){
-        return(
-          <>{username}</>
-        )
-      }else{
-        return(
-          <div >
-          <label className='username-label'>Enter username</label>
-          <input className='usernameInput' type="text"  placeholder='username'
-            value={username} onChange={(e)=>setUsername(e.target.value)}/>
-          </div>
-        )
-      }
-    }
+
   return (
 
     
@@ -144,10 +122,7 @@ function MainFeaturedPost(props) {
             </Typography>
             <Typography variant="h5" color="inherit" paragraph>
               {professionText()}
-            </Typography>
-            <Typography variant="h5" color="inherit" paragraph>
-              {usernameText()}
-            </Typography>            
+            </Typography>        
             {(user && user.uid == UserId) && <Button variant="contained" href="#contained-buttons" onClick={()=> editBtn()}>
               {btn}
             </Button>}
