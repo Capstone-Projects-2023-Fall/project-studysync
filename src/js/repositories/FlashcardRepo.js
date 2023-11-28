@@ -109,7 +109,7 @@ const FlashcardRepo = {
                 sharedWith: [],
                 quizName: "Default Quiz",
                 questionItems: initialQuizItems,
-                flashcardSetsID: newDocRef.id
+                flashcardSetId: newDocRef.id
             };
 
             const newDocRefQuizzes = await addDoc(collection(database, 'quizzesCreation'), setQuizData);
