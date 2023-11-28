@@ -217,8 +217,6 @@ function FlashcardApp() {
         if (term && definition) {
             try {
                 const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, term, definition);
-                // add the user added flashcard data as quiz question
-                await FlashcardRepo.addQuizQuestion(setId, definition, [term, 'Option 2', 'Option 3', 'Option 4'], 0);
 
                 setCards((prev) => [...prev, { term, definition, flashcardId: newFlashcardId }]);
                 setTerm('');
