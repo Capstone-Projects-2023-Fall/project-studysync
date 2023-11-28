@@ -41,10 +41,10 @@ function FlashcardApp() {
     const [isFullScreen, setIsFullScreen] = useState(false);
     const toggleFullScreen = () => {
         setIsFullScreen(!isFullScreen);
-        if (!isFullScreen) {
-            alert("Press 'Esc' to exit full screen mode.");
-        }
+
+
     };
+    const [isFlipped, setIsFlipped] = useState(false);
     useEffect(() => {
         const fetchFlashcards = async () => {
             try {
@@ -385,6 +385,9 @@ function FlashcardApp() {
             fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
         },
     });
+    const toggleFlip = () => {
+        setIsFlipped(!isFlipped);
+    };
 
 
     return (
@@ -463,15 +466,44 @@ function FlashcardApp() {
                                     flex: 1,
                                     height: "150px",
                                     border: "1px solid #e0e0e0",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    cursor: "pointer",
-                                    borderRadius: '8px'
+                                    borderRadius: '8px',
+                                    transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                                    transition: 'transform 0.6s',
+                                    transformStyle: 'preserve-3d',
+                                    position: 'relative'
                                 }}
-                                onClick={() => setShowDefinition(!showDefinition)}
+                                onClick={toggleFlip}
                             >
-                                {selectedCard && (showDefinition ? selectedCard.definition : selectedCard.term)}
+
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backfaceVisibility: 'hidden',
+                                    }}
+                                >
+                                    {selectedCard && !isFlipped && selectedCard.term}
+                                </div>
+
+
+                                <div
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '100%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        backfaceVisibility: 'hidden',
+                                        transform: 'rotateY(180deg)'
+                                    }}
+                                >
+                                    {selectedCard && isFlipped && selectedCard.definition}
+                                </div>
                             </div>
                             <IconButton onClick={handleNextCard}>
                                 <ArrowForwardIcon />
@@ -549,7 +581,7 @@ function FlashcardApp() {
                     </div>
                 )}
 
-                {/* Dialog 组件 */}
+
                 <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
                     <DialogTitle>Edit flashcard</DialogTitle>
                     <DialogContent>
