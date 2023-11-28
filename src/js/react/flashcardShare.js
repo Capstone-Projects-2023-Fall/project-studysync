@@ -141,6 +141,15 @@ function FlashcardShare() {
                                 <ArrowForwardIcon />
                             </IconButton>
                         </div>
+                        <Button
+                            variant="outlined"
+                            style={{
+                                marginTop: '10px',
+                                color: 'white'
+                            }}
+                        >
+                            share
+                        </Button>
                     </div>
                 </div>
             </div>

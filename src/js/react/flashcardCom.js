@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
   List, ListItem, ListItemText, Button, Divider, Dialog, DialogTitle,
-  DialogContent, DialogContentText, DialogActions, TextField, InputAdornment, IconButton, Paper
+  DialogContent, DialogContentText, DialogActions, TextField, InputAdornment, IconButton, Paper, Close
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FlashcardRepo from '../repositories/FlashcardRepo';
-import { useParams,useNavigate } from 'react-router-dom';
-
-import Quiz from './Quiz'; 
+import { useParams, useNavigate } from 'react-router-dom';
+import ClearIcon from '@mui/icons-material/Clear';
+import Quiz from './Quiz';
 
 
 const astyle = {
@@ -30,8 +30,16 @@ const FlashcardComponent = () => {
   const [currentlyEditingTopic, setCurrentlyEditingTopic] = useState(null);
   const [showQuiz, setShowQuiz] = useState(false);
   const { setId, quizId } = useParams();
-
-
+  const [searchQuery, setSearchQuery] = useState('');
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value.toLowerCase());
+  };
+  const handleClearSearch = () => {
+    setSearchQuery('');
+  };
+  const filteredFlashcards = (subject) => {
+    return flashcards[subject] ? flashcards[subject].filter(topic => topic.toLowerCase().includes(searchQuery)) : [];
+  };
   const navigate = useNavigate();
 
   const handleFlashcardClick = async (topicName) => {
@@ -74,7 +82,7 @@ const FlashcardComponent = () => {
           const userSubjects = await FlashcardRepo.getUserSubjects(uid);
           console.log("Fetched user subjects:", userSubjects);
 
-          setSubjects(userSubjects);
+          setSubjects(userSubjects); // 确保此处正确设置subjects数组
 
           const ownedFlashcardSetIds = await FlashcardRepo.getUserFlashcardSets(uid);
           console.log("Fetched flashcard set IDs:", ownedFlashcardSetIds);
@@ -182,10 +190,10 @@ const FlashcardComponent = () => {
   };
 
   const handleEdit = async () => {
-    console.log('handleEdit called');  
+    console.log('handleEdit called');
 
     if (editedName.trim() === "" || !currentlyEditingTopic) {
-      console.log('Empty edited name or no topic being edited, exiting');  
+      console.log('Empty edited name or no topic being edited, exiting');
       return;
     }
 
@@ -225,10 +233,7 @@ const FlashcardComponent = () => {
             <ListItem
               button
               key={subject}
-              onClick={() => {
-                console.log('Selected subject:', subject);
-                setSelectedSubject(subject);
-              }}
+              onClick={() => setSelectedSubject(subject)}
               style={{ padding: '15px 10px' }}
             >
               <ListItemText primary={subject} />
@@ -252,7 +257,7 @@ const FlashcardComponent = () => {
         </Button>
       </Paper>
 
-      {/* Flashcard Sets */}
+      {/* 右侧 Flashcard Sets */}
       <div style={{ flexGrow: 1, padding: '20px', marginLeft: '260px', backgroundColor: astyle.colors.secondary }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2>{selectedSubject}</h2>
@@ -260,11 +265,14 @@ const FlashcardComponent = () => {
             Add Topic
           </Button>
         </div>
+
         <TextField
           variant="outlined"
           size="small"
           fullWidth
           placeholder="Search..."
+          value={searchQuery}
+          onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -273,39 +281,20 @@ const FlashcardComponent = () => {
                 </IconButton>
               </InputAdornment>
             ),
+            endAdornment: searchQuery && (
+              <InputAdornment position="end">
+                <IconButton onClick={handleClearSearch}>
+                  <ClearIcon />
+                </IconButton>
+              </InputAdornment>
+            )
           }}
         />
-        {flashcards[selectedSubject]?.map((topic, index) => (
+
+        {filteredFlashcards(selectedSubject).map((topic, index) => (
           <div key={index} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
-            {
-              currentlyEditingTopic === topic ? (
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    value={editedName}
-                    onChange={(e) => setEditedName(e.target.value)}
-                  />
-                  <Button variant="contained" color="primary" onClick={handleEdit}>Save</Button>
-                </div>
-              ) : (
-                <h3>{topic}</h3>
-              )
-            }
+            <h3>{topic}</h3>
             <div style={{ display: 'flex', gap: '10px' }}>
-
-              <Button variant="outlined" onClick={() => {
-
-                if (currentlyEditingTopic) {
-
-                  setCurrentlyEditingTopic(null);
-                  setEditedName('');
-                } else {
-
-                  setCurrentlyEditingTopic(topic);
-                  setEditedName(topic);
-                }
-              }}>Edit</Button>
               <Button variant="outlined" onClick={() => handleFlashcardClick(topic)}>Flashcard</Button>
               <Button variant="outlined" onClick={() => handleQuizClick(topic)}>Quiz</Button>
               <Button variant="outlined">AITutor</Button>
@@ -342,9 +331,9 @@ const FlashcardComponent = () => {
         </DialogActions>
       </Dialog>
     </div>
-
   );
 
-            };
+
+};
 
 export default FlashcardComponent;
