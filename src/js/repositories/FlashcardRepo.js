@@ -107,7 +107,7 @@ const FlashcardRepo = {
                 authorId: this.getCurrentUid(),
                 subject: subject,
                 sharedWith: [],
-                quizName: "Default Quiz",
+                quizName: "Initial Quiz",
                 questionItems: initialQuizItems,
                 flashcardSetId: newDocRef.id
             };
