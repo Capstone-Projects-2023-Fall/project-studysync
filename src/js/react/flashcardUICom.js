@@ -38,8 +38,13 @@ function FlashcardApp() {
         notSure: false,
         dontKnow: false
     });
-
-
+    const [isFullScreen, setIsFullScreen] = useState(false);
+    const toggleFullScreen = () => {
+        setIsFullScreen(!isFullScreen);
+        if (!isFullScreen) {
+            alert("Press 'Esc' to exit full screen mode.");
+        }
+    };
     useEffect(() => {
         const fetchFlashcards = async () => {
             try {
@@ -94,16 +99,25 @@ function FlashcardApp() {
             const fetchedTopicName = await FlashcardRepo.fetchTopicName(setId);
             setTopicName(fetchedTopicName);
         };
+        const handleKeyDown = (event) => {
+            if (event.key === 'Escape') {
+                setIsFullScreen(false);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
 
         if (openAIDialog) {
             fetchTopicName();
         }
 
-
         fetchCurrentUserImage();
         fetchFlashcards();
         fetchComments();
         fetchTopicName();
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
     }, [openAIDialog, setId]);
 
     const fetchComments = async () => {
@@ -314,25 +328,25 @@ function FlashcardApp() {
     };
 
     const handleGenerateFlashcards = async () => {
-    setOpenAIDialog(false);
+        setOpenAIDialog(false);
 
-    try {
-        const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
-        const generatedFlashcards = responseString;
+        try {
+            const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
+            const generatedFlashcards = responseString;
 
-        const addedFlashcards = [];
-        for (const flashcard of generatedFlashcards) {
-            const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
-            // add the AI generated flashcard data into quiz question
-            await FlashcardRepo.addQuizQuestion(setId, flashcard.definition, [flashcard.term, 'Option 2', 'Option 3', 'Option 4'], 0);
-            addedFlashcards.push({ ...flashcard, flashcardId: newFlashcardId });
+            const addedFlashcards = [];
+            for (const flashcard of generatedFlashcards) {
+                const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
+                // add the AI generated flashcard data into quiz question
+                await FlashcardRepo.addQuizQuestion(setId, flashcard.definition, [flashcard.term, 'Option 2', 'Option 3', 'Option 4'], 0);
+                addedFlashcards.push({ ...flashcard, flashcardId: newFlashcardId });
+            }
+
+            setCards(prev => [...prev, ...addedFlashcards]);
+        } catch (error) {
+            console.error("Error generating or adding flashcards with AI:", error);
         }
-
-        setCards(prev => [...prev, ...addedFlashcards]);
-    } catch (error) {
-        console.error("Error generating or adding flashcards with AI:", error);
-    }
-};
+    };
 
     const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName) => {
         try {
@@ -373,52 +387,63 @@ function FlashcardApp() {
         <ThemeProvider theme={theme}>
             <div style={{
                 display: "flex", flexDirection: "column", height: "100vh",
-                backgroundColor: '#f9f9f9', padding: '20px'
+                backgroundColor: '#f9f9f9', padding: '20px',
+                position: isFullScreen ? 'fixed' : 'static',
+                width: isFullScreen ? '100%' : 'auto',
+                top: 0, left: 0, right: 0, bottom: 0,
+                zIndex: isFullScreen ? 1000 : 1,
             }}>
-                <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
-                    <FormControlLabel
-                        control={<Checkbox checked={filterOptions.know} onChange={handleFilterChange} name="know" />}
-                        label="Know"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox checked={filterOptions.notSure} onChange={handleFilterChange} name="notSure" />}
-                        label="Not Sure"
-                    />
-                    <FormControlLabel
-                        control={<Checkbox checked={filterOptions.dontKnow} onChange={handleFilterChange} name="dontKnow" />}
-                        label="Don't Know"
-                    />
-                </div>
+                <Button onClick={toggleFullScreen} style={{ position: 'absolute', top: 50, right: 50 }}>
+                    {isFullScreen ? 'Exit' : 'Full Screen'}
+                </Button>
+
+                {!isFullScreen && (
+                    <div style={{ display: 'flex', justifyContent: 'flex-start', marginBottom: '20px' }}>
+                        <FormControlLabel
+                            control={<Checkbox checked={filterOptions.know} onChange={handleFilterChange} name="know" />}
+                            label="Know"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={filterOptions.notSure} onChange={handleFilterChange} name="notSure" />}
+                            label="Not Sure"
+                        />
+                        <FormControlLabel
+                            control={<Checkbox checked={filterOptions.dontKnow} onChange={handleFilterChange} name="dontKnow" />}
+                            label="Don't Know"
+                        />
+                    </div>
+                )}
+
                 <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
-                    <List style={{
-                        width: "30%", borderRight: "1px solid #e0e0e0",
-                        borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
-                    }}>
-                        {filteredCards.map((card, index) => (
-                            <ListItem button key={index} onClick={() => { selectCard(card); setShowDefinition(false); }}>
-                                {card.term}
-                                <IconButton onClick={() => handleEditClick(card)}>
-                                    <EditIcon />
-                                </IconButton>
-                                <IconButton onClick={() => handleDeleteClick(card)}>
-                                    <DeleteIcon />
-                                </IconButton>
+                    {!isFullScreen && (
+                        <List style={{
+                            width: "30%", borderRight: "1px solid #e0e0e0",
+                            borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
+                        }}>
+                            {filteredCards.map((card, index) => (
+                                <ListItem button key={index} onClick={() => { selectCard(card); setShowDefinition(false); }}>
+                                    {card.term}
+                                    <IconButton onClick={() => handleEditClick(card)}>
+                                        <EditIcon />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleDeleteClick(card)}>
+                                        <DeleteIcon />
+                                    </IconButton>
+                                </ListItem>
+                            ))}
+                            <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
+                                Add
+                            </Button>
+                            <Button
+                                onClick={handleAIClick}
+                                startIcon={<AddIcon />}
+                            >
+                                AI Assist
+                            </Button>
+                        </List>
+                    )}
 
-                            </ListItem>
-                        ))}
-                        <Button onClick={() => setOpenAdd(true)} startIcon={<AddIcon />}>
-                            Add
-                        </Button>
-                        <Button
-                            onClick={handleAIClick}
-                            startIcon={<AddIcon />}
-                        >
-                            AI Assist
-                        </Button>
-                    </List>
-
-
-                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
+                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: isFullScreen ? '0' : '20px' }}>
                         <Typography variant="h6">
                             {selectedCard ? `${cards.indexOf(selectedCard) + 1}/${cards.length}` : ""}
                         </Typography>
@@ -444,11 +469,9 @@ function FlashcardApp() {
                             >
                                 {selectedCard && (showDefinition ? selectedCard.definition : selectedCard.term)}
                             </div>
-
                             <IconButton onClick={handleNextCard}>
                                 <ArrowForwardIcon />
                             </IconButton>
-
                         </div>
                         <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", width: "100%" }}>
                             <Button
@@ -476,49 +499,53 @@ function FlashcardApp() {
                     </div>
                 </div>
 
-
-                <div style={{ flex: 1, overflowY: 'auto', maxHeight: 'calc(30% - 60px)', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
-                    {comments.map((comment, index) => (
-                        <div key={index} style={{
-                            display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", borderBottom: '1px solid #e0e0e0'
-                        }}>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Avatar src={comment.imageURL} />
-                                <Typography variant="body1" style={{ marginLeft: "10px", fontWeight: 'bold' }}>
-                                    {comment.username}
-                                </Typography>
-                                <Typography variant="body1" style={{ marginLeft: "10px" }}>
-                                    {comment.content}
-                                </Typography>
+                {!isFullScreen && (
+                    <div style={{ flex: 1, overflowY: 'auto', maxHeight: 'calc(30% - 60px)', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
+                        {comments.map((comment, index) => (
+                            <div key={index} style={{
+                                display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", borderBottom: '1px solid #e0e0e0'
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <Avatar src={comment.imageURL} />
+                                    <Typography variant="body1" style={{ marginLeft: "10px", fontWeight: 'bold' }}>
+                                        {comment.username}
+                                    </Typography>
+                                    <Typography variant="body1" style={{ marginLeft: "10px" }}>
+                                        {comment.content}
+                                    </Typography>
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <Typography variant="body2" style={{ marginRight: "10px" }}>
+                                        {comment.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                                    </Typography>
+                                    <Button
+                                        startIcon={likedComments[comment.commentId] ? <ThumbUpIcon color="primary" /> : <ThumbUpOutlinedIcon />}
+                                        onClick={() => {
+                                            console.log("Like button clicked for commentId:", comment.commentId);
+                                            handleLikeClick(comment.commentId);
+                                        }}
+                                    >
+                                        {comment.likes || 0}
+                                    </Button>
+                                </div>
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Typography variant="body2" style={{ marginRight: "10px" }}>
-                                    {comment.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                                </Typography>
-                                <Button
-                                    startIcon={likedComments[comment.commentId] ? <ThumbUpIcon color="primary" /> : <ThumbUpOutlinedIcon />}
-                                    onClick={() => {
-                                        console.log("Like button clicked for commentId:", comment.commentId);
-                                        handleLikeClick(comment.commentId);
-                                    }}
-                                >
-                                    {comment.likes || 0}
-                                </Button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-                <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
-                    <div style={{ display: "flex", alignItems: "center", }}>
-                        <Avatar src={userImage} />
-                        <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
-                        <IconButton onClick={handleSendComment}>
-                            <SendIcon />
-                        </IconButton>
+                        ))}
                     </div>
-                </div>
+                )}
 
+                {!isFullScreen && (
+                    <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
+                        <div style={{ display: "flex", alignItems: "center", }}>
+                            <Avatar src={userImage} />
+                            <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
+                            <IconButton onClick={handleSendComment}>
+                                <SendIcon />
+                            </IconButton>
+                        </div>
+                    </div>
+                )}
 
+                {/* Dialog 组件 */}
                 <Dialog open={openEdit} onClose={() => setOpenEdit(false)}>
                     <DialogTitle>Edit flashcard</DialogTitle>
                     <DialogContent>
@@ -542,16 +569,11 @@ function FlashcardApp() {
                         <Button onClick={() => setOpenEdit(false)} color="primary">
                             Cancel
                         </Button>
-                        <Button
-                            onClick={handleUpdateFlashcard}
-                            color="primary"
-                        >
+                        <Button onClick={handleUpdateFlashcard} color="primary">
                             Update
                         </Button>
                     </DialogActions>
                 </Dialog>
-
-
 
                 <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
                     <DialogTitle>Add a new flashcard</DialogTitle>
@@ -574,18 +596,11 @@ function FlashcardApp() {
                         <Button onClick={() => setOpenAdd(false)} color="primary">
                             Cancel
                         </Button>
-                        <Button
-                            onClick={() => {
-                                handleAddFlashcard();
-                                setOpenAdd(false);
-                            }}
-                            color="primary"
-                        >
+                        <Button onClick={() => { handleAddFlashcard(); setOpenAdd(false); }} color="primary">
                             Add
                         </Button>
                     </DialogActions>
                 </Dialog>
-
 
                 <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
                     <DialogTitle>Confirm Deletion</DialogTitle>
@@ -596,10 +611,7 @@ function FlashcardApp() {
                         <Button onClick={() => setOpenDelete(false)} color="primary">
                             No
                         </Button>
-                        <Button
-                            onClick={confirmDelete}
-                            color="primary"
-                        >
+                        <Button onClick={confirmDelete} color="primary">
                             Yes
                         </Button>
                     </DialogActions>
