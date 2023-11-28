@@ -160,7 +160,9 @@ function FlashcardApp() {
     const handlePrevCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex > 0) {
-            setSelectedCard(cards[currentIndex - 1]);
+            const prevCard = cards[currentIndex - 1];
+            setSelectedCard(prevCard);
+            setSelectedButton(prevCard.status);
             setShowDefinition(false);
         }
     };
@@ -223,7 +225,9 @@ function FlashcardApp() {
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex < cards.length - 1) {
-            setSelectedCard(cards[currentIndex + 1]);
+            const nextCard = cards[currentIndex + 1];
+            setSelectedCard(nextCard);
+            setSelectedButton(nextCard.status);
             setShowDefinition(false);
         }
     };
