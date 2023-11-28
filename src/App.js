@@ -31,6 +31,7 @@ function App() {
         { label: "Socials", link: `/socials/${user && user.uid}` },
         { label: "My Sets", link: `/mysets/${user && user.uid}` },
         //... add other items
+    
     ];
 
     return (

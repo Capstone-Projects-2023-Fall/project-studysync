@@ -18,8 +18,8 @@ export default function Events(props) {
       <Title>Events</Title>
       <Table size='small'>
         <TableBody>
-          {_events.map((event)=>(
-            <TableRow key={event.id}>
+          {_events.map((event,index)=>(
+            <TableRow key={index}>
               <TableCell>{event.name}</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>

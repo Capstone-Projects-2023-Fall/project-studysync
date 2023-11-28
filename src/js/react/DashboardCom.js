@@ -43,29 +43,32 @@ export default function DashboardCom() {
     const [events,setEvents] = useState([]);
 
 
-    useEffect(()=>{
-      if(user){
+    useEffect(() => {
+      if (user) {
         setIsLoading(true);
-        userRepository.getFriends(user.uid).then((friends)=>{
-          console.log(`Friends: ${friends}`)
-          setFriends(friends);
-          setIsLoading(false);
-        }).catch((e)=>{
-          console.log(e);
-          setError(e);
-          setIsLoading(false);
-        })       
-        userRepository.getEvents(user.uid).then((events)=>{
-          console.log(`Events: ${events}`)
-          setEvents(events);
-          setIsLoading(false);
-
-        }).catch((e)=>{
-          setError(e);
-          setIsLoading(false);
-        })
+    
+        Promise.all([
+          userRepository.getFriends(user.uid),
+          userRepository.getEvents(user.uid),
+        ])
+          .then(([friends, events]) => {
+            console.log(`Friends: ${friends}`);
+            console.log(`Events: ${events}`);
+            setFriends(friends);
+            //REPLACE THIS WITH REAL EVENTS  
+            // setEvents(events);
+            setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
+            {name:"Upcoming FlashCard",eventType:"New FlashCard"}])
+          })
+          .catch((e) => {
+            console.log(e);
+            setError(e);
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
       }
-    },[])
+    }, [user]);
 
 
 
