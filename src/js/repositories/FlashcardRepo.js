@@ -74,7 +74,7 @@ const FlashcardRepo = {
             const initialComments = {
                 [commentId]: {
                     uid: this.getCurrentUid(),
-                    content: "Sample comment content",
+                    content: "Sample feedback content",
                     like: 0,
                     date: Timestamp.now()
                 },
