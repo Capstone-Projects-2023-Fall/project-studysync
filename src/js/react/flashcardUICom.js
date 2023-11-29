@@ -307,6 +307,11 @@ function FlashcardApp() {
     function parseGPTResponse(rawResponse) {
         try {
             // Regular expression to find JSON objects in the response
+
+            if (typeof rawResponse !== 'string') {
+                console.error("Invalid rawResponse: not a string");
+                return [];
+            }
             const jsonRegex = /{[\s\S]*?}/g;
             const matches = rawResponse.match(jsonRegex);
             console.log("Raw JSON matches:", matches);
@@ -338,7 +343,7 @@ function FlashcardApp() {
         setOpenAIDialog(false);
 
         try {
-            const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName);
+            const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName, imageFile);
 
             const generatedFlashcards = responseString; // Since the response is already in the expected format
 
@@ -359,38 +364,62 @@ function FlashcardApp() {
     const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName, imageFile) => {
         try {
             const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithOptionalImage';
-
-            const formData = new FormData();
-
-            formData.append('message', `Based on the provided topic '${topicName}' and the analysis of the uploaded image (if there is one), generate ${numFlashcards} educational flashcards. Each flashcard should relate to the topic and the image content. Provide a term and a definition for each flashcard in JSON format, with fields 'term' and 'definition'. For instance, if the topic is 'Botany' and the image contains a specific plant, a flashcard might be {"term": "Plant Name", "definition": "Description and significance in botany"}.`);
-
+    
+            const messages = [{
+                role: "user",
+                content: [{
+                    type: "text",
+                    text: `Based on the provided topic '${topicName}' and the analysis of the uploaded image (if there is one), generate ${numFlashcards} educational flashcards. Each flashcard should relate to the topic and the image content. Provide a term and a definition for each flashcard in JSON format, with fields 'term' and 'definition'. For instance, if the topic is 'Botany', a flashcard might be {"term": "Plant Name", "definition": "Description and significance in botany"}.`
+                }]
+            }];
+    
             if (imageFile) {
-                formData.append('image', imageFile);
+                const base64Image = await getBase64(imageFile);
+                console.log("Base64 Image:", base64Image); 
+                messages[0].content.push({
+                    type: "image_url",
+                    image_url: {
+                        url: `data:image/jpeg;base64,${base64Image}`
+                    }
+                });
             }
-            console.log("Sending Request with FormData:", formData);
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
-
+            
+    
+            console.log("Sending Request with JSON payload:", { messages });
+    
             const response = await fetch(functionUrl, {
                 method: 'POST',
-                body: formData,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ messages }),
             });
-            console.log("Response Status:", response.status);
-            console.log("Response OK:", response.ok);
 
+            console.log("Prompt sent:", messages);
+    
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
+            console.log("Response from cloud function:", response);
+    
             const data = await response.json();
-
-            return parseGPTResponse(data.text);
+            console.log("Response data from cloud function:", data);
+            
+            return parseGPTResponse(data);
         } catch (error) {
             console.error("Error calling cloud function:", error);
-            console.error("Detailed error:", error.message);
             throw error;
         }
+    };
+    
+
+    const getBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
     };
 
     const handleImageUpload = (event) => {
