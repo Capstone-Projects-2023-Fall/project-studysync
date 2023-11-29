@@ -306,7 +306,6 @@ function FlashcardApp() {
 
     function parseGPTResponse(rawResponse) {
         try {
-            // Regular expression to find JSON objects in the response
 
             if (typeof rawResponse !== 'string') {
                 console.error("Invalid rawResponse: not a string");
@@ -318,13 +317,12 @@ function FlashcardApp() {
 
             if (!matches) return [];
 
-            // Parse each JSON string into an object
             const flashcards = matches.map(jsonString => {
                 try {
                     return JSON.parse(jsonString);
                 } catch (error) {
                     console.error("Error parsing individual JSON string:", jsonString, error);
-                    return null; // or some other error handling
+                    return null; 
                 }
             }).filter(flashcard => flashcard != null);
             return flashcards;
@@ -345,15 +343,14 @@ function FlashcardApp() {
         try {
             const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName, imageFile);
     
-            const generatedFlashcards = responseString; // Assuming this is an array of flashcard objects
+            const generatedFlashcards = responseString; 
     
-            let addedFlashcards = []; // Array to hold newly added flashcards
+            let addedFlashcards = []; 
             for (const flashcard of generatedFlashcards) {
                 const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
                 addedFlashcards.push({ ...flashcard, flashcardId: newFlashcardId });
             }
     
-            // Update the state by appending the new flashcards
             setCards(prev => [...prev, ...addedFlashcards]);
     
         } catch (error) {
