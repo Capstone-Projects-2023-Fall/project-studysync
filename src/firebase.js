@@ -11,13 +11,13 @@ import { NotificationRepository } from "./js/repositories/NotificationRepository
 import { FlashCardRepository } from "./js/repositories/FlashCardRepository";
 import { EventRepository } from "./js/repositories/EventRepository";
 const firebaseConfig = {
-  apiKey: keys.apiKey,
-  authDomain: keys.authDomain,
-  projectId: keys.projectId,
-  storageBucket: keys.storageBucket,
-  messagingSenderId: keys.messagingSenderId,
-  appId: keys.appId,
-  measurementId: keys.measurementId,
+    apiKey: keys.apiKey,
+    authDomain: keys.authDomain,
+    projectId: keys.projectId,
+    storageBucket: keys.storageBucket,
+    messagingSenderId: keys.messagingSenderId,
+    appId: keys.appId,
+    measurementId: keys.measurementId,
 };
 
 // Initialize Firebase
@@ -32,16 +32,16 @@ export const quizRepository = new QuizRepository(database);
 export const eventRepository = new EventRepository(database);
 
 export const notificationRepository = new NotificationRepository(
-  database,
-  eventRepository
+    database,
+    eventRepository
 );
 export const flashcardRepository = new FlashCardRepository(database);
 export const userRepository = new UserRepository(
-  database,
-  quizRepository,
-  notificationRepository,
-  flashcardRepository,
-  eventRepository
+    database,
+    quizRepository,
+    notificationRepository,
+    flashcardRepository,
+    eventRepository
 );
 
 // export const askGPT = async (prompt) => {
@@ -54,3 +54,28 @@ export const userRepository = new UserRepository(
 //     throw error;
 //   }
 // };
+
+// export async function updateUsers() {
+//     const collectionRef = collection(database, "users");
+//     try {
+//         let ids = [];
+//         const querySnapshot = await getDocs(collectionRef);
+
+//         querySnapshot.docs.forEach((d) => {
+//             ids.push(d.id);
+//         });
+
+//         for (const id of ids) {
+//             const flashcardSetRef = doc(database, "users", id);
+
+//             await updateDoc(flashcardSetRef, {
+//                 newNotifications: 3,
+//             });
+//         }
+
+//         console.log("doneee");
+//     } catch (error) {
+//         console.error("Error:", error);
+//         return []; // Return an empty array or handle the error as needed
+//     }
+// }

@@ -5,6 +5,7 @@ import FlashcardRepo from '../repositories/FlashcardRepo';
 import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';//quotation mark 
 import SendIcon from '@mui/icons-material/Send';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -14,7 +15,6 @@ import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import Question from '../models/question';
 import QuizList from './QuizList';
-
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 
 const QuizComponent = () => {
@@ -46,7 +46,27 @@ const QuizComponent = () => {
 
   const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
-  
+  const [isQuizPaused, setIsQuizPaused] = useState(false);
+  const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz infor
+  //calculation time limit
+  const calculateTimeLimit = () => {
+    return questions.length * 5;
+    };
+
+
+
+  useEffect(() => {
+    //check if the quiz is paused
+    const pausedState = JSON.parse(localStorage.getItem('quizPaused'));
+    if (pausedState && pausedState.setId === setId) {
+      setIsQuizPaused(true);
+    }
+  }, []);
+
+  //resumae quiz navigate back to saved quiz
+  const handleResumeQuiz = () => {
+    navigate(`/quizmain/${setId}`);
+  };
 
   //hook for navigation
   const navigate = useNavigate();
@@ -54,6 +74,7 @@ const QuizComponent = () => {
   //for navagation start quiz
   const startQuiz = () => {
     navigate(`/quizmain/${setId}`); //Navigate to the quiz page with setId
+    localStorage.removeItem('quizPaused');//if start new quiz, delete saved progress
   };
 
 
@@ -64,7 +85,7 @@ const QuizComponent = () => {
   }, [openEdit]);
 
   useEffect(() => {
-    // fetch questions from database
+    //fetch questions from database
     const fetchQuestions = async () => {
         try {
             const questionData = await FlashcardRepo.getQuestionItems(quizId);
@@ -299,7 +320,7 @@ return (
         display: "flex", flexDirection: "column", height: "100vh",
         backgroundColor: '#f9f9f9', padding: '20px'
     }}>
-  
+ 
     <QuizList newQuizAdded={newQuizAdded}/>
 
         {/* Step 3: Add "Start Quiz" Button */}
@@ -317,6 +338,16 @@ return (
                 width: "30%", borderRight: "1px solid #e0e0e0",
                 borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
             }}>
+                
+            {/*quiz info button*/}
+                <Button
+                variant="outlined"
+                startIcon={<FormatQuoteIcon />}
+                onClick={() => setOpenQuizInfo(true)}
+                style={{ alignSelf: 'center', marginTop: '20px', marginLeft: '10px' }}>
+                    Quiz Info
+                </Button>
+
             {/* show list of question on the left panel with options to edit or delete */}
             {questions.map((quiz, index) => (
                     <ListItem button key={index} onClick={() => { setSelectedCard(quiz); setShowDefinition(false); }}>
@@ -390,15 +421,26 @@ return (
              </div>
 
         </div>
-        {/* Move the "Start Quiz" Button here, below the question preview panel */}
+        {/*start quiz button*/}
         <Button
             variant="contained"
             color="primary"
             onClick={startQuiz}
-            style={{ alignSelf: 'center', marginTop: '20px' }} // Center button and add margin on the top
+            style={{ alignSelf: 'center', marginTop: '20px' }} 
         >
             Start Quiz
         </Button>
+        
+        {isQuizPaused && (
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleResumeQuiz}
+          style={{ alignSelf: 'center', marginTop: '20px' }}
+        >
+          Resume Quiz
+        </Button>
+        )}
 
         <Dialog open={openEdit} onClose={() => { setOpenEdit(false)}}>
                     <DialogTitle>Edit question</DialogTitle>
@@ -573,11 +615,23 @@ return (
                     <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button>
                     </DialogActions>
                 </Dialog>
-    
-    </div>
-    
-);
-
-};
+                
+                {/*diaglos show quiz infomatio*/}
+                <Dialog open={openQuizInfo} onClose={() => setOpenQuizInfo(false)}>
+                    <DialogTitle>Quiz Information</DialogTitle>
+                    <DialogContent>
+                        <Typography>Question number: {questions.length}</Typography>
+                        <Typography>Time Limit: {calculateTimeLimit()} minutes</Typography>
+                        </DialogContent>
+                        {/*close info display*/}
+                        <DialogActions>
+                            <Button onClick={() => setOpenQuizInfo(false)} color="primary">
+                                Close
+                                </Button>
+                                </DialogActions>
+                                </Dialog>
+                                </div>
+                                );
+            };
 
 export default QuizComponent;
