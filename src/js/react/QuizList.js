@@ -45,18 +45,23 @@ function QuizList({ newQuizAdded }) {
   const [deleteQuiz, setDeleteQuiz] = useState(null); 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // state to keep the drawer open/close 
+
   useEffect(() => {
     const fetchQuizTitle = async () => {
       try{
         const quizData = await FlashcardRepo.getQuizTitleFromFlashcardSet(setId);
         console.log("Fetching Quiz Title:", quizData);
+        // check if newQuizAdded is provided and it's not already in quizList
+      if (newQuizAdded && !quizList.includes(newQuizAdded)) {
+        setQuizList(prevList => [...prevList, newQuizAdded]);
+        // reset the newQuizAdded prop
+        // this is crucial to prevent continuous addition of the same quiz title
+        newQuizAdded = null;
+      } else {
         setQuizList(quizData);
-        if (newQuizAdded) {
-          setQuizList(prevList => [...prevList, newQuizAdded]);
-          // reset the newQuizAdded prop
-          // this is crucial to prevent continuous addition of the same quiz title
-          newQuizAdded = null;
-        }
+      } 
+      setQuizList(quizData);
 
       } catch (error) {
           console.error("Failed to fetch flashcards:", error);
@@ -96,6 +101,7 @@ function QuizList({ newQuizAdded }) {
     if (isEditDialogOpen || isDeleteDialogOpen) {
       return;
     }
+    setIsDrawerOpen(open);
     setState({ ...state, [anchor]: open });
   };
 
@@ -137,7 +143,7 @@ function QuizList({ newQuizAdded }) {
 
   // this handler will edit the quiz title
   const handleEditQuizTitle = async () => {
-    console.log('handleEdit called');  
+    console.log('Rename is clicked!');  
 
     if (editedTitle.trim() === "" || !currentlyEditingTitle) {
       console.log('Empty edited name or no topic being edited, exiting');  
@@ -160,7 +166,7 @@ function QuizList({ newQuizAdded }) {
 
       setCurrentlyEditingTitle(null);
       setEditedTitle('');
-
+      setIsDrawerOpen(true); // keep the drawer open
 
     } catch (error) {
       console.error("Error editing flashcard set name:", error);
@@ -184,6 +190,7 @@ const handleDeleteQuiz = async () => {
             const updatedQuiz = quizList.filter(quiz => quiz !== deleteQuiz);
             setQuizList(updatedQuiz);
             setDeleteQuiz(null);
+            setIsDrawerOpen(true); // keep the drawer open
         } catch (error) {
             console.error("Failed to delete flashcard:", error);
         }
@@ -250,7 +257,7 @@ const handleDeleteQuiz = async () => {
         <Button variant="contained" onClick={toggleDrawer(anchor, true)}>Quiz List</Button>
           <Drawer
             anchor={anchor}
-            open={state[anchor] || isEditDialogOpen || isDeleteDialogOpen}
+            open={state[anchor] || isDrawerOpen || isEditDialogOpen || isDeleteDialogOpen}
             onClose={toggleDrawer(anchor, false)}
           >
             {list(anchor)}
