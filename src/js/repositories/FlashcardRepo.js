@@ -710,7 +710,21 @@ const FlashcardRepo = {
             throw error;
         }
     },
- 
+
+    // this will delete a quiz from the database accordingly
+    deleteQuiz: async function(quizToBeDeleted) {
+      
+        const quizSetRef = doc(database, 'quizzesCreation', quizToBeDeleted);
+        
+        try {
+            await deleteDoc(quizSetRef);
+            console.log('Document deleted successfully');
+            } catch (error) {
+            console.error('Error deleting document:', error);
+              throw error;
+            }
+
+    },
 
 };
 

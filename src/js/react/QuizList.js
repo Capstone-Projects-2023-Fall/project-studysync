@@ -20,11 +20,12 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Typography,
 } from '@mui/material';
 import QuizIcon from '@mui/icons-material/Quiz';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-function QuizList() {
+function QuizList({ newQuizAdded }) {
   const [state, setState] = React.useState({
     left: false,
   });
@@ -39,7 +40,10 @@ function QuizList() {
 
   const [currentlyEditingTitle, setCurrentlyEditingTitle] = useState(null); // store the quiz title for user editting
   const [editedTitle, setEditedTitle] = useState(''); // store the user input which is the edited quiz title
-
+  const [isEditDialogOpen, setEditDialogOpen] = useState(false);
+  
+  const [deleteQuiz, setDeleteQuiz] = useState(null); 
+  const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchQuizTitle = async () => {
@@ -47,18 +51,12 @@ function QuizList() {
         const quizData = await FlashcardRepo.getQuizTitleFromFlashcardSet(setId);
         console.log("Fetching Quiz Title:", quizData);
         setQuizList(quizData);
-
-        // // if quizId is available, set it as the current open quiz
-        // if (quizId) {
-        //   setCurrentQuiz(quizId);
-        //   console.log("Current Quiz ID: ", quizId);
-        // } else if (quizData.length > 0) {
-        //   // if no specific quizId is provided, navigate to the first quiz in the list by default
-        //   const firstQuizId = await FlashcardRepo.getQuizTitleId(quizData[0]);
-        //   const firstSetId = await FlashcardRepo.getSetIdByQuizId(firstQuizId);
-        //   navigate(`/quizFlash/${firstSetId}/quiz/${firstQuizId}`);
-        //   setCurrentQuiz(firstQuizId);
-        // }
+        if (newQuizAdded) {
+          setQuizList(prevList => [...prevList, newQuizAdded]);
+          // reset the newQuizAdded prop
+          // this is crucial to prevent continuous addition of the same quiz title
+          newQuizAdded = null;
+        }
 
       } catch (error) {
           console.error("Failed to fetch flashcards:", error);
@@ -67,7 +65,7 @@ function QuizList() {
   
       fetchQuizTitle();
   
-  }, [setId, quizId, navigate]);
+  }, [setId, quizId, navigate, newQuizAdded]);
 
   // navigate to quiz page by passing flashcardSet ID as parameter
   const handleQuizTitleClick = async (quizName) => {
@@ -95,7 +93,7 @@ function QuizList() {
     }
 
         // check if the dialog is open, and if yes, do not close the drawer
-    if (isDialogOpen) {
+    if (isEditDialogOpen || isDeleteDialogOpen) {
       return;
     }
     setState({ ...state, [anchor]: open });
@@ -107,6 +105,7 @@ function QuizList() {
     event.stopPropagation();
     setCurrentlyEditingTitle(title);
     setEditedTitle(title);
+    setDeleteQuiz(title);
     setAnchorEl(event.currentTarget);
     console.log("You have clicked on: ", title);
   };
@@ -116,16 +115,24 @@ function QuizList() {
     setAnchorEl(null);
   };
 
-  const [isDialogOpen, setDialogOpen] = useState(false);
-
-  // handle the dialog when open
-  const handleOpenDialog = () => {
-    setDialogOpen(true);
+  // handle open the edit dialog 
+  const handleOpenEditDialog = () => {
+    setEditDialogOpen(true);
   };
 
-  // handle the dialog when closed
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
+  // handle close the edit dialog 
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+  };
+
+  // handle open the deleting dialog
+  const handleOpenDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+  
+  // handle close the deleting dialog
+  const handleCloseDeleteDialog = () => {
+    setDeleteDialogOpen(false);
   };
 
   // this handler will edit the quiz title
@@ -158,13 +165,30 @@ function QuizList() {
     } catch (error) {
       console.error("Error editing flashcard set name:", error);
     }
-    handleCloseDialog();
+    handleCloseEditDialog();
   };
 
-  // this handler will delete the quiz
-  const handleDeleteQuiz = async () => {
-    console.log("Are you sure you want to delete this? ", currentlyEditingTitle);
-  };
+//delete the question and update the question data (setQuizData(updateQuiz))
+const handleDeleteQuiz = async () => {
+
+  // get the selected quiz id for the deletion
+  const quizIdToDelete = await FlashcardRepo.getQuizTitleId(deleteQuiz);
+  console.log("This is the quiz id you want to delete?: ", quizIdToDelete);
+
+    if (deleteQuiz) {
+        try {
+            await FlashcardRepo.deleteQuiz(quizIdToDelete);
+
+            //update the quiz list so the deleted quiz doesnt show in the drawer
+            const updatedQuiz = quizList.filter(quiz => quiz !== deleteQuiz);
+            setQuizList(updatedQuiz);
+            setDeleteQuiz(null);
+        } catch (error) {
+            console.error("Failed to delete flashcard:", error);
+        }
+        setDeleteDialogOpen(false);
+    }
+}
  
     const list = (anchor) => (
       <Box
@@ -199,17 +223,20 @@ function QuizList() {
                     aria-labelledby="quiz-dropdown-button"
                     anchorEl={anchorEl}
                     open={open}
-                    onClose={handleClose}
-                >
+                    onClose={handleClose}>
                   <MenuItem
                      onClick={() => {
-                      handleOpenDialog();
+                      handleOpenEditDialog();
                       handleClose();
-                      }}>Rename</MenuItem>
+                      }}>
+                      Rename
+                    </MenuItem>
                   <MenuItem onClick={() => {
-                      handleDeleteQuiz();
+                      handleOpenDeleteDialog();
                       handleClose();
-                      }}>Delete</MenuItem>
+                      }}>
+                      Delete
+                    </MenuItem>
                 </Menu>
         </List>
       </Box>
@@ -222,7 +249,7 @@ function QuizList() {
         <Button variant="contained" onClick={toggleDrawer(anchor, true)}>Quiz List</Button>
           <Drawer
             anchor={anchor}
-            open={state[anchor] || isDialogOpen}
+            open={state[anchor] || isEditDialogOpen || isDeleteDialogOpen}
             onClose={toggleDrawer(anchor, false)}
           >
             {list(anchor)}
@@ -230,7 +257,7 @@ function QuizList() {
         </React.Fragment>
       ))}
 
-      <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
+      <Dialog open={isEditDialogOpen} onClose={handleCloseEditDialog}>
         <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
           <TextField
@@ -243,11 +270,28 @@ function QuizList() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
+          <Button onClick={handleCloseEditDialog} color="primary">
             Cancel
           </Button>
           <Button onClick={handleEditQuizTitle} color="primary">
             Save
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={isDeleteDialogOpen} onClose={handleCloseDeleteDialog}>
+        <DialogTitle>Confirmation</DialogTitle>
+          <DialogContent>
+            <Typography>Are you sure you want to delete this quiz?</Typography>
+          </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDeleteDialog} color="primary">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteQuiz}
+            color="primary">
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>
