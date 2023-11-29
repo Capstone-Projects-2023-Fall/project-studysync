@@ -243,6 +243,12 @@ const handleOpenGenerateAI = () => {
 
 function parseGPTResponse(rawResponse) {
     try {
+    
+        // Check if rawResponse is undefined or null
+        if (!rawResponse) {
+            console.error("Raw response is undefined or null");
+            return [];
+        }
         // Regular expression to find JSON objects in the response
         const jsonRegex = /{[\s\S]*?}/g;
         const matches = rawResponse.match(jsonRegex);
@@ -289,26 +295,35 @@ const handleGenerateAIQuestion = async () => {
 // a cloud function to make POST request to ChatGPT for to generate user requested questions
 const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName) => {
     try {
-        const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
+        const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithImage';
 
+        const messages = [{
+            role: "user",
+            content: [{
+                type: "text",
+                text: `Please create ${numQuestions} quiz question 
+                along with 4 multiple choices answer with one correct answerabout ${topicName}. 
+                Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
+                as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
+                Please make sure questions are not repetitive. It is better just have the json back without any other text.`
+            }]
+        }];
+        console.log("Sending Request with JSON payload:", { messages });
         const response = await fetch(functionUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-                body: JSON.stringify({ message: `Please create ${numQuestions} quiz question 
-                along with 4 multiple choices answer with one correct answerabout ${topicName}. 
-                Format each question as JSON with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
-                as an index to the correct choice no other words in json , i need to parse it with only "question", "choices", and "correctChoiceIndex".
-                Please make sure questions are not repetitive.` }),
+                body: JSON.stringify({ messages }),
         });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
+            console.log("Response from cloud function:", response);
             const data = await response.json();
-            return parseGPTResponse(data.text); // Assuming the data.text is the string of JSON flashcards
+            console.log("Response data from cloud function:", data);
+            return parseGPTResponse(data); // Assuming the data.text is the string of JSON flashcards
         } catch (error) {
             console.error("Error calling cloud function:", error);
             throw error;
