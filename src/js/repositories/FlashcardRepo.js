@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { database, auth } from '../../firebase';
 import { collection, getDocs, getDoc, query, where, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
 
@@ -691,13 +692,12 @@ const FlashcardRepo = {
     // this will update the quiz title in the database accordingly
     updateQuizTitle: async function (quizId, newTitle) {
         try {
-            const flashcardSetRef = doc(database, 'quizzesCreation', quizId);
-            const snap = await getDoc(flashcardSetRef);
-
+            const quizSetRef = doc(database, 'quizzesCreation', quizId);
+            const snap = await getDoc(quizSetRef);
 
             if (snap.exists()) {
-
-                await updateDoc(flashcardSetRef, {
+                // update the quiz title
+                await updateDoc(quizSetRef, {
                     quizName: newTitle
                 });
                 console.log(`Flashcard set with ID ${quizId} updated successfully with new name: ${newTitle}.`);
@@ -712,19 +712,48 @@ const FlashcardRepo = {
     },
 
     // this will delete a quiz from the database accordingly
-    deleteQuiz: async function(quizToBeDeleted) {
+    deleteQuiz: async function(quizIdToBeDeleted, uid) {
+        const quizSetRef = doc(database, 'quizzesCreation', quizIdToBeDeleted);
       
-        const quizSetRef = doc(database, 'quizzesCreation', quizToBeDeleted);
-        
         try {
+            // delete the selected quiz
             await deleteDoc(quizSetRef);
-            console.log('Document deleted successfully');
+
+            console.log('Quiz is deleted successfully');
             } catch (error) {
-            console.error('Error deleting document:', error);
+            console.error('Error deleting quiz:', error);
               throw error;
             }
-
     },
+
+    // this will remove the owned quiz from the user
+    removeOwnedQuizFromUser: async function(uid, quizIdToBeDeleted) {
+        try {
+            const userSetRef = doc(database, 'users', uid);
+            const snap = await getDoc(userSetRef);
+            // check if the users table exists with the id 
+            if (snap.exists()) {
+              const data = snap.data();
+        
+              if (Array.isArray(data['ownedQuizzes']) && data['ownedQuizzes'].includes(quizIdToBeDeleted)) {
+                // remove the item from the array
+                data['ownedQuizzes'] = data['ownedQuizzes'].filter(item => item !== quizIdToBeDeleted);
+        
+                // update the document with the modified data
+                await updateDoc(userSetRef, { ownedQuizzes: data['ownedQuizzes'] });
+                
+                console.log(`Quiz ID ${quizIdToBeDeleted} is removed from user ${uid} successfully.`);
+              } else {
+                console.log(`Quiz ID ${quizIdToBeDeleted} not found in ownedQuizzes.`);
+              }
+            } else {
+              console.log(`User with ID ${uid} does not exist.`);
+            }
+          } catch (error) {
+            console.error("Error deleting quiz", error);
+            throw error;
+          }
+        },
 
 };
 

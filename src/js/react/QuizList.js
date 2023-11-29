@@ -170,15 +170,16 @@ function QuizList({ newQuizAdded }) {
 
 //delete the question and update the question data (setQuizData(updateQuiz))
 const handleDeleteQuiz = async () => {
-
+  
+  const uid = FlashcardRepo.getCurrentUid();
   // get the selected quiz id for the deletion
-  const quizIdToDelete = await FlashcardRepo.getQuizTitleId(deleteQuiz);
+  const quizIdToDelete = await FlashcardRepo.getQuizTitleId(deleteQuiz, uid);
   console.log("This is the quiz id you want to delete?: ", quizIdToDelete);
 
     if (deleteQuiz) {
         try {
             await FlashcardRepo.deleteQuiz(quizIdToDelete);
-
+            await FlashcardRepo.removeOwnedQuizFromUser(uid, quizIdToDelete);
             //update the quiz list so the deleted quiz doesnt show in the drawer
             const updatedQuiz = quizList.filter(quiz => quiz !== deleteQuiz);
             setQuizList(updatedQuiz);
