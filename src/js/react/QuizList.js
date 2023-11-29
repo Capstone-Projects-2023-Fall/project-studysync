@@ -210,7 +210,6 @@ function QuizList() {
                       handleDeleteQuiz();
                       handleClose();
                       }}>Delete</MenuItem>
-                  <MenuItem onClick={handleClose}>Share</MenuItem>
                 </Menu>
         </List>
       </Box>
