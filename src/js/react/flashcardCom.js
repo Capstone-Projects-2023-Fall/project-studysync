@@ -116,13 +116,16 @@ const FlashcardComponent = () => {
     try {
       const uid = FlashcardRepo.getCurrentUid();
       if (uid) {
-        const flashcardSetId = await FlashcardRepo.createFlashcardSet({
+        // retreived both flashcardSetID and quizSetID
+          const { flashcardSetId, quizSetId } = await FlashcardRepo.createFlashcardSet({
           name: newEntry,
           subject: selectedSubject
         });
         console.log('selectedSubject:', selectedSubject);
 
         await FlashcardRepo.addOwnedFlashcardSetToUser(uid, flashcardSetId);
+        // add user created quiz to the user collection
+        await FlashcardRepo.addOwnedQuizSetToUser(uid, quizSetId);
 
         // Update the local state
         const currentFlashcards = flashcards[selectedSubject] || [];

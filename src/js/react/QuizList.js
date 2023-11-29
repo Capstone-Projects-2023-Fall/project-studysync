@@ -48,21 +48,21 @@ function QuizList() {
         console.log("Fetching Quiz Title:", quizData);
         setQuizList(quizData);
 
-        // if quizId is available, set it as the current open quiz
-        if (quizId) {
-          setCurrentQuiz(quizId);
-          console.log("Current Quiz ID: ", quizId);
-        } else if (quizData.length > 0) {
-          // if no specific quizId is provided, navigate to the first quiz in the list by default
-          const firstQuizId = await FlashcardRepo.getQuizTitleId(quizData[0]);
-          const firstSetId = await FlashcardRepo.getSetIdByQuizId(firstQuizId);
-          navigate(`/quizFlash/${firstSetId}/quiz/${firstQuizId}`);
-          setCurrentQuiz(firstQuizId);
-        }
+        // // if quizId is available, set it as the current open quiz
+        // if (quizId) {
+        //   setCurrentQuiz(quizId);
+        //   console.log("Current Quiz ID: ", quizId);
+        // } else if (quizData.length > 0) {
+        //   // if no specific quizId is provided, navigate to the first quiz in the list by default
+        //   const firstQuizId = await FlashcardRepo.getQuizTitleId(quizData[0]);
+        //   const firstSetId = await FlashcardRepo.getSetIdByQuizId(firstQuizId);
+        //   navigate(`/quizFlash/${firstSetId}/quiz/${firstQuizId}`);
+        //   setCurrentQuiz(firstQuizId);
+        // }
 
-    } catch (error) {
-        console.error("Failed to fetch flashcards:", error);
-    }
+      } catch (error) {
+          console.error("Failed to fetch flashcards:", error);
+      }
     };
   
       fetchQuizTitle();
@@ -88,23 +88,6 @@ function QuizList() {
       }
   
   };
-
-  // navigate to the defualt quiz page by passing flashcardSet ID as parameter
-  const handleDefaultQuizClick = async () => {
-    try {
-      if (setId) {
-        console.log("Your Set Id is: ", setId);
-        console.log("Your Quiz Id is: ", setId);
-        console.log("Navigating to: ", `/quizFlash/${setId}/quiz/${setId}`);
-        navigate(`/quizFlash/${setId}/quiz/${setId}`);
-      } else {
-        console.error("Unable to fetch set ID for topic:");
-      }
-    } catch (error) {
-      console.error("Error in handleFlashcardClick:", error);
-    }
-
-};
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -193,25 +176,6 @@ function QuizList() {
         <h3>List of Quiz</h3>
         <Divider/>
         <List>
-        {/* Button for the current open quiz */}
-        {currentQuiz && (
-            <ListItem key={currentQuiz} disablePadding onClick= {() => handleDefaultQuizClick()}>
-              <ListItemButton>
-                <ListItemIcon>
-                  <QuizIcon/>
-                </ListItemIcon>
-                <ListItemText primary={`Default Quiz`} />
-              </ListItemButton>
-              <IconButton
-                  id="quiz-dropdown-button"
-                  aria-controls={open ? 'quiz-dropdown-menu' : undefined}
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}
-                  onClick={(event) => handleClick(event, 'Default Quiz')}>
-                <MoreVertIcon/>
-              </IconButton>
-            </ListItem>
-          )}
         {quizList.map((quizTitle) => (
             <ListItem key={quizTitle} disablePadding>
               <ListItemButton onClick= {() => handleQuizTitleClick(quizTitle)}>
@@ -246,7 +210,6 @@ function QuizList() {
                       handleDeleteQuiz();
                       handleClose();
                       }}>Delete</MenuItem>
-                  <MenuItem onClick={handleClose}>Share</MenuItem>
                 </Menu>
         </List>
       </Box>
