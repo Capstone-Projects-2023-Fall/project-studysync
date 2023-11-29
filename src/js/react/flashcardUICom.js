@@ -181,7 +181,7 @@ function FlashcardApp() {
         setOpenDelete(true);
     };
 
-    
+
     const confirmDelete = async () => {
         if (cardToDelete) {
             try {
@@ -376,13 +376,13 @@ function FlashcardApp() {
 
     const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName, imageFile) => {
         try {
-            const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithOptionalImage';
+            const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithImage';
 
             const messages = [{
                 role: "user",
                 content: [{
                     type: "text",
-                    text: `Based on the provided topic '${topicName}' and the analysis of the uploaded image (if there is one), generate ${numFlashcards} educational flashcards. Each flashcard should relate to the topic and the image content(if there is one). Provide a term and a definition for each flashcard in JSON format, with fields 'term' and 'definition'. For instance, if the topic is 'Botany', a flashcard might be {"term": "Plant Name", "definition": "Description and significance in botany"}.`
+                    text: `Based on the provided description '${topicName}' and the analysis of the uploaded image (if there is one), generate ${numFlashcards} educational flashcards. Each flashcard should relate to the the image content first(if there is one)and description . Provide a term and a definition for each flashcard in JSON format, with fields 'term' and 'definition'. For instance, if the topic is 'Botany', a flashcard might be {"term": "Plant Name", "definition": "Description and significance in botany"}. It is better just have the json back without any other text.`
                 }]
             }];
 
@@ -439,6 +439,12 @@ function FlashcardApp() {
             reader.readAsDataURL(file);
         }
     };
+
+    const handleCancelImage = () => {
+        setImage(null);
+        setPreviewUrl(null);
+    };
+
 
 
 
@@ -753,7 +759,7 @@ function FlashcardApp() {
                         <TextField
                             autoFocus
                             margin="dense"
-                            label="Topic Name"
+                            label="Description"
                             type="text"
                             fullWidth
                             value={topicName}
@@ -781,11 +787,21 @@ function FlashcardApp() {
                                 Upload Image
                             </Button>
                         </label>
+                        
                         {previewUrl && (
                             <div style={{ marginTop: '10px' }}>
                                 <img src={previewUrl} alt="Image preview" style={{ maxWidth: '100%', height: 'auto' }} />
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleCancelImage}
+                                    style={{ marginTop: '10px' }}
+                                >
+                                    Cancel Image
+                                </Button>
                             </div>
                         )}
+
 
 
                     </DialogContent>
