@@ -23,7 +23,7 @@ const QuizComponent = () => {
   const { setId, quizId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
 
   const [question, setQuestion] = useState('');
-  const [choices, setChoices] = useState(['', '', '', '']); //store choices
+  const [choices, setChoices] = useState(['', '', '', '']); // store choices
   const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null); //capture the correct choice as an array index
   const [questions, setQuizData] = useState([]); //array to hold all questions data
 
@@ -38,11 +38,13 @@ const QuizComponent = () => {
 
 
   const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
-  const [topicName, setTopicName] = useState(''); //capture the topic name from user entry
+  const [topicName, setTopicName] = useState(''); // capture the topic name from user entry
   const [numberOfQuestions, setNumOfQuestions] = useState(1); //capture the number of quesiton from user entry, default is set to 1
 
-  const [openQuiz, setOpenQuiz] = useState(false);
-  const [quizTitle, setQuizTitle] = useState('');
+  const [openQuiz, setOpenQuiz] = useState(false); // state to handle the creat quiz button
+  const [quizTitle, setQuizTitle] = useState(''); // capture the quiz title from the user entry
+
+  const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
   const [isQuizPaused, setIsQuizPaused] = useState(false);
   const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz infor
@@ -225,8 +227,10 @@ const handleCreateQuiz = async () => {
         const newQuizId = await FlashcardRepo.createNewQuiz(setId, quizTitle);
   
         console.log("You want to add: ", quizTitle);
-        // Add the newly created quiz to the user's owned quiz sets
+        // add the newly created quiz to the user's owned quiz sets
         await FlashcardRepo.addOwnedQuizSetToUser(uid, newQuizId);
+        //store a newly added quiz in a state to pass as prop
+        setQuizList(newQuizId);
       }
     } catch (error) {
       console.error('Error creating quiz:', error);
@@ -316,8 +320,19 @@ return (
         display: "flex", flexDirection: "column", height: "100vh",
         backgroundColor: '#f9f9f9', padding: '20px'
     }}>
-  
-    <QuizList/>
+ 
+    <QuizList newQuizAdded={newQuizAdded}/>
+
+        {/* Step 3: Add "Start Quiz" Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={startQuiz}
+        style={{ /* your button styles */ }}
+      >
+        Start Quiz
+      </Button>
+
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
                 width: "30%", borderRight: "1px solid #e0e0e0",
