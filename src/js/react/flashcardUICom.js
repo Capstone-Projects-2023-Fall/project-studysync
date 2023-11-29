@@ -341,24 +341,26 @@ function FlashcardApp() {
 
     const handleGenerateFlashcards = async () => {
         setOpenAIDialog(false);
-
+    
         try {
             const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName, imageFile);
-
-            const generatedFlashcards = responseString; // Since the response is already in the expected format
-
-            const addFlashcardPromises = generatedFlashcards.map(async (flashcard) => {
+    
+            const generatedFlashcards = responseString; // Assuming this is an array of flashcard objects
+    
+            let addedFlashcards = []; // Array to hold newly added flashcards
+            for (const flashcard of generatedFlashcards) {
                 const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
-                return { ...flashcard, flashcardId: newFlashcardId };
-            });
-
-            const addedFlashcards = await Promise.all(addFlashcardPromises);
+                addedFlashcards.push({ ...flashcard, flashcardId: newFlashcardId });
+            }
+    
+            // Update the state by appending the new flashcards
             setCards(prev => [...prev, ...addedFlashcards]);
-
+    
         } catch (error) {
             console.error("Error generating or adding flashcards with AI:", error);
         }
     };
+    
 
 
     const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName, imageFile) => {
@@ -409,17 +411,7 @@ function FlashcardApp() {
             console.error("Error calling cloud function:", error);
             throw error;
         }
-    };
-    
-
-    const getBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
-            reader.readAsDataURL(file);
-        });
-    };
+    };  
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
