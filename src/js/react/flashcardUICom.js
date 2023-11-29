@@ -10,6 +10,8 @@ import { useParams } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
+import { CircularProgress, Snackbar } from '@mui/material';
+
 
 
 function FlashcardApp() {
@@ -47,6 +49,11 @@ function FlashcardApp() {
     const [isFlipped, setIsFlipped] = useState(false);
     const [imageFile, setImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+
 
     useEffect(() => {
         const fetchFlashcards = async () => {
@@ -174,6 +181,7 @@ function FlashcardApp() {
         setOpenDelete(true);
     };
 
+    
     const confirmDelete = async () => {
         if (cardToDelete) {
             try {
@@ -322,7 +330,7 @@ function FlashcardApp() {
                     return JSON.parse(jsonString);
                 } catch (error) {
                     console.error("Error parsing individual JSON string:", jsonString, error);
-                    return null; 
+                    return null;
                 }
             }).filter(flashcard => flashcard != null);
             return flashcards;
@@ -339,52 +347,58 @@ function FlashcardApp() {
 
     const handleGenerateFlashcards = async () => {
         setOpenAIDialog(false);
-    
+        setIsLoading(true);
+
         try {
             const responseString = await callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName, imageFile);
-    
-            const generatedFlashcards = responseString; 
-    
-            let addedFlashcards = []; 
+
+            const generatedFlashcards = responseString;
+
+            let addedFlashcards = [];
             for (const flashcard of generatedFlashcards) {
                 const newFlashcardId = await FlashcardRepo.addFlashcardItem(setId, flashcard.term, flashcard.definition);
                 addedFlashcards.push({ ...flashcard, flashcardId: newFlashcardId });
             }
-    
+            setSuccessMessage('Flashcards generated successfully!');
+
             setCards(prev => [...prev, ...addedFlashcards]);
-    
+
         } catch (error) {
             console.error("Error generating or adding flashcards with AI:", error);
+            setErrorMessage('Failed to generate flashcards.');
+        }
+        finally {
+            setIsLoading(false);
         }
     };
-    
+
 
 
     const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName, imageFile) => {
         try {
             const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithOptionalImage';
-    
+
             const messages = [{
                 role: "user",
                 content: [{
                     type: "text",
-                    text: `Based on the provided topic '${topicName}' and the analysis of the uploaded image (if there is one), generate ${numFlashcards} educational flashcards. Each flashcard should relate to the topic and the image content. Provide a term and a definition for each flashcard in JSON format, with fields 'term' and 'definition'. For instance, if the topic is 'Botany', a flashcard might be {"term": "Plant Name", "definition": "Description and significance in botany"}.`
+                    text: `Based on the provided topic '${topicName}' and the analysis of the uploaded image (if there is one), generate ${numFlashcards} educational flashcards. Each flashcard should relate to the topic and the image content(if there is one). Provide a term and a definition for each flashcard in JSON format, with fields 'term' and 'definition'. For instance, if the topic is 'Botany', a flashcard might be {"term": "Plant Name", "definition": "Description and significance in botany"}.`
                 }]
             }];
-    
+
             if (imageFile) {
                 messages[0].content.push({
                     type: "image_url",
                     image_url: {
-                        url: `data:image/jpeg;base64,${imageFile}` 
+                        url: `data:image/jpeg;base64,${imageFile}`
                     }
                 });
             }
-            
-            
-    
+
+
+
             console.log("Sending Request with JSON payload:", { messages });
-    
+
             const response = await fetch(functionUrl, {
                 method: 'POST',
                 headers: {
@@ -394,21 +408,21 @@ function FlashcardApp() {
             });
 
             console.log("Prompt sent:", messages);
-    
+
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             console.log("Response from cloud function:", response);
-    
+
             const data = await response.json();
             console.log("Response data from cloud function:", data);
-            
+
             return parseGPTResponse(data);
         } catch (error) {
             console.error("Error calling cloud function:", error);
             throw error;
         }
-    };  
+    };
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -425,8 +439,8 @@ function FlashcardApp() {
             reader.readAsDataURL(file);
         }
     };
-    
-    
+
+
 
     const handleCloseDialog = () => {
         setOpenAIDialog(false);
@@ -452,6 +466,25 @@ function FlashcardApp() {
 
     return (
         <ThemeProvider theme={theme}>
+
+            {isLoading && (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0, zIndex: 1000, backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
+                    <CircularProgress />
+                </div>
+            )}
+            <Snackbar
+                open={!!successMessage}
+                autoHideDuration={6000}
+                onClose={() => setSuccessMessage('')}
+                message={successMessage}
+            />
+            <Snackbar
+                open={!!errorMessage}
+                autoHideDuration={6000}
+                onClose={() => setErrorMessage('')}
+                message={errorMessage}
+                color="error"
+            />
             <div style={{
                 display: "flex", flexDirection: "column", height: "100vh",
                 backgroundColor: '#f9f9f9', padding: '20px',
