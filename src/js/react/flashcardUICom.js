@@ -374,15 +374,14 @@ function FlashcardApp() {
             }];
     
             if (imageFile) {
-                const base64Image = await getBase64(imageFile);
-                console.log("Base64 Image:", base64Image); 
                 messages[0].content.push({
                     type: "image_url",
                     image_url: {
-                        url: `data:image/jpeg;base64,${base64Image}`
+                        url: `data:image/jpeg;base64,${imageFile}` 
                     }
                 });
             }
+            
             
     
             console.log("Sending Request with JSON payload:", { messages });
@@ -425,11 +424,20 @@ function FlashcardApp() {
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
-            setImage(file);
             const previewUrl = URL.createObjectURL(file);
             setPreviewUrl(previewUrl);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const base64String = reader.result
+                    .replace('data:', '')
+                    .replace(/^.+,/, '');
+                setImage(base64String); // Set the base64 string
+            };
+            reader.readAsDataURL(file);
         }
     };
+    
+    
 
     const handleCloseDialog = () => {
         setOpenAIDialog(false);
