@@ -1,7 +1,7 @@
 import Event from "../models/event";
 import { EVENT_TYPE } from "../models/event";
-import { setDoc, doc } from "firebase/firestore";
-import { getAllItems, getItemById } from "../utils/sharedRepositoryFunctions";
+import { setDoc, doc, collection, addDoc} from "firebase/firestore";
+import { getAllItems, getItemById, removeDocumentFromCollection, updateNonArrayDocumentFields } from "../utils/sharedRepositoryFunctions";
 const { v4: uuidv4 } = require("uuid");
 
 export class EventRepository {
@@ -59,5 +59,38 @@ export class EventRepository {
 
     async getEventById(id) {
         return await getItemById(this.database, id, "events", "event");
+    }
+
+    /**Upcoming Events */
+    async createUpcomingEvent(upcomingEvent){
+        try {
+            const eventsCollectionRef = collection(this.database, "upcomingEvents");
+            const docRef = await addDoc(eventsCollectionRef, upcomingEvent.toJSON());
+            return docRef.id;
+        } catch (error) {
+            console.log(`error adding event: ${error}`);
+            throw error
+        }  
+    }
+
+    async getUpcomingEventById(upcomingEventId){
+        return await getItemById(this.database, upcomingEventId, "upcomingEvents", "upcoming event");
+    }
+
+    async deleteUpcomingEvent(upcomingEventId){
+        await removeDocumentFromCollection(this.database, upcomingEventId, "upcomingEvents", "upcoming event")
+    }
+
+    /**Pass in an updated object to update */
+    async updateUpcomingEvent(upcomingEventId, updatedUpcomingEvent){
+        await updateNonArrayDocumentFields(this.database, upcomingEventId, "upcomingEvents", updatedUpcomingEvent)
+    }
+
+    async updateUpcomingEventDateTime(upcomingEventId, newDateTime){
+        await this.updateUpcomingEvent(upcomingEventId, {dateTime: newDateTime})
+    }
+    
+    async updateUpcomingEventName(upcomingEventId, newName){
+        await this.updateUpcomingEvent(upcomingEventId, {dateTime: newName})
     }
 }
