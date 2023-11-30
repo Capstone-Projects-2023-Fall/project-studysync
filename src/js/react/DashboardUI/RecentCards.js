@@ -7,8 +7,8 @@ import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 
-function RecentFlashcards(props) {
-  const { card } = props;
+function RecentCards(props) {
+  const { card,imageLink } = props;
 
 
   return (
@@ -17,7 +17,7 @@ function RecentFlashcards(props) {
         <Card sx={{ display: 'flex' }}>
           <CardContent sx={{ flex: 1 }}>
             <Typography component="h2" variant="h5">
-              Title
+              {card.name}
             </Typography>
             <Typography variant="subtitle1" paragraph>
               description
@@ -26,7 +26,7 @@ function RecentFlashcards(props) {
           <CardMedia
             component="img"
             sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-            image='https://source.unsplash.com/random?wallpapers'
+            image={'https://source.unsplash.com/random?wallpapers'}
             alt='flashcards-pictures'
           />
         </Card>
@@ -35,7 +35,7 @@ function RecentFlashcards(props) {
   );
 }
 
-RecentFlashcards.propTypes = {
+RecentCards.propTypes = {
   post: PropTypes.shape({
     date: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
@@ -45,4 +45,4 @@ RecentFlashcards.propTypes = {
   }).isRequired,
 };
 
-export default RecentFlashcards;
+export default RecentCards;

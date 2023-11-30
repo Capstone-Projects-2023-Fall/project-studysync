@@ -14,11 +14,13 @@ import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import Events from './DashboardUI/Events';
 import Friends from './DashboardUI/Friends';
-import Orders from './DashboardUI/Orders';
 import {useState,useEffect} from 'react';
 import { userRepository } from '../../firebase';
-import RecentFlashcards from './DashboardUI/RecentFlashcards';
-import './DashboardUI/RecentFlash.css'
+import RecentCards from './DashboardUI/RecentCards';
+import './DashboardUI/RecentFlash.css';
+import './DashboardUI/Dashboard.css';
+
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -45,6 +47,7 @@ export default function DashboardCom() {
     const [friends,setFriends] = useState([]);
     const [events,setEvents] = useState([]);
     const [ownedFlashcards,setOwnedFlashcards] = useState([]);
+    const [ownedQuizzes,setOwnedQuizzes] = useState([]);
 
     useEffect(() => {
       if (user) {
@@ -54,21 +57,27 @@ export default function DashboardCom() {
           userRepository.getFriends(user.uid),
           userRepository.getEvents(user.uid),
           userRepository.getOwnedFlashcards(user.uid),
+          // userRepository.getOwnedQuizzes(user.uid),
         ])
-          .then(([friends, events,ownedFlashcards]) => {
+          .then(([friends, events,ownedFlashcards,ownedQuizzes]) => {
             console.log(`Friends: ${friends}`);
             console.log(`Events: ${events}`);
-            console.log(`OwnedFlashcards: ${ownedFlashcards}`)
+            console.log(`OwnedFlashcards: ${ownedFlashcards}`);
+            // console.log(`OwnedQuizzes: ${ownedQuizzes}`);
             setFriends(friends);
             //REPLACE THIS WITH REAL EVENTS  
             // setEvents(events);
             setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
-            {name:"Upcoming FlashCard",eventType:"New FlashCard"}])
+            {name:"Upcoming FlashCard",eventType:"New FlashCard"}]);
+
             //REPLACE THIS WITH REAL OWNED FLASHCARDS
             //setOwnedFlashcards(ownedFlashcards);
-              setOwnedFlashcards([{name:'card1'},
-              {name:"card2"},{name:'card3'}
-            ])
+            setOwnedFlashcards([{name:'card1'},
+              {name:"card2"},{name:'card3'}]);
+
+            //REPLACE THIS WITH REAL OWNED QUIZZES
+            //setOwnedQuizzes(ownedQuizzes);
+            setOwnedQuizzes([{name:'quiz1'},{name:'quiz2'},{name:'quiz3'}])
           })
           .catch((e) => {
             console.log(e);
@@ -121,6 +130,11 @@ export default function DashboardCom() {
 
   return (
     <>  
+    <div class="banner animated tada">
+    <div class=" big-text animated tada">95% OFF</div>
+      <div>the entire store</div>
+      <a href="#">Go to store</a>
+    </div>    
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -170,20 +184,26 @@ export default function DashboardCom() {
                   Recent flashcards:
               </div>
               <Grid id='flashcard-grid' container spacing={4}>
-                {ownedFlashcards.map((card,index) => (
-                  <RecentFlashcards key={index} card={card}/>
+                {ownedFlashcards.map((card,index,
+                  imageLink='https://lovetoteach87.com/wp-content/uploads/2020/09/flashcards-1591812_1280-940x590.jpg') => (
+                  <RecentCards key={index} card={card}/>
                 ))}
               </Grid>
               {/* RECENT Quizzes */}
               <div className='recent-headers'>
                   Recent Quizzes:
-              </div>                            
+              </div>       
+              <Grid id='flashcard-grid' container spacing={4}>
+                {ownedQuizzes.map((card,index,
+                  imageLink='./DashboardUI/static/quizz-pic.webp') => (
+                  <RecentCards key={index} card={card}/>
+                ))}
+              </Grid>                                   
             </Grid>
           </Container>
         </Box>
       </Box>
     </ThemeProvider>
- 
     </>
   );
 }  
