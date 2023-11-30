@@ -35,7 +35,7 @@ export default function Friends(props) {
         <TableBody>
           {_friends.map((friend)=>(
             <TableRow key={friend.id}>
-              <TableCell><a id='Friend-link' href={link(friend.id)}>{friend.name}</a></TableCell>
+              <TableCell id='friend-row'><a id='Friend-link' href={link(friend.id)}>{friend.name}</a></TableCell>
             </TableRow>
           ))}
       

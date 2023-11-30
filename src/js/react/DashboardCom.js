@@ -17,6 +17,8 @@ import Friends from './DashboardUI/Friends';
 import Orders from './DashboardUI/Orders';
 import {useState,useEffect} from 'react';
 import { userRepository } from '../../firebase';
+import RecentFlashcards from './DashboardUI/RecentFlashcards';
+
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -31,6 +33,7 @@ function Copyright(props) {
 }
 
 
+
 const defaultTheme = createTheme();
 
 export default function DashboardCom() {
@@ -41,7 +44,7 @@ export default function DashboardCom() {
     const [error,setError ]= useState(null);
     const [friends,setFriends] = useState([]);
     const [events,setEvents] = useState([]);
-
+    const [ownedFlashcards,setOwnedFlashcards] = useState([]);
 
     useEffect(() => {
       if (user) {
@@ -50,15 +53,18 @@ export default function DashboardCom() {
         Promise.all([
           userRepository.getFriends(user.uid),
           userRepository.getEvents(user.uid),
+          userRepository.getOwnedFlashcards(user.uid),
         ])
-          .then(([friends, events]) => {
+          .then(([friends, events,ownedFlashcards]) => {
             console.log(`Friends: ${friends}`);
             console.log(`Events: ${events}`);
+            console.log(`OwnedFlashcards: ${ownedFlashcards}`)
             setFriends(friends);
             //REPLACE THIS WITH REAL EVENTS  
             // setEvents(events);
             setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
             {name:"Upcoming FlashCard",eventType:"New FlashCard"}])
+            setOwnedFlashcards(ownedFlashcards);
           })
           .catch((e) => {
             console.log(e);
@@ -161,6 +167,12 @@ export default function DashboardCom() {
                 </Paper>
               </Grid>
             </Grid>
+                              {/* RECENT FLASHCARDS */}
+                              <Grid container spacing={4}>
+                {ownedFlashcards.map((card,index) => (
+                  <RecentFlashcards key={index} card={card}/>
+                ))}
+              </Grid>
             <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>

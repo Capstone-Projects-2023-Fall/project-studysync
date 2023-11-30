@@ -19,10 +19,14 @@ function MainFeaturedPost(props) {
     const [btn,setBtn] = useState('');
     const [name,SetName] = useState('');
     const [profession,setProfession] = useState('');
+    const [firstName,setFirstName] = useState('');
+    const [lastName,setLastName] = useState('');
+
 
     useEffect(()=>{
       setBtn('edit');
-      SetName(post.Name);
+      setFirstName(post.firstName);
+      setLastName(post.lastName);
       setProfession(post.profession);
     },[])
 
@@ -39,9 +43,12 @@ function MainFeaturedPost(props) {
       if(edit == false){
         setEdit(true)
       }else{
-
-        userRepository.saveUserProfile(UserId,{name: name,
-          profession: profession}).then(()=>{
+        if(firstName == '' && lastName == ''){
+          alert('Both name fields are empty !');
+          return;
+        }
+        userRepository.saveUserProfile(UserId,{firstName:firstName,
+          profession: profession,lastName: lastName}).then(()=>{
             console.log('Saved information to the database.')
             }).catch(()=>{
               console.log('Error in saving data in header.')
@@ -54,15 +61,28 @@ function MainFeaturedPost(props) {
 
       if(btn == 'edit'){
         return(
-          <>{name == '' ? "User doesn't have a name yet" : name}</>
+          <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+            {`${firstName} ${lastName}`}
+          </Typography>
         )
       }else{
         return(
-          <div className='MainFeature'>
-          <label className='name-label'>Enter name</label>
-          <input className='nameInput' type="text"  placeholder='Your name' 
-            value={name} onChange={(e)=>SetName(e.target.value)}/>
-          </div>
+          <>
+            <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+              <div className='MainFeature'>
+                <label className='name-label'>Enter first name</label>
+                <input className='nameInput' type="text"  placeholder='Your name' 
+                  value={firstName} onChange={(e)=>setFirstName(e.target.value)}/>
+              </div>
+            </Typography>
+            <Typography component="h1" variant="h3" color="inherit" gutterBottom>
+            <div className='MainFeature2'>
+                <label className='name-label'>Enter last name</label>
+                <input className='nameInput' type="text"  placeholder='Your name' 
+                  value={lastName} onChange={(e)=>setLastName(e.target.value)}/>
+              </div>            
+            </Typography>
+        </>
         )
       }
     }
@@ -117,9 +137,7 @@ function MainFeaturedPost(props) {
               pr: { md: 0 },
             }}
           >
-            <Typography component="h1" variant="h3" color="inherit" gutterBottom>
               {nameText()}
-            </Typography>
             <Typography variant="h5" color="inherit" paragraph>
               {professionText()}
             </Typography>        

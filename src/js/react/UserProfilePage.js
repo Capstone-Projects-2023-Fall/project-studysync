@@ -28,7 +28,6 @@ import { useParams } from 'react-router-dom';
     image: 'https://source.unsplash.com/random?wallpapers',
     imageText: 'main image description',
     linkText: 'View flashcards',
-    Name: profile.name,
     bio: profile.bio,
     imageURL: profile.imageURL,
     profession: profile.profession,
@@ -36,8 +35,9 @@ import { useParams } from 'react-router-dom';
     friends: profile.friends,
     email: profile.email,
     id: profile.id,
-    cardlink: `/flashcard-ui/${profile.id}`,
-    username: profile.username
+    cardlink: `/flashcard-ui/${profile.id}`,    
+    firstName: profile.firstName,
+    lastName: profile.lastName,
     }
 };
   
