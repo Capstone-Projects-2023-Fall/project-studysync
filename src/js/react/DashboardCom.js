@@ -184,9 +184,8 @@ export default function DashboardCom() {
                   Recent flashcards:
               </div>
               <Grid id='flashcard-grid' container spacing={4}>
-                {ownedFlashcards.map((card,index,
-                  imageLink='https://lovetoteach87.com/wp-content/uploads/2020/09/flashcards-1591812_1280-940x590.jpg') => (
-                  <RecentCards key={index} card={card}/>
+                {ownedFlashcards.map((card,index) => (
+                  <RecentCards key={index} card={card} imageLink='https://lovetoteach87.com/wp-content/uploads/2020/09/flashcards-1591812_1280-940x590.jpg'/>
                 ))}
               </Grid>
               {/* RECENT Quizzes */}
@@ -194,9 +193,8 @@ export default function DashboardCom() {
                   Recent Quizzes:
               </div>       
               <Grid id='flashcard-grid' container spacing={4}>
-                {ownedQuizzes.map((card,index,
-                  imageLink='./DashboardUI/static/quizz-pic.webp') => (
-                  <RecentCards key={index} card={card}/>
+                {ownedQuizzes.map((card,index) => (
+                  <RecentCards key={index} card={card} imageLink='https://canopylab.com/wp-content/uploads/2020/05/Working-with-adaptive-quizzes-A-beginners-guide.jpg'/>
                 ))}
               </Grid>                                   
             </Grid>

@@ -26,8 +26,8 @@ function RecentCards(props) {
           <CardMedia
             component="img"
             sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-            image={'https://source.unsplash.com/random?wallpapers'}
-            alt='flashcards-pictures'
+            image={imageLink}
+            alt='Recent cards Pictures'
           />
         </Card>
       </CardActionArea>
