@@ -82,12 +82,9 @@ export class NotificationRepository {
       async getListOfNotifications(listOfNotificationIds){
         const res = []
         let nullCount = 0
-
         for(const id of listOfNotificationIds){
             const noti = await this.getNotificationById(id)
-            console.log("noti is: ", noti)
             res.push(noti)
-
             if(!noti.event){
                 nullCount += 1
             }

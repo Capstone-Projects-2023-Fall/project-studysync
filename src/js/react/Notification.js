@@ -203,7 +203,6 @@ function timeAgo(timestamp) {
 }
 
 function parseNotifications(notifications){
-    console.log("notifications: ", notifications)
     const data = []
     for (const notification of notifications) {
         if(!notification.event) continue

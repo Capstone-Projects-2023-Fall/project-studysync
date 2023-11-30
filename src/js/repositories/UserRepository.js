@@ -177,7 +177,6 @@ export class UserRepository {
 
     async getSharedFlashcards(userId) {
         const quizIds = await this.getSharedFlashcardIds(userId);
-        console.log("shared flashcard ids are: ", quizIds)
         const result = [];
         for (const id of quizIds) {
             const flashcard = await this.flashcardRepository.getFlashcardSetBy_Id(id);
