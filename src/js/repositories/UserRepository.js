@@ -12,7 +12,7 @@ import {
 import { userConverter } from "../converters/userConverter";
 import User from "../models/user";
 import { Notification } from "../models/notification";
-import { EVENT_TYPE } from "../models/event";
+import { EVENT_TYPE, UpcomingEvent } from "../models/event";
 
 /**
  * Utility class to talk to FireStore User Collection [IN PROGRESS]
@@ -613,5 +613,50 @@ export class UserRepository {
             newNotifications: 0,
         });
         return 0;
+    }
+
+    /**Upcoming events */
+    async addUpcomingEvent(userId, name, dateTime, type){
+        const upcomingEventId = await this.eventRepository.createUpcomingEvent(new UpcomingEvent(name, dateTime, type))        
+        await addItemToArrayField(
+            this.database,
+            userId,
+            upcomingEventId,
+            "users",
+            "upcomingEvents",
+            "upcoming event"
+        );
+        return true
+    }
+
+    async removeUpcomingEvent(userId, eventId){
+        await removeItemFromArrayField(
+            this.database,
+            userId,
+            eventId,
+            "users",
+            "upcomingEvents",
+            "upcoming event"
+        );
+        return true
+    }
+
+    async getUpcomingEventIds(userId){
+        const upcomingEventIds = await getArrayFieldFromCollection(
+            this.database,
+            "users",
+            userId,
+            "upcomingEvents"
+        );
+        return upcomingEventIds;
+    }
+
+    async getUpcomingEvents(userId){
+        const upcomingEventIds = await this.getUpcomingEventIds(userId)
+        const result = []
+        for(const id of upcomingEventIds){
+            result.push(await this.eventRepository.getUpcomingEventById(id))
+        }
+        return result
     }
 }
