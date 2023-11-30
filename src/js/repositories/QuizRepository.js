@@ -33,13 +33,13 @@ export class QuizRepository {
 
     //Updated version
     async get_AllQuizzes() {
-        const collectionRef = collection(this.database, "quizzes");
+        const collectionRef = collection(this.database, "quizzesCreation");
         try {
             const querySnapshot = await getDocs(collectionRef);
             const documents = querySnapshot.docs.map((d) => ({
                 id: d.id,
                 ...d.data(),
-            }));
+            }));     
 
             return documents;
         } catch (error) {
