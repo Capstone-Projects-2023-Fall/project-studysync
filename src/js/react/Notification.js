@@ -12,58 +12,40 @@ import {
     ListItem,
 } from "@mui/material";
 import useUser from "./useUser";
-import { userRepository, flashcardRepository } from "../../firebase";
+import { userRepository} from "../../firebase";
 import { EVENT_TYPE } from "../models/event";
 import {
     addNewIdField,
     updateQuestion,
     getAllDocumentsInCollection,
 } from "../../firebase";
-const { v4: uuidv4 } = require("uuid");
-
-export default function Notification() {
+import { useNavigate} from "react-router-dom";
+export default function Notification({userId, closePanel}) {
+ 
     const [page, setPage] = useState(1);
     const itemsPerPage = 8; // You can adjust this value as needed
 
     const [notifications, setNotifications] = useState([]);
     const { user, isLoading } = useUser();
+    const navigate = useNavigate();
 
     React.useEffect(() => {
-        if (!isLoading && user != null && user.uid) {
-            userRepository.getNotifications(user.uid).then((result) => {
-                result.reverse();
+        if (userId != null) {
+            userRepository.getNotifications(userId.uid).then((result) => {
                 setNotifications(result);
             });
         }
-    }, [isLoading, user]);
+    }, []);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
 
-    let data = [];
-    if (notifications.length > 0) {
-        for (const notification of notifications) {
-            switch (notification.event.eventType) {
-                case EVENT_TYPE.NEW_FOLLOWER:
-                    data.push(createNewFollowerEvent(notification));
-                    break;
-                case EVENT_TYPE.SHARE_QUIZ:
-                    data.push(createSharedQuizEvent(notification));
-                    break;
-                case EVENT_TYPE.SHARE_FLASHCARD:
-                    data.push(createSharedFlashcardEvent(notification));
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
 
     return (
         <div>
             <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-                {data
+                {parseNotifications(notifications)
                     .slice((page - 1) * itemsPerPage, page * itemsPerPage)
                     .map((item) => (
                         <React.Fragment key={item.id}>
@@ -75,10 +57,26 @@ export default function Notification() {
                                     <Avatar
                                         alt={item.author}
                                         src={item.avatar}
+                                        onClick={()=>{
+                                            navigate(`/profile/${item.userFrom}`)
+                                            closePanel()
+                                        }}
                                     />
                                 </ListItemAvatar>
                                 <ListItemText
                                     primary={item.name}
+                                    onClick={()=>{
+                                                
+                                    if(item.isFlashcard){
+                                        navigate(`/flashcard-ui/${item.sharedFlashcardId}`);
+                                    }else if(item.isFollower){
+                                        navigate(`/profile/${item.userFrom}`)
+                                    }else{
+                                        navigate(`/quizmain/${item.sharedQuizId}`)
+                                    }
+                                    
+                                    closePanel()
+                                }}
                                     secondary={
                                         <React.Fragment>
                                             <Typography
@@ -86,6 +84,18 @@ export default function Notification() {
                                                 component="span"
                                                 variant="body2"
                                                 color="text.primary"
+                                                onClick={()=>{
+                                                if(item.isFlashcard){
+                                                    navigate(`/flashcard-ui/${item.sharedFlashcardId}`);
+                                                }else if(item.isFollower){
+                                                    navigate(`/profile/${item.userFrom}`)
+                                                    console.log("not flashcard banchekry sia: ", item.isFollower)
+                                                }else{
+                                                    navigate(`/quizmain/${item.sharedQuizId}`)
+                                                }
+                                                
+                                                closePanel()
+                                            }}
                                             >
                                                 {item.author}
                                             </Typography>
@@ -112,12 +122,12 @@ export default function Notification() {
             </List>
             {notifications.length >= itemsPerPage && (
                 <Pagination
-                    count={Math.ceil(data.length / itemsPerPage)}
+                    count={Math.ceil(notifications.length / itemsPerPage)}
                     page={page}
                     onChange={handleChangePage}
                     color="primary"
                 />
-            )}
+            )} 
         </div>
     );
 }
@@ -133,34 +143,45 @@ const styles = {
 
 function createNewFollowerEvent(notification) {
     let data = {
-        id: uuidv4(),
+        id: notification.id,
         name: "New Follower!",
     };
     data.author = notification.userFrom.name + " followed you!";
     data.avatar = notification.userFrom.imageURL;
     data.when = timeAgo(notification.createdAt);
+    data.userFrom = notification.userFrom.id
+    data.isFollower = true
+    data.currUser = notification.event.newFollowerEvent.followingId
     return data;
 }
 
 function createSharedQuizEvent(notification) {
     let data = {
-        id: uuidv4(),
+        id: notification.id,
         name: `${notification.userFrom.name} shared a Quiz with you!`,
     };
-    data.author = notification.quiz.title;
+    data.author = notification.quiz.name;
     data.avatar = notification.userFrom.imageURL;
     data.when = timeAgo(notification.createdAt);
+    data.userFrom = notification.userFrom.id
+    data.isQuiz = true
+    data.sharedQuizId = notification.quiz.id
+    data.currUser = notification.event.shareQuizEvent.sharedWith
     return data;
 }
 
 function createSharedFlashcardEvent(notification) {
     let data = {
-        id: uuidv4(),
+        id: notification.id,
         name: `${notification.userFrom.name} shared a Flashcard with you!`,
     };
     data.author = notification.flashcard.name;
     data.avatar = notification.userFrom.imageURL;
     data.when = timeAgo(notification.createdAt);
+    data.sharedFlashcardId = notification.flashcard.id
+    data.userFrom = notification.userFrom.id
+    data.isFlashcard = true
+    data.currUser = notification.event.shareFlashcardEvent.sharedWith
     return data;
 }
 
@@ -179,4 +200,26 @@ function timeAgo(timestamp) {
         const days = Math.floor(seconds / 86400);
         return `${days}d`;
     }
+}
+
+function parseNotifications(notifications){
+    console.log("notifications: ", notifications)
+    const data = []
+    for (const notification of notifications) {
+        if(!notification.event) continue
+        switch (notification.event.eventType) {
+            case EVENT_TYPE.NEW_FOLLOWER:
+                data.push(createNewFollowerEvent(notification));
+                break;
+            case EVENT_TYPE.SHARE_QUIZ:
+                data.push(createSharedQuizEvent(notification));
+                break;
+            case EVENT_TYPE.SHARE_FLASHCARD:
+                data.push(createSharedFlashcardEvent(notification));
+                break;
+            default:
+                break;
+        }
+    }
+    return data
 }

@@ -18,8 +18,16 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { userRepository } from "../../firebase";
 import useUser from "./useUser";
+import { useParams } from "react-router-dom";
+import useNotificationCount from "./useNotificationCount";
+import { useNavigate} from "react-router-dom";
+
+import AccessTimeIcon from '@mui/icons-material/AccessTime'; // Import the timer icon
+import ScheduleDialog from "./ScheduleDialog";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function MySets() {
+    const { UserId } = useParams();
     const [tab, setTab] = React.useState(0);
     const [ownedQuizzes, setOwnedQuizzes] = useState([]);
     const [users, setUsers] = useState([]);
@@ -27,7 +35,11 @@ export default function MySets() {
     const [selectedFlashcardId, setSelectedFlashcardId] = useState(null); // Track the selected flashcard ID
     const [selectedQuizId, setSelectedQuizId] = useState(null);
     const { user, isLoading } = useUser();
-    const handleTabChange = (event, newValue) => {
+    const [currUser, setCurrUser] = useState(null)
+    const [sharedQuizzes, setSharedQuizzes] = useState([]);
+    const [sharedFlashcards, setSharedFlashcards] = useState([]);
+    
+    const handleTabChange = (newValue) => {
         setTab(newValue);
     };
 
@@ -42,11 +54,11 @@ export default function MySets() {
 
     const handleShare = (selectedId, selectedUsers, isFlashcard) => {
         if (isFlashcard) {
-            for (const user of selectedUsers) {
+            for (const u of selectedUsers) {
                 userRepository
                     .shareFlashcard(
-                        "bOJOSp8Xa0N80s576Ol19PirqH12",
-                        user,
+                        UserId,
+                        u,
                         selectedId
                     )
                     .then((res) => {
@@ -57,17 +69,13 @@ export default function MySets() {
                     });
             }
             setSelectedFlashcardId(null);
-            console.log("Shared Selected Card!", selectedFlashcardId);
-            console.log("shared selected users: ", selectedUsers);
             return;
         }
         // Implement the logic to handle sharing quizzes
-        console.log("Shared Selected Card!", selectedQuizId);
-        console.log("shared selected users: ", selectedUsers);
 
-        for (const user of selectedUsers) {
+        for (const u of selectedUsers) {
             userRepository
-                .shareQuiz("bOJOSp8Xa0N80s576Ol19PirqH12", user, selectedId)
+                .shareQuiz(UserId, u, selectedId)
                 .then((res) => {
                     console.log("Share Quiz Success: ", res);
                 })
@@ -80,16 +88,25 @@ export default function MySets() {
 
     useEffect(() => {
         if (user != null) {
+            setCurrUser(currUser)
             userRepository.getOwnedQuizzes(user.uid).then((res) => {
                 setOwnedQuizzes(res);
-            });
+            })
 
             userRepository.getOwnedFlashcards(user.uid).then((res) => {
                 setOwnedFlashcards(res);
+            })
+
+            userRepository.getSharedFlashcards(user.uid).then((res) => {
+                setSharedFlashcards(res);
+            });
+
+            userRepository.getSharedQuizzes(user.uid).then((res) => {
+                setSharedQuizzes(res);
             });
             userRepository.getAllUsers().then((res) => setUsers(res));
         }
-    }, [isLoading, user]);
+    }, [isLoading, user, tab]);
     return (
         <>
             <Tabs
@@ -100,6 +117,8 @@ export default function MySets() {
             >
                 <Tab label="Quizzes" />
                 <Tab label="Flashcards" />
+                <Tab label="Shared Quizzes" />
+                <Tab label="Shared Flashcards" />
             </Tabs>
 
             {tab === 0 && (
@@ -107,16 +126,19 @@ export default function MySets() {
                     {ownedQuizzes.map((item) => (
                         <FlashCardSet
                             key={item.id}
-                            author="me"
-                            title={item.title}
-                            terms={`${item.question} questions`}
+                            author={item.author.name}
+                            imageURL={item.author.imageURL}
+                            title={item.quizName}
+                            terms={`${Object.keys(item.questionItems).length} questions`}
                             users={users}
+                            quizId={item.id}
                             onShareClick={() =>
                                 handleShareClick(item.id, false)
                             }
                             onShare={(selectedUsers) =>
                                 handleShare(item.id, selectedUsers, false)
                             }
+                            authorId={item.authorId}
                         />
                     ))}
                 </div>
@@ -127,8 +149,11 @@ export default function MySets() {
                         <FlashCardSet
                             key={item.id}
                             users={users}
-                            author="me"
+                            author={item.author.name}
+                            imageURL={item.author.imageURL}
                             title={item.name}
+                            flashcardId={item.id}
+                            authorId={item.authorId}
                             terms={`${
                                 Object.keys(item.flashcardItems).length
                             } terms`}
@@ -140,22 +165,81 @@ export default function MySets() {
                     ))}
                 </div>
             )}
+
+                {tab === 2 && (
+                    <div style={styles.containerStyle}>
+                        {sharedQuizzes.map((item) => (
+                            <FlashCardSet
+                            key={item.id}
+                            quizId={item.id}
+                            author={item.author.name}
+                            imageURL={item.author.imageURL}
+                            authorId={item.authorId}
+                            title={item.quizName}
+                            terms={`${Object.keys(item.questionItems).length} questions`}
+                            users={users}
+                            onShareClick={() =>
+                                handleShareClick(item.id, false)
+                            }
+                            onShare={(selectedUsers) =>
+                                handleShare(item.id, selectedUsers, false)
+                            }
+                        />
+                        ))}
+                    </div>
+                )}
+                {tab === 3 && (
+                    <div style={styles.containerStyle}>
+                        {sharedFlashcards.map((item) => (
+                                <FlashCardSet
+                                    key={item.id}
+                                    users={users}
+                                    authorId={item.authorId}
+                                    author={item.author.name}
+                                    imageURL={item.author.imageURL}
+                                    title={item.name}
+                                    flashcardId={item.id}
+                                    terms={`${
+                                        Object.keys(item.flashcardItems).length
+                                    } terms`}
+                                    onShareClick={() => handleShareClick(item.id, true)}
+                                    onShare={(selectedUsers) =>
+                                        handleShare(item.id, selectedUsers, true)
+                                    }
+                                />
+                            ))}
+                    </div>
+                )}
         </>
     );
 }
 
-function FlashCardSet({ author, title, terms, users, onShareClick, onShare }) {
+function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imageURL, authorId, flashcardId, quizId}) {
     const [open, setOpen] = React.useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
+    const [scheduleDialogOpenD, setScheduleDialogOpenD] = useState(false);
+    const navigate = useNavigate();
 
-    // const handleShareClick = () => {
-    //     setOpen(true);
-    // };
+  const openScheduleDialogD = (e) => {
+    e.stopPropagation();
+    setScheduleDialogOpenD(true);
+  };
+
+  const closeScheduleDialogD = () => {
+    setScheduleDialogOpenD(false);
+  };
+
+  const handleScheduleD = (selectedDate, selectedTime) => {
+    // Handle scheduling logic here
+    console.log('Scheduled for:', selectedDate, selectedTime);
+    closeScheduleDialogD();
+  };
 
     const handleClose = () => {
         setOpen(false);
     };
-    const handleShareClick = () => {
+    const handleShareClick = (e) => {
+        e.stopPropagation();
         setOpen(true);
         // Call the parent component's onShareClick function
         onShareClick();
@@ -185,6 +269,13 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare }) {
                 (e.currentTarget.style.boxShadow = styles.hoverStyle.boxShadow)
             }
             onMouseOut={(e) => (e.currentTarget.style.boxShadow = "")}
+            onClick={()=>{
+                if(quizId){
+                    navigate(`/quizmain/${quizId}`)
+                }else{
+                    navigate(`/flashcard-ui/${flashcardId}`)
+                }
+            }}
         >
             <div>
                 <Typography variant="heading4">
@@ -202,7 +293,10 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare }) {
                     gap: "5px",
                 }}
             >
-                <Avatar alt={"Michael Jordan"} src={"bankusrc"} />
+                <Avatar alt={author} src={imageURL} onClick={(e)=>{
+                    e.stopPropagation()
+                    navigate(`/profile/${authorId}`)
+                }}/>
                 <Typography variant="body2">
                     {author || "Mike Scott"}
                 </Typography>
@@ -214,8 +308,24 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare }) {
                     Share
                 </Button>
 
-                <Dialog open={open} onClose={handleClose}>
+                <Button onClick={openScheduleDialogD} variant="contained" color="primary" >
+                    <AccessTimeIcon /> 
+                </Button>
+
+                <ScheduleDialog
+                open={scheduleDialogOpenD}
+                onClose={closeScheduleDialogD}
+                onSchedule={handleScheduleD}
+            /> 
+                <Dialog open={open} onClose={handleClose} onClick={(e)=>{e.stopPropagation()}}>
                     <DialogTitle>Select Users to Share With</DialogTitle>
+                    <Button
+                    onClick={handleClose}
+                    color="primary"
+                    style={{ position: "absolute", top: "8px", right: "8px" }} // Position the close button
+                    >
+                    <CloseIcon /> {/* Add a CloseIcon from Material-UI */}
+                    </Button>
                     <SearchBar onSearch={() => {}} sx={{ width: "70%" }} />
                     <DialogContent
                         style={{
@@ -226,8 +336,8 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare }) {
                     >
                         <List>
                             {/* Replace the following with your actual list of users */}
-                            {users.map((user) => (
-                                <ListItem key={user.id}>
+                            {users.map((user, index) => (
+                                <ListItem key={user.id || index}>
                                     <ListItemText
                                         primary={
                                             user.name ||
