@@ -16,10 +16,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import Question from '../models/question';
 import QuizList from './QuizList';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
-import Backdrop from '@mui/material/Backdrop';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
-
+import ListAltIcon from '@mui/icons-material/ListAlt';
 const QuizComponent = () => {
 
   const [openAdd, setOpenAdd] = useState(false);
@@ -411,6 +410,7 @@ return (
                 <Button variant="outlined" onClick={() => setOpenQuiz(true)}>Create a New Quiz</Button>
             </Stack>
             </List>
+               
 
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
                         <Typography variant="h6">

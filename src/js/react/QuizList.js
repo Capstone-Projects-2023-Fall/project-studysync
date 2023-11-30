@@ -24,6 +24,7 @@ import {
 } from '@mui/material';
 import QuizIcon from '@mui/icons-material/Quiz';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
 function QuizList({ newQuizAdded }) {
   const [state, setState] = React.useState({
@@ -257,7 +258,11 @@ const handleDeleteQuiz = async () => {
     <div>
       {['left'].map((anchor) => (
         <React.Fragment key={anchor}>
-        <Button variant="contained" onClick={toggleDrawer(anchor, true)}>Quiz List</Button>
+        <Button 
+          variant="contained" 
+          onClick={toggleDrawer(anchor, true)}
+          startIcon= {<ListAltIcon/>}
+        >Quiz List</Button>
           <Drawer
             anchor={anchor}
             open={state[anchor] || isDrawerOpen || isEditDialogOpen || isDeleteDialogOpen}
