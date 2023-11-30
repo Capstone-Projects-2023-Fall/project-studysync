@@ -599,9 +599,11 @@ const FlashcardRepo = {
     },
 
     // get quiz id by using the quiz name
-    getQuizTitleId: async function (quizName) {
+    getQuizTitleId: async function (quizName, flashcardSetId) {
         try {
-            const querySnapshot = await getDocs(query(collection(database, 'quizzesCreation'), where('quizName', '==', quizName)));
+            const querySnapshot = await getDocs(query(collection(database, 'quizzesCreation'), 
+            where('quizName', '==', quizName),
+            where('flashcardSetId', '==', flashcardSetId)));
             if (!querySnapshot.empty) {
                 return querySnapshot.docs[0].id;
             }
