@@ -752,7 +752,7 @@ function FlashcardApp() {
 
 
                 <Dialog open={openAIDialog} onClose={handleCloseDialog}>
-                    <DialogTitle>Generate Flashcards with AI</DialogTitle>
+                    <DialogTitle>Flashcards with AI</DialogTitle>
                     <DialogContent>
                         <TextField
                             autoFocus

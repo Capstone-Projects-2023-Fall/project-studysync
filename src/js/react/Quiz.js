@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText } from '@mui/material';
+import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';//quotation mark 
@@ -16,6 +16,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import Question from '../models/question';
 import QuizList from './QuizList';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Snackbar from '@mui/material/Snackbar';
 
 const QuizComponent = () => {
 
@@ -48,6 +51,11 @@ const QuizComponent = () => {
 
   const [isQuizPaused, setIsQuizPaused] = useState(false);
   const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz infor
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   //calculation time limit
   const calculateTimeLimit = () => {
     return questions.length * 5;
@@ -239,6 +247,7 @@ const handleCreateQuiz = async () => {
 
 const handleOpenGenerateAI = () => {
     setOpenGenerateAI(true);
+
 };
 
 function parseGPTResponse(rawResponse) {
@@ -275,7 +284,7 @@ function parseGPTResponse(rawResponse) {
 // this function allows user to generate new quiz question through the help of AI
 const handleGenerateAIQuestion = async () => {
     setOpenGenerateAI(false);
-
+    setIsLoading(true);
     try {
         const responseString = await callYourCloudFunctionToGenerateQuestions(numberOfQuestions, topicName);
         const generatedQuestions = responseString;
@@ -285,10 +294,12 @@ const handleGenerateAIQuestion = async () => {
             const newQuestionId = await FlashcardRepo.addQuizQuestion(quizId, question.question, question.choices, question.correctChoiceIndex);
             addedQuestions.push({ ...question, questionId: newQuestionId });
         }
-
+        setSuccessMessage('Flashcards generated successfully!');
         setQuizData(prev => [...prev, ...addedQuestions]);
     } catch (error) {
         console.error("Error generating or adding question with AI:", error);
+    }finally {
+        setIsLoading(false);
     }
 };
 
@@ -335,6 +346,25 @@ return (
         display: "flex", flexDirection: "column", height: "100vh",
         backgroundColor: '#f9f9f9', padding: '20px'
     }}>
+
+            {isLoading && (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0, zIndex: 1000, backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
+                    <CircularProgress />
+                </div>
+            )}
+            <Snackbar
+                open={!!successMessage}
+                autoHideDuration={6000}
+                onClose={() => setSuccessMessage('')}
+                message={successMessage}
+            />   
+            <Snackbar
+                open={!!errorMessage}
+                autoHideDuration={6000}
+                onClose={() => setErrorMessage('')}
+                message={errorMessage}
+                color="error"
+            />
  
     <QuizList newQuizAdded={newQuizAdded}/>
 
