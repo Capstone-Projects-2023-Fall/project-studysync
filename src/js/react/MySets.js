@@ -10,6 +10,7 @@ import {
     ListItem,
     Checkbox,
     TextField,
+    ListItemAvatar,
     Tab,
     Tabs,
 } from "@mui/material";
@@ -251,6 +252,7 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imag
 
     const handleClose = () => {
         setOpen(false);
+        setCheckedItems([])
     };
     const handleShareClick = (e) => {
         e.stopPropagation();
@@ -297,113 +299,209 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imag
     };
 
     return (
-        <Paper
-            elevation={3}
-            style={styles.cardStyle}
-            onMouseOver={(e) =>
-                (e.currentTarget.style.boxShadow = styles.hoverStyle.boxShadow)
-            }
-            onMouseOut={(e) => (e.currentTarget.style.boxShadow = "")}
-            onClick={()=>{
-                if(quizId){
-                    navigate(`/quizmain/${quizId}`)
-                }else{
-                    navigate(`/flashcard-ui/${flashcardId}`)
-                }
-            }}
+        // <Paper
+        //     elevation={3}
+        //     style={styles.cardStyle}
+        //     onMouseOver={(e) =>
+        //         (e.currentTarget.style.boxShadow = styles.hoverStyle.boxShadow)
+        //     }
+        //     onMouseOut={(e) => (e.currentTarget.style.boxShadow = "")}
+        //     onClick={()=>{
+        //         if(quizId){
+        //             navigate(`/quizmain/${quizId}`)
+        //         }else{
+        //             navigate(`/flashcard-ui/${flashcardId}`)
+        //         }
+        //     }}
+        // >
+        //     <div>
+        //         <Typography variant="heading4">
+        //             {title || "What do the best college students do?"}
+        //         </Typography>
+        //         <Typography variant="body2" style={styles.flashcardInfo}>
+        //             {terms || "20 Terms"}
+        //         </Typography>
+        //     </div>
+
+        //     <div
+        //         style={{
+        //             display: "flex",
+        //             alignItems: "center",
+        //             gap: "5px",
+        //         }}
+        //     >
+        //         <Avatar alt={author} src={imageURL} onClick={(e)=>{
+        //             e.stopPropagation()
+        //             navigate(`/profile/${authorId}`)
+        //         }}/>
+        //         <Typography variant="body2">
+        //             {author || "Mike Scott"}
+        //         </Typography>
+        //         <Button
+        //             variant="contained"
+        //             color="primary"
+        //             onClick={handleShareClick}
+        //         >
+        //             Share
+        //         </Button>
+
+        //         <Button onClick={openScheduleDialogD} variant="contained" color="primary" >
+        //             <AccessTimeIcon /> 
+        //         </Button>
+
+        //         <ScheduleDialog
+        //         open={scheduleDialogOpenD}
+        //         onClose={closeScheduleDialogD}
+        //         onSchedule={handleScheduleD}
+        //     /> 
+        //         <Dialog open={open} onClose={handleClose} onClick={(e)=>{e.stopPropagation()}}>
+        //             <DialogTitle  sx={{ fontSize: '1.0rem' }}>Select/Search Users to Share With</DialogTitle>
+        //             <Button
+        //             onClick={handleClose}
+        //             color="primary"
+        //             style={{ position: "absolute", top: "8px", right: "8px" }} // Position the close button
+        //             >
+        //             <CloseIcon /> {/* Add a CloseIcon from Material-UI */}
+        //             </Button>
+                    
+        //             <DialogContent
+        //                 style={{
+        //                     height: "30rem",
+        //                     overflow: "auto",
+        //                     width: "30rem",
+        //                 }}
+        //             >
+        //                 <SearchBar onSearch={handleSearch}  />
+        //                 <List>
+        //                     {/* Replace the following with your actual list of users */}
+        //                     {filteredData.map((user, index) => (
+                                
+        //                         <ListItem key={user.id || index}     sx={{
+        //                             "&:hover": {
+        //                                 backgroundColor: "rgba(0, 0, 0, 0.05)", // Grey highlight color
+        //                                 cursor: "pointer", // Change the cursor to a pointer on hover
+        //                             },
+        //                         }}>
+        //                                 <ListItemAvatar>
+        //                                     <Avatar src={user.imageURL} alt={user.name || user.firstName || user.email} onClick={()=>{navigate(`/profile/${user.id}`)}}/>
+        //                                 </ListItemAvatar>
+        //                             <ListItemText
+        //                                 primary={
+        //                                     user.name ||
+        //                                     user.firstName ||
+        //                                     user.email
+        //                                 }
+        //                             />
+        //                             <Checkbox
+        //                                 onChange={() =>
+        //                                     handleCheckboxChange(user.id)
+        //                                 }
+        //                                 checked={checkedItems.includes(user.id)}
+        //                             />
+        //                         </ListItem>
+        //                     ))}
+        //                 </List>
+
+        //                 {filteredData.length > 0 && (            <Button
+        //                     variant="contained"
+        //                     color="primary"
+        //                     onClick={handleShare}
+        //                 >
+        //                     Share
+        //                 </Button>)}
+            
+        //             </DialogContent>
+        //         </Dialog>
+        //     </div>
+        // </Paper>
+        <Paper elevation={3} style={styles.cardStyle}>
+      <div style={styles.titleBar}>
+        <Typography variant="subtitle1">
+          {title || "What do the best college students do?"}
+        </Typography>
+      </div>
+      <Typography variant="body2" style={styles.infoText}>
+        {terms || "20 Terms"}
+      </Typography>
+      <div style={styles.flexContainer}>
+        <Avatar alt={author} src={imageURL} style={styles.avatar} onClick={(e) => {
+          e.stopPropagation();
+          navigate(`/profile/${authorId}`);
+        }} />
+        <Typography variant="body2">
+          {author || "Mike Scott"}
+        </Typography>
+        <Button
+          style={styles.button}
+          variant="contained"
+          color="primary"
+          onClick={handleShareClick}
         >
-            <div>
-                <Typography variant="heading4">
-                    {title || "What do the best college students do?"}
-                </Typography>
-                <Typography variant="body2" style={styles.flashcardInfo}>
-                    {terms || "20 Terms"}
-                </Typography>
-            </div>
+          Share
+        </Button>
+        <Button style={styles.button} onClick={openScheduleDialogD} variant="contained" color="primary" >
+          <AccessTimeIcon />
+        </Button>
+      </div>
+      {/* ... other components like ScheduleDialog and Dialog */}
+    </Paper>
 
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "5px",
-                }}
-            >
-                <Avatar alt={author} src={imageURL} onClick={(e)=>{
-                    e.stopPropagation()
-                    navigate(`/profile/${authorId}`)
-                }}/>
-                <Typography variant="body2">
-                    {author || "Mike Scott"}
-                </Typography>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleShareClick}
-                >
-                    Share
-                </Button>
-
-                <Button onClick={openScheduleDialogD} variant="contained" color="primary" >
-                    <AccessTimeIcon /> 
-                </Button>
-
-                <ScheduleDialog
-                open={scheduleDialogOpenD}
-                onClose={closeScheduleDialogD}
-                onSchedule={handleScheduleD}
-            /> 
-                <Dialog open={open} onClose={handleClose} onClick={(e)=>{e.stopPropagation()}}>
-                    <DialogTitle>Select Users to Share With</DialogTitle>
-                    <Button
-                    onClick={handleClose}
-                    color="primary"
-                    style={{ position: "absolute", top: "8px", right: "8px" }} // Position the close button
-                    >
-                    <CloseIcon /> {/* Add a CloseIcon from Material-UI */}
-                    </Button>
-                    <SearchBar onSearch={handleSearch} sx={{ width: "70%" }} />
-                    <DialogContent
-                        style={{
-                            height: "30rem",
-                            overflow: "auto",
-                            width: "20rem",
-                        }}
-                    >
-                        <List>
-                            {/* Replace the following with your actual list of users */}
-                            {filteredData.map((user, index) => (
-                                <ListItem key={user.id || index}>
-                                    <ListItemText
-                                        primary={
-                                            user.name ||
-                                            user.firstName ||
-                                            user.email
-                                        }
-                                    />
-                                    <Checkbox
-                                        onChange={() =>
-                                            handleCheckboxChange(user.id)
-                                        }
-                                        checked={checkedItems.includes(user.id)}
-                                    />
-                                </ListItem>
-                            ))}
-                        </List>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={handleShare}
-                        >
-                            Share
-                        </Button>
-                    </DialogContent>
-                </Dialog>
-            </div>
-        </Paper>
     );
 }
 
+
 const styles = {
+    cardStyle: {
+      backgroundColor: "#f7f7f7",
+      borderRadius: "8px",
+      padding: "20px",
+      margin: "10px 0",
+      boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      transition: "box-shadow 0.3s",
+      '&:hover': {
+        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+      },
+    },
+    titleBar: {
+      backgroundColor: "#4b9cd3",
+      color: "white",
+      padding: "5px 10px",
+      borderRadius: "4px",
+      fontWeight: "bold",
+      marginBottom: "10px", // add space below the title bar
+    },
+    button: {
+      borderRadius: "20px",
+      textTransform: "none",
+      fontWeight: "normal",
+      margin: "5px", // add margin around the button
+    },
+    infoText: {
+      marginBottom: "10px", // space below the text
+    },
+    avatar: {
+      marginRight: "10px", // space to the right of the avatar
+    },
+    flexContainer: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "flex-start",
+      gap: "10px",
+    },
+    dialogContent: {
+      height: "30rem",
+      overflow: "auto",
+      width: "30rem",
+    },
+    listItemHover: {
+      "&:hover": {
+        backgroundColor: "rgba(0, 0, 0, 0.05)",
+        cursor: "pointer",
+      },
+    },
+    // ... other styles you may need
+  };
+const stylesz = {
     termsStyle: {
         backgroundColor: "#E0E0E0", // Grey background
         borderRadius: "15px", // Rounded corners
@@ -466,6 +564,14 @@ const SearchBar = ({ onSearch }) => {
     };
 
     return (
-        <TextField label="Search" variant="outlined" onChange={handleSearch} />
+        <TextField label="Search" variant="outlined" onChange={handleSearch}  sx={{ width: "100%" }}/>
+        // <div style={{ display: 'flex', justifyContent: 'center' }}>
+        //     <TextField
+        //         label="Search"
+        //         variant="outlined"
+        //         sx={{ width: "60%" }} // Adjust the width here as needed
+        //         onChange={handleSearch}
+        //     />
+        // </div>
     );
 };
