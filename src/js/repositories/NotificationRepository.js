@@ -4,7 +4,8 @@ import {
     getAllItems,
     setField,
 } from "../utils/sharedRepositoryFunctions";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, updateDoc} from "firebase/firestore";
+import { updateNotification } from "../react/useNotificationCount";
 
 export class NotificationRepository {
     constructor(database, eventRepo) {
@@ -60,15 +61,38 @@ export class NotificationRepository {
     }
 
     async getNotificationById(id) {
-        const notification = await this.getNotification(id);
-
-        const eventId = notification.eventId;
-
-        const event = await this.eventRepo.getEventById(eventId);
-        return {
-            id: id,
-            event: event,
-            createdAt: notification.createdAt,
-        };
+        return  await this.getNotification(id);
     }
+
+    async update(id){
+        const noti =  await updateNotification(id)
+        await this.updateNoti(id, noti)
+        return noti
+    }
+
+    async updateNoti(notiId, obj) {
+        const userRef = doc(this.database, "notifications", notiId);
+        try {
+            await updateDoc(userRef, obj);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+      }
+
+      async getListOfNotifications(listOfNotificationIds){
+        const res = []
+        let nullCount = 0
+        for(const id of listOfNotificationIds){
+            const noti = await this.getNotificationById(id)
+            res.push(noti)
+            if(!noti.event){
+                nullCount += 1
+            }
+        }
+        console.log("aaidoo list of notifications: ", res.length)
+        console.log("aaidoo, nullCount is: ", nullCount)
+        console.log(res)
+
+        return res
+      }
 }

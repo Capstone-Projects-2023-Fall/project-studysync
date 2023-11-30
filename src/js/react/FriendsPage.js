@@ -86,7 +86,6 @@ export default function FriendsPage() {
     const navigate = useNavigate();
     const currUserId = UserId;
     const { user } = useUser();
-
     useEffect(() => {
         setIsLoading(true);
         userRepository
@@ -136,7 +135,7 @@ export default function FriendsPage() {
                 .getAllUsers()
                 .then((res) => {
                     setIsLoading(false);
-                    setUsers(res);
+                    setUsers(res)
                     setFilteredData(res.filter((item) => item.id != UserId));
                     setUserStr(JSON.stringify(res));
                 })
@@ -163,7 +162,7 @@ export default function FriendsPage() {
                     console.log(`Error: ${e}`);
                 });
         }
-    }, [type, currFollowing, currFollowers]);
+    }, [type]);
 
     const toggleDrawer = () => {
         setOpen(!open);
@@ -304,14 +303,12 @@ export default function FriendsPage() {
             }
         }
 
-        async function handleFollowOrUnfollow(userId) {
-            // const user = await userRepository.getUserById(userId);
-            const shouldFollow = !currUser.following.includes(userId);
+        const handleFollowOrUnfollow = (userId, isFollowing) => {
+            const shouldFollow = isFollowing;
             if (shouldFollow) {
-                return await followUser(userId);
+                unfollowUser(userId);
             } else {
-                await unfollowUser(userId);
-                return;
+                followUser(userId);
             }
         }
 
@@ -323,17 +320,11 @@ export default function FriendsPage() {
                     (item) => item.id !== userToUnfollowId
                 ),
             };
-            setCurrUser(updatedObject);
             setCurrFollowing(currFollowing - 1);
         }
 
         async function followUser(userToFollowId) {
             await userRepository.startFollowing(currUser.id, userToFollowId);
-            const updatedObject = {
-                ...currUser,
-                followers: [...currUser.followers, userToFollowId],
-            };
-            setCurrUser(updatedObject);
             setCurrFollowers(currFollowers + 1);
         }
 
@@ -452,18 +443,16 @@ export default function FriendsPage() {
                 {type == "Find Friends" && currUser != null && (
                     <div>
                         <SearchBar onSearch={handleSearch} />
-                        {filteredData.map((user) => (
-                            <SingleUserComponent
-                                handleFollowOrUnfollow={() =>
-                                    handleFollowOrUnfollow(user.id)
-                                }
-                                key={user.id}
-                                user={user}
-                                shouldFollow={
-                                    !currUser.following.includes(user.id)
-                                }
-                            />
-                        ))}
+                        {filteredData.map((user,index)=>{
+                            return <SingleUserComponent
+                            handleFollowOrUnfollow={handleFollowOrUnfollow}
+                            key={user.id??index}
+                            user={user}
+                            shouldFollow={
+                                !currUser.following.includes(user.id)
+                            }
+                        />
+                        })}
                     </div>
                 )}
 
