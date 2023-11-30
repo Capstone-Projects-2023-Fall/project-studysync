@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
  * The URL or reference to your projects logo!
  * @type {string}
  */
-const logo = 'https://upload.wikimedia.org/wikipedia/commons/1/17/Temple_T_logo.svg';
+const logo = 'documentation/static/img/icon.png';
 
 const main_template_jira_scripts = () => {
   if (process.env.ORG_NAME === 'ApplebaumIan'){
@@ -18,6 +18,7 @@ const main_template_jira_scripts = () => {
     return []
   }
 }
+
 
 // You can change the title here. The default is the name of the repository.
 const title = ''+process.env.PROJECT_NAME.replaceAll('-',' ').split(' ').map((word) => {
@@ -217,8 +218,12 @@ const config = {
 
   ],
   scripts:['https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js',
-      ...main_template_jira_scripts()
+      ...main_template_jira_scripts(),
+     "https://temple-cis-projects-in-cs.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/tod1zk/b/5/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=50ed92bf"
   ],
+
+  
+
 };
 console.log(config.scripts)
 module.exports = config;
