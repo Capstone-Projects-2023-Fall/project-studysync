@@ -616,8 +616,8 @@ export class UserRepository {
     }
 
     /**Upcoming events */
-    async addUpcomingEvent(userId, name, dateTime, type){
-        const upcomingEventId = await this.eventRepository.createUpcomingEvent(new UpcomingEvent(name, dateTime, type))        
+    async addUpcomingEvent(userId, name, date, time, type){
+        const upcomingEventId = await this.eventRepository.createUpcomingEvent(new UpcomingEvent(name, date, time, type))        
         await addItemToArrayField(
             this.database,
             userId,
