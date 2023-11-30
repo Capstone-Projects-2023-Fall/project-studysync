@@ -61,8 +61,6 @@ const QuizComponent = () => {
     return questions.length * 5;
     };
 
-
-
   useEffect(() => {
     //check if the quiz is paused
     const pausedState = JSON.parse(localStorage.getItem('quizPaused'));

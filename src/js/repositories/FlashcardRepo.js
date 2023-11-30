@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { database, auth } from '../../firebase';
-import { collection, getDocs, getDoc, query, where, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
+import { collection, getDocs, getDoc, query, where, orderBy, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
 
 const FlashcardRepo = {
 
@@ -62,6 +62,7 @@ const FlashcardRepo = {
             const flashcardId = doc(collection(database, 'flashcards')).id;
             const commentId = doc(collection(database, 'comments')).id;
             const questionId = doc(collection(database, 'questions')).id;
+            const scoreId = doc(collection(database, 'scores')).id;
 
             const initialFlashcardItems = {
                 [flashcardId]: {
@@ -88,6 +89,13 @@ const FlashcardRepo = {
                 },
             };
 
+            const initialScore = {
+                [scoreId]: {
+                    score: 0,
+                    attempt: 0, 
+                },
+            };
+
             const setData = {
                 name: name,
                 createdAt: Timestamp.now(),
@@ -110,7 +118,8 @@ const FlashcardRepo = {
                 sharedWith: [],
                 quizName: "Initial Quiz",
                 questionItems: initialQuizItems,
-                flashcardSetId: newDocRef.id
+                flashcardSetId: newDocRef.id,
+                quizScore: initialScore
             };
 
             const newDocRefQuizzes = await addDoc(collection(database, 'quizzesCreation'), setQuizData);
@@ -583,7 +592,9 @@ const FlashcardRepo = {
         try {
             const quizzesRef = collection(database, 'quizzesCreation');
             // Retrieve all quizzes from the flashcard set using the flashcard id
-            const querySnapshot = await getDocs(query(quizzesRef, where('flashcardSetId', '==', flashcardSetId)));
+            const querySnapshot = await getDocs(query(quizzesRef,
+                 where('flashcardSetId', '==', flashcardSetId),
+                 orderBy('createdAt', 'asc')));
     
             const quizTitles = [];
             querySnapshot.forEach((doc) => {
@@ -656,6 +667,7 @@ const FlashcardRepo = {
     
             // Generate a new quiz ID
             const quizId = doc(collection(database, 'quizzes')).id;
+            const scoreId = doc(collection(database, 'scores')).id;
     
             // Create the initial quiz item
             const initialQuizItems = {
@@ -663,6 +675,13 @@ const FlashcardRepo = {
                     question: "Sample Question",
                     choices: ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
                     correctChoiceIndex: 0,
+                },
+            };
+
+            const initialScore = {
+                [scoreId]: {
+                    score: 0,
+                    attempt: 0, 
                 },
             };
     
@@ -674,6 +693,7 @@ const FlashcardRepo = {
                 subject: flashcardSubject,
                 flashcardSetId: flashcardSetId, // Add the flashcard set ID to the data
                 questionItems: initialQuizItems,
+                quizScore: initialScore,
             };
     
             const newDocRef = await addDoc(collection(database, 'quizzesCreation'), setData);
