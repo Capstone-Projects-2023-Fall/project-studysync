@@ -18,7 +18,7 @@ import Orders from './DashboardUI/Orders';
 import {useState,useEffect} from 'react';
 import { userRepository } from '../../firebase';
 import RecentFlashcards from './DashboardUI/RecentFlashcards';
-
+import './DashboardUI/RecentFlash.css'
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -64,7 +64,11 @@ export default function DashboardCom() {
             // setEvents(events);
             setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
             {name:"Upcoming FlashCard",eventType:"New FlashCard"}])
-            setOwnedFlashcards(ownedFlashcards);
+            //REPLACE THIS WITH REAL OWNED FLASHCARDS
+            //setOwnedFlashcards(ownedFlashcards);
+              setOwnedFlashcards([{name:'card1'},
+              {name:"card2"},{name:'card3'}
+            ])
           })
           .catch((e) => {
             console.log(e);
@@ -116,6 +120,7 @@ export default function DashboardCom() {
     }
 
   return (
+    <>  
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -160,23 +165,25 @@ export default function DashboardCom() {
                   <Friends friends={friends}/>
                 </Paper>
               </Grid>
-              {/* Recent Orders */}
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
-                </Paper>
-              </Grid>
-            </Grid>
-                              {/* RECENT FLASHCARDS */}
-                              <Grid container spacing={4}>
+              {/* RECENT FLASHCARDS */}
+              <div className='recent-headers'>
+                  Recent flashcards:
+              </div>
+              <Grid id='flashcard-grid' container spacing={4}>
                 {ownedFlashcards.map((card,index) => (
                   <RecentFlashcards key={index} card={card}/>
                 ))}
               </Grid>
-            <Copyright sx={{ pt: 4 }} />
+              {/* RECENT Quizzes */}
+              <div className='recent-headers'>
+                  Recent Quizzes:
+              </div>                            
+            </Grid>
           </Container>
         </Box>
       </Box>
     </ThemeProvider>
+ 
+    </>
   );
 }  

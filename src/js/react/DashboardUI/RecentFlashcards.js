@@ -12,7 +12,7 @@ function RecentFlashcards(props) {
 
 
   return (
-    <Grid item xs={12} md={6}>
+    <Grid item xs={12} md={4}>
       <CardActionArea component="a" href='#'>
         <Card sx={{ display: 'flex' }}>
           <CardContent sx={{ flex: 1 }}>
