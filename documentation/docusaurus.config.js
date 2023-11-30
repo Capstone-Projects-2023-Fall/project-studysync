@@ -8,11 +8,11 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
  * The URL or reference to your projects logo!
  * @type {string}
  */
-const logo = 'documentation/static/img/icon.png';
+const logo = './static/img/icon.png';
 
 const main_template_jira_scripts = () => {
-  if (process.env.ORG_NAME === 'ApplebaumIan'){
-    return [    'https://temple-cis-projects-in-cs.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/azc3hx/b/8/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=50af7ec2',
+  if (process.env.ORG_NAME === 'ApplebaumIan') {
+    return ['https://temple-cis-projects-in-cs.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/azc3hx/b/8/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=50af7ec2',
       'https://temple-cis-projects-in-cs.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/azc3hx/b/8/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=160e88a6',]
   } else {
     return []
@@ -21,7 +21,7 @@ const main_template_jira_scripts = () => {
 
 
 // You can change the title here. The default is the name of the repository.
-const title = ''+process.env.PROJECT_NAME.replaceAll('-',' ').split(' ').map((word) => {
+const title = '' + process.env.PROJECT_NAME.replaceAll('-', ' ').split(' ').map((word) => {
   return word[0].toUpperCase() + word.substring(1);
 }).join(' ');
 
@@ -31,8 +31,8 @@ const config = {
   title: title,
   tagline: 'Owls are cool',
   /*Unless you move this website to a seperate repo don't change url and baseurl.*/
-  url: 'https://'+process.env.ORG_NAME+'.github.io/',
-  baseUrl: '/'+process.env.PROJECT_NAME+'/',
+  url: 'https://' + process.env.ORG_NAME + '.github.io/',
+  baseUrl: '/' + process.env.PROJECT_NAME + '/',
   trailingSlash: false,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -53,7 +53,7 @@ const config = {
   markdown: {
     mermaid: true,
   },
-  themes: ['@docusaurus/theme-live-codeblock','@docusaurus/theme-mermaid'],
+  themes: ['@docusaurus/theme-live-codeblock', '@docusaurus/theme-mermaid'],
   presets: [
     [
       'classic',
@@ -67,7 +67,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/'+process.env.ORG_NAME+'/'+process.env.PROJECT_NAME+'/edit/main/documentation/',
+            'https://github.com/' + process.env.ORG_NAME + '/' + process.env.PROJECT_NAME + '/edit/main/documentation/',
           // remarkPlugins: [require('mdx-mermaid')],
 
         },
@@ -119,14 +119,14 @@ const config = {
             docId: 'intro',
             position: 'left',
             label: 'Documentation',
-          },{
+          }, {
             to: '/tutorial/Intro',
             label: 'Docusaurus Tutorial',
             position: 'left',
             activeBaseRegex: `/tutorial/`,
           },
           {
-            href: 'https://github.com/'+process.env.ORG_NAME+'/'+process.env.PROJECT_NAME,
+            href: 'https://github.com/' + process.env.ORG_NAME + '/' + process.env.PROJECT_NAME,
             label: 'GitHub',
             position: 'right',
           },
@@ -169,7 +169,7 @@ const config = {
             items: [
               {
                 label: 'GitHub',
-                href: 'https://github.com/'+process.env.ORG_NAME+'/'+process.env.PROJECT_NAME,
+                href: 'https://github.com/' + process.env.ORG_NAME + '/' + process.env.PROJECT_NAME,
               },
             ],
           },
@@ -187,7 +187,7 @@ const config = {
         // see: https://www.npmjs.com/package/medium-zoom#options
         options: {
           margin: 24,
-          zIndex:100,
+          zIndex: 100,
           background: 'white',
           // scrollOffset: 10,
           // container: '#zoom-container',
@@ -217,12 +217,12 @@ const config = {
 
 
   ],
-  scripts:['https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js',
-      ...main_template_jira_scripts(),
-     "https://temple-cis-projects-in-cs.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/tod1zk/b/5/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=50ed92bf"
+  scripts: ['https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js',
+    ...main_template_jira_scripts(),
+    "https://temple-cis-projects-in-cs.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/tod1zk/b/5/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=50ed92bf"
   ],
 
-  
+
 
 };
 console.log(config.scripts)
