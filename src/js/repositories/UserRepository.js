@@ -1,4 +1,4 @@
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, runTransaction} from "firebase/firestore";
 import {
     removeItemFromArrayField,
     updateArrayDocumentFields,
@@ -93,13 +93,22 @@ export class UserRepository {
         const quizIds = await this.getOwnedQuizzesIds(userId);
         const result = [];
         for (const id of quizIds) {
-            result.push(await this.quizRepository.get_QuizById(id));
+            const quiz = await this.quizRepository.get_QuizById(id);
+            const quizAuthor = await this.getUserById(quiz.authorId)
+            
+            quiz.author =  {
+                name: quizAuthor.name,
+                imageURL: quizAuthor.imageURL,
+                firstName: quizAuthor.firstName,
+                lastName: quizAuthor.lastName
+            }
+            result.push(quiz)
         }
         return result;
     }
 
     /**Get all quizzes shared by user with id: {id} */
-    async getSharedQuizzes(id) {
+    async getSharedQuizzesIds(id) {
         const sharedQuizzes = await getArrayFieldFromCollection(
             this.database,
             "users",
@@ -108,6 +117,24 @@ export class UserRepository {
         );
         return sharedQuizzes;
     }
+
+    async getSharedQuizzes(userId) {
+        const quizIds = await this.getSharedQuizzesIds(userId);
+        const result = [];
+        for (const id of quizIds) {
+            const quiz = await this.quizRepository.get_QuizById(id);
+            const quizAuthor = await this.getUserById(quiz.authorId)
+            
+            quiz.author =  {
+                name: quizAuthor.name,
+                imageURL: quizAuthor.imageURL,
+                firstName: quizAuthor.firstName,
+                lastName: quizAuthor.lastName
+            }
+            result.push(quiz)
+        }
+        return result;
+    } 
 
     /**Get all owned flashcards owned by user with id: {id} */
     async getOwnedFlashcardsIds(id) {
@@ -120,27 +147,52 @@ export class UserRepository {
         return ownedFlashcardsIds;
     }
 
-    async getOwnedFlashcards(id) {
-        const ownedFlashcardsIds = await this.getOwnedFlashcardsIds(id);
-        let result = [];
-
-        for (const flashId of ownedFlashcardsIds) {
-            result.push(
-                await this.flashcardRepository.getFlashcardSetBy_Id(flashId)
-            );
+    async getOwnedFlashcards(userId) {
+        const quizIds = await this.getOwnedFlashcardsIds(userId);
+        const result = [];
+        for (const id of quizIds) {
+            const flashcard = await this.flashcardRepository.getFlashcardSetBy_Id(id);
+            const flashcardAuthor = await this.getUserById(flashcard.authorId)
+            flashcard.author =  {
+                name: flashcardAuthor.name,
+                imageURL: flashcardAuthor.imageURL,
+                firstName: flashcardAuthor.firstName,
+                lastName: flashcardAuthor.lastName
+            }
+            result.push(flashcard)
         }
         return result;
     }
 
     /**Get all flashcards shared by user with id: {id} */
-    async getSharedFlashcards(id) {
-        const sharedFlashcards = await getArrayFieldFromCollection(
+    async getSharedFlashcardIds(id) {
+        const sharedFlashcardsIds = await getArrayFieldFromCollection(
             this.database,
             "users",
             id,
             "sharedFlashcards"
         );
-        return await this.flashcardRepository.getFlashcards(sharedFlashcards);
+        return sharedFlashcardsIds
+    }
+
+    async getSharedFlashcards(userId) {
+        const quizIds = await this.getSharedFlashcardIds(userId);
+        console.log("shared flashcard ids are: ", quizIds)
+        const result = [];
+        for (const id of quizIds) {
+            const flashcard = await this.flashcardRepository.getFlashcardSetBy_Id(id);
+
+            const flashcardAuthor = await this.getUserById(flashcard.authorId)
+            
+            flashcard.author =  {
+                name: flashcardAuthor.name,
+                imageURL: flashcardAuthor.imageURL,
+                firstName: flashcardAuthor.firstName,
+                lastName: flashcardAuthor.lastName
+            }
+            result.push(flashcard)
+        }
+        return result;
     }
 
     /**Get all followers of user with id: {id} */
@@ -255,55 +307,11 @@ export class UserRepository {
     /**Get raw notifications and not just the ids */
     async getNotifications(id) {
         const notificationIds = await this.getNotificationIds(id);
-        const result = [];
 
-        for (const notifId of notificationIds) {
-            let notification =
-                await this.notificationRepository.getNotificationById(notifId);
-            let userFromId = null;
-            let userFrom = null;
-            let quiz = null;
-            let quizId = null;
-            let flashcardId = null;
-            let flashcard = null;
-            const event = await this.eventRepository.getEventById(
-                notification.event.id
-            );
-            switch (event.eventType) {
-                case EVENT_TYPE.NEW_FOLLOWER:
-                    userFromId = event.newFollowerEvent.followerId;
-                    break;
-                case EVENT_TYPE.SHARE_QUIZ:
-                    userFromId = event.shareQuizEvent.sharedBy;
-                    quizId = event.shareQuizEvent.itemId;
-                    break;
-                case EVENT_TYPE.SHARE_FLASHCARD:
-                    userFromId = event.shareFlashcardEvent.sharedBy;
-                    flashcardId = event.shareFlashcardEvent.itemId;
-                    break;
-                default:
-                    break;
-            }
+        const listOfNotifications = await this.notificationRepository.getListOfNotifications(notificationIds)
+        listOfNotifications.reverse()
+        return listOfNotifications
 
-            if (userFromId != null) {
-                userFrom = await this.getUserById(userFromId);
-                notification.userFrom = userFrom;
-            }
-
-            if (quizId != null) {
-                quiz = await this.quizRepository.getQuizBy_Id(quizId);
-                notification.quiz = quiz;
-            }
-
-            if (flashcardId != null) {
-                flashcard = await this.flashcardRepository.getFlashcardSetBy_Id(
-                    flashcardId
-                );
-                notification.flashcard = flashcard;
-            }
-            result.push(notification);
-        }
-        return result;
     }
 
     /**get all user events */
@@ -344,6 +352,7 @@ export class UserRepository {
         this.addEvent(sharedWithId, eventId);
         this.addNotification(sharedWithId, notificationId);
         this.incrementNewNotifications(sharedWithId);
+        await this.notificationRepository.update(notificationId)
         return true;
     }
 
@@ -370,20 +379,13 @@ export class UserRepository {
         const notificationId =
             await this.notificationRepository.addNotification(
                 new Notification(eventId)
-            );
+            );    
         this.addEvent(sharedWithId, eventId);
-        this.addNotification(sharedWithId, notificationId);
+        this.addNotification(sharedWithId, notificationId);    
         this.incrementNewNotifications(sharedWithId);
+        await this.notificationRepository.update(notificationId)
         return true;
     }
-
-    // /**user with userId shares flashcard with users in listOfUserIds sharedWithId */
-    // async shareFlashcard(userId, listOfUserIds, flashcardId) {
-    //     for (const id of listOfUserIds) {
-    //         await this.shareFlashcard(userId, id, flashcardId);
-    //     }
-    //     return true;
-    // }
 
     async addOwnedQuiz(userId, quizId) {
         await addItemToArrayField(
@@ -463,19 +465,6 @@ export class UserRepository {
                 "following"
             );
             await this.addFollower(followingId, userId);
-            // //create a new event in followingId to indicate that someone followed them. add the event to their notifications
-            // const eventId = await this.eventRepository.createNewFollowerEvent(
-            //   userId,
-            //   followingId
-            // );
-            // // //create a new notification with this event
-            // const notificationId = await this.notificationRepository.addNotification(
-            //   new Notification(eventId)
-            // );
-            // // //add this notification to users list of notifications
-            // this.addNotification(followingId, notificationId);
-            // //add event to user events
-            // this.addEvent(userId, eventId);
         } catch (error) {
             console.error(`error while adding following is: ${error}`);
             return false;
@@ -537,6 +526,7 @@ export class UserRepository {
             );
         this.addNotification(followingId, notificationId);
         this.incrementNewNotifications(followingId);
+        await this.notificationRepository.update(notificationId)
     }
 
     /**
@@ -595,13 +585,22 @@ export class UserRepository {
     }
 
     async incrementNewNotifications(userId) {
-        const user = await this.getUserById(userId);
-
-        await this.updateNonArrayUserFields(userId, {
-            newNotifications: user.newNotifications + 1,
-        });
-
-        return user.newNotifications + 1;
+        const userRef = doc(this.database, "users", userId);
+        try {
+            await runTransaction(this.database, async (transaction) => {
+                const userDoc = await transaction.get(userRef);
+                if (!userDoc.exists()) {
+                    throw new Error("User document not found.");
+                }
+                const currentNotifications = userDoc.data().newNotifications || 0;
+                const newNotifications = currentNotifications + 1;
+                transaction.update(userRef, { newNotifications });
+    
+                return newNotifications;
+            });  
+        } catch (error) {
+            console.error("Error:", error);
+        }
     }
 
     async getNotificationCount(userId) {
