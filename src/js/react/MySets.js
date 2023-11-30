@@ -25,6 +25,7 @@ import { useNavigate} from "react-router-dom";
 import AccessTimeIcon from '@mui/icons-material/AccessTime'; // Import the timer icon
 import ScheduleDialog from "./ScheduleDialog";
 import CloseIcon from "@mui/icons-material/Close";
+import { UPCOMING_EVENT_TYPE } from "../models/event";
 
 export default function MySets() {
     const { UserId } = useParams();
@@ -126,6 +127,7 @@ export default function MySets() {
                     {ownedQuizzes.map((item) => (
                         <FlashCardSet
                             key={item.id}
+                            item={item}
                             author={item.author.name}
                             imageURL={item.author.imageURL}
                             title={item.quizName}
@@ -148,6 +150,7 @@ export default function MySets() {
                     {ownedFlashcards.map((item) => (
                         <FlashCardSet
                             key={item.id}
+                            item={item}
                             users={users}
                             author={item.author.name}
                             imageURL={item.author.imageURL}
@@ -171,6 +174,7 @@ export default function MySets() {
                         {sharedQuizzes.map((item) => (
                             <FlashCardSet
                             key={item.id}
+                            item={item}
                             quizId={item.id}
                             author={item.author.name}
                             imageURL={item.author.imageURL}
@@ -193,6 +197,7 @@ export default function MySets() {
                         {sharedFlashcards.map((item) => (
                                 <FlashCardSet
                                     key={item.id}
+                                    item={item}
                                     users={users}
                                     authorId={item.authorId}
                                     author={item.author.name}
@@ -214,11 +219,12 @@ export default function MySets() {
     );
 }
 
-function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imageURL, authorId, flashcardId, quizId}) {
+function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imageURL, authorId, flashcardId, quizId, item}) {
     const [open, setOpen] = React.useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
     const [scheduleDialogOpenD, setScheduleDialogOpenD] = useState(false);
     const navigate = useNavigate();
+    const { UserId } = useParams();
 
   const openScheduleDialogD = (e) => {
     e.stopPropagation();
@@ -230,8 +236,14 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imag
   };
 
   const handleScheduleD = (selectedDate, selectedTime) => {
-    // Handle scheduling logic here
-    console.log('Scheduled for:', selectedDate, selectedTime);
+    //Scheduling logic
+    const name = quizId ? item.quizName : item.name
+    const type = quizId ? UPCOMING_EVENT_TYPE.QUIZ : UPCOMING_EVENT_TYPE.FLASHCARD
+
+    userRepository.addUpcomingEvent(UserId, name, selectedDate.toString(), selectedTime, type).then((res)=>{
+        console.log('result of creating upcomig event is: ', res)
+    })
+
     closeScheduleDialogD();
   };
 

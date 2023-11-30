@@ -86,8 +86,11 @@ export class EventRepository {
         await updateNonArrayDocumentFields(this.database, upcomingEventId, "upcomingEvents", updatedUpcomingEvent)
     }
 
-    async updateUpcomingEventDateTime(upcomingEventId, newDateTime){
-        await this.updateUpcomingEvent(upcomingEventId, {dateTime: newDateTime})
+    async updateUpcomingEventDate(upcomingEventId, newDate){
+        await this.updateUpcomingEvent(upcomingEventId, {date: newDate})
+    }
+    async updateUpcomingEventTime(upcomingEventId, newTime){
+        await this.updateUpcomingEvent(upcomingEventId, {date: newTime})
     }
     
     async updateUpcomingEventName(upcomingEventId, newName){
