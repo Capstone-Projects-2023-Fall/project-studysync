@@ -39,7 +39,7 @@ export default function MySets() {
     const [sharedQuizzes, setSharedQuizzes] = useState([]);
     const [sharedFlashcards, setSharedFlashcards] = useState([]);
     
-    const handleTabChange = (newValue) => {
+    const handleTabChange = (event, newValue) => {
         setTab(newValue);
     };
 
