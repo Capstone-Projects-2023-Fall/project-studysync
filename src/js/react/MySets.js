@@ -39,6 +39,7 @@ export default function MySets() {
     const [currUser, setCurrUser] = useState(null)
     const [sharedQuizzes, setSharedQuizzes] = useState([]);
     const [sharedFlashcards, setSharedFlashcards] = useState([]);
+
     
     const handleTabChange = (event, newValue) => {
         setTab(newValue);
@@ -223,6 +224,7 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imag
     const [open, setOpen] = React.useState(false);
     const [checkedItems, setCheckedItems] = useState([]);
     const [scheduleDialogOpenD, setScheduleDialogOpenD] = useState(false);
+    const [filteredData, setFilteredData] = useState(users || []);
     const navigate = useNavigate();
     const { UserId } = useParams();
 
@@ -271,6 +273,27 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imag
             // If the user is not checked, check them
             setCheckedItems((prev) => [...prev, userId]);
         }
+    };
+
+    const handleSearch = (searchTerm) => {
+        const filtered = users.filter((item) => {
+            if (item.name != null) {
+                return item.name
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase());
+            }
+            if (item.firstName != null) {
+                return item.firstName
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase());
+            }
+            if (item.email != null) {
+                return item.email
+                    .toLowerCase()
+                    .includes(searchTerm.toLowerCase());
+            }
+        });
+        setFilteredData(filtered);
     };
 
     return (
@@ -338,7 +361,7 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imag
                     >
                     <CloseIcon /> {/* Add a CloseIcon from Material-UI */}
                     </Button>
-                    <SearchBar onSearch={() => {}} sx={{ width: "70%" }} />
+                    <SearchBar onSearch={handleSearch} sx={{ width: "70%" }} />
                     <DialogContent
                         style={{
                             height: "30rem",
@@ -348,7 +371,7 @@ function FlashCardSet({ author, title, terms, users, onShareClick, onShare, imag
                     >
                         <List>
                             {/* Replace the following with your actual list of users */}
-                            {users.map((user, index) => (
+                            {filteredData.map((user, index) => (
                                 <ListItem key={user.id || index}>
                                     <ListItemText
                                         primary={
