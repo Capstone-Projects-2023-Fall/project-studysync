@@ -74,10 +74,13 @@ function QuizList({ newQuizAdded }) {
 
   // navigate to quiz page by passing flashcardSet ID as parameter
   const handleQuizTitleClick = async (quizName) => {
-      try {
-        const quizId = await FlashcardRepo.getQuizTitleId(quizName);
-        const setId = await FlashcardRepo.getSetIdByQuizId(quizId);
+  
+    console.log("The after rendered Set ID: ", setId);
+    console.log("The after rendered Set ID: ", quizId);
 
+      try {
+        const quizId = await FlashcardRepo.getQuizTitleId(quizName, setId);
+        //const setId = await FlashcardRepo.getSetIdByQuizId(quizId);
         if (quizId && setId) {
           console.log("Your Set Id is: ", setId);
           console.log("Your Quiz Id is: ", quizId);
