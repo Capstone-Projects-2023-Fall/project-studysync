@@ -8,14 +8,21 @@ import { auth, userRepository } from "../../firebase";
 import NotificationBadge from "./NotificationBadge";
 import { useState, useEffect } from "react";
 import Notification from "./Notification";
+import useNotificationCount from "./useNotificationCount";
 function Navbar({ items }) {
-    const { user } = useUser();
+    const { user, isLoading } = useUser();
     const [isNotificationPanelOpen, setIsNotificationPanelOpen] =
         useState(false);
     const [count, setCount] = useState(0);
+
+    const [currUser, setCurrUser] = useState(null)
+    useEffect(()=>{
+        setCurrUser(user)
+    }, [user, isLoading])
+    const notificationCount = useNotificationCount()
+
     const toggleNotificationPanel = () => {
-        //if its not open set notification count to zero
-        if (!isNotificationPanelOpen && user != null && count > 0) {
+        if (isNotificationPanelOpen) {
             userRepository.setNotificationCountoZero(user.uid).then((res) => {
                 setCount(0);
             });
@@ -74,7 +81,7 @@ function Navbar({ items }) {
 
                 {user && (
                     <NotificationBadge
-                        count={count}
+                        count={notificationCount}
                         onClick={toggleNotificationPanel}
                     />
                 )}
@@ -99,7 +106,7 @@ function Navbar({ items }) {
                     }}
                 >
                     {/* Your notification contents go here */}
-                    <Notification />
+                    <Notification userId={user} closePanel={toggleNotificationPanel}/>
                 </div>
             )}
         </nav>

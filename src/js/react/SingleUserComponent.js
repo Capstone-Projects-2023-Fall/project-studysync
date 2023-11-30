@@ -9,6 +9,11 @@ import Button from "@mui/material/Button";
 
 export default function SingleUserComponent(props) {
     const { user, shouldFollow, handleFollowOrUnfollow } = props;
+    const [isFollowing,setIsFollowing]=React.useState(shouldFollow)
+    const handleClick = () => {
+        setIsFollowing(!isFollowing);
+        handleFollowOrUnfollow(user.id, !isFollowing);
+    };
 
     return (
         <>
@@ -44,8 +49,8 @@ export default function SingleUserComponent(props) {
                         </React.Fragment>
                     }
                 />
-                <Button onClick={handleFollowOrUnfollow}>
-                    {shouldFollow ? "FOLLOW" : "UNFOLLOW"}
+                <Button onClick={handleClick}>
+                    {isFollowing ? "FOLLOW" : "UNFOLLOW"}
                 </Button>
             </ListItem>
             <Divider />
