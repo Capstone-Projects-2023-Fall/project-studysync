@@ -14,20 +14,20 @@ import MainQuizPage from "./js/react/MainQuizPage";
 import Quiz from "./js/react/Quiz.js";
 import MySets from "./js/react/MySets.js";
 import React, { useEffect, useState } from 'react';
-import Lottie from 'react-lottie-player';
+// import Lottie from 'react-lottie-player';
 
 function App() {
 
-    const [lottieAnimation, setLottieAnimation] = useState(null);
+    // const [lottieAnimation, setLottieAnimation] = useState(null);
 
-    useEffect(() => {
-        fetch('https://lottie.host/59e288fc-b4d7-4027-a1ed-cd428b77054d/QG5mWA6bIU.json')
-            .then(response => response.json())
-            .then(data => {
-                console.log('Animation data:', data);
-                setLottieAnimation(data);
-            });
-    }, []);
+    // useEffect(() => {
+    //     fetch('https://lottie.host/59e288fc-b4d7-4027-a1ed-cd428b77054d/QG5mWA6bIU.json')
+    //         .then(response => response.json())
+    //         .then(data => {
+    //             console.log('Animation data:', data);
+    //             setLottieAnimation(data);
+    //         });
+    // }, []);
 
     const containerStyle = {
         display: 'flex',
@@ -47,7 +47,7 @@ function App() {
     ];
 
     const navbarItemsLoggedIn = [
-        { label: "Dashboard", link: "/dashboard" },
+        { label: "Dashboard", link: "/" },
         { label: "Study Tool", link: "/flashcard" },
         { label: "My Sets", link: `/mysets/${user && user.uid}` },
         { label: "Socials", link: `/socials/${user && user.uid}` },
@@ -75,14 +75,14 @@ function App() {
                         ) : (
                             <div className="welcome-container">
                                 <div id="welcome-animation" className="welcome-animation" style={containerStyle}>
-                                    <Lottie
+                                    {/* <Lottie
                                         loop
                                         animationData={lottieAnimation}
                                         play
                                         speed={1}
                                         onComplete={() => console.log("Animation completed")}
                                         style={{ width: 300, height: 300 }}
-                                    />
+                                    /> */}
 
                                 </div>
                                 <div className="welcome-message">

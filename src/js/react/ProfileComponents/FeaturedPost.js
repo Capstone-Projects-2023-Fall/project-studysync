@@ -6,19 +6,15 @@ import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-
+import './FeaturePost.css'
 function FeaturedPost(props) {
   const { post,UserId } = props;
 
-  let cardLink = '';
-  if(post.title == 'Quiz'){
-    cardLink = `/quiz/${UserId}`
-  }else{
-    cardLink = `/flashcard-ui/${UserId}`
-  }
+  let cardLink = `/mysets/${UserId}`;
+  
   return (
-    <Grid item xs={12} md={6}>
-      <CardActionArea component="a" href={cardLink}>
+    <Grid item xs={12} md={6} >
+      <CardActionArea component="a" href={cardLink} className='featuredcard'>
         <Card sx={{ display: 'flex' }}>
           <CardContent sx={{ flex: 1 }}>
             <Typography component="h2" variant="h5">
