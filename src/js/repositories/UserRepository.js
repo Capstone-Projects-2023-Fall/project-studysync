@@ -284,6 +284,8 @@ export class UserRepository {
       profession: profession,
       phone: phone,
       name: name,
+      firstName: firstName,
+      lastName: lastName,
     };
   }
 
