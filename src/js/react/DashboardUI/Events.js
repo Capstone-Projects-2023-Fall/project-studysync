@@ -6,7 +6,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
+import './Events.css';
 
 export default function Events(props) {
   const {events} = props;
@@ -15,7 +15,7 @@ export default function Events(props) {
 
   return (
     <React.Fragment>
-      <Title>Events</Title>
+      <Title>Upcoming Events</Title>
       <Table size='small'>
         <TableBody>
           {_events.map((event,index)=>(

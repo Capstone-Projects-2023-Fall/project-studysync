@@ -1,5 +1,9 @@
 #Friend-link{
     color: black;
+    float: right;
+    padding-right: 5%;
+    padding-bottom: 1%;
+    padding-top: 1%;
 }
 #Friend-link:visited{
     color: black;
@@ -7,7 +11,10 @@
 #Friend-link:hover, :active{
     color: blue;
 }
-#friend-row{
-    text-align: center;
-    
-}
+
+.avatar {
+    vertical-align: middle;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }

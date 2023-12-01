@@ -124,16 +124,19 @@ export default function DashboardCom() {
       )
     }
     //Welcome page for non logged in users
-    if(!user){
-      return(<WelcomePage />)
-    }
+    // if(!user){
+    //   return(<WelcomePage />)
+    // }
 
   return (
     <>  
     <div class="banner animated tada">
-    <div class=" big-text animated tada">95% OFF</div>
-      <div>the entire store</div>
-      <a href="#">Go to store</a>
+    <div class=" big-text animated tada">StudySync</div>
+      <div className='banner description'>
+        
+        Your Ultimate Studying Companion!
+      </div>
+      <a href="/flashcard">Get Started !</a>
     </div>    
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -154,7 +157,7 @@ export default function DashboardCom() {
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4}}>
             <Grid container spacing={5}>
               {/* Events */}
-              <Grid item xs={12} md={8} lg={9}>
+              <Grid item xs={12} md={8} lg={9} className='eventgrid'>
                 <Paper
                   sx={{
                     p: 2,

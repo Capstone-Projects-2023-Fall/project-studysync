@@ -35,7 +35,12 @@ export default function Friends(props) {
         <TableBody>
           {_friends.map((friend)=>(
             <TableRow key={friend.id}>
-              <TableCell id='friend-row'><a id='Friend-link' href={link(friend.id)}>{friend.name}</a></TableCell>
+              <TableCell id='friend-row'>
+                {friend.imageURL &&
+                <img src={friend.imageURL} alt="friend-profile-picture" class="avatar"/>
+                }
+                <a id='Friend-link' href={link(friend.id)}>{friend.name}</a>
+              </TableCell>
             </TableRow>
           ))}
       
