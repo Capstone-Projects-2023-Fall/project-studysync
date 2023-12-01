@@ -57,27 +57,23 @@ export default function DashboardCom() {
           userRepository.getFriends(user.uid),
           userRepository.getEvents(user.uid),
           userRepository.getOwnedFlashcards(user.uid),
-          // userRepository.getOwnedQuizzes(user.uid),
+          userRepository.getOwnedQuizzes(user.uid),
         ])
           .then(([friends, events,ownedFlashcards,ownedQuizzes]) => {
             console.log(`Friends: ${friends}`);
             console.log(`Events: ${events}`);
             console.log(`OwnedFlashcards: ${ownedFlashcards}`);
-            // console.log(`OwnedQuizzes: ${ownedQuizzes}`);
+            console.log(`OwnedQuizzes: ${ownedQuizzes}`);
             setFriends(friends);
             //REPLACE THIS WITH REAL EVENTS  
             // setEvents(events);
             setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
             {name:"Upcoming FlashCard",eventType:"New FlashCard"}]);
 
-            //REPLACE THIS WITH REAL OWNED FLASHCARDS
-            //setOwnedFlashcards(ownedFlashcards);
-            setOwnedFlashcards([{name:'card1'},
-              {name:"card2"},{name:'card3'}]);
+            setOwnedFlashcards(ownedFlashcards);
+           setOwnedQuizzes([{name:'quiz1',id:'123'}])
+            // setOwnedQuizzes(ownedQuizzes);
 
-            //REPLACE THIS WITH REAL OWNED QUIZZES
-            //setOwnedQuizzes(ownedQuizzes);
-            setOwnedQuizzes([{name:'quiz1'},{name:'quiz2'},{name:'quiz3'}])
           })
           .catch((e) => {
             console.log(e);
@@ -131,11 +127,9 @@ export default function DashboardCom() {
   return (
     <>  
     <div class="banner animated tada">
-    <div class=" big-text animated tada">StudySync</div>
-      <div className='banner description'>
-        
-        Your Ultimate Studying Companion!
-      </div>
+    <div class=" big-text animated tada">StudySync - Your Ultimate Studying Companion!
+</div>
+
       <a href="/flashcard">Get Started !</a>
     </div>    
     <ThemeProvider theme={defaultTheme}>
@@ -187,18 +181,19 @@ export default function DashboardCom() {
                   Recent flashcards:
               </div>
               <Grid id='flashcard-grid' container spacing={4}>
-                {ownedFlashcards.map((card,index) => (
+                {ownedFlashcards ? ownedFlashcards.map((card,index) => (
                   <RecentCards key={index} card={card} imageLink='https://lovetoteach87.com/wp-content/uploads/2020/09/flashcards-1591812_1280-940x590.jpg'/>
-                ))}
+                )) : <a href='/flashcard' className='EmptyCards'>No flashcards? Create flashcards to study your topics here!</a>}
               </Grid>
               {/* RECENT Quizzes */}
               <div className='recent-headers'>
                   Recent Quizzes:
               </div>       
               <Grid id='flashcard-grid' container spacing={4}>
-                {ownedQuizzes.map((card,index) => (
+                {ownedQuizzes  &&
+                  ownedQuizzes.map((card,index) => (
                   <RecentCards key={index} card={card} imageLink='https://canopylab.com/wp-content/uploads/2020/05/Working-with-adaptive-quizzes-A-beginners-guide.jpg'/>
-                ))}
+                )) }
               </Grid>                                   
             </Grid>
           </Container>

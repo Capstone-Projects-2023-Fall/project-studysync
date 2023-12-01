@@ -6,7 +6,7 @@
 }
 .banner {
     width: 100%;
-    background:url(https://img.freepik.com/free-vector/realistic-style-technology-particle-background_23-2148426704.jpg?w=1380&t=st=1701377387~exp=1701377987~hmac=4f0e6e3d675f65f57cf2809d2329725d74163a694f8983ceb258e9fd9eb3fc6a);
+    background:url(http://s6.favim.com/orig/150112/background-cold-gif-nature-Favim.com-2380226.gif);
     /*https://i0.wp.com/media.giphy.com/media/5ERaOy5fQEIAU/giphy.gif*/
     background-size: cover;
     font-size: 40px;
@@ -16,7 +16,7 @@
   }
   
   .big-text {
-    font-size: 70px;
+    font-size: 50px;
     font-weight:800;
     animation-delay: 1s;
   }
@@ -37,4 +37,7 @@
   }
 .banner .description{
     font-size:medium;
+}
+.EmptyCards{
+    padding-top: 5%;
 }
