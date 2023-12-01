@@ -168,7 +168,7 @@ export default function MySets() {
 
     fetchData()
       .then(() => {
-        console.log("we are setting loading to false");
+        console.log("Set loading to false");
         setLoading(false);
       })
       .catch((error) => {
