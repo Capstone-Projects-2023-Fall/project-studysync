@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText } from '@mui/material';
+import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';//quotation mark 
@@ -16,6 +16,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import Question from '../models/question';
 import QuizList from './QuizList';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Snackbar from '@mui/material/Snackbar';
 
 const QuizComponent = () => {
 
@@ -23,7 +26,7 @@ const QuizComponent = () => {
   const { setId, quizId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
 
   const [question, setQuestion] = useState('');
-  const [choices, setChoices] = useState(['', '', '', '']); //store choices
+  const [choices, setChoices] = useState(['', '', '', '']); // store choices
   const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null); //capture the correct choice as an array index
   const [questions, setQuizData] = useState([]); //array to hold all questions data
 
@@ -38,14 +41,21 @@ const QuizComponent = () => {
 
 
   const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
-  const [topicName, setTopicName] = useState(''); //capture the topic name from user entry
+  const [topicName, setTopicName] = useState(''); // capture the topic name from user entry
   const [numberOfQuestions, setNumOfQuestions] = useState(1); //capture the number of quesiton from user entry, default is set to 1
 
-  const [openQuiz, setOpenQuiz] = useState(false);
-  const [quizTitle, setQuizTitle] = useState('');
+  const [openQuiz, setOpenQuiz] = useState(false); // state to handle the creat quiz button
+  const [quizTitle, setQuizTitle] = useState(''); // capture the quiz title from the user entry
+
+  const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
   const [isQuizPaused, setIsQuizPaused] = useState(false);
   const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz infor
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   //calculation time limit
   const calculateTimeLimit = () => {
     return questions.length * 5;
@@ -225,8 +235,10 @@ const handleCreateQuiz = async () => {
         const newQuizId = await FlashcardRepo.createNewQuiz(setId, quizTitle);
   
         console.log("You want to add: ", quizTitle);
-        // Add the newly created quiz to the user's owned quiz sets
+        // add the newly created quiz to the user's owned quiz sets
         await FlashcardRepo.addOwnedQuizSetToUser(uid, newQuizId);
+        //store a newly added quiz in a state to pass as prop
+        setQuizList(newQuizId);
       }
     } catch (error) {
       console.error('Error creating quiz:', error);
@@ -235,10 +247,17 @@ const handleCreateQuiz = async () => {
 
 const handleOpenGenerateAI = () => {
     setOpenGenerateAI(true);
+
 };
 
 function parseGPTResponse(rawResponse) {
     try {
+    
+        // Check if rawResponse is undefined or null
+        if (!rawResponse) {
+            console.error("Raw response is undefined or null");
+            return [];
+        }
         // Regular expression to find JSON objects in the response
         const jsonRegex = /{[\s\S]*?}/g;
         const matches = rawResponse.match(jsonRegex);
@@ -265,7 +284,7 @@ function parseGPTResponse(rawResponse) {
 // this function allows user to generate new quiz question through the help of AI
 const handleGenerateAIQuestion = async () => {
     setOpenGenerateAI(false);
-
+    setIsLoading(true);
     try {
         const responseString = await callYourCloudFunctionToGenerateQuestions(numberOfQuestions, topicName);
         const generatedQuestions = responseString;
@@ -275,36 +294,47 @@ const handleGenerateAIQuestion = async () => {
             const newQuestionId = await FlashcardRepo.addQuizQuestion(quizId, question.question, question.choices, question.correctChoiceIndex);
             addedQuestions.push({ ...question, questionId: newQuestionId });
         }
-
+        setSuccessMessage('Flashcards generated successfully!');
         setQuizData(prev => [...prev, ...addedQuestions]);
     } catch (error) {
         console.error("Error generating or adding question with AI:", error);
+    }finally {
+        setIsLoading(false);
     }
 };
 
 // a cloud function to make POST request to ChatGPT for to generate user requested questions
 const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName) => {
     try {
-        const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPT';
+        const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithImage';
 
+        const messages = [{
+            role: "user",
+            content: [{
+                type: "text",
+                text: `Please create ${numQuestions} quiz question 
+                along with 4 multiple choices answer with one correct answerabout ${topicName}. 
+                Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
+                as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
+                Please make sure questions are not repetitive. It is better just have the json back without any other text.`
+            }]
+        }];
+        console.log("Sending Request with JSON payload:", { messages });
         const response = await fetch(functionUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-                body: JSON.stringify({ message: `Please create ${numQuestions} quiz question 
-                along with 4 multiple choices answer with one correct answerabout ${topicName}. 
-                Format each question as JSON with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
-                as an index to the correct choice no other words in json , i need to parse it with only "question", "choices", and "correctChoiceIndex".
-                Please make sure questions are not repetitive.` }),
+                body: JSON.stringify({ messages }),
         });
 
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
+            console.log("Response from cloud function:", response);
             const data = await response.json();
-            return parseGPTResponse(data.text); // Assuming the data.text is the string of JSON flashcards
+            console.log("Response data from cloud function:", data);
+            return parseGPTResponse(data); // Assuming the data.text is the string of JSON flashcards
         } catch (error) {
             console.error("Error calling cloud function:", error);
             throw error;
@@ -316,8 +346,38 @@ return (
         display: "flex", flexDirection: "column", height: "100vh",
         backgroundColor: '#f9f9f9', padding: '20px'
     }}>
-  
-    <QuizList/>
+
+            {isLoading && (
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0, zIndex: 1000, backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
+                    <CircularProgress />
+                </div>
+            )}
+            <Snackbar
+                open={!!successMessage}
+                autoHideDuration={6000}
+                onClose={() => setSuccessMessage('')}
+                message={successMessage}
+            />   
+            <Snackbar
+                open={!!errorMessage}
+                autoHideDuration={6000}
+                onClose={() => setErrorMessage('')}
+                message={errorMessage}
+                color="error"
+            />
+ 
+    <QuizList newQuizAdded={newQuizAdded}/>
+
+        {/* Step 3: Add "Start Quiz" Button */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={startQuiz}
+        style={{ /* your button styles */ }}
+      >
+        Start Quiz
+      </Button>
+
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
                 width: "30%", borderRight: "1px solid #e0e0e0",

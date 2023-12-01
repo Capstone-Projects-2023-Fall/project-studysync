@@ -13,11 +13,33 @@ import FriendsPage from "./js/react/FriendsPage";
 import MainQuizPage from "./js/react/MainQuizPage";
 import Quiz from "./js/react/Quiz.js";
 import MySets from "./js/react/MySets.js";
+import React, { useEffect, useState } from 'react';
+import Lottie from 'react-lottie-player';
 
 function App() {
+
+    const [lottieAnimation, setLottieAnimation] = useState(null);
+
+    useEffect(() => {
+        fetch('https://lottie.host/59e288fc-b4d7-4027-a1ed-cd428b77054d/QG5mWA6bIU.json')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Animation data:', data);
+                setLottieAnimation(data);
+            });
+    }, []);
+
+    const containerStyle = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+
+    };
+
+
     const { user } = useUser();
 
-    const handleLogin = () => {};
+    const handleLogin = () => { };
 
     const navbarItemsLoggedOut = [
         { label: "Log in", link: "/login", action: handleLogin },
@@ -25,13 +47,12 @@ function App() {
     ];
 
     const navbarItemsLoggedIn = [
-        { label: "Dashboard", link: "/" },
-        { label: "Flashcard", link: "/flashcard" },
-        { label: "Profile", link: `/profile/${user && user.uid}` },
-        { label: "Socials", link: `/socials/${user && user.uid}` },
+        { label: "Dashboard", link: "/dashboard" },
+        { label: "Study Tool", link: "/flashcard" },
         { label: "My Sets", link: `/mysets/${user && user.uid}` },
+        { label: "Socials", link: `/socials/${user && user.uid}` },
+        { label: "Profile", link: `/profile/${user && user.uid}` },
         //... add other items
-    
     ];
 
     return (
@@ -52,9 +73,26 @@ function App() {
                         user ? (
                             <DashboardCom />
                         ) : (
-                            <div className="login-center">
-                                Please log in or sign up to continue
+                            <div className="welcome-container">
+                                <div id="welcome-animation" className="welcome-animation" style={containerStyle}>
+                                    <Lottie
+                                        loop
+                                        animationData={lottieAnimation}
+                                        play
+                                        speed={1}
+                                        onComplete={() => console.log("Animation completed")}
+                                        style={{ width: 300, height: 300 }}
+                                    />
+
+                                </div>
+                                <div className="welcome-message">
+                                    <h1>Unlock Knowledge with AI</h1>
+                                    <p>Discover a new way of learning with AI-generated flashcards and quizzes. Dive into an interactive learning experience tailored just for you.</p>
+                                    <p>Log in or sign up to start your personalized educational journey today.</p>
+                                </div>
                             </div>
+
+
                         )
                     }
                 />

@@ -109,3 +109,26 @@ export class ShareEvent {
         };
     }
 }
+
+export const UPCOMING_EVENT_TYPE = {
+    QUIZ: "Quiz",
+    FLASHCARD: "Flashcard"
+}
+
+export class UpcomingEvent{
+    constructor(name, date, time, type){
+        this.name = name
+        this.date = date
+        this.time = time
+        this.type = type
+    }
+
+    toJSON(){
+        return{
+            name: this.name,
+            time: this.time,
+            date: this.date,
+            type: this.type
+        }
+    }
+}

@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { database, auth } from '../../firebase';
 import { collection, getDocs, getDoc, query, where, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
 
@@ -73,7 +74,7 @@ const FlashcardRepo = {
             const initialComments = {
                 [commentId]: {
                     uid: this.getCurrentUid(),
-                    content: "Sample comment content",
+                    content: "Sample feedback content",
                     like: 0,
                     date: Timestamp.now()
                 },
@@ -93,22 +94,36 @@ const FlashcardRepo = {
                 authorId: this.getCurrentUid(),
                 subject: subject,
                 sharedWith: [],
-                quizName: "Default Quiz",
                 flashcardItems: initialFlashcardItems,
-                questionItems: initialQuizItems,
                 comments: initialComments
             };
 
             const newDocRef = await addDoc(collection(database, 'flashcardSets'), setData);
             console.log("New flashcard set created with ID:", newDocRef.id);
 
+
+            const setQuizData = {
+                name: name,
+                createdAt: Timestamp.now(),
+                authorId: this.getCurrentUid(),
+                subject: subject,
+                sharedWith: [],
+                quizName: "Initial Quiz",
+                questionItems: initialQuizItems,
+                flashcardSetId: newDocRef.id
+            };
+
+            const newDocRefQuizzes = await addDoc(collection(database, 'quizzesCreation'), setQuizData);
+            console.log("New quiz set created with ID:", newDocRefQuizzes.id);
+
+
             const uid = this.getCurrentUid();
             if (uid) {
                 await this.addOwnedFlashcardSetToUser(uid, newDocRef.id);
-                await this.addOwnedQuizSetToUser(uid, newDocRef.id);
+                await this.addOwnedQuizSetToUser(uid, newDocRefQuizzes.id);
             }
 
-            return newDocRef.id;
+            return { flashcardSetId: newDocRef.id, quizSetId: newDocRefQuizzes.id };
         } catch (error) {
             console.error("Error creating flashcard set:", error);
             throw error;
@@ -475,7 +490,7 @@ const FlashcardRepo = {
                 correctChoice: correctChoiceIndex,
             };
 
-            const flashcardSetRef = doc(database, 'flashcardSets', setId); // Use 'flashcardSets' collection
+            const flashcardSetRef = doc(database, 'quizzesCreation', setId); // Use 'flashcardSets' collection
 
             const snap = await getDoc(flashcardSetRef);
             const data = snap.data();
@@ -496,7 +511,7 @@ const FlashcardRepo = {
     // delete question from the flashcardSets table and from questionItems field
     deleteQuestion: async function (setId, questionIdToBeDeleted) {
         try {
-            const flashcardSetRef = doc(database, 'flashcardSets', setId);
+            const flashcardSetRef = doc(database, 'quizzesCreation', setId);
             const snap = await getDoc(flashcardSetRef);
             const data = snap.data();
             let questionItems = data.questionItems || {};
@@ -522,7 +537,7 @@ const FlashcardRepo = {
     // get all the question data from the database called quizSet
     getQuestionItems: async function (setId) {
         try {
-            const setRef = doc(database, 'flashcardSets', setId);
+            const setRef = doc(database, 'quizzesCreation', setId);
             const setSnapshot = await getDoc(setRef);
             const setData = setSnapshot.data();
             const questionData = setData.questionItems || [];
@@ -536,7 +551,7 @@ const FlashcardRepo = {
     // update existing question as requested from the user
     updateQuestion: async function (setId, questionToBeUpdated, newQuestion, newChoices, newCorrectChoiceIndex) {
         try {
-            const flashcardSetRef = doc(database, 'flashcardSets', setId);
+            const flashcardSetRef = doc(database, 'quizzesCreation', setId);
             const snap = await getDoc(flashcardSetRef);
             const data = snap.data();
             // this will retrieve from questionItems field on firebase
@@ -566,7 +581,7 @@ const FlashcardRepo = {
     // get all the quiz titles from its flashcard sets
     getQuizTitleFromFlashcardSet: async function (flashcardSetId) {
         try {
-            const quizzesRef = collection(database, 'flashcardSets');
+            const quizzesRef = collection(database, 'quizzesCreation');
             // Retrieve all quizzes from the flashcard set using the flashcard id
             const querySnapshot = await getDocs(query(quizzesRef, where('flashcardSetId', '==', flashcardSetId)));
     
@@ -584,9 +599,11 @@ const FlashcardRepo = {
     },
 
     // get quiz id by using the quiz name
-    getQuizTitleId: async function (quizName) {
+    getQuizTitleId: async function (quizName, flashcardSetId) {
         try {
-            const querySnapshot = await getDocs(query(collection(database, 'flashcardSets'), where('quizName', '==', quizName)));
+            const querySnapshot = await getDocs(query(collection(database, 'quizzesCreation'), 
+            where('quizName', '==', quizName),
+            where('flashcardSetId', '==', flashcardSetId)));
             if (!querySnapshot.empty) {
                 return querySnapshot.docs[0].id;
             }
@@ -600,7 +617,7 @@ const FlashcardRepo = {
     // get quiz id by using topic name
     getQuizIdByTopicName: async function (topicName) {
         try {
-            const querySnapshot = await getDocs(query(collection(database, 'flashcardSets'), where('name', '==', topicName)));
+            const querySnapshot = await getDocs(query(collection(database, 'quizzesCreation'), where('name', '==', topicName)));
             if (!querySnapshot.empty) {
                 return querySnapshot.docs[0].id;
             }
@@ -611,10 +628,10 @@ const FlashcardRepo = {
         }
     },
 
-  
+    // get the flashcardSet Id by the quiz Id
     getSetIdByQuizId: async function (quizId) {
         try {
-            const setDoc = await getDoc(doc(database, 'flashcardSets', quizId));
+            const setDoc = await getDoc(doc(database, 'quizzesCreation', quizId));
             const data = setDoc.data();
             return data?.flashcardSetId || '';
             
@@ -659,7 +676,7 @@ const FlashcardRepo = {
                 questionItems: initialQuizItems,
             };
     
-            const newDocRef = await addDoc(collection(database, 'flashcardSets'), setData);
+            const newDocRef = await addDoc(collection(database, 'quizzesCreation'), setData);
             console.log("New Quiz is created with ID:", newDocRef.id);
     
             const uid = this.getCurrentUid();
@@ -677,13 +694,12 @@ const FlashcardRepo = {
     // this will update the quiz title in the database accordingly
     updateQuizTitle: async function (quizId, newTitle) {
         try {
-            const flashcardSetRef = doc(database, 'flashcardSets', quizId);
-            const snap = await getDoc(flashcardSetRef);
-
+            const quizSetRef = doc(database, 'quizzesCreation', quizId);
+            const snap = await getDoc(quizSetRef);
 
             if (snap.exists()) {
-
-                await updateDoc(flashcardSetRef, {
+                // update the quiz title
+                await updateDoc(quizSetRef, {
                     quizName: newTitle
                 });
                 console.log(`Flashcard set with ID ${quizId} updated successfully with new name: ${newTitle}.`);
@@ -696,7 +712,50 @@ const FlashcardRepo = {
             throw error;
         }
     },
- 
+
+    // this will delete a quiz from the database accordingly
+    deleteQuiz: async function(quizIdToBeDeleted, uid) {
+        const quizSetRef = doc(database, 'quizzesCreation', quizIdToBeDeleted);
+      
+        try {
+            // delete the selected quiz
+            await deleteDoc(quizSetRef);
+
+            console.log('Quiz is deleted successfully');
+            } catch (error) {
+            console.error('Error deleting quiz:', error);
+              throw error;
+            }
+    },
+
+    // this will remove the owned quiz from the user
+    removeOwnedQuizFromUser: async function(uid, quizIdToBeDeleted) {
+        try {
+            const userSetRef = doc(database, 'users', uid);
+            const snap = await getDoc(userSetRef);
+            // check if the users table exists with the id 
+            if (snap.exists()) {
+              const data = snap.data();
+        
+              if (Array.isArray(data['ownedQuizzes']) && data['ownedQuizzes'].includes(quizIdToBeDeleted)) {
+                // remove the item from the array
+                data['ownedQuizzes'] = data['ownedQuizzes'].filter(item => item !== quizIdToBeDeleted);
+        
+                // update the document with the modified data
+                await updateDoc(userSetRef, { ownedQuizzes: data['ownedQuizzes'] });
+                
+                console.log(`Quiz ID ${quizIdToBeDeleted} is removed from user ${uid} successfully.`);
+              } else {
+                console.log(`Quiz ID ${quizIdToBeDeleted} not found in ownedQuizzes.`);
+              }
+            } else {
+              console.log(`User with ID ${uid} does not exist.`);
+            }
+          } catch (error) {
+            console.error("Error deleting quiz", error);
+            throw error;
+          }
+        },
 
 };
 

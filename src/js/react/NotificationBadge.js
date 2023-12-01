@@ -11,7 +11,7 @@ export default function NotificationBadge({ onClick, count }) {
             badgeContent={count}
             color="primary"
         >
-            <NotificationsIcon color="action" />
+            <NotificationsIcon style={{ color: "#1DB954" }} />
         </Badge>
     );
 }
