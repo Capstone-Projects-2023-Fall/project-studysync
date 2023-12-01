@@ -393,8 +393,6 @@ function FlashcardApp() {
                 });
             }
 
-
-
             console.log("Sending Request with JSON payload:", { messages });
 
             const response = await fetch(functionUrl, {

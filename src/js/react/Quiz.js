@@ -18,7 +18,10 @@ import QuizList from './QuizList';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
-import ListAltIcon from '@mui/icons-material/ListAlt';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 const QuizComponent = () => {
 
   const [openAdd, setOpenAdd] = useState(false);
@@ -337,6 +340,61 @@ const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName)
             throw error;
         }
 };
+
+const [value, setValue] = React.useState('one');
+
+const handleChange = (event, newValue) => {
+  setValue(newValue);
+};
+const handleGenerateViaFlashcards = async () => {
+    // Implement your function for the second tab here
+    const flashcardName = await FlashcardRepo.getFlashcardSetById(setId);
+    console.log("Performing a different function for the second tab");
+    console.log("This is the quiz title you would like to work with: ", setId);
+    console.log("This is the quiz title you would like to work with: ", flashcardName);
+  };
+
+const renderOptions = () => {
+    switch (value) {
+      case "AI":
+        return (
+          <div>
+            <Typography textAlign="center">
+                Quiz Based on AI: You can create a quiz by entering your quiz topic and our AI tools will handle it for you.
+            </Typography>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Topic Name"
+              type="text"
+              fullWidth
+              value={topicName}
+              onChange={(e) => setTopicName(e.target.value)}
+            />
+            <TextField
+              margin="dense"
+              label="Number of Question(s)"
+              type="number"
+              fullWidth
+              value={numberOfQuestions}
+              onChange={(e) => setNumOfQuestions(e.target.value)}
+            />
+          </div>
+        );
+      case "Flashcards":
+        
+        return (
+          <div>
+            <Typography textAlign="center">
+                Quiz Based on Flashcards: Our AI tools will generate those question by using your flashcards that marked as "Don't Know"
+            </Typography>
+          </div>
+        );
+      // Add more cases for additional tabs as needed
+      default:
+        return null;
+    }
+  };
   
 return (
     <div style={{
@@ -632,30 +690,27 @@ return (
                     open={openGenerate}
                     onClose={() => setOpenGenerateAI(false)}
                 >
-                    <DialogTitle>{"AI Q/A Generated Tool"}</DialogTitle>
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        textColor="secondary"
+                        indicatorColor="secondary"
+                        aria-label="secondary tabs example"
+                    >
+                        <Tab value="AI" label="Quiz Based on AI" />
+                        <Tab value="Flashcards" label="Quiz Based on Flashcards" />
+                    </Tabs>
+                    <DialogTitle>                  
+                            <PrecisionManufacturingIcon /> 
+                            {"AI Generating Tools"}
+                    </DialogTitle>
                     <DialogContent>
-                    <DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Topic Name"
-                            type="text"
-                            fullWidth
-                            value={topicName}
-                            onChange={(e) => setTopicName(e.target.value)}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Number of Question(s)"
-                            type="number"
-                            fullWidth
-                            value={numberOfQuestions}
-                            onChange={(e) => setNumOfQuestions(e.target.value)}
-                        />
-                    </DialogContentText>
+                        {renderOptions()}
                     </DialogContent>
                     <DialogActions>
-                    <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button>
+                    {/* <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button> */}
+                    {value === "AI" && <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button>}
+                    {value === "Flashcards" && <Button onClick={handleGenerateViaFlashcards}>Another Function</Button>}
                     </DialogActions>
                 </Dialog>
                 
