@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import React, { useState } from "react";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function ScheduleDialog({ open, onClose, onSchedule }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedTime, setSelectedTime] = useState("");
 
   const handleDateChange = (e) => {
     setSelectedDate(new Date(e.target.value));
@@ -19,7 +19,7 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
 
   const handleClose = () => {
     setSelectedDate(new Date());
-    setSelectedTime('');
+    setSelectedTime("");
     onClose();
   };
 
@@ -29,19 +29,27 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
   };
 
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs" onClick={(e)=>{ e.stopPropagation()}}>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      fullWidth
+      maxWidth="xs"
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
       <DialogContent>
-      <Button
-                    onClick={handleClose}
-                    color="primary"
-                    style={{ position: "absolute", top: "8px", right: "8px" }} // Position the close button
-                    >
-                    <CloseIcon /> {/* Add a CloseIcon from Material-UI */}
-                    </Button>
+        <Button
+          onClick={handleClose}
+          color="primary"
+          style={{ position: "absolute", top: "8px", right: "8px" }} // Position the close button
+        >
+          <CloseIcon /> {/* Add a CloseIcon from Material-UI */}
+        </Button>
         <TextField
           type="date"
           label="Select Date"
-          value={selectedDate.toISOString().split('T')[0]}
+          value={selectedDate.toISOString().split("T")[0]}
           onChange={handleDateChange}
           fullWidth
           margin="normal"
