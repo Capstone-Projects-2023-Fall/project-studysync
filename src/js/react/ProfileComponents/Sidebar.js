@@ -63,6 +63,7 @@ function Sidebar(props) {
     <Grid item xs={12} md={4}>
 
       <CardMedia
+          className='image-card'
           component="img"
           sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
           image={image}
