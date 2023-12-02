@@ -144,7 +144,8 @@ function FlashCardSet({
         if (isFlashcard == false) {
           navigate(`/quizmain/${quizId}`);
         } else {
-          navigate(`/flashcard-ui/${flashcardId}`);
+          navigate(`/flashcardshare/${flashcardId}`);
+          console.log("flashcardId", flashcardId)
         }
       }}
     >
