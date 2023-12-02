@@ -65,13 +65,8 @@ export default function DashboardCom() {
             console.log(`OwnedFlashcards: ${ownedFlashcards}`);
             console.log(`OwnedQuizzes: ${ownedQuizzes}`);
             setFriends(friends);
-            //REPLACE THIS WITH REAL EVENTS  
             setEvents(events);
-            // setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
-            // {name:"Upcoming FlashCard",eventType:"New FlashCard"}]);
-
             setOwnedFlashcards(ownedFlashcards);
-            //setOwnedQuizzes([{name:'quiz1',id:'123'}])
             setOwnedQuizzes(ownedQuizzes);
 
           })
@@ -119,16 +114,13 @@ export default function DashboardCom() {
         </>        
       )
     }
-    //Welcome page for non logged in users
-    // if(!user){
-    //   return(<WelcomePage />)
-    // }
+
 
   return (
     <>  
     <div class="banner animated tada">
     <div class=" big-text animated tada">StudySync - Your Ultimate Studying Companion!
-</div>
+    </div>
 
       <a href="/flashcard">Get Started !</a>
     </div>    
