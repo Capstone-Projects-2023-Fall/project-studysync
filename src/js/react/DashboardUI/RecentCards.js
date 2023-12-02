@@ -8,15 +8,13 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 
 function RecentCards(props) {
-  const { card,imageLink } = props;
+  const { card,imageLink ,cardLink} = props;
 
-  const cardLink = (id)=>{
-    return `/flashcard-ui/${id}`;
-  }
+
 
   return (
     <Grid item xs={12} md={4}>
-      <CardActionArea component="a" href={cardLink(card.id)}>
+      <CardActionArea component="a" href={cardLink}>
         <Card sx={{ display: 'flex' }}>
           <CardContent sx={{ flex: 1 }}>
             <Typography component="h2" variant="h5" className='cards'>

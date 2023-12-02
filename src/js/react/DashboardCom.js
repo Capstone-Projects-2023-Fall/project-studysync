@@ -19,7 +19,7 @@ import { userRepository } from '../../firebase';
 import RecentCards from './DashboardUI/RecentCards';
 import './DashboardUI/RecentFlash.css';
 import './DashboardUI/Dashboard.css';
-
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -48,14 +48,14 @@ export default function DashboardCom() {
     const [events,setEvents] = useState([]);
     const [ownedFlashcards,setOwnedFlashcards] = useState([]);
     const [ownedQuizzes,setOwnedQuizzes] = useState([]);
-
+    const navigate = useNavigate();
     useEffect(() => {
       if (user) {
         setIsLoading(true);
     
         Promise.all([
           userRepository.getFriends(user.uid),
-          userRepository.getEvents(user.uid),
+          userRepository.getUpcomingEvents(user.uid),
           userRepository.getOwnedFlashcards(user.uid),
           userRepository.getOwnedQuizzes(user.uid),
         ])
@@ -65,14 +65,9 @@ export default function DashboardCom() {
             console.log(`OwnedFlashcards: ${ownedFlashcards}`);
             console.log(`OwnedQuizzes: ${ownedQuizzes}`);
             setFriends(friends);
-            //REPLACE THIS WITH REAL EVENTS  
-            // setEvents(events);
-            setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
-            {name:"Upcoming FlashCard",eventType:"New FlashCard"}]);
-
+            setEvents(events);
             setOwnedFlashcards(ownedFlashcards);
-           setOwnedQuizzes([{name:'quiz1',id:'123'}])
-            // setOwnedQuizzes(ownedQuizzes);
+            setOwnedQuizzes(ownedQuizzes);
 
           })
           .catch((e) => {
@@ -119,18 +114,15 @@ export default function DashboardCom() {
         </>        
       )
     }
-    //Welcome page for non logged in users
-    // if(!user){
-    //   return(<WelcomePage />)
-    // }
+
 
   return (
     <>  
     <div class="banner animated tada">
     <div class=" big-text animated tada">StudySync - Your Ultimate Studying Companion!
-</div>
+    </div>
 
-      <a href="/flashcard">Get Started !</a>
+      <a id='banner-link' onClick={()=>navigate('/flashcard')}>Get Started !</a>
     </div>    
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>
@@ -182,7 +174,9 @@ export default function DashboardCom() {
               </div>
               <Grid id='flashcard-grid' container spacing={4}>
                 {ownedFlashcards ? ownedFlashcards.map((card,index) => (
-                  <RecentCards key={index} card={card} imageLink='https://lovetoteach87.com/wp-content/uploads/2020/09/flashcards-1591812_1280-940x590.jpg'/>
+                  <RecentCards key={index} card={card} 
+                  imageLink='https://lovetoteach87.com/wp-content/uploads/2020/09/flashcards-1591812_1280-940x590.jpg'
+                  cardLink={`/flashcard-ui/${card.id}`}/>
                 )) : <a href='/flashcard' className='EmptyCards'>No flashcards? Create flashcards to study your topics here!</a>}
               </Grid>
               {/* RECENT Quizzes */}
@@ -190,10 +184,13 @@ export default function DashboardCom() {
                   Recent Quizzes:
               </div>       
               <Grid id='flashcard-grid' container spacing={4}>
-                {ownedQuizzes  &&
+                {ownedQuizzes ?
                   ownedQuizzes.map((card,index) => (
-                  <RecentCards key={index} card={card} imageLink='https://canopylab.com/wp-content/uploads/2020/05/Working-with-adaptive-quizzes-A-beginners-guide.jpg'/>
-                )) }
+                  <RecentCards key={index} card={card} 
+                  imageLink='https://canopylab.com/wp-content/uploads/2020/05/Working-with-adaptive-quizzes-A-beginners-guide.jpg'
+                  cardLink={`/quizmain/${card.id}`}/>
+                )) : <a href={`/mysets/${user && user.uid}`}> 
+                No quizzes? Get started here!</a>}
               </Grid>                                   
             </Grid>
           </Container>

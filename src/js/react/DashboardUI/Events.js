@@ -11,7 +11,7 @@ import './Events.css';
 export default function Events(props) {
   const {events} = props;
   const _events = events.slice(0,4);
-  const theme = useTheme();
+
 
   return (
     <React.Fragment>
@@ -24,7 +24,7 @@ export default function Events(props) {
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell align="right">{event.eventType}</TableCell>     
+              <TableCell align="right">{event.createdAt}</TableCell>     
             </TableRow>
           ))}
       

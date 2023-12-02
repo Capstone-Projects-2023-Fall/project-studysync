@@ -37,7 +37,7 @@ function App() {
         alignItems: 'center',
 
     };
-
+    
 
     const { user } = useUser();
 
@@ -49,6 +49,7 @@ function App() {
     ];
 
     const navbarItemsLoggedIn = [
+
         { label: "Dashboard", link: `/dashboard/${user && user.uid}` },
         { label: "Study Tool", link: "/flashcard" },
         { label: "My Sets", link: `/mysets/${user && user.uid}` },

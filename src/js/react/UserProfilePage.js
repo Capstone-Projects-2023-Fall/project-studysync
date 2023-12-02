@@ -42,13 +42,7 @@ import { useParams } from 'react-router-dom';
 };
   
   const featuredPosts = (user) =>[
-    {
-      title: 'Quiz',
-      description:
-        `Check out ${user.name}'s quizzes`,
-      image: 'https://source.unsplash.com/random?wallpapers',
-      imageLabel: 'Image Text',
-    },
+
     {
       title: 'FlashCards',
       description:
@@ -192,7 +186,7 @@ import { useParams } from 'react-router-dom';
             </Grid>
             <Grid container spacing={5} sx={{ mt: 3 }}>
               <Main title="About" edit={edit} setEdit={setEdit} userDescription={userDescription} />
-              <Sidebar
+              <Sidebar 
                 title={sidebar.title}
                 description={profile.bio}
                 archives={sidebar.archives}
