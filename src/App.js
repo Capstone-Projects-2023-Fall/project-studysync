@@ -13,6 +13,8 @@ import FriendsPage from "./js/react/FriendsPage";
 import MainQuizPage from "./js/react/MainQuizPage";
 import Quiz from "./js/react/Quiz.js";
 import MySets from "./js/react/MySets.js";
+import FlashcardShare from "./js/react/flashcardShare";
+
 import React, { useEffect, useState } from 'react';
 import Lottie from 'react-lottie-player';
 
@@ -47,7 +49,7 @@ function App() {
     ];
 
     const navbarItemsLoggedIn = [
-        { label: "Dashboard", link: "/dashboard" },
+        { label: "Dashboard", link: `/dashboard/${user && user.uid}` },
         { label: "Study Tool", link: "/flashcard" },
         { label: "My Sets", link: `/mysets/${user && user.uid}` },
         { label: "Socials", link: `/socials/${user && user.uid}` },
@@ -103,6 +105,8 @@ function App() {
                 <Route path="/socials/:UserId" element={<FriendsPage />} />
                 <Route path="/quizmain/:setId" element={<MainQuizPage />} />
                 <Route path="/mysets/:UserId" element={<MySets />} />
+                <Route path="/dashboard/:UserId" element={<DashboardCom />} />
+                <Route path="/flashcardshare/:UserId" element={<FlashcardShare />} />
             </Routes>
         </div>
     );
