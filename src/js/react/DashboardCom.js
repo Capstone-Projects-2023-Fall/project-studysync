@@ -19,7 +19,7 @@ import { userRepository } from '../../firebase';
 import RecentCards from './DashboardUI/RecentCards';
 import './DashboardUI/RecentFlash.css';
 import './DashboardUI/Dashboard.css';
-
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
   return (
@@ -48,7 +48,7 @@ export default function DashboardCom() {
     const [events,setEvents] = useState([]);
     const [ownedFlashcards,setOwnedFlashcards] = useState([]);
     const [ownedQuizzes,setOwnedQuizzes] = useState([]);
-
+    const navigate = useNavigate();
     useEffect(() => {
       if (user) {
         setIsLoading(true);
@@ -122,7 +122,7 @@ export default function DashboardCom() {
     <div class=" big-text animated tada">StudySync - Your Ultimate Studying Companion!
     </div>
 
-      <a href="/flashcard">Get Started !</a>
+      <a id='banner-link' onClick={()=>navigate('/flashcard')}>Get Started !</a>
     </div>    
     <ThemeProvider theme={defaultTheme}>
       <Box sx={{ display: 'flex' }}>

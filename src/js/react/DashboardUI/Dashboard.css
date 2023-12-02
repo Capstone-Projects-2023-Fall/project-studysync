@@ -41,3 +41,7 @@
 .EmptyCards{
     padding-top: 5%;
 }
+#banner-link:hover{
+  cursor: pointer;
+
+}
