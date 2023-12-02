@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, ThemeProvider, createTheme } from '@mui/material';
+import { Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ThemeProvider, IconButton, Button, createTheme } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useParams } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
+import { useParams, useNavigate } from 'react-router-dom';
+
 
 function FlashcardShare() {
     const [term, setTerm] = useState('');
@@ -145,10 +146,11 @@ function FlashcardShare() {
                             variant="outlined"
                             style={{
                                 marginTop: '10px',
+                                backgroundColor: '#4f97e0',
                                 color: 'white'
                             }}
                         >
-                            share
+                            save to my flashcard
                         </Button>
                     </div>
                 </div>
