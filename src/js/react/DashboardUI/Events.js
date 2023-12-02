@@ -7,7 +7,6 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import './Events.css';
-import { userRepository } from '../../../firebase';
 
 export default function Events(props) {
   const {events} = props;
@@ -21,11 +20,11 @@ export default function Events(props) {
         <TableBody>
           {_events.map((event,index)=>(
             <TableRow key={index}>
-              <TableCell>{event}</TableCell>
+              <TableCell>{event.name}</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell align="right">{event}</TableCell>     
+              <TableCell align="right">{event.createdAt}</TableCell>     
             </TableRow>
           ))}
       
