@@ -81,7 +81,7 @@ const QuizComponent = () => {
 
   //for navagation start quiz
   const startQuiz = () => {
-    navigate(`/quizmain/${setId}`); //Navigate to the quiz page with setId
+    navigate(`/quizmain/${quizId}`); //Navigate to the quiz page with setId
     localStorage.removeItem('quizPaused');//if start new quiz, delete saved progress
   };
 
