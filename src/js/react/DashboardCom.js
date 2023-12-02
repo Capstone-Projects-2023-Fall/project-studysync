@@ -71,8 +71,8 @@ export default function DashboardCom() {
             {name:"Upcoming FlashCard",eventType:"New FlashCard"}]);
 
             setOwnedFlashcards(ownedFlashcards);
-           setOwnedQuizzes([{name:'quiz1',id:'123'}])
-            // setOwnedQuizzes(ownedQuizzes);
+            //setOwnedQuizzes([{name:'quiz1',id:'123'}])
+            setOwnedQuizzes(ownedQuizzes);
 
           })
           .catch((e) => {
@@ -182,7 +182,9 @@ export default function DashboardCom() {
               </div>
               <Grid id='flashcard-grid' container spacing={4}>
                 {ownedFlashcards ? ownedFlashcards.map((card,index) => (
-                  <RecentCards key={index} card={card} imageLink='https://lovetoteach87.com/wp-content/uploads/2020/09/flashcards-1591812_1280-940x590.jpg'/>
+                  <RecentCards key={index} card={card} 
+                  imageLink='https://lovetoteach87.com/wp-content/uploads/2020/09/flashcards-1591812_1280-940x590.jpg'
+                  cardLink={`/flashcard-ui/${card.id}`}/>
                 )) : <a href='/flashcard' className='EmptyCards'>No flashcards? Create flashcards to study your topics here!</a>}
               </Grid>
               {/* RECENT Quizzes */}
@@ -190,10 +192,13 @@ export default function DashboardCom() {
                   Recent Quizzes:
               </div>       
               <Grid id='flashcard-grid' container spacing={4}>
-                {ownedQuizzes  &&
+                {ownedQuizzes ?
                   ownedQuizzes.map((card,index) => (
-                  <RecentCards key={index} card={card} imageLink='https://canopylab.com/wp-content/uploads/2020/05/Working-with-adaptive-quizzes-A-beginners-guide.jpg'/>
-                )) }
+                  <RecentCards key={index} card={card} 
+                  imageLink='https://canopylab.com/wp-content/uploads/2020/05/Working-with-adaptive-quizzes-A-beginners-guide.jpg'
+                  cardLink={`/quizmain/${card.id}`}/>
+                )) : <a href={`/mysets/${user && user.uid}`}> 
+                No quizzes? Get started here!</a>}
               </Grid>                                   
             </Grid>
           </Container>
