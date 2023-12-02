@@ -12,16 +12,16 @@ import {
     ListItem,
 } from "@mui/material";
 import useUser from "./useUser";
-import { userRepository} from "../../firebase";
+import { userRepository } from "../../firebase";
 import { EVENT_TYPE } from "../models/event";
 import {
     addNewIdField,
     updateQuestion,
     getAllDocumentsInCollection,
 } from "../../firebase";
-import { useNavigate} from "react-router-dom";
-export default function Notification({userId, closePanel}) {
- 
+import { useNavigate } from "react-router-dom";
+export default function Notification({ userId, closePanel }) {
+
     const [page, setPage] = useState(1);
     const itemsPerPage = 8; // You can adjust this value as needed
 
@@ -57,7 +57,7 @@ export default function Notification({userId, closePanel}) {
                                     <Avatar
                                         alt={item.author}
                                         src={item.avatar}
-                                        onClick={()=>{
+                                        onClick={() => {
                                             navigate(`/profile/${item.userFrom}`)
                                             closePanel()
                                         }}
@@ -65,18 +65,18 @@ export default function Notification({userId, closePanel}) {
                                 </ListItemAvatar>
                                 <ListItemText
                                     primary={item.name}
-                                    onClick={()=>{
-                                                
-                                    if(item.isFlashcard){
-                                        navigate(`/flashcard-ui/${item.sharedFlashcardId}`);
-                                    }else if(item.isFollower){
-                                        navigate(`/profile/${item.userFrom}`)
-                                    }else{
-                                        navigate(`/quizmain/${item.sharedQuizId}`)
-                                    }
-                                    
-                                    closePanel()
-                                }}
+                                    onClick={() => {
+
+                                        if (item.isFlashcard) {
+                                            navigate(`/flashcardshare/${item.sharedFlashcardId}`);
+                                        } else if (item.isFollower) {
+                                            navigate(`/profile/${item.userFrom}`)
+                                        } else {
+                                            navigate(`/quizmain/${item.sharedQuizId}`)
+                                        }
+
+                                        closePanel()
+                                    }}
                                     secondary={
                                         <React.Fragment>
                                             <Typography
@@ -84,18 +84,18 @@ export default function Notification({userId, closePanel}) {
                                                 component="span"
                                                 variant="body2"
                                                 color="text.primary"
-                                                onClick={()=>{
-                                                if(item.isFlashcard){
-                                                    navigate(`/flashcard-ui/${item.sharedFlashcardId}`);
-                                                }else if(item.isFollower){
-                                                    navigate(`/profile/${item.userFrom}`)
-                                                    console.log("not flashcard banchekry sia: ", item.isFollower)
-                                                }else{
-                                                    navigate(`/quizmain/${item.sharedQuizId}`)
-                                                }
-                                                
-                                                closePanel()
-                                            }}
+                                                onClick={() => {
+                                                    if (item.isFlashcard) {
+                                                        navigate(`/flashcard-ui/${item.sharedFlashcardId}`);
+                                                    } else if (item.isFollower) {
+                                                        navigate(`/profile/${item.userFrom}`)
+                                                        console.log("not flashcard banchekry sia: ", item.isFollower)
+                                                    } else {
+                                                        navigate(`/quizmain/${item.sharedQuizId}`)
+                                                    }
+
+                                                    closePanel()
+                                                }}
                                             >
                                                 {item.author}
                                             </Typography>
@@ -127,7 +127,7 @@ export default function Notification({userId, closePanel}) {
                     onChange={handleChangePage}
                     color="primary"
                 />
-            )} 
+            )}
         </div>
     );
 }
@@ -202,10 +202,10 @@ function timeAgo(timestamp) {
     }
 }
 
-function parseNotifications(notifications){
+function parseNotifications(notifications) {
     const data = []
     for (const notification of notifications) {
-        if(!notification.event) continue
+        if (!notification.event) continue
         switch (notification.event.eventType) {
             case EVENT_TYPE.NEW_FOLLOWER:
                 data.push(createNewFollowerEvent(notification));
