@@ -19,19 +19,6 @@ import { useParams } from 'react-router-dom';
 
 
 
-const sections = [
-    { title: 'Technology', url: '#' },
-    { title: 'Design', url: '#' },
-    { title: 'Culture', url: '#' },
-    { title: 'Business', url: '#' },
-    { title: 'Politics', url: '#' },
-    { title: 'Opinion', url: '#' },
-    { title: 'Science', url: '#' },
-    { title: 'Health', url: '#' },
-    { title: 'Style', url: '#' },
-    { title: 'Travel', url: '#' },
-  ];
-  
   function mainFeaturedPost(profile){
 
     return{  
@@ -41,7 +28,6 @@ const sections = [
     image: 'https://source.unsplash.com/random?wallpapers',
     imageText: 'main image description',
     linkText: 'View flashcards',
-    Name: profile.name,
     bio: profile.bio,
     imageURL: profile.imageURL,
     profession: profile.profession,
@@ -49,8 +35,9 @@ const sections = [
     friends: profile.friends,
     email: profile.email,
     id: profile.id,
-    cardlink: `/flashcard-ui/${profile.id}`,
-    username: profile.username
+    cardlink: `/flashcard-ui/${profile.id}`,    
+    firstName: profile.firstName,
+    lastName: profile.lastName,
     }
 };
   
