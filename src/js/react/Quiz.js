@@ -19,7 +19,10 @@ import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
-
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControl from '@mui/material/FormControl';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 const QuizComponent = () => {
@@ -57,6 +60,12 @@ const QuizComponent = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const [flashcardSetName, setFlashcardSetName] = useState('');
+  const [flashcardRating, setRating] = useState('');
+  const [flashcardDifficulty, setDifficulty] = useState('');
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [submitAttempted1, setSubmitAttempted1] = useState(false);
 
   //calculation time limit
   const calculateTimeLimit = () => {
@@ -231,7 +240,7 @@ const handleCreateQuiz = async () => {
       const uid = FlashcardRepo.getCurrentUid();
   
       if (uid && quizTitle) {
-        // Call your createNewQuiz function from FlashcardRepo
+        // call createNewQuiz function from FlashcardRepo
         const newQuizId = await FlashcardRepo.createNewQuiz(setId, quizTitle);
   
         console.log("You want to add: ", quizTitle);
@@ -245,8 +254,12 @@ const handleCreateQuiz = async () => {
     }
   };
 
-const handleOpenGenerateAI = () => {
+const handleOpenGenerateAI = async () => {
     setOpenGenerateAI(true);
+     const topicName = await FlashcardRepo.getFlashcardSetById(setId);
+    //get the flashcard set name
+    console.log("Your topic name is: ", topicName.name);
+    setFlashcardSetName(topicName.name);
 
 };
 
@@ -283,9 +296,18 @@ function parseGPTResponse(rawResponse) {
 
 // this function allows user to generate new quiz question through the help of AI
 const handleGenerateAIQuestion = async () => {
-    setOpenGenerateAI(false);
-    setIsLoading(true);
+   
     try {
+            // check if required fields are filled
+        if (!numberOfQuestions || !topicName) {
+            // display alert if any required field is missing
+            alert('Please fill in all required fields.');
+            // set submitAttempted to true to highlight missing fields
+            setSubmitAttempted(true);
+        }
+        else {
+            setOpenGenerateAI(false);
+            setIsLoading(true);
         const responseString = await callYourCloudFunctionToGenerateQuestions(numberOfQuestions, topicName);
         const generatedQuestions = responseString;
 
@@ -296,6 +318,7 @@ const handleGenerateAIQuestion = async () => {
         }
         setSuccessMessage('Flashcards generated successfully!');
         setQuizData(prev => [...prev, ...addedQuestions]);
+    }
     } catch (error) {
         console.error("Error generating or adding question with AI:", error);
     }finally {
@@ -341,18 +364,34 @@ const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName)
         }
 };
 
-const [value, setValue] = React.useState('one');
+const [value, setValue] = React.useState('AI');
 
 const handleChange = (event, newValue) => {
   setValue(newValue);
 };
 const handleGenerateViaFlashcards = async () => {
-    // Implement your function for the second tab here
+
     const flashcardName = await FlashcardRepo.getFlashcardSetById(setId);
     console.log("Performing a different function for the second tab");
     console.log("This is the quiz title you would like to work with: ", setId);
     console.log("This is the quiz title you would like to work with: ", flashcardName);
   };
+
+const getFlashcardsData = async () => {
+
+    // check if required fields are filled
+    if (!numberOfQuestions || !flashcardRating || !flashcardDifficulty) {
+        // display alert if any required field is missing
+        alert('Please fill in all required fields.');
+        // set submitAttempted to true to highlight missing fields
+        setSubmitAttempted1(true);
+      } else {
+        console.log('Rating:', flashcardRating);
+        console.log('Difficulty:', flashcardDifficulty);
+        console.log('Form submitted successfully');
+      }
+
+}
 
 const renderOptions = () => {
     switch (value) {
@@ -370,6 +409,8 @@ const renderOptions = () => {
               fullWidth
               value={topicName}
               onChange={(e) => setTopicName(e.target.value)}
+              error={submitAttempted && !topicName}
+              helperText={submitAttempted && !topicName ? 'Please enter the topic of the quiz' : ''}
             />
             <TextField
               margin="dense"
@@ -388,6 +429,57 @@ const renderOptions = () => {
             <Typography textAlign="center">
                 Quiz Based on Flashcards: Our AI tools will generate those question by using your flashcards that marked as "Don't Know"
             </Typography>
+            <br/>
+            <Typography> 
+                By using this flashcard topic: &nbsp;
+                <span
+                    style={{
+                        fontWeight: "bold",
+                        color: "black",
+                        fontSize: "20px",
+                    }}
+                >
+                {flashcardSetName}
+                </span>
+            </Typography>
+            <TextField
+                margin="dense"
+                label="Number of Question(s)"
+                type="number"
+                fullWidth
+                value={numberOfQuestions}
+                onChange={(e) => setNumOfQuestions(e.target.value)}
+            />
+            <FormControl id="rating-control-buttons"> Rating Levels: 
+            <RadioGroup
+                aria-labelledby="rating-control-buttons"
+                name="rating"
+                value={flashcardRating}
+                onChange={(e) => setRating(e.target.value)}
+                row
+                >
+                <FormControlLabel value="Know" control={<Radio />} label="Know" />
+                <FormControlLabel value="Don't Know" control={<Radio />} label="Don't Know" />
+                <FormControlLabel value="Not Sure" control={<Radio />} label="Not Sure" />
+            </RadioGroup>
+            {submitAttempted1 && !flashcardRating && <div style={{ color: 'red' }}>Please select a rating level</div>}
+            </FormControl>
+
+            <FormControl id="difficulty-control-buttons"> Difficulty Levels:
+            <RadioGroup
+                aria-labelledby="rdifficulty-control-buttons"
+                name="difficulty"
+                value={flashcardDifficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
+                row
+                >
+                <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
+                <FormControlLabel value="Medium" control={<Radio />} label="Medium" />
+                <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
+            </RadioGroup>
+            {submitAttempted1 && !flashcardDifficulty && <div style={{ color: 'red' }}>Please select a difficulty level</div>}
+            </FormControl>
+            
           </div>
         );
       // Add more cases for additional tabs as needed
@@ -688,7 +780,15 @@ return (
 
                 <Dialog 
                     open={openGenerate}
-                    onClose={() => setOpenGenerateAI(false)}
+                    onClose={() => {
+                    setOpenGenerateAI(false);
+                    setNumOfQuestions("1");
+                    setTopicName('');
+                    setDifficulty('');
+                    setRating('');
+                    setSubmitAttempted(false);
+                    setSubmitAttempted1(false);
+                    }}
                 >
                     <Tabs
                         value={value}
@@ -700,7 +800,10 @@ return (
                         <Tab value="AI" label="Quiz Based on AI" />
                         <Tab value="Flashcards" label="Quiz Based on Flashcards" />
                     </Tabs>
-                    <DialogTitle>                  
+                    <DialogTitle   
+                    fontSize= "25px"
+                    fontWeight= "bold"
+                    >                  
                             <PrecisionManufacturingIcon /> 
                             {"AI Generating Tools"}
                     </DialogTitle>
@@ -709,8 +812,8 @@ return (
                     </DialogContent>
                     <DialogActions>
                     {/* <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button> */}
-                    {value === "AI" && <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button>}
-                    {value === "Flashcards" && <Button onClick={handleGenerateViaFlashcards}>Another Function</Button>}
+                    {value === "AI" && <Button variant ="contained" onClick={handleGenerateAIQuestion}>Generate</Button>}
+                    {value === "Flashcards" && <Button variant ="contained" onClick={getFlashcardsData}>Generate</Button>}
                     </DialogActions>
                 </Dialog>
                 
