@@ -785,7 +785,7 @@ function FlashcardApp() {
                                 Upload Image
                             </Button>
                         </label>
-                        
+
                         {previewUrl && (
                             <div style={{ marginTop: '10px' }}>
                                 <img src={previewUrl} alt="Image preview" style={{ maxWidth: '100%', height: 'auto' }} />

@@ -106,7 +106,7 @@ function App() {
                 <Route path="/quizmain/:setId" element={<MainQuizPage />} />
                 <Route path="/mysets/:UserId" element={<MySets />} />
                 <Route path="/dashboard/:UserId" element={<DashboardCom />} />
-                <Route path="/flashcardshare/:UserId" element={<FlashcardShare />} />
+                <Route path="/flashcardshare/:flashcardId" element={<FlashcardShare />} component={FlashcardShare} />
             </Routes>
         </div>
     );

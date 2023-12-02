@@ -2,22 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, ThemeProvider, IconButton, Button, createTheme } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useParams } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
-import { useParams, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 function FlashcardShare() {
     const [term, setTerm] = useState('');
     const [definition, setDefinition] = useState('');
-    const { setId } = useParams();
+    const { setId, flashcardId } = useParams();
     const [cards, setCards] = useState([]);
     const [selectedCard, setSelectedCard] = useState(null);
     const [isFlipped, setIsFlipped] = useState(false);
+    const userId = FlashcardRepo.getCurrentUid();
+    const navigate = useNavigate();
+    console.log("flashcard", flashcardId)
 
     useEffect(() => {
         const fetchFlashcards = async () => {
             try {
-                const flashcardData = await FlashcardRepo.getFlashcardItems(setId);
+                const flashcardData = await FlashcardRepo.getFlashcardItems(flashcardId);
                 const flashcardsArray = Object.keys(flashcardData).map(key => {
                     return {
                         term: flashcardData[key].term,
@@ -55,7 +58,17 @@ function FlashcardShare() {
     const toggleFlip = () => {
         setIsFlipped(!isFlipped);
     };
-
+    const handleSaveToMyFlashcards = async () => {
+        if (flashcardId) {
+            try {
+                const newFlashcardSetId = await FlashcardRepo.copyFlashcards(flashcardId, userId);
+                navigate(`/flashcard-ui/${newFlashcardSetId}`);
+                console.log("New flashcard set created with ID:", newFlashcardSetId);
+            } catch (error) {
+                console.error("Error saving to my flashcards:", error);
+            }
+        }
+    };
     const theme = createTheme({
         palette: {
             primary: { main: '#007aff' },
@@ -149,6 +162,7 @@ function FlashcardShare() {
                                 backgroundColor: '#4f97e0',
                                 color: 'white'
                             }}
+                            onClick={handleSaveToMyFlashcards}
                         >
                             save to my flashcard
                         </Button>
