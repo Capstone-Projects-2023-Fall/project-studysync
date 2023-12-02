@@ -670,7 +670,7 @@ function FlashcardApp() {
                     <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
                         <div style={{ display: "flex", alignItems: "center", }}>
                             <Avatar src={userImage} />
-                            <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
+                            <TextField fullWidth label="Provide Feedback!" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
                             <IconButton onClick={handleSendComment}>
                                 <SendIcon />
                             </IconButton>
