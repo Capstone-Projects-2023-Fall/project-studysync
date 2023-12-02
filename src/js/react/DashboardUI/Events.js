@@ -7,11 +7,12 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import './Events.css';
+import { userRepository } from '../../../firebase';
 
 export default function Events(props) {
   const {events} = props;
   const _events = events.slice(0,4);
-  const theme = useTheme();
+
 
   return (
     <React.Fragment>
@@ -20,11 +21,11 @@ export default function Events(props) {
         <TableBody>
           {_events.map((event,index)=>(
             <TableRow key={index}>
-              <TableCell>{event.name}</TableCell>
+              <TableCell>{event}</TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell align="right">{event.eventType}</TableCell>     
+              <TableCell align="right">{event}</TableCell>     
             </TableRow>
           ))}
       

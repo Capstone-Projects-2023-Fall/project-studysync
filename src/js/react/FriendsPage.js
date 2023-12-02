@@ -258,17 +258,17 @@ export default function FriendsPage() {
     function viewUser(uid) {
       navigate(`/profile/${uid}`);
     }
-    function followBack(uid) {
-      userRepository
-        .addFollowing(UserId, uid)
-        .then(() => {
-          console.log(`Followed ${uid} back!`);
-        })
-        .catch((e) => {
-          setError(e);
-          console.log(`Error: ${e}`);
-        });
-    }
+    // function followBack(uid) {
+    //   userRepository
+    //     .addFollowing(UserId, uid)
+    //     .then(() => {
+    //       console.log(`Followed ${uid} back!`);
+    //     })
+    //     .catch((e) => {
+    //       setError(e);
+    //       console.log(`Error: ${e}`);
+    //     });
+    // }
     function stopFollowing(uid) {
       setIsLoading(true);
       userRepository
@@ -288,7 +288,12 @@ export default function FriendsPage() {
     }
     function handlebtn1(uid) {
       if (type == "Followers") {
-        followBack(uid);
+        // followBack(uid);
+        userRepository.startFollowing(UserId,uid).then(console.log(`Started following ${uid}.`))
+          .catch((e)=>{
+              setError(e);
+              console.log(`Error: ${e}`)}
+          )
       } else {
         viewUser(uid);
       }

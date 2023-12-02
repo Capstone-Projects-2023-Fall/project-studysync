@@ -55,7 +55,7 @@ export default function DashboardCom() {
     
         Promise.all([
           userRepository.getFriends(user.uid),
-          userRepository.getEvents(user.uid),
+          userRepository.getUpcomingEvents(user.uid),
           userRepository.getOwnedFlashcards(user.uid),
           userRepository.getOwnedQuizzes(user.uid),
         ])
@@ -66,9 +66,9 @@ export default function DashboardCom() {
             console.log(`OwnedQuizzes: ${ownedQuizzes}`);
             setFriends(friends);
             //REPLACE THIS WITH REAL EVENTS  
-            // setEvents(events);
-            setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
-            {name:"Upcoming FlashCard",eventType:"New FlashCard"}]);
+            setEvents(events);
+            // setEvents([{name:"Upcoming Quiz",eventType:"New Quiz"},
+            // {name:"Upcoming FlashCard",eventType:"New FlashCard"}]);
 
             setOwnedFlashcards(ownedFlashcards);
             //setOwnedQuizzes([{name:'quiz1',id:'123'}])
