@@ -609,8 +609,41 @@ export class UserRepository {
 
   /**Upcoming events */
   async addUpcomingEvent(userId, name, date, time, type, itemId) {
+    console.log("incoming: ", name, date, time);
+    const splitDate = date.split(" ");
+    const splitTime = time.split(":");
+    console.log("split time is: ", splitDate);
+    const scheduledDate = new Date(
+      parseInt(splitDate[3]),
+      this.getMonthIndex(splitDate[1]),
+      parseInt(splitDate[2]),
+      parseInt(splitTime[0]),
+      parseInt(splitTime[1]),
+      0
+    );
+
+    const utcStamp = scheduledDate.getTime();
+
+    const dateToStore =
+      splitDate[0] +
+      " " +
+      splitDate[1] +
+      " " +
+      splitDate[2] +
+      " " +
+      splitDate[3];
+    console.log("date to store is: ", dateToStore);
+
+    console.log("scheduled date is : ", scheduledDate);
     const upcomingEventId = await this.eventRepository.createUpcomingEvent(
-      new UpcomingEvent(name, date, time, type, itemId)
+      new UpcomingEvent(
+        name,
+        dateToStore,
+        this.convertTo12HourFormat(time),
+        type,
+        itemId,
+        utcStamp
+      )
     );
     await addItemToArrayField(
       this.database,
@@ -663,7 +696,7 @@ export class UserRepository {
     const upcomingEvents = await this.getAllUpcomingEvents(userId);
 
     return upcomingEvents.filter((item) => {
-      return this.isFutureDate(item.date);
+      return this.isTimestampInFuture(item.timestamp);
     });
   }
 
@@ -671,7 +704,7 @@ export class UserRepository {
     const upcomingEvents = await this.getAllUpcomingEvents(userId);
 
     return upcomingEvents.filter((item) => {
-      return !this.isFutureDate(item.date);
+      return !this.isTimestampInFuture(item.timestamp);
     });
   }
 
@@ -680,5 +713,48 @@ export class UserRepository {
     var currentDate = new Date();
 
     return givenDate > currentDate;
+  }
+
+  isTimestampInFuture(timestamp) {
+    const currentTime = Date.now();
+
+    console.log("current and given", currentTime, timestamp);
+    return timestamp > currentTime;
+  }
+
+  getMonthIndex(monthName) {
+    const months = {
+      Jan: 0,
+      Feb: 1,
+      Mar: 2,
+      Apr: 3,
+      May: 4,
+      Jun: 5,
+      Jul: 6,
+      Aug: 7,
+      Sep: 8,
+      Oct: 9,
+      Nov: 10,
+      Dec: 11,
+    };
+
+    return months[monthName];
+  }
+
+  convertTo12HourFormat(timeString) {
+    // Split the time string into hours and minutes
+    let [hours, minutes] = timeString.split(":").map(Number);
+
+    // Determine AM or PM suffix
+    const ampm = hours >= 12 ? "PM" : "AM";
+
+    // Convert hour from 24-hour to 12-hour format
+    hours = hours % 12 || 12; // Converts '0' to '12'
+
+    // Format the hour to ensure it always has two digits
+    const formattedHour = hours.toString().padStart(2, "0");
+
+    // Return the formatted time string
+    return `${formattedHour}:${minutes} ${ampm}`;
   }
 }

@@ -135,7 +135,8 @@ const UpcomingEvents = () => {
             <Grid item xs={5} md={6} lg={4} key={index + 1.5}>
               <EventCardWithDialog
                 initialEvent={event}
-                onDelete={() => {
+                onDelete={(e) => {
+                  e.stopPropagation();
                   deleteUpcomingEvent(event.id);
                 }}
               />

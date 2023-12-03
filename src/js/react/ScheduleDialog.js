@@ -8,6 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 export default function ScheduleDialog({ open, onClose, onSchedule }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState("");
+  const [eventName, setEventName] = useState("");
 
   const handleDateChange = (e) => {
     setSelectedDate(new Date(e.target.value));
@@ -17,6 +18,10 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
     setSelectedTime(e.target.value);
   };
 
+  const handleNameChange = (e) => {
+    setEventName(e.target.value);
+  };
+
   const handleClose = () => {
     setSelectedDate(new Date());
     setSelectedTime("");
@@ -24,9 +29,11 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
   };
 
   const handleSchedule = () => {
-    onSchedule(selectedDate, selectedTime);
+    onSchedule(selectedDate, selectedTime, eventName);
     handleClose();
   };
+
+  const isScheduleDisabled = selectedTime === "" || eventName === "";
 
   return (
     <Dialog
@@ -46,6 +53,17 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
         >
           <CloseIcon /> {/* Add a CloseIcon from Material-UI */}
         </Button>
+        <TextField
+          type="text"
+          label="Enter a name"
+          value={eventName}
+          onChange={handleNameChange}
+          fullWidth
+          margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
         <TextField
           type="date"
           label="Select Date"
@@ -68,7 +86,12 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
             shrink: true,
           }}
         />
-        <Button variant="contained" color="primary" onClick={handleSchedule}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleSchedule}
+          disabled={isScheduleDisabled}
+        >
           Schedule
         </Button>
       </DialogContent>

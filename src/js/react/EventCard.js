@@ -11,7 +11,6 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-  Paper,
   Typography,
   Button,
 } from "@mui/material";
@@ -76,7 +75,8 @@ const EventCard = ({ initialEvent, onDelete }) => {
       ? `/flashcardshare/${event.itemId}`
       : `/quizmain/${event.itemId}`;
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (e) => {
+    e.stopPropagation();
     setTempEvent({ ...event });
     setOpen(true);
   };
@@ -127,13 +127,13 @@ const EventCard = ({ initialEvent, onDelete }) => {
           </Typography>
         </div>
 
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" fontWeight="bold">
           {event.date}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" fontWeight="bold">
           {event.time ? event.time : "Wed Jan 24 2024 19:00:00 GMT-0500"}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" color="text.secondary" fontWeight="bold">
           {event.type}
         </Typography>
       </CardContent>
@@ -154,6 +154,7 @@ const EventCard = ({ initialEvent, onDelete }) => {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
         onKeyDown={handleDialogKeyDown}
+        onClick={(e) => e.stopPropagation()}
       >
         <DialogContent>
           <div style={{ padding: 16 }}>

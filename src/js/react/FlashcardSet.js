@@ -68,9 +68,9 @@ function FlashCardSet({
     setScheduleDialogOpenD(false);
   };
 
-  const handleScheduleD = (selectedDate, selectedTime) => {
+  const handleScheduleD = (selectedDate, selectedTime, eventName) => {
     //Scheduling logic
-    const name = isFlashcard == false ? item.quizName : item.name;
+    // const name = isFlashcard == false ? item.quizName : item.name;
     const type =
       isFlashcard == false
         ? UPCOMING_EVENT_TYPE.QUIZ
@@ -81,7 +81,7 @@ function FlashCardSet({
     userRepository
       .addUpcomingEvent(
         UserId,
-        name,
+        eventName,
         selectedDate.toString(),
         selectedTime,
         type,
