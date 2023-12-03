@@ -49,8 +49,11 @@ const QuizComponent = () => {
 
   const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
-  const [isQuizPaused, setIsQuizPaused] = useState(false);
+  const [isQuizPaused, setIsQuizPaused] = useState(true);
   const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz infor
+  const [isQuizResumable, setIsQuizResumable] = useState(false);//check if quiz progress can be resumed
+  const [openConfirmResume, setOpenConfirmResume] = useState(false);//dialog for resume quiz
+
 
   const [isLoading, setIsLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -63,13 +66,15 @@ const QuizComponent = () => {
 
 
 
-  useEffect(() => {
-    //check if the quiz is paused
-    const pausedState = JSON.parse(localStorage.getItem('quizPaused'));
-    if (pausedState && pausedState.quizId === quizId) {
-      setIsQuizPaused(true);
-    }
-  }, []);
+    useEffect(() => {
+        //check if the quiz is paused and has saved data
+        const pausedState = JSON.parse(localStorage.getItem('quizPaused'));
+        if (pausedState && pausedState.quizId === quizId) {
+          setIsQuizResumable(true); //enable Resume Quiz button
+        } else {
+          setIsQuizResumable(false); //disable Resume Quiz button
+        }
+      }, [quizId]);
 
   //resumae quiz navigate back to saved quiz
   const handleResumeQuiz = () => {
@@ -84,6 +89,12 @@ const QuizComponent = () => {
     navigate(`/quizmain/${quizId}`); //Navigate to the quiz page with setId
     localStorage.removeItem('quizPaused');//if start new quiz, delete saved progress
   };
+
+  //handle resume dialog
+  const handleOpenConfirmResume = () => {
+    setOpenConfirmResume(true);
+  };
+  
 
 
   useEffect(() => {
@@ -469,13 +480,14 @@ return (
         
         {isQuizPaused && (
         <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleResumeQuiz}
-          style={{ alignSelf: 'center', marginTop: '20px' }}
-        >
-          Resume Quiz
-        </Button>
+        variant="contained"
+        color="secondary"
+        onClick={handleOpenConfirmResume}
+        style={{ alignSelf: 'center', marginTop: '20px' }}
+      >
+        Resume Quiz
+      </Button>
+      
         )}
 
         <Dialog open={openEdit} onClose={() => { setOpenEdit(false)}}>
@@ -651,6 +663,29 @@ return (
                     <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button>
                     </DialogActions>
                 </Dialog>
+
+
+                {/*diaglos show resume quiz*/}            
+                <Dialog
+                open={openConfirmResume}
+                onClose={() => setOpenConfirmResume(false)}
+                aria-labelledby="resume-quiz-dialog-title"
+                aria-describedby="resume-quiz-dialog-description">
+                    <DialogTitle id="resume-quiz-dialog-title">{"Resume Quiz"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="resume-quiz-dialog-description">
+                            Are you sure you want to resume the quiz?
+                            </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setOpenConfirmResume(false)} color="primary">
+                                    Cancel
+                                    </Button>
+                                    <Button onClick={handleResumeQuiz} color="primary">
+                                        Resume
+                                        </Button>
+                                        </DialogActions>
+                                        </Dialog>
                 
                 {/*diaglos show quiz infomatio*/}
                 <Dialog open={openQuizInfo} onClose={() => setOpenQuizInfo(false)}>
