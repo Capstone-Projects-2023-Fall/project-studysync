@@ -16,7 +16,12 @@ function MainQuizPage() {
   const [isPaused, setIsPaused] = useState(false);//pause quiz
   const [openDialog, setOpenDialog] = useState(false);//for dialog
   const LOCAL_STORAGE_QUIZ_KEY = 'quizPaused';//saved key
+  const [openSubmitDialog, setOpenSubmitDialog] = useState(false);//for submit dialog
 
+  //for submit dialog
+  const handleOpenSubmitDialog = () => {
+    setOpenSubmitDialog(true);
+  };  
 
   //handle time, each quiz 5 mins
   const calculateInitialTime = useCallback(() => {
@@ -54,6 +59,14 @@ function MainQuizPage() {
     handleCloseDialog();
   };
 
+  //submit
+  const handleConfirmSubmit = () => {
+    calculateScore();
+    setQuizFinished(true);
+    localStorage.removeItem(LOCAL_STORAGE_QUIZ_KEY);
+    setOpenSubmitDialog(false);
+  };
+  
 
   //for resume, with saved status
   const handleResume = () => {
@@ -163,7 +176,6 @@ function MainQuizPage() {
   });
   };
 
-
   //calculate score
   const calculateScore = () => {const correctAnswers = questions.reduce((acc, question) => {
     //Count the number of correct answers
@@ -177,14 +189,9 @@ function MainQuizPage() {
 
   //for submit quiz
   const handleSubmit = () => {
-    const confirmSubmit = window.confirm("Are you sure you want to submit the quiz?");
-    if (confirmSubmit) {
-        calculateScore();
-        setQuizFinished(true);
-        localStorage.removeItem('quizPaused');
-      }
+      handleOpenSubmitDialog();
     };
- 
+    
 
   //for previous button
   const handlePrevious = () => {
@@ -351,17 +358,6 @@ function MainQuizPage() {
           
           {/*button group*/}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
-            {/*share score button */}
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                console.log("Share score functionality not implemented yet");
-              }}
-              style={{ marginBottom: '10px' }} 
-            >
-              Share Score
-            </Button>
 
             {/*back button */}
             <Button
@@ -374,6 +370,30 @@ function MainQuizPage() {
           </div>
         </div>
       )}
+      
+
+      {/*submit quiz dialog*/}
+      <Dialog
+        open={openSubmitDialog}
+        onClose={() => setOpenSubmitDialog(false)}
+        aria-labelledby="submit-dialog-title"
+        aria-describedby="submit-dialog-description">
+          
+          <DialogTitle id="submit-dialog-title">{"Submit Quiz"}</DialogTitle>
+          <DialogContent>
+          <DialogContentText id="submit-dialog-description">
+            Are you sure you want to submit the quiz?
+          </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+          <Button onClick={handleConfirmSubmit} color="primary">
+            Yes
+          </Button>
+          <Button onClick={() => setOpenSubmitDialog(false)} color="primary">
+            No
+          </Button>
+          </DialogActions>
+          </Dialog>
       
       {/*pause quiz dialog*/}
       <Dialog
