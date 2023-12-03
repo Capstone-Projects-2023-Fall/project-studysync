@@ -27,45 +27,54 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 const QuizComponent = () => {
 
-  const [openAdd, setOpenAdd] = useState(false);
-  const { setId, quizId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
+    const [openAdd, setOpenAdd] = useState(false);
+    const { setId, quizId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
 
-  const [question, setQuestion] = useState('');
-  const [choices, setChoices] = useState(['', '', '', '']); // store choices
-  const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null); //capture the correct choice as an array index
-  const [questions, setQuizData] = useState([]); //array to hold all questions data
+    const [question, setQuestion] = useState('');
+    const [choices, setChoices] = useState(['', '', '', '']); // store choices
+    const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null); //capture the correct choice as an array index
+    const [questions, setQuizData] = useState([]); //array to hold all questions data
 
-  const [deleteQuestion, setDeleteQuestion] = useState(null); 
-  const [openDelete, setOpenDelete] = useState(false);
+    const [deleteQuestion, setDeleteQuestion] = useState(null); 
+    const [openDelete, setOpenDelete] = useState(false);
 
-  const [editQuestion, setEditQuestion] = useState(null);
-  const [openEdit, setOpenEdit] = useState(false);
+    const [editQuestion, setEditQuestion] = useState(null);
+    const [openEdit, setOpenEdit] = useState(false);
 
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [showDefinition, setShowDefinition] = useState(false);
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [showDefinition, setShowDefinition] = useState(false);
 
 
-  const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
-  const [topicName, setTopicName] = useState(''); // capture the topic name from user entry
-  const [numberOfQuestions, setNumOfQuestions] = useState(1); //capture the number of quesiton from user entry, default is set to 1
+    const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
+    const [topicName, setTopicName] = useState(''); // capture the topic name from user entry
+    const [numberOfQuestions, setNumOfQuestions] = useState(1); //capture the number of quesiton from user entry, default is set to 1
 
-  const [openQuiz, setOpenQuiz] = useState(false); // state to handle the creat quiz button
-  const [quizTitle, setQuizTitle] = useState(''); // capture the quiz title from the user entry
+    const [openQuiz, setOpenQuiz] = useState(false); // state to handle the creat quiz button
+    const [quizTitle, setQuizTitle] = useState(''); // capture the quiz title from the user entry
 
-  const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
+    const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
-  const [isQuizPaused, setIsQuizPaused] = useState(false);
-  const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz infor
+    const [isQuizPaused, setIsQuizPaused] = useState(false);
+    const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz info
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);  //state for the loading screen 
+    const [successMessage, setSuccessMessage] = useState('');   //state for the success message with Snackbar
+    const [errorMessage, setErrorMessage] = useState('');    //state for the error message with Snackbar
 
-  const [flashcardSetName, setFlashcardSetName] = useState('');
-  const [flashcardRating, setRating] = useState('');
-  const [flashcardDifficulty, setDifficulty] = useState('');
-  const [submitAttempted, setSubmitAttempted] = useState(false);
-  const [submitAttempted1, setSubmitAttempted1] = useState(false);
+    const [flashcardSetName, setFlashcardSetName] = useState('');
+    const [flashcardSubject, setFlashcardSubject] = useState('');
+    const [flashcardRating, setRating] = useState('');
+    const [flashcardDifficulty, setDifficulty] = useState('');
+    const [submitAttempted, setSubmitAttempted] = useState(false);
+    const [submitAttempted1, setSubmitAttempted1] = useState(false);
+
+    const [termArray, setTermArray] = useState([]);
+    const [definitionArray, setDefinitionArray] = useState([]);
+
+    const [value, setValue] = React.useState('AI'); 
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+        };
 
   //calculation time limit
   const calculateTimeLimit = () => {
@@ -254,14 +263,22 @@ const handleCreateQuiz = async () => {
     }
   };
 
-const handleOpenGenerateAI = async () => {
+  const handleOpenGenerateAI = async () => {
     setOpenGenerateAI(true);
-     const topicName = await FlashcardRepo.getFlashcardSetById(setId);
-    //get the flashcard set name
-    console.log("Your topic name is: ", topicName.name);
-    setFlashcardSetName(topicName.name);
 
+    try {
+        // retrieve the flashcard set topic name
+        const flashcardSet = await FlashcardRepo.getFlashcardSetById(setId);
+
+        // set the state variables accordingly
+        setFlashcardSetName(flashcardSet.name);
+        setFlashcardSubject(flashcardSet.subject);
+
+    } catch (error) {
+        console.error("Error fetching flashcard set:", error);
+    }
 };
+
 
 function parseGPTResponse(rawResponse) {
     try {
@@ -318,6 +335,9 @@ const handleGenerateAIQuestion = async () => {
         }
         setSuccessMessage('Flashcards generated successfully!');
         setQuizData(prev => [...prev, ...addedQuestions]);
+        // reset all the field
+        setNumOfQuestions(1);
+        setTopicName('');
     }
     } catch (error) {
         console.error("Error generating or adding question with AI:", error);
@@ -327,21 +347,40 @@ const handleGenerateAIQuestion = async () => {
 };
 
 // a cloud function to make POST request to ChatGPT for to generate user requested questions
-const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName) => {
+const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName, definition, difficulty) => {
     try {
         const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithImage';
-
-        const messages = [{
-            role: "user",
-            content: [{
-                type: "text",
-                text: `Please create ${numQuestions} quiz question 
-                along with 4 multiple choices answer with one correct answerabout ${topicName}. 
-                Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
-                as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
-                Please make sure questions are not repetitive. It is better just have the json back without any other text.`
-            }]
-        }];
+        
+        //conditional statement for two different scenerio based on the passed parameters above
+        let messages;
+        if(numQuestions && topicName && definition && difficulty){
+            messages = [
+                {
+                  role: "user",
+                  content: [{
+                      type: "text",
+                      text: `Please create ${numQuestions} quiz question 
+                    along with 4 multiple choices answer with one correct answer about these terms ${topicName}, with its definitions as such
+                    ${definition} with this level of difficulty ${difficulty} 
+                    Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
+                    as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
+                    Please make sure questions are not repetitive. It is better just have the json back without any other text.`
+                    }]
+                }];
+        }
+        else{   
+            messages = [{
+                role: "user",
+                content: [{
+                    type: "text",
+                    text: `Please create ${numQuestions} quiz question 
+                    along with 4 multiple choices answer with one correct answer about ${topicName}. 
+                    Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
+                    as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
+                    Please make sure questions are not repetitive. It is better just have the json back without any other text.`
+                }]
+            }];
+        }
         console.log("Sending Request with JSON payload:", { messages });
         const response = await fetch(functionUrl, {
             method: 'POST',
@@ -364,35 +403,84 @@ const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName)
         }
 };
 
-const [value, setValue] = React.useState('AI');
-
-const handleChange = (event, newValue) => {
-  setValue(newValue);
-};
-const handleGenerateViaFlashcards = async () => {
-
-    const flashcardName = await FlashcardRepo.getFlashcardSetById(setId);
-    console.log("Performing a different function for the second tab");
-    console.log("This is the quiz title you would like to work with: ", setId);
-    console.log("This is the quiz title you would like to work with: ", flashcardName);
-  };
-
+//this will handle creating quiz according to the user input
 const getFlashcardsData = async () => {
+    try {
+        // check if required fields are filled
+        if (!numberOfQuestions || !flashcardRating || !flashcardDifficulty) {
+            // display alert if any required field is missing
+            alert('Please fill in all required fields.');
+            // set submitAttempted to true to highlight missing fields
+            setSubmitAttempted1(true);
+            return; // Exit early if required fields are missing
+        }
+        // retrieve all flashcard items based on flashcard status and store as object, if no then go to else and use name and subject
+        const flashcardData = await FlashcardRepo.getFlashcardItemsByStatus(setId, flashcardRating);
+        // check if there is any content in the flashcardData object
+        if (flashcardData && Object.keys(flashcardData).length > 0){
+        const filteredFlashcardArray = Object.keys(flashcardData).map(key => ({
+            term: flashcardData[key].term,
+            definition: flashcardData[key].definition,
+            status: flashcardData[key].status
+        }));
+        // store each term and definition as an array instead of object in order to pass into callYourCloudFunctionToGenerateQuestions()
+        const termObject = filteredFlashcardArray.map(flashcard => flashcard.term);
+        const defObject = filteredFlashcardArray.map(flashcard => flashcard.definition);
+        
+        setTermArray(termObject);
+        setDefinitionArray(defObject);
 
-    // check if required fields are filled
-    if (!numberOfQuestions || !flashcardRating || !flashcardDifficulty) {
-        // display alert if any required field is missing
-        alert('Please fill in all required fields.');
-        // set submitAttempted to true to highlight missing fields
-        setSubmitAttempted1(true);
-      } else {
-        console.log('Rating:', flashcardRating);
-        console.log('Difficulty:', flashcardDifficulty);
-        console.log('Form submitted successfully');
-      }
+        }
+        else {
+        setTermArray(flashcardSetName);
+        setDefinitionArray(flashcardSubject);
+        }
 
-}
+        setOpenGenerateAI(false);
+        setIsLoading(true);
+    
+        const responseString = await callYourCloudFunctionToGenerateQuestions(
+            numberOfQuestions,
+            termArray,
+            definitionArray,
+            flashcardDifficulty
+        );
+    
+        const generatedQuestions = responseString;
+        // add all of the AI response Q/A into the database so we can display on screen
+        const addedQuestions = [];
+            for (const question of generatedQuestions) {
+            const newQuestionId = await FlashcardRepo.addQuizQuestion
+            (
+                quizId,
+                question.question, 
+                question.choices, 
+                question.correctChoiceIndex);
+            addedQuestions.push({ ...question, questionId: newQuestionId });
+            }
+            setSuccessMessage('Flashcards generated successfully!');
+            setQuizData(prev => [...prev, ...addedQuestions]);
+            //reset all the fields
+            setNumOfQuestions(1);
+            setTopicName('');
+            setDifficulty('');
+            setRating('');
 
+        } catch (error) {
+            console.error("Error generating or adding question with AI:", error);
+        } finally {
+        setIsLoading(false);
+        }
+};
+
+  // useEffect to handle side effects after state updates
+  useEffect(() => {
+    // code that relies on the updated state values
+    console.log("Term Array: ", termArray);
+    console.log("Definition Array: ", definitionArray);
+  }, [termArray, definitionArray]);
+
+// this will handle rendering a specific tab in the AI Generating Tool dialog
 const renderOptions = () => {
     switch (value) {
       case "AI":
@@ -458,9 +546,9 @@ const renderOptions = () => {
                 onChange={(e) => setRating(e.target.value)}
                 row
                 >
-                <FormControlLabel value="Know" control={<Radio />} label="Know" />
-                <FormControlLabel value="Don't Know" control={<Radio />} label="Don't Know" />
-                <FormControlLabel value="Not Sure" control={<Radio />} label="Not Sure" />
+                <FormControlLabel value="know" control={<Radio />} label="Know" />
+                <FormControlLabel value="dontKnow" control={<Radio />} label="Don't Know" />
+                <FormControlLabel value="notSure" control={<Radio />} label="Not Sure" />
             </RadioGroup>
             {submitAttempted1 && !flashcardRating && <div style={{ color: 'red' }}>Please select a rating level</div>}
             </FormControl>

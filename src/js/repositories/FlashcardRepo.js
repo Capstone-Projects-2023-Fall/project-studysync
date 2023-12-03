@@ -771,11 +771,32 @@ const FlashcardRepo = {
             } else {
               console.log(`User with ID ${uid} does not exist.`);
             }
-          } catch (error) {
+        } catch (error) {
             console.error("Error deleting quiz", error);
             throw error;
           }
-        },
+    },
+
+    getFlashcardItemsByStatus: async function(setId, status) {
+        try {
+            const setRef = doc(database, 'flashcardSets', setId);
+            const setSnapshot = await getDoc(setRef);
+            const setData = setSnapshot.data();
+            const flashcardData = setData.flashcardItems || [];
+            
+            // if flashcardData is an object, convert it to an array
+            const flashcardArray = Object.values(flashcardData);
+            //console.log('Converted flashcardData to array:', flashcardArray);
+             // filter flashcards based on the status field
+            const flashcardsWithStatus = flashcardArray.filter(flashcard => flashcard.status === status);
+            //console.log("Filtered flashcards are: ", flashcardsWithStatus);
+
+            return flashcardsWithStatus;
+        } catch (error) {
+            console.error("Error getting flashcard items:", error);
+            throw error;
+        }
+    },
 
 };
 

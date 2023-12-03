@@ -156,7 +156,7 @@ function QuizList({ newQuizAdded }) {
 
     try {
 
-      const quizId = await FlashcardRepo.getQuizTitleId(currentlyEditingTitle);
+      const quizId = await FlashcardRepo.getQuizTitleId(currentlyEditingTitle, setId);
       console.log('Quiz ID by quiz title:', quizId);
 
       // Update the Firebase database
@@ -183,10 +183,10 @@ const handleDeleteQuiz = async () => {
   
   const uid = FlashcardRepo.getCurrentUid();
   // get the selected quiz id for the deletion
-  const quizIdToDelete = await FlashcardRepo.getQuizTitleId(deleteQuiz, uid);
+  const quizIdToDelete = await FlashcardRepo.getQuizTitleId(deleteQuiz, setId);
   console.log("This is the quiz id you want to delete?: ", quizIdToDelete);
 
-    if (deleteQuiz) {
+    if (deleteQuiz){
         try {
             await FlashcardRepo.deleteQuiz(quizIdToDelete);
             await FlashcardRepo.removeOwnedQuizFromUser(uid, quizIdToDelete);
@@ -200,7 +200,7 @@ const handleDeleteQuiz = async () => {
         }
         setDeleteDialogOpen(false);
     }
-}
+};
  
     const list = (anchor) => (
       <Box
@@ -314,4 +314,5 @@ const handleDeleteQuiz = async () => {
     </div>
   );
 }
+
 export default QuizList;
