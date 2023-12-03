@@ -76,13 +76,16 @@ function FlashCardSet({
         ? UPCOMING_EVENT_TYPE.QUIZ
         : UPCOMING_EVENT_TYPE.FLASHCARD;
 
+    const id = isFlashcard == true ? flashcardId : quizId;
+
     userRepository
       .addUpcomingEvent(
         UserId,
         name,
         selectedDate.toString(),
         selectedTime,
-        type
+        type,
+        id
       )
       .then((res) => {
         console.log("result of creating upcomig event is: ", res);
@@ -145,7 +148,7 @@ function FlashCardSet({
           navigate(`/quizmain/${quizId}`);
         } else {
           navigate(`/flashcardshare/${flashcardId}`);
-          console.log("flashcardId", flashcardId)
+          console.log("flashcardId", flashcardId);
         }
       }}
     >
@@ -291,12 +294,6 @@ const styles = {
     fontWeight: "bold",
     marginBottom: "10px", // add space below the title bar
   },
-  buttonz: {
-    borderRadius: "20px",
-    textTransform: "none",
-    fontWeight: "normal",
-    margin: "5px", // add margin around the button
-  },
   infoText: {
     marginBottom: "10px", // space below the text
   },
@@ -348,13 +345,13 @@ const styles = {
     boxShadow: "0 8px 15px rgba(128, 90, 213, 0.2)", // Light purple shadow at the bottom
   },
 
-  containerStyle: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between", // Distributes space evenly
-    // padding: "1rem",
-  },
+  // containerStyle: {
+  //   display: "flex",
+  //   flexDirection: "row",
+  //   flexWrap: "wrap",
+  //   justifyContent: "space-between", // Distributes space evenly
+  //   // padding: "1rem",
+  // },
 };
 
 export default FlashCardSet;

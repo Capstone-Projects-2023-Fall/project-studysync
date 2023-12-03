@@ -608,9 +608,9 @@ export class UserRepository {
   }
 
   /**Upcoming events */
-  async addUpcomingEvent(userId, name, date, time, type) {
+  async addUpcomingEvent(userId, name, date, time, type, itemId) {
     const upcomingEventId = await this.eventRepository.createUpcomingEvent(
-      new UpcomingEvent(name, date, time, type)
+      new UpcomingEvent(name, date, time, type, itemId)
     );
     await addItemToArrayField(
       this.database,
@@ -624,6 +624,7 @@ export class UserRepository {
   }
 
   async removeUpcomingEvent(userId, eventId) {
+    await this.eventRepository.deleteUpcomingEvent(eventId);
     await removeItemFromArrayField(
       this.database,
       userId,
@@ -645,12 +646,39 @@ export class UserRepository {
     return upcomingEventIds;
   }
 
-  async getUpcomingEvents(userId) {
+  async getAllUpcomingEvents(userId) {
     const upcomingEventIds = await this.getUpcomingEventIds(userId);
+    console.log("upcoming event ids are: ", upcomingEventIds);
     const result = [];
     for (const id of upcomingEventIds) {
-      result.push(await this.eventRepository.getUpcomingEventById(id));
+      result.push({
+        ...(await this.eventRepository.getUpcomingEventById(id)),
+        id: id,
+      });
     }
     return result;
+  }
+
+  async getUpcomingEvents(userId) {
+    const upcomingEvents = await this.getAllUpcomingEvents(userId);
+
+    return upcomingEvents.filter((item) => {
+      return this.isFutureDate(item.date);
+    });
+  }
+
+  async getPastEvents(userId) {
+    const upcomingEvents = await this.getAllUpcomingEvents(userId);
+
+    return upcomingEvents.filter((item) => {
+      return !this.isFutureDate(item.date);
+    });
+  }
+
+  isFutureDate(dateString) {
+    var givenDate = new Date(dateString);
+    var currentDate = new Date();
+
+    return givenDate > currentDate;
   }
 }
