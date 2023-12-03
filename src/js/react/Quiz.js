@@ -1,30 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
+import { useParams } from 'react-router-dom';
 
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText, CircularProgress } from '@mui/material';
+import { 
+  Button, 
+  TextField, 
+  Typography, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogTitle, 
+  List, 
+  ListItem, 
+  IconButton, 
+  Avatar, 
+  ThemeProvider, 
+  createTheme, 
+  ButtonGroup, 
+  Stack, 
+  DialogContentText, 
+  CircularProgress,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  FormControl,
+  Tabs,
+  Tab,
+  Snackbar,
+  Box 
+} from '@mui/material';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import FormatQuoteIcon from '@mui/icons-material/FormatQuote';//quotation mark 
-import SendIcon from '@mui/icons-material/Send';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useParams } from 'react-router-dom';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import Question from '../models/question';
-import QuizList from './QuizList';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
-import Box from '@mui/material/Box';
-import Snackbar from '@mui/material/Snackbar';
 import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControl from '@mui/material/FormControl';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+
+import QuizList from './QuizList';
+
+
 const QuizComponent = () => {
 
     const [openAdd, setOpenAdd] = useState(false);
@@ -61,17 +79,20 @@ const QuizComponent = () => {
     const [successMessage, setSuccessMessage] = useState('');   //state for the success message with Snackbar
     const [errorMessage, setErrorMessage] = useState('');    //state for the error message with Snackbar
 
-    const [flashcardSetName, setFlashcardSetName] = useState('');
-    const [flashcardSubject, setFlashcardSubject] = useState('');
-    const [flashcardRating, setRating] = useState('');
-    const [flashcardDifficulty, setDifficulty] = useState('');
-    const [submitAttempted, setSubmitAttempted] = useState(false);
-    const [submitAttempted1, setSubmitAttempted1] = useState(false);
+    const [flashcardSetName, setFlashcardSetName] = useState('');   //state to store the flashcard set topic
+    const [flashcardSubject, setFlashcardSubject] = useState('');   //state to store the flashcard subject
+    const [flashcardRating, setRating] = useState('');  //state to store the flashcard status
+    const [flashcardDifficulty, setDifficulty] = useState('');  //state to store the quiz difficulty
+    const [submitAttempted, setSubmitAttempted] = useState(false);  //state to track the submit for the first dialog
+    const [submitAttempted1, setSubmitAttempted1] = useState(false);    //state to track the submit for the second dialog
 
-    const [termArray, setTermArray] = useState([]);
-    const [definitionArray, setDefinitionArray] = useState([]);
+    const [termArray, setTermArray] = useState([]);     // a state to store an array of the retrieved flashcard terms
+    const [definitionArray, setDefinitionArray] = useState([]);     // a state to store an array of the retrieved flashcard definitions
 
-    const [value, setValue] = React.useState('AI'); 
+    const [previewUrl, setPreviewUrl] = useState(null);     //  this is used to reset the url
+    const [imageFile, setImage] = useState(null);       // a state to store the user uploaded image
+
+    const [value, setValue] = React.useState('AI');     // state to use with the Generation Question dialog, default is the first tab
     const handleChange = (event, newValue) => {
         setValue(newValue);
         };
@@ -381,6 +402,16 @@ const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName,
                 }]
             }];
         }
+        //if there is an image uploaded, append it into the array
+        if (imageFile) {
+            messages[0].content.push({
+                type: "image_url",
+                image_url: {
+                    url: `data:image/jpeg;base64,${imageFile}`
+                }
+            });
+        }
+
         console.log("Sending Request with JSON payload:", { messages });
         const response = await fetch(functionUrl, {
             method: 'POST',
@@ -473,6 +504,27 @@ const getFlashcardsData = async () => {
         }
 };
 
+const handleCancelImage = () => {
+    setImage(null);
+    setPreviewUrl(null);
+};
+
+const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const previewUrl = URL.createObjectURL(file);
+        setPreviewUrl(previewUrl);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result
+                .replace('data:', '')
+                .replace(/^.+,/, '');
+            setImage(base64String); // Set the base64 string
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
   // useEffect to handle side effects after state updates
   useEffect(() => {
     // code that relies on the updated state values
@@ -508,7 +560,35 @@ const renderOptions = () => {
               value={numberOfQuestions}
               onChange={(e) => setNumOfQuestions(e.target.value)}
             />
-          </div>
+
+                <input
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                    onChange={handleImageUpload}
+                />
+                    <label htmlFor="raised-button-file">
+                        <Button variant="contained" component="span">
+                            Upload Image
+                        </Button>
+                    </label>
+                        
+                    {previewUrl && (
+                        <div style={{ marginTop: '10px' }}>
+                            <img src={previewUrl} alt="Image preview" style={{ maxWidth: '100%', height: 'auto' }} />
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleCancelImage}
+                                style={{ marginTop: '10px' }}
+                            >
+                                Cancel Image
+                            </Button>
+                        </div>
+                    )}
+            </div>
         );
       case "Flashcards":
         
@@ -876,6 +956,7 @@ return (
                     setRating('');
                     setSubmitAttempted(false);
                     setSubmitAttempted1(false);
+                    setPreviewUrl(null);
                     }}
                 >
                     <Tabs
