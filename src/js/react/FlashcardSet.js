@@ -9,26 +9,15 @@ import {
   ListItemText,
   ListItem,
   Checkbox,
-  TextField,
   ListItemAvatar,
-  Tab,
-  Tabs,
 } from "@mui/material";
 import SearchBar from "./SearchBar";
-import SearchIcon from "@mui/icons-material/Search";
 import Avatar from "@mui/material/Avatar";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { userRepository } from "../../firebase";
-import useUser from "./useUser";
 import { useParams } from "react-router-dom";
-import useNotificationCount from "./useNotificationCount";
 import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime"; // Import the timer icon
 import ScheduleDialog from "./ScheduleDialog";

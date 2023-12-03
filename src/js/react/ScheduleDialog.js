@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
@@ -45,6 +46,9 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
         e.stopPropagation();
       }}
     >
+      <DialogTitle sx={{ fontSize: "1.0rem" }}>
+        Schedule some time to study!
+      </DialogTitle>
       <DialogContent>
         <Button
           onClick={handleClose}

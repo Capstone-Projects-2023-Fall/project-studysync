@@ -596,7 +596,6 @@ export class UserRepository {
 
   async getNotificationCount(userId) {
     const user = await this.getUserById(userId);
-
     return user.newNotifications;
   }
 
