@@ -237,9 +237,10 @@ export default function FriendsPage() {
   );
 
   function MainList() {
+
     function removeFriend(uid) {
       removeFollower(uid);
-      stopFollowing(uid);
+      unfollowUser(uid);
     }
     function removeFollower(uid) {
       setIsLoading(true);
@@ -258,37 +259,41 @@ export default function FriendsPage() {
     function viewUser(uid) {
       navigate(`/profile/${uid}`);
     }
-    function followBack(uid) {
-      userRepository
-        .addFollowing(UserId, uid)
-        .then(() => {
-          console.log(`Followed ${uid} back!`);
-        })
-        .catch((e) => {
-          setError(e);
-          console.log(`Error: ${e}`);
-        });
-    }
-    function stopFollowing(uid) {
-      setIsLoading(true);
-      userRepository
-        .removeFollowing(UserId, uid)
-        .then(() => {
-          console.log(`Stopped Following ${uid}`);
-          setIsLoading(false);
-        })
-        .catch((e) => {
-          setError(e);
-          console.log(`Error: ${e}`);
-          setIsLoading(false);
-        });
-      const index = showList.findIndex((x) => x.id === uid);
-      showList.splice(index, 1);
-      console.log(`Stopped following: ${showList}`);
-    }
+    // function followBack(uid) {
+    //   userRepository
+    //     .addFollowing(UserId, uid)
+    //     .then(() => {
+    //       console.log(`Followed ${uid} back!`);
+    //     })
+    //     .catch((e) => {
+    //       setError(e);
+    //       console.log(`Error: ${e}`);
+    //     });
+    // }
+
+
+    // function stopFollowing(uid) {
+    //   setIsLoading(true);
+    //   userRepository
+    //     .removeFollowing(UserId, uid)
+    //     .then(() => {
+    //       console.log(`Stopped Following ${uid}`);
+    //       setIsLoading(false);
+    //     })
+    //     .catch((e) => {
+    //       setError(e);
+    //       console.log(`Error: ${e}`);
+    //       setIsLoading(false);
+    //     });
+    //   const index = showList.findIndex((x) => x.id === uid);
+    //   showList.splice(index, 1);
+    //   console.log(`Stopped following: ${showList}`);
+    // }
+
+
     function handlebtn1(uid) {
       if (type == "Followers") {
-        followBack(uid);
+        followUser(uid);
       } else {
         viewUser(uid);
       }
@@ -297,7 +302,8 @@ export default function FriendsPage() {
       if (type == "Followers") {
         removeFollower(uid);
       } else if (type == "Following") {
-        stopFollowing(uid);
+        //stopFollowing(uid);
+        unfollowUser(uid);
       } else {
         removeFriend(uid);
       }

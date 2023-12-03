@@ -16,7 +16,7 @@ function Navbar({ items }) {
     const [count, setCount] = useState(0);
 
     const [currUser, setCurrUser] = useState(null)
-    useEffect(()=>{
+    useEffect(() => {
         setCurrUser(user)
     }, [user, isLoading])
     const notificationCount = useNotificationCount()
@@ -48,7 +48,7 @@ function Navbar({ items }) {
 
     return (
         <nav className="navbar">
-            <Link to="/" className="brand">
+            <Link to="/dashboard/:UserId" className="brand">
                 StudySync
             </Link>
             <div className="nav-items">
@@ -106,7 +106,7 @@ function Navbar({ items }) {
                     }}
                 >
                     {/* Your notification contents go here */}
-                    <Notification userId={user} closePanel={toggleNotificationPanel}/>
+                    <Notification userId={user} closePanel={toggleNotificationPanel} />
                 </div>
             )}
         </nav>
