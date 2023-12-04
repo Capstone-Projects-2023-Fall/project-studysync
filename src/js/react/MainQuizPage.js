@@ -6,7 +6,7 @@ import FlashcardRepo from '../repositories/FlashcardRepo';
 //mainQuizPage component
 function MainQuizPage() {
 
-  const { setId } = useParams(); //aroute param to identify the quiz set
+  const { setId,quizId} = useParams(); //aroute param to identify the quiz set
   const [questions, setQuestions] = useState([]); //array to hold question data from database
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
   const [score, setScore] = useState(null);//for score
@@ -16,6 +16,7 @@ function MainQuizPage() {
   const [isPaused, setIsPaused] = useState(false);//pause quiz
   const [openDialog, setOpenDialog] = useState(false);//for dialog
   const LOCAL_STORAGE_QUIZ_KEY = 'quizPaused';//saved key
+  const [openSubmitConfirm, setOpenSubmitConfirm] = useState(false);//dialog for submit quiz
 
 
   //handle time, each quiz 5 mins
@@ -174,16 +175,19 @@ function MainQuizPage() {
   setScore(scorePercentage);
 };
 
+//open submit dialog
+const handleSubmit = () => {
+  setOpenSubmitConfirm(true);
+};
 
-  //for submit quiz
-  const handleSubmit = () => {
-    const confirmSubmit = window.confirm("Are you sure you want to submit the quiz?");
-    if (confirmSubmit) {
-        calculateScore();
-        setQuizFinished(true);
-        localStorage.removeItem('quizPaused');
-      }
-    };
+//get score close dialog
+const handleConfirmSubmit = () => {
+  calculateScore();
+  setQuizFinished(true);
+  localStorage.removeItem(LOCAL_STORAGE_QUIZ_KEY);
+  setOpenSubmitConfirm(false); 
+};
+
  
 
   //for previous button
@@ -364,6 +368,24 @@ function MainQuizPage() {
           </div>
         </div>
       )}
+
+       {/*submit Quiz Confirmation Dialog */}
+       <Dialog open={openSubmitConfirm} onClose={() => setOpenSubmitConfirm(false)}>
+        <DialogTitle>Submit Quiz</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to submit the quiz?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenSubmitConfirm(false)} color="primary">
+            No
+          </Button>
+          <Button onClick={handleConfirmSubmit} color="primary">
+            Yes
+          </Button>
+        </DialogActions>
+      </Dialog>
       
       {/*pause quiz dialog*/}
       <Dialog
