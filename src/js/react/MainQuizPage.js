@@ -374,6 +374,7 @@ function MainQuizPage() {
           {/*button group*/}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
 
+
             {/*back button */}
             <Button
               variant="contained"

@@ -60,9 +60,10 @@ function Sidebar(props) {
     }
   }
   return (
-    <Grid item xs={12} md={4}>
+    <Grid item xs={12} md={4} class="profile-sidebar">
 
       <CardMedia
+          className='image-card'
           component="img"
           sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
           image={image}

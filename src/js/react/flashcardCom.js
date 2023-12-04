@@ -117,7 +117,7 @@ const FlashcardComponent = () => {
       const uid = FlashcardRepo.getCurrentUid();
       if (uid) {
         // retreived both flashcardSetID and quizSetID
-          const { flashcardSetId, quizSetId } = await FlashcardRepo.createFlashcardSet({
+        const { flashcardSetId, quizSetId } = await FlashcardRepo.createFlashcardSet({
           name: newEntry,
           subject: selectedSubject
         });
