@@ -703,7 +703,7 @@ return (
                 width: "30%", borderRight: "1px solid #e0e0e0",
                 borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
             }}>
-                
+
             {/*quiz info button*/}
                 <Button
                 variant="outlined"
