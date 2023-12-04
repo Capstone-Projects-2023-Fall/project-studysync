@@ -77,27 +77,27 @@ function FlashcardApp() {
         const fetchComments = async () => {
             try {
                 const commentsData = await FlashcardRepo.getCommentsWithUserData(setId);
-                console.log("fetching comments", commentsData);
-
-                // Convert Firebase Timestamp to Date objects
                 const formattedComments = commentsData.map(comment => ({
                     ...comment,
-                    date: comment.date.toDate()  // This converts the Timestamp to a Date object
+                    date: comment.date.toDate(),
+                    likes: comment.like || 0,
+                    isLiked: comment.likedBy.includes(uid)
                 }));
 
                 setComments(formattedComments);
+                const initialLikedComments = {};
+                formattedComments.forEach(comment => {
+                    initialLikedComments[comment.commentId] = comment.isLiked;
+                });
+                setLikedComments(initialLikedComments);
             } catch (error) {
                 console.error("Failed to fetch comments:", error);
             }
         };
 
         const fetchCurrentUserImage = async () => {
-            const uid = await FlashcardRepo.getCurrentUid();
-            console.log("uid", uid);
             try {
-
                 const currentUserImg = await FlashcardRepo.getUserImageURLByUid(uid);
-
                 setUserImage(currentUserImg);
             } catch (error) {
                 console.error("Error fetching current user image:", error);
@@ -154,7 +154,8 @@ function FlashcardApp() {
                     content: comment,
                     uid: uid,
                     date: new Date(),
-                    like: 0
+                    like: 0,
+                    likedBy: []
                 };
                 await FlashcardRepo.addComment(setId, newComment);
 
@@ -163,6 +164,42 @@ function FlashcardApp() {
             } catch (error) {
                 console.error("Failed to send comment:", error);
             }
+        }
+    };
+
+    const handleLikeClick = async (commentId) => {
+        try {
+            const commentToUpdate = comments.find(comment => comment.commentId === commentId);
+            const isLiked = commentToUpdate.likedBy.includes(uid);
+
+
+            await FlashcardRepo.updateLikesForComment(setId, commentId, uid);
+            const userId = FlashcardRepo.getCurrentUid();
+
+
+            setComments(comments.map(comment => {
+                if (comment.commentId === commentId) {
+                    const updatedLikes = isLiked ? comment.likes - 1 : comment.likes + 1;
+                    const updatedLikedBy = isLiked
+                        ? comment.likedBy.filter(uid => uid !== userId)
+                        : [...comment.likedBy, uid];
+
+                    return {
+                        ...comment,
+                        likes: updatedLikes,
+                        likedBy: updatedLikedBy
+                    };
+                }
+                return comment;
+            }));
+
+
+            setLikedComments(prev => ({
+                ...prev,
+                [commentId]: !isLiked
+            }));
+        } catch (error) {
+            console.error("Failed to update likes:", error);
         }
     };
 
@@ -254,33 +291,6 @@ function FlashcardApp() {
                 console.error("Failed to add flashcard:", error);
             }
         }
-    };
-    const handleLikeClick = async (commentId) => {
-        const isLiked = likedComments[commentId] || false;
-
-        let updatedLikes = comments.find(comment => comment.commentId === commentId).likes || 0;
-        updatedLikes = isLiked ? updatedLikes - 1 : updatedLikes + 1;
-
-        // This simulates updating the likes in the database
-        try {
-            await FlashcardRepo.updateLikesForComment(setId, commentId, updatedLikes);
-            setComments(prevComments => {
-                return prevComments.map(comment => {
-                    if (comment.commentId === commentId) {
-                        return { ...comment, likes: updatedLikes };
-                    }
-                    return comment;
-                });
-            });
-        } catch (error) {
-            console.error("Failed to update likes:", error);
-        }
-        console.log("current comment id: ", commentId);
-
-        setLikedComments({
-            ...likedComments,
-            [commentId]: !isLiked
-        });
     };
 
     const handleEditClick = (card) => {
@@ -653,13 +663,11 @@ function FlashcardApp() {
                                     </Typography>
                                     <Button
                                         startIcon={likedComments[comment.commentId] ? <ThumbUpIcon color="primary" /> : <ThumbUpOutlinedIcon />}
-                                        onClick={() => {
-                                            console.log("Like button clicked for commentId:", comment.commentId);
-                                            handleLikeClick(comment.commentId);
-                                        }}
+                                        onClick={() => handleLikeClick(comment.commentId)}
                                     >
-                                        {comment.likes || 0}
+                                        {comment.likes}
                                     </Button>
+
                                 </div>
                             </div>
                         ))}
@@ -821,3 +829,4 @@ function FlashcardApp() {
 }
 
 export default FlashcardApp;
+
