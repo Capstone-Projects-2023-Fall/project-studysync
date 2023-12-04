@@ -16,7 +16,7 @@ import MySets from "./js/react/MySets.js";
 import FlashcardShare from "./js/react/flashcardShare";
 
 import React, { useEffect, useState } from "react";
-import Lottie from "react-lottie-player";
+// import Lottie from "react-lottie-player";
 import UpcomingEvents from "./js/react/UpcomingEvents.js";
 import { checkUpcomingEvents } from "./js/react/useNotificationCount.js";
 
@@ -80,34 +80,35 @@ function App() {
             user ? (
               <DashboardCom />
             ) : (
-              <div className="welcome-container">
-                <div
-                  id="welcome-animation"
-                  className="welcome-animation"
-                  style={containerStyle}
-                >
-                  <Lottie
-                    loop
-                    animationData={lottieAnimation}
-                    play
-                    speed={1}
-                    onComplete={() => console.log("Animation completed")}
-                    style={{ width: 300, height: 300 }}
-                  />
-                </div>
-                <div className="welcome-message">
-                  <h1>Unlock Knowledge with AI</h1>
-                  <p>
-                    Discover a new way of learning with AI-generated flashcards
-                    and quizzes. Dive into an interactive learning experience
-                    tailored just for you.
-                  </p>
-                  <p>
-                    Log in or sign up to start your personalized educational
-                    journey today.
-                  </p>
-                </div>
-              </div>
+              // <div className="welcome-container">
+              //   <div
+              //     id="welcome-animation"
+              //     className="welcome-animation"
+              //     style={containerStyle}
+              //   >
+              //     <Lottie
+              //       loop
+              //       animationData={lottieAnimation}
+              //       play
+              //       speed={1}
+              //       onComplete={() => console.log("Animation completed")}
+              //       style={{ width: 300, height: 300 }}
+              //     />
+              //   </div>
+              //   <div className="welcome-message">
+              //     <h1>Unlock Knowledge with AI</h1>
+              //     <p>
+              //       Discover a new way of learning with AI-generated flashcards
+              //       and quizzes. Dive into an interactive learning experience
+              //       tailored just for you.
+              //     </p>
+              //     <p>
+              //       Log in or sign up to start your personalized educational
+              //       journey today.
+              //     </p>
+              //   </div>
+              // </div>
+              <></>
             )
           }
         />

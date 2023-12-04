@@ -23,6 +23,7 @@ export const userConverter = {
       subjects: user.subjects,
       newNotifications: user.newNotifications,
       unseenNotifications: user.unseenNotifications,
+      upcomingEvents: user.upcomingEvents,
     };
   },
   fromFirestore: (snapshot, options) => {
@@ -54,5 +55,6 @@ function setUser(data) {
   user.subjects = data.subjects;
   user.newNotifications = data.newNotifications;
   user.unseenNotifications = data.unseenNotifications;
+  user.upcomingEvents = data.upcomingEvents;
   return user;
 }

@@ -112,7 +112,7 @@ export const UPCOMING_EVENT_TYPE = {
 };
 
 export class UpcomingEvent {
-  constructor(name, date, time, type, itemId, timestamp, userId) {
+  constructor(name, date, time, type, itemId, timestamp, userId, itemName) {
     this.name = name;
     this.date = date;
     this.time = time;
@@ -120,6 +120,7 @@ export class UpcomingEvent {
     this.itemId = itemId;
     this.timestamp = timestamp;
     this.userId = userId;
+    this.itemName = itemName;
   }
 
   toJSON() {
@@ -131,6 +132,7 @@ export class UpcomingEvent {
       itemId: this.itemId,
       timestamp: this.timestamp,
       userId: this.userId,
+      itemName: this.itemName,
     };
   }
 }
