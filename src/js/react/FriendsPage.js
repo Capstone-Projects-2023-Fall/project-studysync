@@ -101,10 +101,15 @@ export default function FriendsPage() {
 
   useEffect(() => {
     setIsLoading(true);
-    userRepository.getUserById(currUserId).then((res) => {
-      setCurrUser(res);
-      setIsLoading(false);
-    });
+    userRepository
+      .getUserById(currUserId)
+      .then((res) => {
+        setCurrUser(res);
+      })
+      .catch((error) => {
+        console.log("error finding user with id: ", currUserId);
+        setError(error);
+      });
 
     if (type == "Following") {
       userRepository
