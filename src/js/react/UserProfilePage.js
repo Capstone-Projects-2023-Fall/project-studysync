@@ -13,7 +13,7 @@ import Sidebar from './ProfileComponents/Sidebar';
 import Footer from './ProfileComponents/Footer';
 import { userRepository } from '../../firebase';
 import { useParams } from 'react-router-dom';
-
+import pfp from './static/defaultPfp.jpg';
 const defaultTheme = createTheme();
 
 export default function UserProfile() {
@@ -109,7 +109,7 @@ export default function UserProfile() {
               description={profile.bio || 'No bio available'}
               archives={[]}
               social={[{ name: 'GitHub', icon: GitHubIcon }, { name: 'Twitter', icon: TwitterIcon }, { name: 'Facebook', icon: FacebookIcon }]}
-              imageURL={profile.imageURL || 'defaultImageURL'}
+              imageURL={profile.imageURL || pfp}
               friends={friends}
               followers={followers}
               following={following}
