@@ -610,26 +610,26 @@ export class UserRepository {
   async addUpcomingEvent(userId, name, date, time, type, itemId, itemName) {
     const [year, month, day] = date.split("-");
 
-    console.log("year, month, day: ", year, month, day);
+    const y = parseInt(year, 10);
+    const m = parseInt(month, 10) - 1;
+    const d = parseInt(day, 10);
     const splitTime = time.split(":");
     const scheduledDate = new Date(
-      parseInt(year),
-      parseInt(month),
-      parseInt(day),
+      y,
+      m,
+      d,
       parseInt(splitTime[0]),
       parseInt(splitTime[1]),
       0
     );
 
-    console.log("formatted time is: ", this.convertTo12HourFormat(time));
-
     const utcStamp = scheduledDate.getTime();
-    const d = new Date(date);
+    const dd = new Date(date);
 
     const dateToStore =
-      this.getDayOfWeekShort(d) +
+      this.getDayOfWeekShort(dd) +
       " " +
-      this.getMonthAbbreviation(d) +
+      this.getMonthAbbreviation(dd) +
       " " +
       day +
       " " +
@@ -763,7 +763,7 @@ export class UserRepository {
   getDayOfWeekShort(dateString) {
     const daysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     const date = new Date(dateString);
-    return daysShort[date.getDay()];
+    return daysShort[date.getDay() + 1];
   }
   getMonthAbbreviation(dateString) {
     const months = [
