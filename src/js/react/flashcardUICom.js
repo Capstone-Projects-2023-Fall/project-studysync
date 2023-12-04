@@ -3,12 +3,10 @@ import { Button, TextField, Typography, Dialog, DialogActions, FormControlLabel,
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useParams } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import { CircularProgress, Snackbar } from '@mui/material';
 
@@ -26,7 +24,6 @@ function FlashcardApp() {
     const [selectedCard, setSelectedCard] = useState(null);
     const [comments, setComments] = useState([]);
     const [cardToDelete, setCardToDelete] = useState(null);
-    const [likedComments, setLikedComments] = useState({});
     const [userImage, setUserImage] = useState(null);
     const [openEdit, setOpenEdit] = useState(false);
     const [cardToEdit, setCardToEdit] = useState(null);
@@ -77,27 +74,27 @@ function FlashcardApp() {
         const fetchComments = async () => {
             try {
                 const commentsData = await FlashcardRepo.getCommentsWithUserData(setId);
+                console.log("fetching comments", commentsData);
+
+                // Convert Firebase Timestamp to Date objects
                 const formattedComments = commentsData.map(comment => ({
                     ...comment,
-                    date: comment.date.toDate(),
-                    likes: comment.like || 0,
-                    isLiked: comment.likedBy.includes(uid)
+                    date: comment.date.toDate()  // This converts the Timestamp to a Date object
                 }));
 
                 setComments(formattedComments);
-                const initialLikedComments = {};
-                formattedComments.forEach(comment => {
-                    initialLikedComments[comment.commentId] = comment.isLiked;
-                });
-                setLikedComments(initialLikedComments);
             } catch (error) {
                 console.error("Failed to fetch comments:", error);
             }
         };
 
         const fetchCurrentUserImage = async () => {
+            const uid = await FlashcardRepo.getCurrentUid();
+            console.log("uid", uid);
             try {
+
                 const currentUserImg = await FlashcardRepo.getUserImageURLByUid(uid);
+
                 setUserImage(currentUserImg);
             } catch (error) {
                 console.error("Error fetching current user image:", error);
@@ -154,8 +151,6 @@ function FlashcardApp() {
                     content: comment,
                     uid: uid,
                     date: new Date(),
-                    like: 0,
-                    likedBy: []
                 };
                 await FlashcardRepo.addComment(setId, newComment);
 
@@ -164,42 +159,6 @@ function FlashcardApp() {
             } catch (error) {
                 console.error("Failed to send comment:", error);
             }
-        }
-    };
-
-    const handleLikeClick = async (commentId) => {
-        try {
-            const commentToUpdate = comments.find(comment => comment.commentId === commentId);
-            const isLiked = commentToUpdate.likedBy.includes(uid);
-
-
-            await FlashcardRepo.updateLikesForComment(setId, commentId, uid);
-            const userId = FlashcardRepo.getCurrentUid();
-
-
-            setComments(comments.map(comment => {
-                if (comment.commentId === commentId) {
-                    const updatedLikes = isLiked ? comment.likes - 1 : comment.likes + 1;
-                    const updatedLikedBy = isLiked
-                        ? comment.likedBy.filter(uid => uid !== userId)
-                        : [...comment.likedBy, uid];
-
-                    return {
-                        ...comment,
-                        likes: updatedLikes,
-                        likedBy: updatedLikedBy
-                    };
-                }
-                return comment;
-            }));
-
-
-            setLikedComments(prev => ({
-                ...prev,
-                [commentId]: !isLiked
-            }));
-        } catch (error) {
-            console.error("Failed to update likes:", error);
         }
     };
 
@@ -292,6 +251,7 @@ function FlashcardApp() {
             }
         }
     };
+    
 
     const handleEditClick = (card) => {
         setTerm(card.term);
@@ -661,13 +621,7 @@ function FlashcardApp() {
                                     <Typography variant="body2" style={{ marginRight: "10px" }}>
                                         {comment.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
                                     </Typography>
-                                    <Button
-                                        startIcon={likedComments[comment.commentId] ? <ThumbUpIcon color="primary" /> : <ThumbUpOutlinedIcon />}
-                                        onClick={() => handleLikeClick(comment.commentId)}
-                                    >
-                                        {comment.likes}
-                                    </Button>
-
+                             
                                 </div>
                             </div>
                         ))}
@@ -678,7 +632,7 @@ function FlashcardApp() {
                     <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
                         <div style={{ display: "flex", alignItems: "center", }}>
                             <Avatar src={userImage} />
-                            <TextField fullWidth label="Provide Feedback!" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
+                            <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
                             <IconButton onClick={handleSendComment}>
                                 <SendIcon />
                             </IconButton>
@@ -793,7 +747,7 @@ function FlashcardApp() {
                                 Upload Image
                             </Button>
                         </label>
-
+                        
                         {previewUrl && (
                             <div style={{ marginTop: '10px' }}>
                                 <img src={previewUrl} alt="Image preview" style={{ maxWidth: '100%', height: 'auto' }} />
@@ -829,4 +783,3 @@ function FlashcardApp() {
 }
 
 export default FlashcardApp;
-
