@@ -151,7 +151,7 @@ const QuizComponent = () => {
     };
     fetchQuestions();
 
-}, [quizId]);
+}, [quizId,termArray, definitionArray]);
 
   //this methods add quiz and its data to the database
   const handleAddQuestion = async () => {
@@ -445,35 +445,37 @@ const getFlashcardsData = async () => {
             setSubmitAttempted1(true);
             return; // Exit early if required fields are missing
         }
+        // variables to hold object data
+        let termCollection, defCollection;
         // retrieve all flashcard items based on flashcard status and store as object, if no then go to else and use name and subject
         const flashcardData = await FlashcardRepo.getFlashcardItemsByStatus(setId, flashcardRating);
-        // check if there is any content in the flashcardData object
-        if (flashcardData && Object.keys(flashcardData).length > 0){
-        const filteredFlashcardArray = Object.keys(flashcardData).map(key => ({
-            term: flashcardData[key].term,
-            definition: flashcardData[key].definition,
-            status: flashcardData[key].status
-        }));
-        // store each term and definition as an array instead of object in order to pass into callYourCloudFunctionToGenerateQuestions()
-        const termObject = filteredFlashcardArray.map(flashcard => flashcard.term);
-        const defObject = filteredFlashcardArray.map(flashcard => flashcard.definition);
+            // check if there is any content in the flashcardData object
+            if (flashcardData && Object.keys(flashcardData).length > 0){
+            const filteredFlashcardArray = Object.keys(flashcardData).map(key => ({
+                term: flashcardData[key].term,
+                definition: flashcardData[key].definition,
+                status: flashcardData[key].status
+            }));
+                // store each term and definition as an array instead of object in order to pass into callYourCloudFunctionToGenerateQuestions()
+                termCollection = filteredFlashcardArray.map(flashcard => flashcard.term);
+                defCollection = filteredFlashcardArray.map(flashcard => flashcard.definition); 
         
-        setTermArray(termObject);
-        setDefinitionArray(defObject);
-
-        }
-        else {
-        setTermArray(flashcardSetName);
-        setDefinitionArray(flashcardSubject);
-        }
+                }
+            else {
+                termCollection = flashcardSetName;
+                defCollection = flashcardSubject
+            }
 
         setOpenGenerateAI(false);
         setIsLoading(true);
+        
+        console.log("The term array is: ", termCollection);
+        console.log("The definition array is: ", defCollection);
     
         const responseString = await callYourCloudFunctionToGenerateQuestions(
             numberOfQuestions,
-            termArray,
-            definitionArray,
+            termCollection,
+            defCollection,
             flashcardDifficulty
         );
     
@@ -524,13 +526,6 @@ const handleImageUpload = (event) => {
         reader.readAsDataURL(file);
     }
 };
-
-  // useEffect to handle side effects after state updates
-  useEffect(() => {
-    // code that relies on the updated state values
-    console.log("Term Array: ", termArray);
-    console.log("Definition Array: ", definitionArray);
-  }, [termArray, definitionArray]);
 
 // this will handle rendering a specific tab in the AI Generating Tool dialog
 const renderOptions = () => {
