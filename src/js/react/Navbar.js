@@ -48,7 +48,7 @@ function Navbar({ items }) {
 
     return (
         <nav className="navbar">
-            <Link to="/dashboard/:UserId" className="brand">
+            <Link to="/" className="brand">
                 StudySync
             </Link>
             <div className="nav-items">

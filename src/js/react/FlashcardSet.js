@@ -36,6 +36,7 @@ function FlashCardSet({
   quizId,
   item,
   isFlashcard,
+  filter,
 }) {
   const { UserId } = useParams();
   const [open, setOpen] = React.useState(false);
@@ -43,7 +44,7 @@ function FlashCardSet({
   const [scheduleDialogOpenD, setScheduleDialogOpenD] = useState(false);
   const [filteredData, setFilteredData] = useState(
     users.filter((item) => {
-      return item.id != UserId;
+      return item.id !== UserId;
     })
   );
   const navigate = useNavigate();
@@ -59,13 +60,13 @@ function FlashCardSet({
 
   const handleScheduleD = (selectedDate, selectedTime, eventName) => {
     //Scheduling logic
-    const itemName = isFlashcard == false ? item.quizName : item.name;
+    const itemName = isFlashcard === false ? item.quizName : item.name;
     const type =
-      isFlashcard == false
+      isFlashcard === false
         ? UPCOMING_EVENT_TYPE.QUIZ
         : UPCOMING_EVENT_TYPE.FLASHCARD;
 
-    const id = isFlashcard == true ? flashcardId : quizId;
+    const id = isFlashcard === true ? flashcardId : quizId;
 
     userRepository
       .addUpcomingEvent(
@@ -134,10 +135,14 @@ function FlashCardSet({
       }
       onMouseOut={(e) => (e.currentTarget.style.boxShadow = "")}
       onClick={() => {
-        if (isFlashcard == false) {
+
+        if (filter === "Shared Flashcards") {
+          navigate(`/flashcardshare/${flashcardId}`);
+        }
+        else if (isFlashcard === false) {
           navigate(`/quizmain/${quizId}`);
         } else {
-          navigate(`/flashcardshare/${flashcardId}`);
+          navigate(`/flashcard-ui/${flashcardId}`);
           console.log("flashcardId", flashcardId);
         }
       }}

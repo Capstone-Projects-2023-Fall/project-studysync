@@ -294,10 +294,36 @@ const FlashcardComponent = () => {
           }}
         />
 
-        {filteredFlashcards(selectedSubject).map((topic, index) => (
+        {flashcards[selectedSubject]?.map((topic, index) => (
           <div key={index} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
-            <h3>{topic}</h3>
+            {
+              currentlyEditingTopic === topic ? (
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    value={editedName}
+                    onChange={(e) => setEditedName(e.target.value)}
+                  />
+                  <Button variant="contained" color="primary" onClick={handleEdit}>Save</Button>
+                </div>
+              ) : (
+                <h3>{topic}</h3>
+              )
+            }
             <div style={{ display: 'flex', gap: '10px' }}>
+              <Button variant="outlined" onClick={() => {
+
+                if (currentlyEditingTopic) {
+
+                  setCurrentlyEditingTopic(null);
+                  setEditedName('');
+                } else {
+
+                  setCurrentlyEditingTopic(topic);
+                  setEditedName(topic);
+                }
+              }}>Edit</Button>
               <Button variant="outlined" onClick={() => handleFlashcardClick(topic)}>Flashcard</Button>
               <Button variant="outlined" onClick={() => handleQuizClick(topic)}>Quiz</Button>
               <Button variant="outlined">AITutor</Button>
@@ -333,7 +359,7 @@ const FlashcardComponent = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </div >
   );
 
 
