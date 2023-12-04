@@ -300,7 +300,7 @@ const FlashcardComponent = () => {
             <div style={{ display: 'flex', gap: '10px' }}>
               <Button variant="outlined" onClick={() => handleFlashcardClick(topic)}>Flashcard</Button>
               <Button variant="outlined" onClick={() => handleQuizClick(topic)}>Quiz</Button>
-              <Button variant="outlined">AITutor</Button>
+              {/* <Button variant="outlined">AITutor</Button>*/}
               <Button variant="outlined" color="secondary" onClick={() => handleDelete(topic)}>Delete</Button>
             </div>
           </div>
