@@ -496,6 +496,28 @@ const FlashcardRepo = {
         }
     },
 
+    getFlashcardItemsByStatus: async function(setId, status) {
+        try {
+            const setRef = doc(database, 'flashcardSets', setId);
+            const setSnapshot = await getDoc(setRef);
+            const setData = setSnapshot.data();
+            const flashcardData = setData.flashcardItems || [];
+
+            // if flashcardData is an object, convert it to an array
+            const flashcardArray = Object.values(flashcardData);
+            //console.log('Converted flashcardData to array:', flashcardArray);
+             // filter flashcards based on the status field
+            const flashcardsWithStatus = flashcardArray.filter(flashcard => flashcard.status === status);
+            //console.log("Filtered flashcards are: ", flashcardsWithStatus);
+
+            return flashcardsWithStatus;
+        } catch (error) {
+            console.error("Error getting flashcard items:", error);
+            throw error;
+
+        }
+    },
+
     // add owned quizzes into the users table using the flashcardSet id
     addOwnedQuizSetToUser: async function (uid, quizSetId) {
         try {
