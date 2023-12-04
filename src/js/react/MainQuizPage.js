@@ -16,7 +16,12 @@ function MainQuizPage() {
   const [isPaused, setIsPaused] = useState(false);//pause quiz
   const [openDialog, setOpenDialog] = useState(false);//for dialog
   const LOCAL_STORAGE_QUIZ_KEY = 'quizPaused';//saved key
+  const [openSubmitDialog, setOpenSubmitDialog] = useState(false);//for submit dialog
 
+  //for submit dialog
+  const handleOpenSubmitDialog = () => {
+    setOpenSubmitDialog(true);
+  };  
 
   //handle time, each quiz 5 mins
   const calculateInitialTime = useCallback(() => {
@@ -53,6 +58,27 @@ function MainQuizPage() {
     setIsPaused(true);
     handleCloseDialog();
   };
+
+  //submit
+  const handleConfirmSubmit = async () => { // Mark the function as async
+    setOpenSubmitDialog(false);
+  
+    const finalScore = calculateScore(); // Store the returned score in a variable
+    setQuizFinished(true);
+    localStorage.removeItem(LOCAL_STORAGE_QUIZ_KEY);
+  
+    // Assuming you have a way to get the current user's ID
+    const uid = FlashcardRepo.getCurrentUid(); // Replace with the actual method to get the user ID
+    if (finalScore !== null && uid) {
+      try {
+        await FlashcardRepo.updateQuizScore(setId, uid, finalScore); // Use the finalScore here
+        console.log('Score updated successfully in the database');
+      } catch (error) {
+        console.error('Failed to update score in the database:', error);
+      }
+    }
+  };
+  
 
 
   //for resume, with saved status
@@ -163,28 +189,24 @@ function MainQuizPage() {
   });
   };
 
-
   //calculate score
-  const calculateScore = () => {const correctAnswers = questions.reduce((acc, question) => {
+  const calculateScore = () => {
+    const correctAnswers = questions.reduce((acc, question) => {
     //Count the number of correct answers
     return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
   }, 0);
   //calculate the score percentage based on the total number of questions
   const scorePercentage = (correctAnswers / questions.length) * 100;
   setScore(scorePercentage);
+  return scorePercentage;
 };
 
 
   //for submit quiz
   const handleSubmit = () => {
-    const confirmSubmit = window.confirm("Are you sure you want to submit the quiz?");
-    if (confirmSubmit) {
-        calculateScore();
-        setQuizFinished(true);
-        localStorage.removeItem('quizPaused');
-      }
+      handleOpenSubmitDialog();
     };
- 
+    
 
   //for previous button
   const handlePrevious = () => {
@@ -351,7 +373,7 @@ function MainQuizPage() {
           
           {/*button group*/}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
-          
+
 
             {/*back button */}
             <Button
@@ -364,6 +386,30 @@ function MainQuizPage() {
           </div>
         </div>
       )}
+      
+
+      {/*submit quiz dialog*/}
+      <Dialog
+        open={openSubmitDialog}
+        onClose={() => setOpenSubmitDialog(false)}
+        aria-labelledby="submit-dialog-title"
+        aria-describedby="submit-dialog-description">
+          
+          <DialogTitle id="submit-dialog-title">{"Submit Quiz"}</DialogTitle>
+          <DialogContent>
+          <DialogContentText id="submit-dialog-description">
+            Are you sure you want to submit the quiz?
+          </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+          <Button onClick={handleConfirmSubmit} color="primary">
+            Yes
+          </Button>
+          <Button onClick={() => setOpenSubmitDialog(false)} color="primary">
+            No
+          </Button>
+          </DialogActions>
+          </Dialog>
       
       {/*pause quiz dialog*/}
       <Dialog

@@ -86,9 +86,6 @@ const QuizComponent = () => {
     const [submitAttempted, setSubmitAttempted] = useState(false);  //state to track the submit for the first dialog
     const [submitAttempted1, setSubmitAttempted1] = useState(false);    //state to track the submit for the second dialog
 
-    const [termArray, setTermArray] = useState([]);     // a state to store an array of the retrieved flashcard terms
-    const [definitionArray, setDefinitionArray] = useState([]);     // a state to store an array of the retrieved flashcard definitions
-
     const [previewUrl, setPreviewUrl] = useState(null);     //  this is used to reset the url
     const [imageFile, setImage] = useState(null);       // a state to store the user uploaded image
 
@@ -102,17 +99,10 @@ const QuizComponent = () => {
     return questions.length * 5;
     };
 
-  useEffect(() => {
-    //check if the quiz is paused
-    const pausedState = JSON.parse(localStorage.getItem('quizPaused'));
-    if (pausedState && pausedState.setId === setId) {
-      setIsQuizPaused(true);
-    }
-  }, []);
 
   //resumae quiz navigate back to saved quiz
   const handleResumeQuiz = () => {
-    navigate(`/quizmain/${setId}`);
+    navigate(`/quizmain/${quizId}`);
   };
 
   //hook for navigation
@@ -120,9 +110,15 @@ const QuizComponent = () => {
 
   //for navagation start quiz
   const startQuiz = () => {
-    navigate(`/quizmain/${setId}`); //Navigate to the quiz page with setId
+    navigate(`/quizmain/${quizId}`); //Navigate to the quiz page with setId
     localStorage.removeItem('quizPaused');//if start new quiz, delete saved progress
   };
+
+  //handle resume dialog
+  const handleOpenConfirmResume = () => {
+    setOpenConfirmResume(true);
+  };
+  
 
 
   useEffect(() => {
@@ -678,15 +674,6 @@ return (
  
     <QuizList newQuizAdded={newQuizAdded}/>
 
-        {/* Step 3: Add "Start Quiz" Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={startQuiz}
-        style={{ /* your button styles */ }}
-      >
-        Start Quiz
-      </Button>
 
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
@@ -789,13 +776,14 @@ return (
         
         {isQuizPaused && (
         <Button
-          variant="contained"
-          color="secondary"
-          onClick={handleResumeQuiz}
-          style={{ alignSelf: 'center', marginTop: '20px' }}
-        >
-          Resume Quiz
-        </Button>
+        variant="contained"
+        color="secondary"
+        onClick={handleOpenConfirmResume}
+        style={{ alignSelf: 'center', marginTop: '20px' }}
+      >
+        Resume Quiz
+      </Button>
+      
         )}
 
         <Dialog open={openEdit} onClose={() => { setOpenEdit(false)}}>
@@ -980,6 +968,29 @@ return (
                     {value === "Flashcards" && <Button variant ="contained" onClick={getFlashcardsData}>Generate</Button>}
                     </DialogActions>
                 </Dialog>
+
+
+                {/*diaglos show resume quiz*/}            
+                <Dialog
+                open={openConfirmResume}
+                onClose={() => setOpenConfirmResume(false)}
+                aria-labelledby="resume-quiz-dialog-title"
+                aria-describedby="resume-quiz-dialog-description">
+                    <DialogTitle id="resume-quiz-dialog-title">{"Resume Quiz"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText id="resume-quiz-dialog-description">
+                            Are you sure you want to resume the quiz?
+                            </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button onClick={() => setOpenConfirmResume(false)} color="primary">
+                                    Cancel
+                                    </Button>
+                                    <Button onClick={handleResumeQuiz} color="primary">
+                                        Resume
+                                        </Button>
+                                        </DialogActions>
+                                        </Dialog>
                 
                 {/*diaglos show quiz infomatio*/}
                 <Dialog open={openQuizInfo} onClose={() => setOpenQuizInfo(false)}>
