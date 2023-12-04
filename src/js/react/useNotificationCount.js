@@ -116,7 +116,6 @@ export const checkUpcomingEvents = async () => {
         }
       }
     }
-    console.log("all upcoming events are: ", upcomingEvents);
   } catch (error) {
     throw error;
   }
