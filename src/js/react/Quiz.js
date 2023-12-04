@@ -337,16 +337,14 @@ const handleGenerateAIQuestion = async () => {
    
     try {
             // check if required fields are filled
-        if (!numberOfQuestions || !topicName) {
-            // display alert if any required field is missing
-            alert('Please fill in all required fields.');
+        if (!numberOfQuestions || !topicName || !flashcardDifficulty) {
             // set submitAttempted to true to highlight missing fields
             setSubmitAttempted(true);
         }
         else {
             setOpenGenerateAI(false);
             setIsLoading(true);
-        const responseString = await callYourCloudFunctionToGenerateQuestions(numberOfQuestions, topicName);
+        const responseString = await callYourCloudFunctionToGenerateQuestions(numberOfQuestions, topicName, flashcardDifficulty);
         const generatedQuestions = responseString;
 
         const addedQuestions = [];
@@ -359,6 +357,7 @@ const handleGenerateAIQuestion = async () => {
         // reset all the field
         setNumOfQuestions(1);
         setTopicName('');
+        setDifficulty('');
     }
     } catch (error) {
         console.error("Error generating or adding question with AI:", error);
@@ -368,7 +367,7 @@ const handleGenerateAIQuestion = async () => {
 };
 
 // a cloud function to make POST request to ChatGPT for to generate user requested questions
-const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName, definition, difficulty) => {
+const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName, difficulty, definition) => {
     try {
         const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithImage';
         
@@ -382,7 +381,7 @@ const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName,
                       type: "text",
                       text: `Please create ${numQuestions} quiz question 
                     along with 4 multiple choices answer with one correct answer about these terms ${topicName}, with its definitions as such
-                    ${definition} with this level of difficulty ${difficulty} 
+                    ${definition} with this level of difficulty '${difficulty}' 
                     Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
                     as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
                     Please make sure questions are not repetitive. It is better just have the json back without any other text.`
@@ -394,8 +393,9 @@ const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName,
                 role: "user",
                 content: [{
                     type: "text",
-                    text: `Please create ${numQuestions} quiz question 
-                    along with 4 multiple choices answer with one correct answer about ${topicName}. 
+                    text: `Hello, Please create ${numQuestions} quiz question 
+                    along with 4 multiple choices answer with one correct answer based on the description provided '${topicName}' with this level of difficulty '${difficulty}'
+                    and the analysis of the uploaded image (if there is one), Each question should relate to the the image content first(if there is one)and description. 
                     Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
                     as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
                     Please make sure questions are not repetitive. It is better just have the json back without any other text.`
@@ -439,8 +439,6 @@ const getFlashcardsData = async () => {
     try {
         // check if required fields are filled
         if (!numberOfQuestions || !flashcardRating || !flashcardDifficulty) {
-            // display alert if any required field is missing
-            alert('Please fill in all required fields.');
             // set submitAttempted to true to highlight missing fields
             setSubmitAttempted1(true);
             return; // Exit early if required fields are missing
@@ -475,8 +473,8 @@ const getFlashcardsData = async () => {
         const responseString = await callYourCloudFunctionToGenerateQuestions(
             numberOfQuestions,
             termCollection,
-            defCollection,
-            flashcardDifficulty
+            flashcardDifficulty,
+            defCollection  
         );
     
         const generatedQuestions = responseString;
@@ -539,13 +537,13 @@ const renderOptions = () => {
             <TextField
               autoFocus
               margin="dense"
-              label="Topic Name"
+              label="Provide your Description"
               type="text"
               fullWidth
               value={topicName}
               onChange={(e) => setTopicName(e.target.value)}
               error={submitAttempted && !topicName}
-              helperText={submitAttempted && !topicName ? 'Please enter the topic of the quiz' : ''}
+              helperText={submitAttempted && !topicName ? 'Please Enter your Description' : ''}
             />
             <TextField
               margin="dense"
@@ -555,6 +553,20 @@ const renderOptions = () => {
               value={numberOfQuestions}
               onChange={(e) => setNumOfQuestions(e.target.value)}
             />
+            <FormControl id="difficulty-control-buttons-AI"> Difficulty Levels:
+            <RadioGroup
+                aria-labelledby="difficulty-control-buttons-AI"
+                name="difficulty"
+                value={flashcardDifficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
+                row
+                >
+                <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
+                <FormControlLabel value="Medium" control={<Radio />} label="Medium" />
+                <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
+            </RadioGroup>
+            {submitAttempted && !flashcardDifficulty && <div style={{ color: 'red' }}>Please select a difficulty level</div>}
+            </FormControl>
 
                 <input
                     accept="image/*"
@@ -564,7 +576,7 @@ const renderOptions = () => {
                     type="file"
                     onChange={handleImageUpload}
                 />
-                    <label htmlFor="raised-button-file">
+                    <label htmlFor="raised-button-file" style={{ position: 'absolute', bottom: '0', left: '0', padding: '8px'}}>
                         <Button variant="contained" component="span">
                             Upload Image
                         </Button>
@@ -630,7 +642,7 @@ const renderOptions = () => {
 
             <FormControl id="difficulty-control-buttons"> Difficulty Levels:
             <RadioGroup
-                aria-labelledby="rdifficulty-control-buttons"
+                aria-labelledby="difficulty-control-buttons"
                 name="difficulty"
                 value={flashcardDifficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
