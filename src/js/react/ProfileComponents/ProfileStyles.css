@@ -21,6 +21,7 @@
 }
 .profile-image{
     margin-top: 2%;
+    margin-left: 19%;
 }
 .description-btn{
     margin-top: 2%;
@@ -73,5 +74,6 @@ input[type="text"]{
     padding-top: 2%;
 }
 .image-card{
-    margin-left: 27%
+    margin-left: 17%;
 }
+

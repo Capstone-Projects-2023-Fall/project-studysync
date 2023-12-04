@@ -64,7 +64,7 @@ function Sidebar(props) {
     }
   }
   return (
-    <Grid item xs={12} md={4} class="profile-sidebar">
+    <Grid item xs={12} md={4} className="profile-sidebar" >
 
       <CardMedia
           className='image-card'
@@ -74,28 +74,28 @@ function Sidebar(props) {
           alt="Profile image"
         />
       <div className='profile-image'>{imageBtn()}</div>        
-      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+      <Typography variant="h6" gutterBottom sx={{ mt: 3 ,ml:6}} className='socials-list'>
         Friends
       </Typography>
       
       {friends.map((friend) => (
-        <Link display="block" variant="body1" href={friendLink(friend.id)} key={friend.id}>
+        <Link  sx={{mt:1, ml:6}} className='socials-list' isplay="block" variant="body1" href={friendLink(friend.id)} key={friend.id}>
           {friend.name}
         </Link>
       ))}
-      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+      <Typography  className='socials-list' variant="h6" gutterBottom sx={{ mt: 3 , ml:6 }}>
         Followers
       </Typography>
       {followers.map((follower) => (
-        <Link display="block" variant="body1" href={friendLink(follower.id)} key={follower.id}>
+        <Link sx={{mt:1,ml:6}} className='socials-list' display="block" variant="body1" href={friendLink(follower.id)} key={follower.id}>
           {follower.name}
         </Link>
       ))}
-      <Typography variant="h6" gutterBottom sx={{ mt: 3 }}>
+      <Typography  className='socials-list' variant="h6" gutterBottom sx={{ mt: 3,ml:6 }}>
         Following
       </Typography>
       {following.map((following) => (
-        <Link display="block" variant="body1" href={friendLink(following.id)} key={following.id}>
+        <Link sx={{ mt:1,ml:6}} className='socials-list' display="block" variant="body1" href={friendLink(following.id)} key={following.id}>
           {following.name}
         </Link>
       ))}      
