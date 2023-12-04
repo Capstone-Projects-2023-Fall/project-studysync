@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { database, auth } from '../../firebase';
-import { collection, getDocs, getDoc, query, where, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
+import { collection, getDocs, getDoc, query, where, orderBy, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
 
 const FlashcardRepo = {
 
@@ -62,6 +62,7 @@ const FlashcardRepo = {
             const flashcardId = doc(collection(database, 'flashcards')).id;
             const commentId = doc(collection(database, 'comments')).id;
             const questionId = doc(collection(database, 'questions')).id;
+            const scoreId = doc(collection(database, 'scores')).id;
 
             const initialFlashcardItems = {
                 [flashcardId]: {
@@ -89,6 +90,13 @@ const FlashcardRepo = {
                 },
             };
 
+            const initialScore = {
+                [scoreId]: {
+                    score: 0,
+                    attempt: 0, 
+                },
+            };
+
             const setData = {
                 name: name,
                 createdAt: Timestamp.now(),
@@ -111,7 +119,8 @@ const FlashcardRepo = {
                 sharedWith: [],
                 quizName: "Initial Quiz",
                 questionItems: initialQuizItems,
-                flashcardSetId: newDocRef.id
+                flashcardSetId: newDocRef.id,
+                quizScore: initialScore
             };
 
             const newDocRefQuizzes = await addDoc(collection(database, 'quizzesCreation'), setQuizData);
@@ -623,8 +632,11 @@ const FlashcardRepo = {
         try {
             const quizzesRef = collection(database, 'quizzesCreation');
             // Retrieve all quizzes from the flashcard set using the flashcard id
-            const querySnapshot = await getDocs(query(quizzesRef, where('flashcardSetId', '==', flashcardSetId)));
 
+            const querySnapshot = await getDocs(query(quizzesRef,
+                 where('flashcardSetId', '==', flashcardSetId),
+                 orderBy('createdAt', 'asc')));
+    
             const quizTitles = [];
             querySnapshot.forEach((doc) => {
                 const quizData = doc.data();
@@ -696,6 +708,7 @@ const FlashcardRepo = {
 
             // Generate a new quiz ID
             const quizId = doc(collection(database, 'quizzes')).id;
+            const scoreId = doc(collection(database, 'scores')).id;
 
             // Create the initial quiz item
             const initialQuizItems = {
@@ -706,6 +719,12 @@ const FlashcardRepo = {
                 },
             };
 
+            const initialScore = {
+                [scoreId]: {
+                    score: 0,
+                    attempt: 0, 
+                },
+            };
             const setData = {
                 name: flashcardTopicName,   //Add the flashcard topic name to the data
                 quizName: quizTitle,    // Add a quiz title to each quiz
@@ -714,6 +733,7 @@ const FlashcardRepo = {
                 subject: flashcardSubject,
                 flashcardSetId: flashcardSetId, // Add the flashcard set ID to the data
                 questionItems: initialQuizItems,
+                quizScore: initialScore,
             };
 
             const newDocRef = await addDoc(collection(database, 'quizzesCreation'), setData);
@@ -794,6 +814,28 @@ const FlashcardRepo = {
         } catch (error) {
             console.error("Error deleting quiz", error);
             throw error;
+          }
+    },
+
+    getFlashcardItemsByStatus: async function(setId, status) {
+        try {
+            const setRef = doc(database, 'flashcardSets', setId);
+            const setSnapshot = await getDoc(setRef);
+            const setData = setSnapshot.data();
+            const flashcardData = setData.flashcardItems || [];
+            
+            // if flashcardData is an object, convert it to an array
+            const flashcardArray = Object.values(flashcardData);
+            //console.log('Converted flashcardData to array:', flashcardArray);
+             // filter flashcards based on the status field
+            const flashcardsWithStatus = flashcardArray.filter(flashcard => flashcard.status === status);
+            //console.log("Filtered flashcards are: ", flashcardsWithStatus);
+
+            return flashcardsWithStatus;
+        } catch (error) {
+            console.error("Error getting flashcard items:", error);
+            throw error;
+
         }
     },
 

@@ -1,67 +1,106 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
+import { useParams } from 'react-router-dom';
 
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogTitle, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme, ButtonGroup, Stack, DialogContentText, CircularProgress } from '@mui/material';
+import { 
+  Button, 
+  TextField, 
+  Typography, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogTitle, 
+  List, 
+  ListItem, 
+  IconButton, 
+  Avatar, 
+  ThemeProvider, 
+  createTheme, 
+  ButtonGroup, 
+  Stack, 
+  DialogContentText, 
+  CircularProgress,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  FormControl,
+  Tabs,
+  Tab,
+  Snackbar,
+  Box 
+} from '@mui/material';
+
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import FormatQuoteIcon from '@mui/icons-material/FormatQuote';//quotation mark 
-import SendIcon from '@mui/icons-material/Send';
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { useParams } from 'react-router-dom';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import EditIcon from '@mui/icons-material/Edit';
-import Question from '../models/question';
-import QuizList from './QuizList';
 import SmartToyOutlinedIcon from '@mui/icons-material/SmartToyOutlined';
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Snackbar from '@mui/material/Snackbar';
+import PrecisionManufacturingIcon from '@mui/icons-material/PrecisionManufacturing';
+
+import QuizList from './QuizList';
+
 
 const QuizComponent = () => {
 
-  const [openAdd, setOpenAdd] = useState(false);
-  const { setId, quizId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
+    const [openAdd, setOpenAdd] = useState(false);
+    const { setId, quizId } = useParams();  //retrieve the flashcard set in order to go to a certain quiz
 
-  const [question, setQuestion] = useState('');
-  const [choices, setChoices] = useState(['', '', '', '']); // store choices
-  const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null); //capture the correct choice as an array index
-  const [questions, setQuizData] = useState([]); //array to hold all questions data
+    const [question, setQuestion] = useState('');
+    const [choices, setChoices] = useState(['', '', '', '']); // store choices
+    const [correctChoiceIndex, setCorrectChoiceIndex] = useState(null); //capture the correct choice as an array index
+    const [questions, setQuizData] = useState([]); //array to hold all questions data
 
-  const [deleteQuestion, setDeleteQuestion] = useState(null); 
-  const [openDelete, setOpenDelete] = useState(false);
+    const [deleteQuestion, setDeleteQuestion] = useState(null); 
+    const [openDelete, setOpenDelete] = useState(false);
 
-  const [editQuestion, setEditQuestion] = useState(null);
-  const [openEdit, setOpenEdit] = useState(false);
+    const [editQuestion, setEditQuestion] = useState(null);
+    const [openEdit, setOpenEdit] = useState(false);
 
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [showDefinition, setShowDefinition] = useState(false);
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [showDefinition, setShowDefinition] = useState(false);
 
 
-  const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
-  const [topicName, setTopicName] = useState(''); // capture the topic name from user entry
-  const [numberOfQuestions, setNumOfQuestions] = useState(1); //capture the number of quesiton from user entry, default is set to 1
+    const [openGenerate, setOpenGenerateAI] = useState(false); // a state to handle the AI button
+    const [topicName, setTopicName] = useState(''); // capture the topic name from user entry
+    const [numberOfQuestions, setNumOfQuestions] = useState(1); //capture the number of quesiton from user entry, default is set to 1
 
-  const [openQuiz, setOpenQuiz] = useState(false); // state to handle the creat quiz button
-  const [quizTitle, setQuizTitle] = useState(''); // capture the quiz title from the user entry
+    const [openQuiz, setOpenQuiz] = useState(false); // state to handle the creat quiz button
+    const [quizTitle, setQuizTitle] = useState(''); // capture the quiz title from the user entry
 
-  const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
+    const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
-  const [isQuizPaused, setIsQuizPaused] = useState(false);
-  const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz infor
+    const [isQuizPaused, setIsQuizPaused] = useState(false);
+    const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz info
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(false);  //state for the loading screen 
+    const [successMessage, setSuccessMessage] = useState('');   //state for the success message with Snackbar
+    const [errorMessage, setErrorMessage] = useState('');    //state for the error message with Snackbar
+
+    const [flashcardSetName, setFlashcardSetName] = useState('');   //state to store the flashcard set topic
+    const [flashcardSubject, setFlashcardSubject] = useState('');   //state to store the flashcard subject
+    const [flashcardRating, setRating] = useState('');  //state to store the flashcard status
+    const [flashcardDifficulty, setDifficulty] = useState('');  //state to store the quiz difficulty
+    const [submitAttempted, setSubmitAttempted] = useState(false);  //state to track the submit for the first dialog
+    const [submitAttempted1, setSubmitAttempted1] = useState(false);    //state to track the submit for the second dialog
+
+    const [termArray, setTermArray] = useState([]);     // a state to store an array of the retrieved flashcard terms
+    const [definitionArray, setDefinitionArray] = useState([]);     // a state to store an array of the retrieved flashcard definitions
+
+    const [previewUrl, setPreviewUrl] = useState(null);     //  this is used to reset the url
+    const [imageFile, setImage] = useState(null);       // a state to store the user uploaded image
+
+    const [value, setValue] = React.useState('AI');     // state to use with the Generation Question dialog, default is the first tab
+    const handleChange = (event, newValue) => {
+        setValue(newValue);
+        };
 
   //calculation time limit
   const calculateTimeLimit = () => {
     return questions.length * 5;
     };
-
-
 
   useEffect(() => {
     //check if the quiz is paused
@@ -112,7 +151,7 @@ const QuizComponent = () => {
     };
     fetchQuestions();
 
-}, [quizId]);
+}, [quizId,termArray, definitionArray]);
 
   //this methods add quiz and its data to the database
   const handleAddQuestion = async () => {
@@ -231,7 +270,7 @@ const handleCreateQuiz = async () => {
       const uid = FlashcardRepo.getCurrentUid();
   
       if (uid && quizTitle) {
-        // Call your createNewQuiz function from FlashcardRepo
+        // call createNewQuiz function from FlashcardRepo
         const newQuizId = await FlashcardRepo.createNewQuiz(setId, quizTitle);
   
         console.log("You want to add: ", quizTitle);
@@ -245,10 +284,22 @@ const handleCreateQuiz = async () => {
     }
   };
 
-const handleOpenGenerateAI = () => {
+  const handleOpenGenerateAI = async () => {
     setOpenGenerateAI(true);
 
+    try {
+        // retrieve the flashcard set topic name
+        const flashcardSet = await FlashcardRepo.getFlashcardSetById(setId);
+
+        // set the state variables accordingly
+        setFlashcardSetName(flashcardSet.name);
+        setFlashcardSubject(flashcardSet.subject);
+
+    } catch (error) {
+        console.error("Error fetching flashcard set:", error);
+    }
 };
+
 
 function parseGPTResponse(rawResponse) {
     try {
@@ -283,9 +334,18 @@ function parseGPTResponse(rawResponse) {
 
 // this function allows user to generate new quiz question through the help of AI
 const handleGenerateAIQuestion = async () => {
-    setOpenGenerateAI(false);
-    setIsLoading(true);
+   
     try {
+            // check if required fields are filled
+        if (!numberOfQuestions || !topicName) {
+            // display alert if any required field is missing
+            alert('Please fill in all required fields.');
+            // set submitAttempted to true to highlight missing fields
+            setSubmitAttempted(true);
+        }
+        else {
+            setOpenGenerateAI(false);
+            setIsLoading(true);
         const responseString = await callYourCloudFunctionToGenerateQuestions(numberOfQuestions, topicName);
         const generatedQuestions = responseString;
 
@@ -296,6 +356,10 @@ const handleGenerateAIQuestion = async () => {
         }
         setSuccessMessage('Flashcards generated successfully!');
         setQuizData(prev => [...prev, ...addedQuestions]);
+        // reset all the field
+        setNumOfQuestions(1);
+        setTopicName('');
+    }
     } catch (error) {
         console.error("Error generating or adding question with AI:", error);
     }finally {
@@ -304,21 +368,50 @@ const handleGenerateAIQuestion = async () => {
 };
 
 // a cloud function to make POST request to ChatGPT for to generate user requested questions
-const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName) => {
+const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName, definition, difficulty) => {
     try {
         const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithImage';
+        
+        //conditional statement for two different scenerio based on the passed parameters above
+        let messages;
+        if(numQuestions && topicName && definition && difficulty){
+            messages = [
+                {
+                  role: "user",
+                  content: [{
+                      type: "text",
+                      text: `Please create ${numQuestions} quiz question 
+                    along with 4 multiple choices answer with one correct answer about these terms ${topicName}, with its definitions as such
+                    ${definition} with this level of difficulty ${difficulty} 
+                    Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
+                    as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
+                    Please make sure questions are not repetitive. It is better just have the json back without any other text.`
+                    }]
+                }];
+        }
+        else{   
+            messages = [{
+                role: "user",
+                content: [{
+                    type: "text",
+                    text: `Please create ${numQuestions} quiz question 
+                    along with 4 multiple choices answer with one correct answer about ${topicName}. 
+                    Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
+                    as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
+                    Please make sure questions are not repetitive. It is better just have the json back without any other text.`
+                }]
+            }];
+        }
+        //if there is an image uploaded, append it into the array
+        if (imageFile) {
+            messages[0].content.push({
+                type: "image_url",
+                image_url: {
+                    url: `data:image/jpeg;base64,${imageFile}`
+                }
+            });
+        }
 
-        const messages = [{
-            role: "user",
-            content: [{
-                type: "text",
-                text: `Please create ${numQuestions} quiz question 
-                along with 4 multiple choices answer with one correct answerabout ${topicName}. 
-                Format each question as JSON format with 'question', an array of choices in 'choices' field, and 'correctChoiceIndex' 
-                as an index to the correct choice, i need to parse it with only "question", "choices", and "correctChoiceIndex".
-                Please make sure questions are not repetitive. It is better just have the json back without any other text.`
-            }]
-        }];
         console.log("Sending Request with JSON payload:", { messages });
         const response = await fetch(functionUrl, {
             method: 'POST',
@@ -340,6 +433,223 @@ const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName)
             throw error;
         }
 };
+
+//this will handle creating quiz according to the user input
+const getFlashcardsData = async () => {
+    try {
+        // check if required fields are filled
+        if (!numberOfQuestions || !flashcardRating || !flashcardDifficulty) {
+            // display alert if any required field is missing
+            alert('Please fill in all required fields.');
+            // set submitAttempted to true to highlight missing fields
+            setSubmitAttempted1(true);
+            return; // Exit early if required fields are missing
+        }
+        // variables to hold object data
+        let termCollection, defCollection;
+        // retrieve all flashcard items based on flashcard status and store as object, if no then go to else and use name and subject
+        const flashcardData = await FlashcardRepo.getFlashcardItemsByStatus(setId, flashcardRating);
+            // check if there is any content in the flashcardData object
+            if (flashcardData && Object.keys(flashcardData).length > 0){
+            const filteredFlashcardArray = Object.keys(flashcardData).map(key => ({
+                term: flashcardData[key].term,
+                definition: flashcardData[key].definition,
+                status: flashcardData[key].status
+            }));
+                // store each term and definition as an array instead of object in order to pass into callYourCloudFunctionToGenerateQuestions()
+                termCollection = filteredFlashcardArray.map(flashcard => flashcard.term);
+                defCollection = filteredFlashcardArray.map(flashcard => flashcard.definition); 
+        
+                }
+            else {
+                termCollection = flashcardSetName;
+                defCollection = flashcardSubject
+            }
+
+        setOpenGenerateAI(false);
+        setIsLoading(true);
+        
+        console.log("The term array is: ", termCollection);
+        console.log("The definition array is: ", defCollection);
+    
+        const responseString = await callYourCloudFunctionToGenerateQuestions(
+            numberOfQuestions,
+            termCollection,
+            defCollection,
+            flashcardDifficulty
+        );
+    
+        const generatedQuestions = responseString;
+        // add all of the AI response Q/A into the database so we can display on screen
+        const addedQuestions = [];
+            for (const question of generatedQuestions) {
+            const newQuestionId = await FlashcardRepo.addQuizQuestion
+            (
+                quizId,
+                question.question, 
+                question.choices, 
+                question.correctChoiceIndex);
+            addedQuestions.push({ ...question, questionId: newQuestionId });
+            }
+            setSuccessMessage('Flashcards generated successfully!');
+            setQuizData(prev => [...prev, ...addedQuestions]);
+            //reset all the fields
+            setNumOfQuestions(1);
+            setTopicName('');
+            setDifficulty('');
+            setRating('');
+
+        } catch (error) {
+            console.error("Error generating or adding question with AI:", error);
+        } finally {
+        setIsLoading(false);
+        }
+};
+
+const handleCancelImage = () => {
+    setImage(null);
+    setPreviewUrl(null);
+};
+
+const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const previewUrl = URL.createObjectURL(file);
+        setPreviewUrl(previewUrl);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const base64String = reader.result
+                .replace('data:', '')
+                .replace(/^.+,/, '');
+            setImage(base64String); // Set the base64 string
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+// this will handle rendering a specific tab in the AI Generating Tool dialog
+const renderOptions = () => {
+    switch (value) {
+      case "AI":
+        return (
+          <div>
+            <Typography textAlign="center">
+                Quiz Based on AI: You can create a quiz by entering your quiz topic and our AI tools will handle it for you.
+            </Typography>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Topic Name"
+              type="text"
+              fullWidth
+              value={topicName}
+              onChange={(e) => setTopicName(e.target.value)}
+              error={submitAttempted && !topicName}
+              helperText={submitAttempted && !topicName ? 'Please enter the topic of the quiz' : ''}
+            />
+            <TextField
+              margin="dense"
+              label="Number of Question(s)"
+              type="number"
+              fullWidth
+              value={numberOfQuestions}
+              onChange={(e) => setNumOfQuestions(e.target.value)}
+            />
+
+                <input
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                    onChange={handleImageUpload}
+                />
+                    <label htmlFor="raised-button-file">
+                        <Button variant="contained" component="span">
+                            Upload Image
+                        </Button>
+                    </label>
+                        
+                    {previewUrl && (
+                        <div style={{ marginTop: '10px' }}>
+                            <img src={previewUrl} alt="Image preview" style={{ maxWidth: '100%', height: 'auto' }} />
+                            <Button
+                                variant="contained"
+                                color="secondary"
+                                onClick={handleCancelImage}
+                                style={{ marginTop: '10px' }}
+                            >
+                                Cancel Image
+                            </Button>
+                        </div>
+                    )}
+            </div>
+        );
+      case "Flashcards":
+        
+        return (
+          <div>
+            <Typography textAlign="center">
+                Quiz Based on Flashcards: Our AI tools will generate those question by using your flashcards that marked as "Don't Know"
+            </Typography>
+            <br/>
+            <Typography> 
+                By using this flashcard topic: &nbsp;
+                <span
+                    style={{
+                        fontWeight: "bold",
+                        color: "black",
+                        fontSize: "20px",
+                    }}
+                >
+                {flashcardSetName}
+                </span>
+            </Typography>
+            <TextField
+                margin="dense"
+                label="Number of Question(s)"
+                type="number"
+                fullWidth
+                value={numberOfQuestions}
+                onChange={(e) => setNumOfQuestions(e.target.value)}
+            />
+            <FormControl id="rating-control-buttons"> Rating Levels: 
+            <RadioGroup
+                aria-labelledby="rating-control-buttons"
+                name="rating"
+                value={flashcardRating}
+                onChange={(e) => setRating(e.target.value)}
+                row
+                >
+                <FormControlLabel value="know" control={<Radio />} label="Know" />
+                <FormControlLabel value="dontKnow" control={<Radio />} label="Don't Know" />
+                <FormControlLabel value="notSure" control={<Radio />} label="Not Sure" />
+            </RadioGroup>
+            {submitAttempted1 && !flashcardRating && <div style={{ color: 'red' }}>Please select a rating level</div>}
+            </FormControl>
+
+            <FormControl id="difficulty-control-buttons"> Difficulty Levels:
+            <RadioGroup
+                aria-labelledby="rdifficulty-control-buttons"
+                name="difficulty"
+                value={flashcardDifficulty}
+                onChange={(e) => setDifficulty(e.target.value)}
+                row
+                >
+                <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
+                <FormControlLabel value="Medium" control={<Radio />} label="Medium" />
+                <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
+            </RadioGroup>
+            {submitAttempted1 && !flashcardDifficulty && <div style={{ color: 'red' }}>Please select a difficulty level</div>}
+            </FormControl>
+            
+          </div>
+        );
+      // Add more cases for additional tabs as needed
+      default:
+        return null;
+    }
+  };
   
 return (
     <div style={{
@@ -413,6 +723,7 @@ return (
                 <Button variant="outlined" onClick={() => setOpenQuiz(true)}>Create a New Quiz</Button>
             </Stack>
             </List>
+               
 
             <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
                         <Typography variant="h6">
@@ -632,32 +943,41 @@ return (
 
                 <Dialog 
                     open={openGenerate}
-                    onClose={() => setOpenGenerateAI(false)}
+                    onClose={() => {
+                    setOpenGenerateAI(false);
+                    setNumOfQuestions("1");
+                    setTopicName('');
+                    setDifficulty('');
+                    setRating('');
+                    setSubmitAttempted(false);
+                    setSubmitAttempted1(false);
+                    setPreviewUrl(null);
+                    }}
                 >
-                    <DialogTitle>{"AI Q/A Generated Tool"}</DialogTitle>
+                    <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        textColor="secondary"
+                        indicatorColor="secondary"
+                        aria-label="secondary tabs example"
+                    >
+                        <Tab value="AI" label="Quiz Based on AI" />
+                        <Tab value="Flashcards" label="Quiz Based on Flashcards" />
+                    </Tabs>
+                    <DialogTitle   
+                    fontSize= "25px"
+                    fontWeight= "bold"
+                    >                  
+                            <PrecisionManufacturingIcon /> 
+                            {"AI Generating Tools"}
+                    </DialogTitle>
                     <DialogContent>
-                    <DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            label="Topic Name"
-                            type="text"
-                            fullWidth
-                            value={topicName}
-                            onChange={(e) => setTopicName(e.target.value)}
-                        />
-                        <TextField
-                            margin="dense"
-                            label="Number of Question(s)"
-                            type="number"
-                            fullWidth
-                            value={numberOfQuestions}
-                            onChange={(e) => setNumOfQuestions(e.target.value)}
-                        />
-                    </DialogContentText>
+                        {renderOptions()}
                     </DialogContent>
                     <DialogActions>
-                    <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button>
+                    {/* <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button> */}
+                    {value === "AI" && <Button variant ="contained" onClick={handleGenerateAIQuestion}>Generate</Button>}
+                    {value === "Flashcards" && <Button variant ="contained" onClick={getFlashcardsData}>Generate</Button>}
                     </DialogActions>
                 </Dialog>
                 
