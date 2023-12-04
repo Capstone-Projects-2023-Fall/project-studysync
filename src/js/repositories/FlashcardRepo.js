@@ -796,6 +796,37 @@ const FlashcardRepo = {
 
         }
     },
+    
+    updateScoreAndAddAttempt: async function(quizId, newScore) {
+        try {
+            //get a new ID for the attempt
+            const attemptId = doc(collection(database, 'attempts')).id;
+
+            //create the attempt data
+            const attemptData = {
+                score: newScore,
+                attemptId: attemptId,
+                
+            };
+
+            //get a reference to the quiz document in the 'quizzesCreation' collection
+            const quizRef = doc(database, 'quizzesCreation', quizId);
+
+            //update the quiz document with the new attempt data
+            await updateDoc(quizRef, {
+                attempts: arrayUnion(attemptData)
+                });
+
+            console.log(`Attempt ID ${attemptId} with score ${newScore} added to quiz ID ${quizId}.`);
+                return attemptId;
+            } catch (error) {
+                console.error("Error updating score and adding attempt:", error);
+                throw error;
+             }
+},
+
+
+
 
 };
 
