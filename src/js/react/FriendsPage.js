@@ -77,10 +77,7 @@ export default function FriendsPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [currUser, setCurrUser] = useState(null);
-  const [currFollowing, setCurrFollowing] = useState(0);
-  const [currFollowers, setCurrFollowers] = useState(0);
   const [users, setUsers] = useState([]);
-  const [userStr, setUserStr] = useState("");
   const [filteredData, setFilteredData] = useState([]);
 
   const navigate = useNavigate();
@@ -104,6 +101,10 @@ export default function FriendsPage() {
 
   useEffect(() => {
     setIsLoading(true);
+    userRepository.getUserById(currUserId).then((res) => {
+      setCurrUser(res);
+      setIsLoading(false);
+    });
 
     if (type == "Following") {
       userRepository
@@ -137,17 +138,8 @@ export default function FriendsPage() {
           setIsLoading(false);
           setUsers(res);
           setFilteredData(res.filter((item) => item.id != UserId));
-          setUserStr(JSON.stringify(res));
         })
         .catch(() => console.log("error fetching all users"));
-
-      userRepository.getUserById(currUserId).then((res) => {
-        setCurrUser(res);
-        setIsLoading(false);
-        console.log("currUser is: ", res);
-        setCurrFollowing(res.following.length);
-        setCurrFollowers(res.followers.length);
-      });
     } else {
       userRepository
         .getFriends(UserId)
@@ -237,7 +229,6 @@ export default function FriendsPage() {
   );
 
   function MainList() {
-
     function removeFriend(uid) {
       removeFollower(uid);
       unfollowUser(uid);
@@ -271,7 +262,6 @@ export default function FriendsPage() {
     //     });
     // }
 
-
     // function stopFollowing(uid) {
     //   setIsLoading(true);
     //   userRepository
@@ -289,7 +279,6 @@ export default function FriendsPage() {
     //   showList.splice(index, 1);
     //   console.log(`Stopped following: ${showList}`);
     // }
-
 
     function handlebtn1(uid) {
       if (type == "Followers") {
@@ -320,18 +309,10 @@ export default function FriendsPage() {
 
     async function unfollowUser(userToUnfollowId) {
       await userRepository.stopFollowing(currUser.id, userToUnfollowId);
-      const updatedObject = {
-        ...currUser,
-        following: currUser.following.filter(
-          (item) => item.id !== userToUnfollowId
-        ),
-      };
-      setCurrFollowing(currFollowing - 1);
     }
 
     async function followUser(userToFollowId) {
       await userRepository.startFollowing(currUser.id, userToFollowId);
-      setCurrFollowers(currFollowers + 1);
     }
 
     const handleSearch = (searchTerm) => {
