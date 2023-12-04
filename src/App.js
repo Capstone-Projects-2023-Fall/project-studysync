@@ -71,6 +71,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/flashcard" element={<FlashcardComponent />} />
+        <Route path="/profile/:UserId" element={<UserProfile />} />
         <Route path="/quizFlash/:setId/quiz/:quizId" element={<Quiz />} />
         <Route path="/quizmain/:setId" element={<MainQuizPage />} />
         <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
@@ -105,7 +106,6 @@ function App() {
         />
         <Route path="/passwordreset" element={<PasswordReset />} />
         <Route path="/signup" element={<SignUpForm />} />
-        <Route path="/profile/:UserId" element={<UserProfile />} />
         <Route path="/quizmain" element={<MainQuizPage />} />
         <Route path="/socials/:UserId" element={<FriendsPage />} />
         <Route path="/quizmain/:setId" element={<MainQuizPage />} />
