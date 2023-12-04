@@ -126,15 +126,14 @@ const EventCard = ({ initialEvent, onDelete }) => {
             {event.name}
           </Typography>
         </div>
-
+        <Typography variant="body2" color="text.secondary" fontWeight="bold">
+          {`${event.type} : ${event.itemName}`}
+        </Typography>
         <Typography variant="body2" color="text.secondary" fontWeight="bold">
           {event.date}
         </Typography>
         <Typography variant="body2" color="text.secondary" fontWeight="bold">
           {event.time ? event.time : "Wed Jan 24 2024 19:00:00 GMT-0500"}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" fontWeight="bold">
-          {event.type}
         </Typography>
       </CardContent>
       <CardActions>

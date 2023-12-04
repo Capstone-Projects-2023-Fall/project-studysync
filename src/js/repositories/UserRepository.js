@@ -607,28 +607,33 @@ export class UserRepository {
   }
 
   /**Upcoming events */
-  async addUpcomingEvent(userId, name, date, time, type, itemId) {
-    const splitDate = date.split(" ");
+  async addUpcomingEvent(userId, name, date, time, type, itemId, itemName) {
+    const [year, month, day] = date.split("-");
+
+    console.log("year, month, day: ", year, month, day);
     const splitTime = time.split(":");
     const scheduledDate = new Date(
-      parseInt(splitDate[3]),
-      this.getMonthIndex(splitDate[1]),
-      parseInt(splitDate[2]),
+      parseInt(year),
+      parseInt(month),
+      parseInt(day),
       parseInt(splitTime[0]),
       parseInt(splitTime[1]),
       0
     );
 
+    console.log("formatted time is: ", this.convertTo12HourFormat(time));
+
     const utcStamp = scheduledDate.getTime();
+    const d = new Date(date);
 
     const dateToStore =
-      splitDate[0] +
+      this.getDayOfWeekShort(d) +
       " " +
-      splitDate[1] +
+      this.getMonthAbbreviation(d) +
       " " +
-      splitDate[2] +
+      day +
       " " +
-      splitDate[3];
+      year;
 
     const upcomingEventId = await this.eventRepository.createUpcomingEvent(
       new UpcomingEvent(
@@ -638,7 +643,8 @@ export class UserRepository {
         type,
         itemId,
         utcStamp,
-        userId
+        userId,
+        itemName
       )
     );
     await addItemToArrayField(
@@ -738,7 +744,6 @@ export class UserRepository {
   }
 
   convertTo12HourFormat(timeString) {
-    // Split the time string into hours and minutes
     let [hours, minutes] = timeString.split(":").map(Number);
 
     // Determine AM or PM suffix
@@ -747,10 +752,35 @@ export class UserRepository {
     // Convert hour from 24-hour to 12-hour format
     hours = hours % 12 || 12; // Converts '0' to '12'
 
-    // Format the hour to ensure it always has two digits
+    // Format the hour and minutes to ensure they always have two digits
     const formattedHour = hours.toString().padStart(2, "0");
+    const formattedMinutes = minutes.toString().padStart(2, "0");
 
     // Return the formatted time string
-    return `${formattedHour}:${minutes} ${ampm}`;
+    return `${formattedHour}:${formattedMinutes} ${ampm}`;
+  }
+
+  getDayOfWeekShort(dateString) {
+    const daysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const date = new Date(dateString);
+    return daysShort[date.getDay()];
+  }
+  getMonthAbbreviation(dateString) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const date = new Date(dateString);
+    return months[date.getMonth()];
   }
 }

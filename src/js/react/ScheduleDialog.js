@@ -12,7 +12,8 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
   const [eventName, setEventName] = useState("");
 
   const handleDateChange = (e) => {
-    setSelectedDate(new Date(e.target.value));
+    console.log("target value is: ", e.target.value);
+    setSelectedDate(e.target.value);
   };
 
   const handleTimeChange = (e) => {
@@ -68,13 +69,24 @@ export default function ScheduleDialog({ open, onClose, onSchedule }) {
             shrink: true,
           }}
         />
-        <TextField
+        {/* <TextField
           type="date"
           label="Select Date"
           value={selectedDate.toISOString().split("T")[0]}
           onChange={handleDateChange}
           fullWidth
           margin="normal"
+          InputLabelProps={{
+            shrink: true,
+          }}
+        /> */}
+        <TextField
+          type="date"
+          label="Select Date"
+          value={selectedDate}
+          fullWidth
+          margin="normal"
+          onChange={handleDateChange}
           InputLabelProps={{
             shrink: true,
           }}
