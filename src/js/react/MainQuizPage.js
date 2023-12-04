@@ -351,17 +351,7 @@ function MainQuizPage() {
           
           {/*button group*/}
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
-            {/*share score button */}
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={() => {
-                console.log("Share score functionality not implemented yet");
-              }}
-              style={{ marginBottom: '10px' }} 
-            >
-              Share Score
-            </Button>
+          
 
             {/*back button */}
             <Button
