@@ -1,10 +1,15 @@
-#flashcard-grid{
-    margin-top: 1%;    
+#flashcard-grid {
+    margin-top: 1%;
     margin-left: 3.5%;
     justify-content: center;
     padding-left: 0;
     padding-right: 2.5%;
 }
-.cards{
+
+.cards {
     padding-top: 12.5%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+
 }
