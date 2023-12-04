@@ -14,7 +14,6 @@ import MainQuizPage from "./js/react/MainQuizPage";
 import Quiz from "./js/react/Quiz.js";
 import MySets from "./js/react/MySets.js";
 import FlashcardShare from "./js/react/flashcardShare";
-import QuizHistory from './js/react/history.js'
 
 import React, { useEffect, useState } from "react";
 import Lottie from "react-lottie-player";
@@ -121,7 +120,6 @@ function App() {
         <Route path="/mysets/:UserId" element={<MySets />} />
         <Route path="/events/:UserId" element={<UpcomingEvents />} />
         <Route path="/dashboard/:UserId" element={<DashboardCom />} />
-        <Route path="/history" element={<QuizHistory />} />
         <Route
           path="/flashcardshare/:flashcardId"
           element={<FlashcardShare />}
