@@ -9,26 +9,15 @@ import {
   ListItemText,
   ListItem,
   Checkbox,
-  TextField,
   ListItemAvatar,
-  Tab,
-  Tabs,
 } from "@mui/material";
 import SearchBar from "./SearchBar";
-import SearchIcon from "@mui/icons-material/Search";
 import Avatar from "@mui/material/Avatar";
 import React from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { userRepository } from "../../firebase";
-import useUser from "./useUser";
 import { useParams } from "react-router-dom";
-import useNotificationCount from "./useNotificationCount";
 import { useNavigate } from "react-router-dom";
-import Box from "@mui/material/Box";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
 
 import AccessTimeIcon from "@mui/icons-material/AccessTime"; // Import the timer icon
 import ScheduleDialog from "./ScheduleDialog";
@@ -68,21 +57,24 @@ function FlashCardSet({
     setScheduleDialogOpenD(false);
   };
 
-  const handleScheduleD = (selectedDate, selectedTime) => {
+  const handleScheduleD = (selectedDate, selectedTime, eventName) => {
     //Scheduling logic
-    const name = isFlashcard == false ? item.quizName : item.name;
+    // const name = isFlashcard == false ? item.quizName : item.name;
     const type =
       isFlashcard == false
         ? UPCOMING_EVENT_TYPE.QUIZ
         : UPCOMING_EVENT_TYPE.FLASHCARD;
 
+    const id = isFlashcard == true ? flashcardId : quizId;
+
     userRepository
       .addUpcomingEvent(
         UserId,
-        name,
+        eventName,
         selectedDate.toString(),
         selectedTime,
-        type
+        type,
+        id
       )
       .then((res) => {
         console.log("result of creating upcomig event is: ", res);
@@ -145,7 +137,7 @@ function FlashCardSet({
           navigate(`/quizmain/${quizId}`);
         } else {
           navigate(`/flashcardshare/${flashcardId}`);
-          console.log("flashcardId", flashcardId)
+          console.log("flashcardId", flashcardId);
         }
       }}
     >
@@ -291,12 +283,6 @@ const styles = {
     fontWeight: "bold",
     marginBottom: "10px", // add space below the title bar
   },
-  buttonz: {
-    borderRadius: "20px",
-    textTransform: "none",
-    fontWeight: "normal",
-    margin: "5px", // add margin around the button
-  },
   infoText: {
     marginBottom: "10px", // space below the text
   },
@@ -348,13 +334,13 @@ const styles = {
     boxShadow: "0 8px 15px rgba(128, 90, 213, 0.2)", // Light purple shadow at the bottom
   },
 
-  containerStyle: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between", // Distributes space evenly
-    // padding: "1rem",
-  },
+  // containerStyle: {
+  //   display: "flex",
+  //   flexDirection: "row",
+  //   flexWrap: "wrap",
+  //   justifyContent: "space-between", // Distributes space evenly
+  //   // padding: "1rem",
+  // },
 };
 
 export default FlashCardSet;
