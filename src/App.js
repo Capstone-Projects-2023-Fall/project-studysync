@@ -1,6 +1,6 @@
 import "./App.css";
 import Navbar from "./js/react/Navbar.js";
-import { BrowserRouter as Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DashboardCom from "./js/react/DashboardCom.js";
 import FlashcardComponent from "./js/react/flashcardCom.js";
 import LoginPage from "./js/react/LoginPage";

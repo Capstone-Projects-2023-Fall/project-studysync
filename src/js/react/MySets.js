@@ -285,6 +285,7 @@ export default function MySets() {
                   }
                   authorId={item.authorId}
                   isFlashcard={isFlashcard}
+                  filter={filter}
                 />
               );
             })}
