@@ -32,6 +32,7 @@ export default class User {
     this.subjects = [];
     this.newNotifications = 0;
     this.unseenNotifications = 0;
+    this.upcomingEvents = [];
   }
 
   toJSON() {
@@ -58,6 +59,7 @@ export default class User {
       profession: user.profession,
       newNotifications: this.newNotifications,
       unseenNotifications: this.unseenNotifications,
+      upcomingEvents: this.upcomingEvents,
     };
   }
 }

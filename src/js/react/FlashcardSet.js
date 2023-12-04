@@ -59,7 +59,7 @@ function FlashCardSet({
 
   const handleScheduleD = (selectedDate, selectedTime, eventName) => {
     //Scheduling logic
-    // const name = isFlashcard == false ? item.quizName : item.name;
+    const itemName = isFlashcard == false ? item.quizName : item.name;
     const type =
       isFlashcard == false
         ? UPCOMING_EVENT_TYPE.QUIZ
@@ -74,7 +74,8 @@ function FlashCardSet({
         selectedDate.toString(),
         selectedTime,
         type,
-        id
+        id,
+        itemName
       )
       .then((res) => {
         console.log("result of creating upcomig event is: ", res);
