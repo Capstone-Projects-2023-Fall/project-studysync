@@ -15,7 +15,6 @@ import Quiz from "./js/react/Quiz.js";
 import MySets from "./js/react/MySets.js";
 import React, { useEffect, useState } from 'react';
 import Lottie from 'react-lottie-player';
-import QuizHistory from "./js/react/history.js"
 
 function App() {
 
@@ -104,7 +103,7 @@ function App() {
                 <Route path="/socials/:UserId" element={<FriendsPage />} />
                 <Route path="/quizmain/:setId" element={<MainQuizPage />} />
                 <Route path="/mysets/:UserId" element={<MySets />} />
-                <Route path="/quizhistory" element={<QuizHistory />} />
+
             </Routes>
         </div>
     );
