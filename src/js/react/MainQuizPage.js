@@ -60,13 +60,26 @@ function MainQuizPage() {
   };
 
   //submit
-  const handleConfirmSubmit = () => {
-    calculateScore();
+  const handleConfirmSubmit = async () => { // Mark the function as async
+    setOpenSubmitDialog(false);
+  
+    const finalScore = calculateScore(); // Store the returned score in a variable
     setQuizFinished(true);
     localStorage.removeItem(LOCAL_STORAGE_QUIZ_KEY);
-    setOpenSubmitDialog(false);
+  
+    // Assuming you have a way to get the current user's ID
+    const uid = FlashcardRepo.getCurrentUid(); // Replace with the actual method to get the user ID
+    if (finalScore !== null && uid) {
+      try {
+        await FlashcardRepo.updateQuizScore(setId, uid, finalScore); // Use the finalScore here
+        console.log('Score updated successfully in the database');
+      } catch (error) {
+        console.error('Failed to update score in the database:', error);
+      }
+    }
   };
   
+
 
   //for resume, with saved status
   const handleResume = () => {
@@ -177,13 +190,15 @@ function MainQuizPage() {
   };
 
   //calculate score
-  const calculateScore = () => {const correctAnswers = questions.reduce((acc, question) => {
+  const calculateScore = () => {
+    const correctAnswers = questions.reduce((acc, question) => {
     //Count the number of correct answers
     return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
   }, 0);
   //calculate the score percentage based on the total number of questions
   const scorePercentage = (correctAnswers / questions.length) * 100;
   setScore(scorePercentage);
+  return scorePercentage;
 };
 
 
