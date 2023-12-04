@@ -1,6 +1,13 @@
 import Event from "../models/event";
 import { EVENT_TYPE } from "../models/event";
-import { setDoc, doc, collection, addDoc } from "firebase/firestore";
+import {
+  setDoc,
+  doc,
+  collection,
+  addDoc,
+  getDocs,
+  updateDoc,
+} from "firebase/firestore";
 import {
   getAllItems,
   getItemById,
@@ -67,6 +74,22 @@ export class EventRepository {
   }
 
   /**Upcoming Events */
+  async getAllUpcomingEvents() {
+    const collectionRef = collection(this.database, "upcomingEvents");
+    try {
+      const querySnapshot = await getDocs(collectionRef);
+      const documents = querySnapshot.docs.map((d) => ({
+        id: d.id,
+        ...d.data(),
+      }));
+
+      return documents;
+    } catch (error) {
+      console.error("Error:", error);
+      return [];
+    }
+  }
+
   async createUpcomingEvent(upcomingEvent) {
     try {
       const eventsCollectionRef = collection(this.database, "upcomingEvents");
@@ -117,5 +140,15 @@ export class EventRepository {
 
   async updateUpcomingEventName(upcomingEventId, newName) {
     await this.updateUpcomingEvent(upcomingEventId, { dateTime: newName });
+  }
+
+  async markUpcomingEventAsNotified(upcomingEventId) {
+    const ref = doc(this.database, "upcomingEvents", upcomingEventId);
+
+    await updateDoc(ref, {
+      notified: true,
+    });
+
+    return true;
   }
 }

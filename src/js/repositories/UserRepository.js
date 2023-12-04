@@ -608,10 +608,8 @@ export class UserRepository {
 
   /**Upcoming events */
   async addUpcomingEvent(userId, name, date, time, type, itemId) {
-    console.log("incoming: ", name, date, time);
     const splitDate = date.split(" ");
     const splitTime = time.split(":");
-    console.log("split time is: ", splitDate);
     const scheduledDate = new Date(
       parseInt(splitDate[3]),
       this.getMonthIndex(splitDate[1]),
@@ -631,9 +629,7 @@ export class UserRepository {
       splitDate[2] +
       " " +
       splitDate[3];
-    console.log("date to store is: ", dateToStore);
 
-    console.log("scheduled date is : ", scheduledDate);
     const upcomingEventId = await this.eventRepository.createUpcomingEvent(
       new UpcomingEvent(
         name,
@@ -641,7 +637,8 @@ export class UserRepository {
         this.convertTo12HourFormat(time),
         type,
         itemId,
-        utcStamp
+        utcStamp,
+        userId
       )
     );
     await addItemToArrayField(
@@ -652,6 +649,16 @@ export class UserRepository {
       "upcomingEvents",
       "upcoming event"
     );
+    return true;
+  }
+
+  async addUpcomingEventNotification(userId, upcomingEvent) {
+    const notification = new Notification(null, true, upcomingEvent);
+    const notificationId = await this.notificationRepository.addNotification(
+      notification
+    );
+    await this.addNotification(userId, notificationId);
+    this.incrementNewNotifications(userId);
     return true;
   }
 
@@ -680,7 +687,6 @@ export class UserRepository {
 
   async getAllUpcomingEvents(userId) {
     const upcomingEventIds = await this.getUpcomingEventIds(userId);
-    console.log("upcoming event ids are: ", upcomingEventIds);
     const result = [];
     for (const id of upcomingEventIds) {
       result.push({
@@ -707,17 +713,8 @@ export class UserRepository {
     });
   }
 
-  isFutureDate(dateString) {
-    var givenDate = new Date(dateString);
-    var currentDate = new Date();
-
-    return givenDate > currentDate;
-  }
-
   isTimestampInFuture(timestamp) {
     const currentTime = Date.now();
-
-    console.log("current and given", currentTime, timestamp);
     return timestamp > currentTime;
   }
 

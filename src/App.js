@@ -18,6 +18,7 @@ import FlashcardShare from "./js/react/flashcardShare";
 import React, { useEffect, useState } from "react";
 import Lottie from "react-lottie-player";
 import UpcomingEvents from "./js/react/UpcomingEvents.js";
+import { checkUpcomingEvents } from "./js/react/useNotificationCount.js";
 
 function App() {
   const [lottieAnimation, setLottieAnimation] = useState(null);
@@ -31,6 +32,12 @@ function App() {
         console.log("Animation data:", data);
         setLottieAnimation(data);
       });
+
+    const intervalId = setInterval(() => {
+      checkUpcomingEvents();
+    }, 10000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   const containerStyle = {
