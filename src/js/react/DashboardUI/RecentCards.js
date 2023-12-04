@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
-import Lottie from 'react-lottie-player';
+// import Lottie from 'react-lottie-player';
 
 function RecentCards(props) {
   const { card, lottieAnimation, cardLink } = props;
@@ -23,14 +23,14 @@ function RecentCards(props) {
             </Typography>
           </CardContent>
          
-          {lottieAnimation && (
+          {/* {lottieAnimation && (
             <Lottie
               loop
               animationData={lottieAnimation}
               play
               style={{ width: 160, height: 160 }}
             />
-          )}
+          )} */}
         </Card>
       </CardActionArea>
     </Grid>
