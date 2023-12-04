@@ -76,8 +76,6 @@ const FlashcardRepo = {
                 [commentId]: {
                     uid: this.getCurrentUid(),
                     content: "Sample feedback content",
-                    like: 0,
-                    likedBy: [],
                     date: Timestamp.now()
                 },
             };
@@ -139,41 +137,7 @@ const FlashcardRepo = {
             throw error;
         }
     },
-    copyFlashcards: async function (flashcardId, userId) {
-        try {
 
-            const originalFlashcardRef = doc(database, 'flashcardSets', flashcardId);
-            const originalFlashcardSnapshot = await getDoc(originalFlashcardRef);
-
-            if (!originalFlashcardSnapshot.exists()) {
-                console.error("Original flashcard set not found.");
-                return null;
-            }
-
-            const originalFlashcardData = originalFlashcardSnapshot.data();
-            const subject = originalFlashcardData.subject;
-            const newFlashcardData = {
-                ...originalFlashcardData,
-                createdAt: Timestamp.now(),
-
-            };
-
-            const newFlashcardRef = await addDoc(collection(database, 'flashcardSets'), newFlashcardData);
-            if (subject) {
-                await this.addUserSubject(userId, subject);
-            }
-            const newFlashcardId = newFlashcardRef.id;
-
-            await this.addOwnedFlashcardSetToUser(userId, newFlashcardId);
-
-            console.log("New flashcard set created with ID:", newFlashcardId);
-
-            return newFlashcardId;
-        } catch (error) {
-            console.error("Error copying flashcards:", error);
-            throw error;
-        }
-    },
 
 
     addOwnedFlashcardSetToUser: async function (uid, flashcardSetId) {
@@ -450,8 +414,6 @@ const FlashcardRepo = {
                 commentsData.push({
                     content: comment.content,
                     date: comment.date,
-                    like: comment.like,
-                    likedBy: comment.likedBy || [],
                     username: userData.name,
                     imageURL: userData.imageURL,
                     commentId: commentId
@@ -464,26 +426,22 @@ const FlashcardRepo = {
             throw error;
         }
     },
-    updateLikesForComment: async function (setId, commentId, userId) {
-        const setRef = doc(database, 'flashcardSets', setId);
-        const commentPath = `comments.${commentId}`;
-        const snap = await getDoc(setRef);
-        const comment = snap.data().comments[commentId];
-        const likedBy = comment.likedBy || [];
-        const index = likedBy.indexOf(userId);
-    
-        if (index === -1) {
-            
-            likedBy.push(userId);
-        } else {
-            
-            likedBy.splice(index, 1);
+    updateLikesForComment: async function (setId, commentId, updatedLikes) {
+        try {
+
+            const setRef = doc(database, 'flashcardSets', setId);
+
+            const fieldPath = `comments.${commentId}.like`;
+
+            await updateDoc(setRef, {
+                [fieldPath]: updatedLikes
+            });
+
+            console.log(`Successfully updated likes for comment ${commentId} to ${updatedLikes}.`);
+        } catch (error) {
+            console.error("Error updating likes for comment:", error);
+            throw error;
         }
-    
-        await updateDoc(setRef, {
-            [`${commentPath}.likedBy`]: likedBy,
-            [`${commentPath}.like`]: likedBy.length 
-        });
     },
     addComment: async function (setId, commentData) {
         try {
