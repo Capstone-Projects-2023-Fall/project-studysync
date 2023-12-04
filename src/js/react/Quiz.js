@@ -72,7 +72,7 @@ const QuizComponent = () => {
 
     const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
-    const [isQuizPaused, setIsQuizPaused] = useState(false);
+    const [isQuizPaused, setIsQuizPaused] = useState(true);
     const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz info
 
     const [isLoading, setIsLoading] = useState(false);  //state for the loading screen 
@@ -105,14 +105,14 @@ const QuizComponent = () => {
   useEffect(() => {
     //check if the quiz is paused
     const pausedState = JSON.parse(localStorage.getItem('quizPaused'));
-    if (pausedState && pausedState.setId === setId) {
+    if (pausedState && pausedState.quizId === quizId) {
       setIsQuizPaused(true);
     }
   }, []);
 
   //resumae quiz navigate back to saved quiz
   const handleResumeQuiz = () => {
-    navigate(`/quizmain/${setId}`);
+    navigate(`/quizmain/${quizId}`);
   };
 
   //hook for navigation
@@ -120,7 +120,7 @@ const QuizComponent = () => {
 
   //for navagation start quiz
   const startQuiz = () => {
-    navigate(`/quizmain/${setId}`); //Navigate to the quiz page with setId
+    navigate(`/quizmain/${quizId}`); //Navigate to the quiz page with setId
     localStorage.removeItem('quizPaused');//if start new quiz, delete saved progress
   };
 
@@ -678,15 +678,6 @@ return (
  
     <QuizList newQuizAdded={newQuizAdded}/>
 
-        {/* Step 3: Add "Start Quiz" Button */}
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={startQuiz}
-        style={{ /* your button styles */ }}
-      >
-        Start Quiz
-      </Button>
 
         <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
             <List style={{
