@@ -12,6 +12,12 @@ export default function Events(props) {
   const {events} = props;
   const _events = events.slice(0,4);
 
+  const convertToDate=(event)=>{
+    let new_date = new Date(event.timestamp);
+    let dateArr = new_date.toString().split(" ");
+    let display = dateArr[0] + " "+dateArr[1];
+    return display;
+  }
 
   return (
     <React.Fragment>
@@ -24,7 +30,7 @@ export default function Events(props) {
               <TableCell></TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
-              <TableCell align="right">{event.createdAt}</TableCell>     
+              <TableCell align="right">{convertToDate(event)}</TableCell>     
             </TableRow>
           ))}
       
