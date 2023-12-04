@@ -166,27 +166,42 @@ function MainQuizPage() {
 
 
   //calculate score
-  const calculateScore = () => {const correctAnswers = questions.reduce((acc, question) => {
-    //Count the number of correct answers
-    return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
-  }, 0);
-  //calculate the score percentage based on the total number of questions
-  const scorePercentage = (correctAnswers / questions.length) * 100;
-  setScore(scorePercentage);
-};
+  const calculateScore = () => {
+    const correctAnswers = questions.reduce((acc, question) => {
+      return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
+    }, 0);
+    const scorePercentage = (correctAnswers / questions.length) * 100;
+    return scorePercentage;
+  };
 
 //open submit dialog
 const handleSubmit = () => {
   setOpenSubmitConfirm(true);
 };
 
-//get score close dialog
-const handleConfirmSubmit = () => {
-  calculateScore();
+
+// for submit
+// Modify handleConfirmSubmit to use the returned score from calculateScore
+const handleConfirmSubmit = async () => {
+  const calculatedScore = calculateScore(); // Get the score directly
   setQuizFinished(true);
+  
+  if (calculatedScore !== null) {
+    try {
+      const newAttemptId = await FlashcardRepo.updateScoreAndAddAttempt(quizId, calculatedScore);
+      console.log(`New attempt recorded with ID: ${newAttemptId}`);
+      setScore(calculatedScore); // Now you can update the state with the calculated score
+    } catch (error) {
+      console.error("Failed to update score and attempt:", error);
+    }
+  } else {
+    console.error("Score calculation failed, cannot update score and attempt.");
+  }
+
   localStorage.removeItem(LOCAL_STORAGE_QUIZ_KEY);
   setOpenSubmitConfirm(false); 
 };
+
 
  
 
