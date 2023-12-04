@@ -76,6 +76,7 @@ const FlashcardRepo = {
                     uid: this.getCurrentUid(),
                     content: "Sample feedback content",
                     like: 0,
+                    likedBy: [],
                     date: Timestamp.now()
                 },
             };
@@ -441,6 +442,7 @@ const FlashcardRepo = {
                     content: comment.content,
                     date: comment.date,
                     like: comment.like,
+                    likedBy: comment.likedBy || [],
                     username: userData.name,
                     imageURL: userData.imageURL,
                     commentId: commentId
@@ -453,22 +455,26 @@ const FlashcardRepo = {
             throw error;
         }
     },
-    updateLikesForComment: async function (setId, commentId, updatedLikes) {
-        try {
-
-            const setRef = doc(database, 'flashcardSets', setId);
-
-            const fieldPath = `comments.${commentId}.like`;
-
-            await updateDoc(setRef, {
-                [fieldPath]: updatedLikes
-            });
-
-            console.log(`Successfully updated likes for comment ${commentId} to ${updatedLikes}.`);
-        } catch (error) {
-            console.error("Error updating likes for comment:", error);
-            throw error;
+    updateLikesForComment: async function (setId, commentId, userId) {
+        const setRef = doc(database, 'flashcardSets', setId);
+        const commentPath = `comments.${commentId}`;
+        const snap = await getDoc(setRef);
+        const comment = snap.data().comments[commentId];
+        const likedBy = comment.likedBy || [];
+        const index = likedBy.indexOf(userId);
+    
+        if (index === -1) {
+            
+            likedBy.push(userId);
+        } else {
+            
+            likedBy.splice(index, 1);
         }
+    
+        await updateDoc(setRef, {
+            [`${commentPath}.likedBy`]: likedBy,
+            [`${commentPath}.like`]: likedBy.length 
+        });
     },
     addComment: async function (setId, commentData) {
         try {

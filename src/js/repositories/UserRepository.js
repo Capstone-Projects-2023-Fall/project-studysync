@@ -535,8 +535,8 @@ export class UserRepository {
     for (const notificartion of notifications) {
       if (!notificartion.event) continue;
       if (
-        notificartion.event.eventType == EVENT_TYPE.NEW_FOLLOWER &&
-        notificartion.userFrom.id == userId
+        notificartion.event.eventType === EVENT_TYPE.NEW_FOLLOWER &&
+        notificartion.userFrom.id === userId
       ) {
         await this.removeNotificationById(followingId, notificartion.id);
       }
