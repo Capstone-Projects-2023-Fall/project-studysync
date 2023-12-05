@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: Navbar</title>
+    <title>JSDoc: Class: Notification</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: Navbar</h1>
+    <h1 class="page-title">Class: Notification</h1>
 
     
 
@@ -28,9 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>Navbar<span class="signature">(items)</span><span class="type-signature"> &rarr; {React.Component}</span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Notification<span class="signature">(props)</span><span class="type-signature"> &rarr; {React.Component}</span></h2>
         
-            <div class="class-description">Navbar - A functional React component that renders the navigation bar.</div>
+            <div class="class-description">Notification - A functional React component that renders a list of notifications.</div>
         
     
 </header>
@@ -45,7 +45,7 @@
     
 
     
-    <h4 class="name" id="Navbar"><span class="type-signature"></span>new Navbar<span class="signature">(items)</span><span class="type-signature"> &rarr; {React.Component}</span></h4>
+    <h4 class="name" id="Notification"><span class="type-signature"></span>new Notification<span class="signature">(props)</span><span class="type-signature"> &rarr; {React.Component}</span></h4>
     
 
     
@@ -85,13 +85,13 @@
 
         <tr>
             
-                <td class="name"><code>items</code></td>
+                <td class="name"><code>props</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Array.&lt;Object></span>
+<span class="param-type">Object</span>
 
 
             
@@ -101,7 +101,7 @@
 
             
 
-            <td class="description last">Array of navigation items for the navbar.</td>
+            <td class="description last">Props including userId and closePanel function.</td>
         </tr>
 
     
@@ -142,7 +142,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Navbar.js.html">Navbar.js</a>, <a href="Navbar.js.html#line13">line 13</a>
+        <a href="Notification.js.html">Notification.js</a>, <a href="Notification.js.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -171,7 +171,7 @@
 
         
 <div class="param-desc">
-    A navigation bar component.
+    A component displaying user notifications.
 </div>
 
 
@@ -220,7 +220,7 @@
     
 
     
-    <h4 class="name" id=".toggleNotificationPanel"><span class="type-signature">(static) </span>toggleNotificationPanel<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".handleChangePage"><span class="type-signature">(static) </span>handleChangePage<span class="signature">(event, newPage)</span><span class="type-signature"></span></h4>
     
 
     
@@ -228,7 +228,167 @@
 
 
 <div class="description">
-    Toggles the notification panel's visibility.
+    Handles the pagination change.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The event object.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>newPage</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The new page number.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Notification.js.html">Notification.js</a>, <a href="Notification.js.html#line45">line 45</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".useEffect"><span class="type-signature">(static) </span>useEffect<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    useEffect hook for fetching notifications when the component mounts.
 </div>
 
 
@@ -272,7 +432,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Navbar.js.html">Navbar.js</a>, <a href="Navbar.js.html#line31">line 31</a>
+        <a href="Notification.js.html">Notification.js</a>, <a href="Notification.js.html#line33">line 33</a>
     </li></ul></dd>
     
 

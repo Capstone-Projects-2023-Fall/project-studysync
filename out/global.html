@@ -104,7 +104,7 @@
     
 
     
-    <h4 class="name" id="Copyright"><span class="type-signature"></span>Copyright<span class="signature">(props)</span><span class="type-signature"> &rarr; {React.Component}</span></h4>
+    <h4 class="name" id="createNewFollowerEvent"><span class="type-signature"></span>createNewFollowerEvent<span class="signature">(notification)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
@@ -112,7 +112,7 @@
 
 
 <div class="description">
-    Renders a copyright message.
+    Creates a new follower event from a notification.
 </div>
 
 
@@ -148,7 +148,7 @@
 
         <tr>
             
-                <td class="name"><code>props</code></td>
+                <td class="name"><code>notification</code></td>
             
 
             <td class="type">
@@ -164,7 +164,7 @@
 
             
 
-            <td class="description last">Properties passed to the component.</td>
+            <td class="description last">The notification object.</td>
         </tr>
 
     
@@ -205,7 +205,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoginPage.js.html">LoginPage.js</a>, <a href="LoginPage.js.html#line28">line 28</a>
+        <a href="Notification.js.html">Notification.js</a>, <a href="Notification.js.html#line153">line 153</a>
     </li></ul></dd>
     
 
@@ -234,7 +234,7 @@
 
         
 <div class="param-desc">
-    Copyright component.
+    A formatted event object for a new follower.
 </div>
 
 
@@ -245,7 +245,7 @@
     </dt>
     <dd>
         
-<span class="param-type">React.Component</span>
+<span class="param-type">Object</span>
 
 
     </dd>
@@ -263,19 +263,72 @@
     
 
     
-    <h4 class="name" id="LoginPage"><span class="type-signature"></span>LoginPage<span class="signature">()</span><span class="type-signature"> &rarr; {React.Component}</span></h4>
+    <h4 class="name" id="createSharedFlashcardEvent"><span class="type-signature"></span>createSharedFlashcardEvent<span class="signature">(notification)</span><span class="type-signature"> &rarr; {Object}</span></h4>
     
 
     
 
 
 
+<div class="description">
+    Creates a data object for a shared flashcard notification.
+</div>
 
 
 
 
 
 
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>notification</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The notification object containing flashcard information.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -311,7 +364,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoginPage.js.html">LoginPage.js</a>, <a href="LoginPage.js.html#line51">line 51</a>
+        <a href="Notification.js.html">Notification.js</a>, <a href="Notification.js.html#line192">line 192</a>
     </li></ul></dd>
     
 
@@ -340,7 +393,7 @@
 
         
 <div class="param-desc">
-    A component for user login.
+    A formatted event object for a shared flashcard notification.
 </div>
 
 
@@ -351,7 +404,484 @@
     </dt>
     <dd>
         
-<span class="param-type">React.Component</span>
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="createSharedQuizEvent"><span class="type-signature"></span>createSharedQuizEvent<span class="signature">(notification)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a data object for a shared quiz notification.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>notification</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The notification object containing quiz information.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Notification.js.html">Notification.js</a>, <a href="Notification.js.html#line172">line 172</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A formatted event object for a shared quiz notification.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Object</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="parseNotifications"><span class="type-signature"></span>parseNotifications<span class="signature">(notifications)</span><span class="type-signature"> &rarr; {Array}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Parses and processes an array of notification objects.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>notifications</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">An array of notification objects to be processed.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Notification.js.html">Notification.js</a>, <a href="Notification.js.html#line234">line 234</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    An array of formatted notification data objects.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="timeAgo"><span class="type-signature"></span>timeAgo<span class="signature">(timestamp)</span><span class="type-signature"> &rarr; {string}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Converts a timestamp to a string indicating time elapsed.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>timestamp</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The timestamp to convert.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Notification.js.html">Notification.js</a>, <a href="Notification.js.html#line212">line 212</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A string representation of the time elapsed since the timestamp.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
 
 
     </dd>
@@ -379,13 +909,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li></ul><h3>Global</h3><ul><li><a href="global.html#Copyright">Copyright</a></li><li><a href="global.html#LoginPage">LoginPage</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MainQuizPage.html">MainQuizPage</a></li><li><a href="MySets.html">MySets</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="Notification.html">Notification</a></li></ul><h3>Global</h3><ul><li><a href="global.html#createNewFollowerEvent">createNewFollowerEvent</a></li><li><a href="global.html#createSharedFlashcardEvent">createSharedFlashcardEvent</a></li><li><a href="global.html#createSharedQuizEvent">createSharedQuizEvent</a></li><li><a href="global.html#parseNotifications">parseNotifications</a></li><li><a href="global.html#timeAgo">timeAgo</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Dec 04 2023 23:55:52 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 00:15:10 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
