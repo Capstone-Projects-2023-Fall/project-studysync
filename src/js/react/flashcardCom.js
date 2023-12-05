@@ -20,10 +20,13 @@ const astyle = {
   borderRadius: '10px'
 };
 /**
+ * @class FlashcardComponent
+ * @classdesc FlashcardComponent
  * FlashcardComponent - A React component for managing flashcards.
  * This component allows users to view, add, edit, and delete flashcards and their subjects.
  * It also provides navigation to flashcard details and associated quizzes.
  */
+
 const FlashcardComponent = () => {
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState(null);
@@ -39,6 +42,7 @@ const FlashcardComponent = () => {
 
 
   /**
+   * @memberof FlashcardComponent
    * @function handleSearchChange
    * @description Handles changes to the search field.
    * @public
@@ -48,6 +52,7 @@ const FlashcardComponent = () => {
     setSearchQuery(event.target.value.toLowerCase());
   };
   /**
+   * @memberof FlashcardComponent
    * @function handleClearSearch
    * @description Clears the current search query.
    */
@@ -55,6 +60,7 @@ const FlashcardComponent = () => {
     setSearchQuery('');
   };
   /**
+   * @memberof FlashcardComponent
    * @function filteredFlashcards
    * @description Filters flashcards based on the search query.
    * @public
@@ -68,6 +74,7 @@ const FlashcardComponent = () => {
   const navigate = useNavigate();
 
   /**
+   * @memberof FlashcardComponent
    * @function handleFlashcardClick
    * @description Handles the action when a flashcard is clicked.
    * @description Navigates to the flashcard details page.
@@ -88,6 +95,7 @@ const FlashcardComponent = () => {
   };
 
   /**
+   * @memberof FlashcardComponent
    * @function handleQuizClick
    * @description Handles the action when the quiz button is clicked.
    * @description Navigates to the associated quiz page.
@@ -151,6 +159,7 @@ const FlashcardComponent = () => {
     fetchData();
   }, []);
   /**
+   * @memberof FlashcardComponent
    * @function handleAddTopic
      * @description Handles adding a new topic.
      */
@@ -181,6 +190,7 @@ const FlashcardComponent = () => {
     }
   };
   /**
+   * @memberof FlashcardComponent
    * @function handleDelete
      * @description Handles the deletion of a topic.
      * @public
@@ -209,6 +219,7 @@ const FlashcardComponent = () => {
     }
   };
   /**
+   * @memberof FlashcardComponent
    * @function handleAdd
      * @description Handles the action when the add button is clicked.
      */
@@ -242,6 +253,7 @@ const FlashcardComponent = () => {
     setOpen(false);
   };
   /**
+   * @memberof FlashcardComponent
    * @function handleEdit
      * @description Handles editing an existing topic.
      */
