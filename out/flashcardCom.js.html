@@ -1,4 +1,32 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: flashcardCom.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: flashcardCom.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
 import {
   List, ListItem, ListItemText, Button, Divider, Dialog, DialogTitle,
   DialogContent, DialogContentText, DialogActions, TextField, InputAdornment, IconButton, Paper, Close
@@ -109,8 +137,10 @@ const FlashcardComponent = () => {
       console.error("Error in handleFlashcardClick:", error);
     }
   };
-
-
+  /**
+   * @function useEffect
+   * @description Fetches and sets the initial data when the component mounts.
+   */
   useEffect(() => {
     async function fetchData() {
       try {
@@ -233,7 +263,7 @@ const FlashcardComponent = () => {
           }
         }
 
-      } else if (dialogType === 'topic' && selectedSubject) {
+      } else if (dialogType === 'topic' &amp;&amp; selectedSubject) {
 
         handleAddTopic();
       }
@@ -280,23 +310,23 @@ const FlashcardComponent = () => {
   }
 
   return (
-    <div style={{ display: 'flex', marginTop: '60px', fontFamily: astyle.fontFamily }}>
+    &lt;div style={{ display: 'flex', marginTop: '60px', fontFamily: astyle.fontFamily }}>
       {/* Sidebar */}
-      <Paper elevation={3} style={{ width: '240px', overflow: 'auto' }}>
-        <Divider />
-        <List>
+      &lt;Paper elevation={3} style={{ width: '240px', overflow: 'auto' }}>
+        &lt;Divider />
+        &lt;List>
           {subjects.map((subject) => (
-            <ListItem
+            &lt;ListItem
               button
               key={subject}
               onClick={() => setSelectedSubject(subject)}
               style={{ padding: '15px 10px' }}
             >
-              <ListItemText primary={subject} />
-            </ListItem>
+              &lt;ListItemText primary={subject} />
+            &lt;/ListItem>
           ))}
-        </List>
-        <Button
+        &lt;/List>
+        &lt;Button
           variant="contained"
           color="primary"
           style={{
@@ -310,19 +340,19 @@ const FlashcardComponent = () => {
           }}
         >
           Add Subject
-        </Button>
-      </Paper>
+        &lt;/Button>
+      &lt;/Paper>
 
       {/* right Flashcard Sets */}
-      <div style={{ flexGrow: 1, padding: '20px', marginLeft: '260px', backgroundColor: astyle.colors.secondary }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2>{selectedSubject}</h2>
-          <Button variant="contained" color="primary" onClick={() => { setOpen(true); setDialogType('topic'); }}>
+      &lt;div style={{ flexGrow: 1, padding: '20px', marginLeft: '260px', backgroundColor: astyle.colors.secondary }}>
+        &lt;div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          &lt;h2>{selectedSubject}&lt;/h2>
+          &lt;Button variant="contained" color="primary" onClick={() => { setOpen(true); setDialogType('topic'); }}>
             Add Topic
-          </Button>
-        </div>
+          &lt;/Button>
+        &lt;/div>
 
-        <TextField
+        &lt;TextField
           variant="outlined"
           size="small"
           fullWidth
@@ -331,41 +361,41 @@ const FlashcardComponent = () => {
           onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
-                <IconButton>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
+              &lt;InputAdornment position="start">
+                &lt;IconButton>
+                  &lt;SearchIcon />
+                &lt;/IconButton>
+              &lt;/InputAdornment>
             ),
-            endAdornment: searchQuery && (
-              <InputAdornment position="end">
-                <IconButton onClick={handleClearSearch}>
-                  <ClearIcon />
-                </IconButton>
-              </InputAdornment>
+            endAdornment: searchQuery &amp;&amp; (
+              &lt;InputAdornment position="end">
+                &lt;IconButton onClick={handleClearSearch}>
+                  &lt;ClearIcon />
+                &lt;/IconButton>
+              &lt;/InputAdornment>
             )
           }}
         />
 
         {flashcards[selectedSubject]?.map((topic, index) => (
-          <div key={index} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
+          &lt;div key={index} style={{ display: 'flex', flexDirection: 'column', marginBottom: '20px' }}>
             {
               currentlyEditingTopic === topic ? (
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <TextField
+                &lt;div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  &lt;TextField
                     variant="outlined"
                     size="small"
                     value={editedName}
                     onChange={(e) => setEditedName(e.target.value)}
                   />
-                  <Button variant="contained" color="primary" onClick={handleEdit}>Save</Button>
-                </div>
+                  &lt;Button variant="contained" color="primary" onClick={handleEdit}>Save&lt;/Button>
+                &lt;/div>
               ) : (
-                <h3>{topic}</h3>
+                &lt;h3>{topic}&lt;/h3>
               )
             }
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <Button variant="outlined" onClick={() => {
+            &lt;div style={{ display: 'flex', gap: '10px' }}>
+              &lt;Button variant="outlined" onClick={() => {
 
                 if (currentlyEditingTopic) {
 
@@ -376,23 +406,23 @@ const FlashcardComponent = () => {
                   setCurrentlyEditingTopic(topic);
                   setEditedName(topic);
                 }
-              }}>Edit</Button>
-              <Button variant="outlined" onClick={() => handleFlashcardClick(topic)}>Flashcard</Button>
-              <Button variant="outlined" onClick={() => handleQuizClick(topic)}>Quiz</Button>
-              <Button variant="outlined" color="secondary" onClick={() => handleDelete(topic)}>Delete</Button>
-            </div>
-          </div>
+              }}>Edit&lt;/Button>
+              &lt;Button variant="outlined" onClick={() => handleFlashcardClick(topic)}>Flashcard&lt;/Button>
+              &lt;Button variant="outlined" onClick={() => handleQuizClick(topic)}>Quiz&lt;/Button>
+              &lt;Button variant="outlined" color="secondary" onClick={() => handleDelete(topic)}>Delete&lt;/Button>
+            &lt;/div>
+          &lt;/div>
         ))}
-      </div>
+      &lt;/div>
 
       {/* Shared Add Dialog */}
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>{`Add a New ${dialogType.charAt(0).toUpperCase() + dialogType.slice(1)}`}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+      &lt;Dialog open={open} onClose={() => setOpen(false)}>
+        &lt;DialogTitle>{`Add a New ${dialogType.charAt(0).toUpperCase() + dialogType.slice(1)}`}&lt;/DialogTitle>
+        &lt;DialogContent>
+          &lt;DialogContentText>
             {`Please enter the name of the new ${dialogType} you'd like to add:`}
-          </DialogContentText>
-          <TextField
+          &lt;/DialogContentText>
+          &lt;TextField
             autoFocus
             margin="dense"
             label={`${dialogType.charAt(0).toUpperCase() + dialogType.slice(1)} Name`}
@@ -401,20 +431,43 @@ const FlashcardComponent = () => {
             value={newEntry}
             onChange={(e) => setNewEntry(e.target.value)}
           />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
+        &lt;/DialogContent>
+        &lt;DialogActions>
+          &lt;Button onClick={() => setOpen(false)} color="primary">
             Cancel
-          </Button>
-          <Button onClick={handleAdd} color="primary">
+          &lt;/Button>
+          &lt;Button onClick={handleAdd} color="primary">
             Add
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div >
+          &lt;/Button>
+        &lt;/DialogActions>
+      &lt;/Dialog>
+    &lt;/div >
   );
 
 
 };
 
 export default FlashcardComponent;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#FlashcardComponent">FlashcardComponent</a></li><li><a href="global.html#filteredFlashcards">filteredFlashcards</a></li><li><a href="global.html#handleAdd">handleAdd</a></li><li><a href="global.html#handleAddTopic">handleAddTopic</a></li><li><a href="global.html#handleClearSearch">handleClearSearch</a></li><li><a href="global.html#handleDelete">handleDelete</a></li><li><a href="global.html#handleEdit">handleEdit</a></li><li><a href="global.html#handleFlashcardClick">handleFlashcardClick</a></li><li><a href="global.html#handleQuizClick">handleQuizClick</a></li><li><a href="global.html#handleSearchChange">handleSearchChange</a></li><li><a href="global.html#useEffect">useEffect</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Dec 04 2023 21:32:34 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
