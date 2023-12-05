@@ -762,9 +762,25 @@ return (
                                  {selectedCard && (
                                 <div>
                                     
-                                    <p><Typography variant="h5">Question:{'\n'}</Typography></p> 
-                                    <Typography>{selectedCard.question}</Typography> 
-                                    <p><Typography variant="h5">Answer Choices:</Typography></p>                              
+                                    <Typography 
+                                        variant="h5" 
+                                        align="left"
+                                        paragraph
+                                        color="black"
+                                        padding="5px"
+                                    >Question:{'\n'}</Typography> 
+                                    <Typography 
+                                        paragraph
+                                        color="black"
+                                        padding="5px"
+                                    >{selectedCard.question}</Typography> 
+                                    <Typography 
+                                        variant="h5" 
+                                        align="left"
+                                        paragraph
+                                        color="black"
+                                        padding="5px"
+                                    >Answer Choices:</Typography>                             
                                     <ul>
                                     {Array.isArray(selectedCard.choices) ? (
                                         selectedCard.choices.map((choice, index) => (

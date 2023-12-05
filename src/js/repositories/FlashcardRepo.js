@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { database, auth } from '../../firebase';
-import { collection, getDocs, getDoc, query, where, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
+import { collection, getDocs, getDoc, query, where, orderBy, limit, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
 
 const FlashcardRepo = {
 
@@ -496,28 +496,6 @@ const FlashcardRepo = {
         }
     },
 
-    getFlashcardItemsByStatus: async function(setId, status) {
-        try {
-            const setRef = doc(database, 'flashcardSets', setId);
-            const setSnapshot = await getDoc(setRef);
-            const setData = setSnapshot.data();
-            const flashcardData = setData.flashcardItems || [];
-
-            // if flashcardData is an object, convert it to an array
-            const flashcardArray = Object.values(flashcardData);
-            //console.log('Converted flashcardData to array:', flashcardArray);
-             // filter flashcards based on the status field
-            const flashcardsWithStatus = flashcardArray.filter(flashcard => flashcard.status === status);
-            //console.log("Filtered flashcards are: ", flashcardsWithStatus);
-
-            return flashcardsWithStatus;
-        } catch (error) {
-            console.error("Error getting flashcard items:", error);
-            throw error;
-
-        }
-    },
-
     // add owned quizzes into the users table using the flashcardSet id
     addOwnedQuizSetToUser: async function (uid, quizSetId) {
         try {
@@ -669,10 +647,15 @@ const FlashcardRepo = {
         }
     },
 
-    // get quiz id by using topic name
+    // get quiz id by using topic name and only retreive the earliest created quiz
     getQuizIdByTopicName: async function (topicName) {
         try {
-            const querySnapshot = await getDocs(query(collection(database, 'quizzesCreation'), where('name', '==', topicName)));
+            const querySnapshot = await getDocs(query(collection(database, 'quizzesCreation'),
+            where('name', '==', topicName), 
+            orderBy('createdAt', 'asc'), 
+            limit(1) // limit the result to only one document (the earliest created quiz)
+        )
+        );
             if (!querySnapshot.empty) {
                 return querySnapshot.docs[0].id;
             }
@@ -809,6 +792,29 @@ const FlashcardRepo = {
         } catch (error) {
             console.error("Error deleting quiz", error);
             throw error;
+        }
+    },
+
+    // this will retrieve flashcard items based on user input rating
+    getFlashcardItemsByStatus: async function(setId, status) {
+        try {
+            const setRef = doc(database, 'flashcardSets', setId);
+            const setSnapshot = await getDoc(setRef);
+            const setData = setSnapshot.data();
+            const flashcardData = setData.flashcardItems || [];
+
+            // if flashcardData is an object, convert it to an array
+            const flashcardArray = Object.values(flashcardData);
+            //console.log('Converted flashcardData to array:', flashcardArray);
+             // filter flashcards based on the status field
+            const flashcardsWithStatus = flashcardArray.filter(flashcard => flashcard.status === status);
+            //console.log("Filtered flashcards are: ", flashcardsWithStatus);
+
+            return flashcardsWithStatus;
+        } catch (error) {
+            console.error("Error getting flashcard items:", error);
+            throw error;
+
         }
     },
 
