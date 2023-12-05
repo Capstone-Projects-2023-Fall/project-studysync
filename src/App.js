@@ -14,6 +14,7 @@ import MainQuizPage from "./js/react/MainQuizPage";
 import Quiz from "./js/react/Quiz.js";
 import MySets from "./js/react/MySets.js";
 import FlashcardShare from "./js/react/flashcardShare";
+import Leaderboard from "./js/react/leaderboard.js";
 
 import React, { useEffect, useState } from "react";
 // import Lottie from "react-lottie-player";
@@ -64,6 +65,7 @@ function App() {
     { label: "Socials", link: `/socials/${user && user.uid}` },
     { label: "Profile", link: `/profile/${user && user.uid}` },
     { label: "Events", link: `/events/${user && user.uid}` },
+    { label: "Leaderboard", link: `/leadrboard/`},
     //... add other items
   ];
 
@@ -123,7 +125,7 @@ function App() {
         <Route path="/mysets/:UserId" element={<MySets />} />
         <Route path="/events/:UserId" element={<UpcomingEvents />} />
         <Route path="/dashboard/:UserId" element={<DashboardCom />} />
-        <Route path="/leaderboard/" element={<QuizHistory />} />
+        <Route path="/leaderboard/" element={<Leaderboard/>} />
         <Route
           path="/flashcardshare/:flashcardId"
           element={<FlashcardShare />}
