@@ -1,4 +1,32 @@
-import DeleteIcon from "@mui/icons-material/Delete";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: EventCard.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: EventCard.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import React, { useState } from "react";
 
@@ -47,7 +75,7 @@ const eventCardStyles = {
     width: "100%", // take up 80% of the page width
     // maxWidth: "800px", // maximum width of the card
     cursor: "pointer",
-    "&:hover": {
+    "&amp;:hover": {
       boxShadow:
         "0 8px 16px rgba(0, 0, 0, 0.16), 0 12px 24px rgba(0, 0, 0, 0.12)", // further enhanced shadow on hover
     },
@@ -107,7 +135,7 @@ const EventCard = ({ initialEvent, onDelete }) => {
    * @memberof EventCard
    * @function updateEvent
    * @description Updates the event details in the database.
-   * @returns {Promise<Boolean>} Promise indicating the success of the update operation.
+   * @returns {Promise&lt;Boolean>} Promise indicating the success of the update operation.
    */
   const updateEvent = async () => {
     const { id, ...eventWithoutId } = tempEvent;
@@ -155,54 +183,54 @@ const EventCard = ({ initialEvent, onDelete }) => {
   };
 
   return (
-    <Card
+    &lt;Card
       variant="outlined"
       sx={eventCardStyles.cardStyle}
       onClick={() => {
         navigate(path);
       }}
     >
-      <CardContent>
-        <div style={eventCardStyles.titleBar}>
-          <Typography gutterBottom variant="h7" component="div">
+      &lt;CardContent>
+        &lt;div style={eventCardStyles.titleBar}>
+          &lt;Typography gutterBottom variant="h7" component="div">
             {event.name}
-          </Typography>
-        </div>
-        <Typography variant="body2" color="text.secondary" fontWeight="bold">
+          &lt;/Typography>
+        &lt;/div>
+        &lt;Typography variant="body2" color="text.secondary" fontWeight="bold">
           {`${event.type} : ${event.itemName}`}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" fontWeight="bold">
+        &lt;/Typography>
+        &lt;Typography variant="body2" color="text.secondary" fontWeight="bold">
           {event.date}
-        </Typography>
-        <Typography variant="body2" color="text.secondary" fontWeight="bold">
+        &lt;/Typography>
+        &lt;Typography variant="body2" color="text.secondary" fontWeight="bold">
           {event.time ? event.time : "Wed Jan 24 2024 19:00:00 GMT-0500"}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <Button
+        &lt;/Typography>
+      &lt;/CardContent>
+      &lt;CardActions>
+        &lt;Button
           size="small"
           onClick={handleClickOpen}
           style={eventCardStyles.button}
         >
-          <EditIcon color="action" />
-        </Button>
-        <Button size="small" color="error" onClick={onDelete}>
-          <DeleteIcon color="error" />
-        </Button>
-      </CardActions>
-      <Dialog
+          &lt;EditIcon color="action" />
+        &lt;/Button>
+        &lt;Button size="small" color="error" onClick={onDelete}>
+          &lt;DeleteIcon color="error" />
+        &lt;/Button>
+      &lt;/CardActions>
+      &lt;Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
         onKeyDown={handleDialogKeyDown}
         onClick={(e) => e.stopPropagation()}
       >
-        <DialogContent>
-          <div style={{ padding: 16 }}>
-            <Typography variant="h6" gutterBottom>
+        &lt;DialogContent>
+          &lt;div style={{ padding: 16 }}>
+            &lt;Typography variant="h6" gutterBottom>
               Event Details
-            </Typography>
-            <TextField
+            &lt;/Typography>
+            &lt;TextField
               label="Date"
               type="text"
               fullWidth
@@ -211,7 +239,7 @@ const EventCard = ({ initialEvent, onDelete }) => {
               onChange={handleChange("date")}
               variant="outlined"
             />
-            <TextField
+            &lt;TextField
               label="Name"
               type="text"
               fullWidth
@@ -220,7 +248,7 @@ const EventCard = ({ initialEvent, onDelete }) => {
               onChange={handleChange("name")}
               variant="outlined"
             />
-            <TextField
+            &lt;TextField
               label="Time"
               type="text"
               fullWidth
@@ -229,7 +257,7 @@ const EventCard = ({ initialEvent, onDelete }) => {
               onChange={handleChange("time")}
               variant="outlined"
             />
-            <TextField
+            &lt;TextField
               label="Type"
               type="text"
               fullWidth
@@ -238,20 +266,43 @@ const EventCard = ({ initialEvent, onDelete }) => {
               onChange={handleChange("type")}
               variant="outlined"
             />
-            <Button
+            &lt;Button
               variant="contained"
               color="primary"
               style={{ marginTop: 16 }}
               onClick={handleClickSaveChanges}
             >
               Save Changes
-            </Button>
-          </div>
-        </DialogContent>
-        <DialogActions></DialogActions>
-      </Dialog>
-    </Card>
+            &lt;/Button>
+          &lt;/div>
+        &lt;/DialogContent>
+        &lt;DialogActions>&lt;/DialogActions>
+      &lt;/Dialog>
+    &lt;/Card>
   );
 };
 
 export default EventCard;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Dec 04 2023 22:22:02 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
