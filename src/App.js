@@ -20,6 +20,8 @@ import React, { useEffect, useState } from "react";
 import UpcomingEvents from "./js/react/UpcomingEvents.js";
 import { checkUpcomingEvents } from "./js/react/useNotificationCount.js";
 
+import QuizHistory from "./js/react/leaderboard.js";
+
 function App() {
   const [lottieAnimation, setLottieAnimation] = useState(null);
 
@@ -121,6 +123,7 @@ function App() {
         <Route path="/mysets/:UserId" element={<MySets />} />
         <Route path="/events/:UserId" element={<UpcomingEvents />} />
         <Route path="/dashboard/:UserId" element={<DashboardCom />} />
+        <Route path="/leaderboard/" element={<QuizHistory />} />
         <Route
           path="/flashcardshare/:flashcardId"
           element={<FlashcardShare />}
