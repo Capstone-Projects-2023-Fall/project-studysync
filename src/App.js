@@ -14,12 +14,13 @@ import MainQuizPage from "./js/react/MainQuizPage";
 import Quiz from "./js/react/Quiz.js";
 import MySets from "./js/react/MySets.js";
 import FlashcardShare from "./js/react/flashcardShare";
-import Leaderboard from "./js/react/leaderboard.js";
 
 import React, { useEffect, useState } from "react";
 // import Lottie from "react-lottie-player";
 import UpcomingEvents from "./js/react/UpcomingEvents.js";
 import { checkUpcomingEvents } from "./js/react/useNotificationCount.js";
+
+import Leaderboard from "./js/react/leaderboard.js";
 
 function App() {
   const [lottieAnimation, setLottieAnimation] = useState(null);
@@ -63,7 +64,8 @@ function App() {
     { label: "Socials", link: `/socials/${user && user.uid}` },
     { label: "Profile", link: `/profile/${user && user.uid}` },
     { label: "Events", link: `/events/${user && user.uid}` },
-    { label: "Leaderboard", link: `/leadrboard/`},
+    { label: "Leaderboard", link: "/leaderboard" },
+
     //... add other items
   ];
 
