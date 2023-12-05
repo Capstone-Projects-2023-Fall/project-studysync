@@ -1,4 +1,32 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: flashcardShare.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: flashcardShare.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
 import { Button, TextField, Typography, List, ListItem, IconButton, Avatar, ThemeProvider, createTheme } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SendIcon from '@mui/icons-material/Send';
@@ -130,7 +158,7 @@ function FlashcardShare() {
        */
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
-        if (currentIndex < cards.length - 1) {
+        if (currentIndex &lt; cards.length - 1) {
             setSelectedCard(cards[currentIndex + 1]);
         }
     };
@@ -180,35 +208,35 @@ function FlashcardShare() {
     });
 
     return (
-        <ThemeProvider theme={theme}>
-            <div style={{
+        &lt;ThemeProvider theme={theme}>
+            &lt;div style={{
                 display: "flex", flexDirection: "column", height: "100vh",
                 backgroundColor: '#f9f9f9', padding: '20px'
             }}>
-                <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
-                    <List style={{
+                &lt;div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
+                    &lt;List style={{
                         width: "30%", borderRight: "1px solid #e0e0e0",
                         borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                     }}>
                         {cards.map((card, index) => (
-                            <ListItem button key={index} onClick={() => selectCard(card)}>
+                            &lt;ListItem button key={index} onClick={() => selectCard(card)}>
                                 {card.term}
-                            </ListItem>
+                            &lt;/ListItem>
                         ))}
-                    </List>
+                    &lt;/List>
 
-                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
-                        <Typography variant="h6">
+                    &lt;div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
+                        &lt;Typography variant="h6">
                             {selectedCard ? `${cards.indexOf(selectedCard) + 1}/${cards.length}` : ""}
-                        </Typography>
-                        <div style={{
+                        &lt;/Typography>
+                        &lt;div style={{
                             display: "flex", alignItems: "center", width: "80%", justifyContent: "space-between",
                             marginTop: '20px', borderRadius: '8px', padding: '10px', backgroundColor: '#fff', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                         }}>
-                            <IconButton onClick={handlePrevCard}>
-                                <ArrowBackIcon />
-                            </IconButton>
-                            <div
+                            &lt;IconButton onClick={handlePrevCard}>
+                                &lt;ArrowBackIcon />
+                            &lt;/IconButton>
+                            &lt;div
                                 style={{
                                     flex: 1,
                                     height: "150px",
@@ -222,7 +250,7 @@ function FlashcardShare() {
                                 onClick={toggleFlip}
                             >
 
-                                <div
+                                &lt;div
                                     style={{
                                         position: 'absolute',
                                         width: '100%',
@@ -233,10 +261,10 @@ function FlashcardShare() {
                                         backfaceVisibility: 'hidden',
                                     }}
                                 >
-                                    {selectedCard && !isFlipped && selectedCard.term}
-                                </div>
+                                    {selectedCard &amp;&amp; !isFlipped &amp;&amp; selectedCard.term}
+                                &lt;/div>
 
-                                <div
+                                &lt;div
                                     style={{
                                         position: 'absolute',
                                         width: '100%',
@@ -248,14 +276,14 @@ function FlashcardShare() {
                                         transform: 'rotateY(180deg)'
                                     }}
                                 >
-                                    {selectedCard && isFlipped && selectedCard.definition}
-                                </div>
-                            </div>
-                            <IconButton onClick={handleNextCard}>
-                                <ArrowForwardIcon />
-                            </IconButton>
-                        </div>
-                        <Button
+                                    {selectedCard &amp;&amp; isFlipped &amp;&amp; selectedCard.definition}
+                                &lt;/div>
+                            &lt;/div>
+                            &lt;IconButton onClick={handleNextCard}>
+                                &lt;ArrowForwardIcon />
+                            &lt;/IconButton>
+                        &lt;/div>
+                        &lt;Button
                             variant="outlined"
                             style={{
                                 marginTop: '10px',
@@ -265,47 +293,69 @@ function FlashcardShare() {
                             onClick={handleSaveToMyFlashcards}
                         >
                             save to my flashcard
-                        </Button>
-                    </div>
-                </div>
+                        &lt;/Button>
+                    &lt;/div>
+                &lt;/div>
 
-                <div style={{ flex: 1, overflowY: 'auto', maxHeight: 'calc(30% - 60px)', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
+                &lt;div style={{ flex: 1, overflowY: 'auto', maxHeight: 'calc(30% - 60px)', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
                     {comments.map((comment, index) => (
-                        <div key={index} style={{
+                        &lt;div key={index} style={{
                             display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px", borderBottom: '1px solid #e0e0e0'
                         }}>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Avatar src={comment.imageURL} />
-                                <Typography variant="body1" style={{ marginLeft: "10px", fontWeight: 'bold' }}>
+                            &lt;div style={{ display: 'flex', alignItems: 'center' }}>
+                                &lt;Avatar src={comment.imageURL} />
+                                &lt;Typography variant="body1" style={{ marginLeft: "10px", fontWeight: 'bold' }}>
                                     {comment.username}
-                                </Typography>
-                                <Typography variant="body1" style={{ marginLeft: "10px" }}>
+                                &lt;/Typography>
+                                &lt;Typography variant="body1" style={{ marginLeft: "10px" }}>
                                     {comment.content}
-                                </Typography>
-                            </div>
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <Typography variant="body2" style={{ marginRight: "10px" }}>
+                                &lt;/Typography>
+                            &lt;/div>
+                            &lt;div style={{ display: 'flex', alignItems: 'center' }}>
+                                &lt;Typography variant="body2" style={{ marginRight: "10px" }}>
                                     {comment.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                                </Typography>
+                                &lt;/Typography>
 
-                            </div>
-                        </div>
+                            &lt;/div>
+                        &lt;/div>
                     ))}
-                </div>
-                <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
-                    <div style={{ display: "flex", alignItems: "center", }}>
-                        <Avatar src={userImage} />
-                        <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
-                        <IconButton onClick={handleSendComment}>
-                            <SendIcon />
-                        </IconButton>
-                    </div>
-                </div>
+                &lt;/div>
+                &lt;div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
+                    &lt;div style={{ display: "flex", alignItems: "center", }}>
+                        &lt;Avatar src={userImage} />
+                        &lt;TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
+                        &lt;IconButton onClick={handleSendComment}>
+                            &lt;SendIcon />
+                        &lt;/IconButton>
+                    &lt;/div>
+                &lt;/div>
 
-            </div>
+            &lt;/div>
 
-        </ThemeProvider>
+        &lt;/ThemeProvider>
     );
 }
 
-export default FlashcardShare;
+export default FlashcardShare;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Dec 04 2023 22:43:14 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
