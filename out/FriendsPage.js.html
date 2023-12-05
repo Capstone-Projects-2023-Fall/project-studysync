@@ -1,4 +1,32 @@
-import * as React from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: FriendsPage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: FriendsPage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as React from "react";
 import { styled, createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiDrawer from "@mui/material/Drawer";
@@ -44,7 +72,7 @@ const drawerWidth = 240;
 const Drawer = styled(MuiDrawer, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme, open }) => ({
-  "& .MuiDrawer-paper": {
+  "&amp; .MuiDrawer-paper": {
     position: "relative",
     whiteSpace: "nowrap",
     width: drawerWidth,
@@ -53,7 +81,7 @@ const Drawer = styled(MuiDrawer, {
       duration: theme.transitions.duration.enteringScreen,
     }),
     boxSizing: "border-box",
-    ...(!open && {
+    ...(!open &amp;&amp; {
       overflowX: "hidden",
       transition: theme.transitions.create("width", {
         easing: theme.transitions.easing.sharp,
@@ -178,68 +206,68 @@ export default function FriendsPage() {
   };
 
   const mainListItems = (
-    <React.Fragment>
-      <ListItemButton style={styles}>
-        <ListItemIcon>
-          <GroupsIcon
+    &lt;React.Fragment>
+      &lt;ListItemButton style={styles}>
+        &lt;ListItemIcon>
+          &lt;GroupsIcon
             onClick={() => {
               setType("Friends");
             }}
           />
-        </ListItemIcon>
-        <ListItemText
+        &lt;/ListItemIcon>
+        &lt;ListItemText
           primary="Friends"
           onClick={() => {
             setType("Friends");
           }}
         />
-      </ListItemButton>
-      <ListItemButton style={styles}>
-        <ListItemIcon>
-          <PeopleOutlineRoundedIcon
+      &lt;/ListItemButton>
+      &lt;ListItemButton style={styles}>
+        &lt;ListItemIcon>
+          &lt;PeopleOutlineRoundedIcon
             onClick={() => {
               setType("Following");
             }}
           />
-        </ListItemIcon>
-        <ListItemText
+        &lt;/ListItemIcon>
+        &lt;ListItemText
           primary="Following"
           onClick={() => {
             setType("Following");
           }}
         />
-      </ListItemButton>
-      <ListItemButton style={styles}>
-        <ListItemIcon>
-          <EmojiPeopleRoundedIcon
+      &lt;/ListItemButton>
+      &lt;ListItemButton style={styles}>
+        &lt;ListItemIcon>
+          &lt;EmojiPeopleRoundedIcon
             onClick={() => {
               setType("Followers");
             }}
           />
-        </ListItemIcon>
-        <ListItemText
+        &lt;/ListItemIcon>
+        &lt;ListItemText
           primary="Followers"
           onClick={() => {
             setType("Followers");
           }}
         />
-      </ListItemButton>
-      <ListItemButton style={styles}>
-        <ListItemIcon>
-          <SearchRoundedIcon
+      &lt;/ListItemButton>
+      &lt;ListItemButton style={styles}>
+        &lt;ListItemIcon>
+          &lt;SearchRoundedIcon
             onClick={() => {
               setType("Find Friends");
             }}
           />
-        </ListItemIcon>
-        <ListItemText
+        &lt;/ListItemIcon>
+        &lt;ListItemText
           primary="Find Friends"
           onClick={() => {
             setType("Find Friends");
           }}
         />
-      </ListItemButton>
-    </React.Fragment>
+      &lt;/ListItemButton>
+    &lt;/React.Fragment>
   );
   /**
      * @memberof FriendsPage
@@ -400,26 +428,26 @@ export default function FriendsPage() {
         secondbtn = "Remove Follower";
       }
       return (
-        <>
+        &lt;>
           {showList.map((user) => (
-            <TableRow key={user.id}>
-              <TableCell>
+            &lt;TableRow key={user.id}>
+              &lt;TableCell>
                 {user.name || user.firstName || user.email || user.id}{" "}
-              </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-              <TableCell>
-                <Button
+              &lt;/TableCell>
+              &lt;TableCell>&lt;/TableCell>
+              &lt;TableCell>&lt;/TableCell>
+              &lt;TableCell>
+                &lt;Button
                   onClick={() => {
                     handlebtn1(user.id);
                   }}
                   variant="contained"
                 >
                   {firstbtn}
-                </Button>
-              </TableCell>
-              <TableCell align="right">
-                <Button
+                &lt;/Button>
+              &lt;/TableCell>
+              &lt;TableCell align="right">
+                &lt;Button
                   onClick={() => {
                     handlebtn2(user.id);
                   }}
@@ -427,59 +455,59 @@ export default function FriendsPage() {
                   variant="contained"
                 >
                   {secondbtn}
-                </Button>
-              </TableCell>
-            </TableRow>
+                &lt;/Button>
+              &lt;/TableCell>
+            &lt;/TableRow>
           ))}
-        </>
+        &lt;/>
       );
     }
     if (isLoading) {
       return (
-        <>
-          <head>
-            <link
+        &lt;>
+          &lt;head>
+            &lt;link
               href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
               rel="stylesheet"
               id="bootstrap-css"
             />
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-          </head>
-          <div class="container emp-profile">
-            <h2>LOADING {type}...</h2>
-          </div>
-        </>
+            &lt;script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js">&lt;/script>
+            &lt;script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">&lt;/script>
+          &lt;/head>
+          &lt;div class="container emp-profile">
+            &lt;h2>LOADING {type}...&lt;/h2>
+          &lt;/div>
+        &lt;/>
       );
     }
     if (error) {
       return (
-        <>
-          <head>
-            <link
+        &lt;>
+          &lt;head>
+            &lt;link
               href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
               rel="stylesheet"
               id="bootstrap-css"
             />
-            <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-            <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-          </head>
-          <div class="container emp-profile">
-            <h2>ERROR LOADING {type}...</h2>
-          </div>
-        </>
+            &lt;script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js">&lt;/script>
+            &lt;script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">&lt;/script>
+          &lt;/head>
+          &lt;div class="container emp-profile">
+            &lt;h2>ERROR LOADING {type}...&lt;/h2>
+          &lt;/div>
+        &lt;/>
       );
     }
 
     return (
-      <React.Fragment>
-        <Title> {type}</Title>
-        {type == "Find Friends" && currUser != null && (
-          <div>
-            <SearchBar onSearch={handleSearch} />
+      &lt;React.Fragment>
+        &lt;Title> {type}&lt;/Title>
+        {type == "Find Friends" &amp;&amp; currUser != null &amp;&amp; (
+          &lt;div>
+            &lt;SearchBar onSearch={handleSearch} />
             {filteredData.map((user, index) => {
               return (
-                <SingleUserComponent
+                &lt;SingleUserComponent
                   handleFollowOrUnfollow={handleFollowOrUnfollow}
                   key={user.id ?? index}
                   user={user}
@@ -487,38 +515,38 @@ export default function FriendsPage() {
                 />
               );
             })}
-          </div>
+          &lt;/div>
         )}
 
-        {type != "Find Friends" && (
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{tableContent()}</TableBody>
-          </Table>
+        {type != "Find Friends" &amp;&amp; (
+          &lt;Table size="small">
+            &lt;TableHead>
+              &lt;TableRow>
+                &lt;TableCell>Name&lt;/TableCell>
+                &lt;TableCell>&lt;/TableCell>
+                &lt;TableCell>&lt;/TableCell>
+                &lt;TableCell>&lt;/TableCell>
+                &lt;TableCell align="right">&lt;/TableCell>
+              &lt;/TableRow>
+            &lt;/TableHead>
+            &lt;TableBody>{tableContent()}&lt;/TableBody>
+          &lt;/Table>
         )}
-      </React.Fragment>
+      &lt;/React.Fragment>
     );
   }
 
-  if (!user || (user && user.uid != UserId)) {
-    return <ErrorPage code="401" />;
+  if (!user || (user &amp;&amp; user.uid != UserId)) {
+    return &lt;ErrorPage code="401" />;
   }
 
   return (
-    <ThemeProvider theme={defaultTheme}>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
+    &lt;ThemeProvider theme={defaultTheme}>
+      &lt;Box sx={{ display: "flex" }}>
+        &lt;CssBaseline />
 
-        <Drawer variant="permanent" open={open}>
-          <Toolbar
+        &lt;Drawer variant="permanent" open={open}>
+          &lt;Toolbar
             sx={{
               display: "flex",
               alignItems: "center",
@@ -526,14 +554,14 @@ export default function FriendsPage() {
               px: [1],
             }}
           >
-            <IconButton onClick={toggleDrawer}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List component="nav">{mainListItems}</List>
-        </Drawer>
-        <Box
+            &lt;IconButton onClick={toggleDrawer}>
+              &lt;ChevronLeftIcon />
+            &lt;/IconButton>
+          &lt;/Toolbar>
+          &lt;Divider />
+          &lt;List component="nav">{mainListItems}&lt;/List>
+        &lt;/Drawer>
+        &lt;Box
           component="main"
           sx={{
             backgroundColor: (theme) =>
@@ -545,11 +573,11 @@ export default function FriendsPage() {
             overflow: "auto",
           }}
         >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper
+          &lt;Toolbar />
+          &lt;Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            &lt;Grid container spacing={3}>
+              &lt;Grid item xs={12}>
+                &lt;Paper
                   sx={{
                     p: 2,
                     display: "flex",
@@ -557,13 +585,13 @@ export default function FriendsPage() {
                   }}
                 >
                   {MainList()}
-                </Paper>
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
-      </Box>
-    </ThemeProvider>
+                &lt;/Paper>
+              &lt;/Grid>
+            &lt;/Grid>
+          &lt;/Container>
+        &lt;/Box>
+      &lt;/Box>
+    &lt;/ThemeProvider>
   );
 }
 
@@ -574,6 +602,29 @@ const SearchBar = ({ onSearch }) => {
   };
 
   return (
-    <TextField label="Search" variant="outlined" onChange={handleSearch} />
+    &lt;TextField label="Search" variant="outlined" onChange={handleSearch} />
   );
 };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Dec 04 2023 23:50:17 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
