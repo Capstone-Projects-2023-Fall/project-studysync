@@ -1,4 +1,32 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Quiz.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Quiz.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import { useParams } from 'react-router-dom';
@@ -114,7 +142,7 @@ const QuizComponent = () => {
     useEffect(() => {
         //check if the quiz is paused
         const pausedState = JSON.parse(localStorage.getItem('quizPaused'));
-        if (pausedState && pausedState.quizId === quizId) {
+        if (pausedState &amp;&amp; pausedState.quizId === quizId) {
             setIsQuizPaused(true);
         }
     }, []);
@@ -188,7 +216,7 @@ const QuizComponent = () => {
  * @description Adds a new quiz question to the database and updates the state.
  */
     const handleAddQuestion = async () => {
-        if (question && choices.every((choice) => choice !== '') &&
+        if (question &amp;&amp; choices.every((choice) => choice !== '') &amp;&amp;
             correctChoiceIndex !== null) {
 
             try {
@@ -288,7 +316,7 @@ const QuizComponent = () => {
      * @description Updates the details of an existing quiz question in the database and refreshes the component's state.
      */
     const handleUpdateQuestion = async () => {
-        if (editQuestion && question && choices.every((choice) => choice !== '')) {
+        if (editQuestion &amp;&amp; question &amp;&amp; choices.every((choice) => choice !== '')) {
             try {
                 await FlashcardRepo.updateQuestion(quizId, editQuestion.questionId, question, choices, correctChoiceIndex);
 
@@ -330,7 +358,7 @@ const QuizComponent = () => {
      */
     const handleNextCard = () => {
         const currentIndex = questions.indexOf(selectedCard);
-        if (currentIndex < questions.length - 1) {
+        if (currentIndex &lt; questions.length - 1) {
             setSelectedCard(questions[currentIndex + 1]);
             setShowDefinition(false);
         }
@@ -342,7 +370,7 @@ const QuizComponent = () => {
         try {
             const uid = FlashcardRepo.getCurrentUid();
 
-            if (uid && quizTitle) {
+            if (uid &amp;&amp; quizTitle) {
                 // call createNewQuiz function from FlashcardRepo
                 const newQuizId = await FlashcardRepo.createNewQuiz(setId, quizTitle);
 
@@ -463,7 +491,7 @@ const QuizComponent = () => {
  * @param {string} topicName - The topic name for the quiz questions.
  * @param {string} difficulty - The difficulty level for the quiz questions.
  * @param {string} definition - The definition to be used for generating questions.
- * @returns {Promise<Array>} A promise that resolves to an array of generated questions.
+ * @returns {Promise&lt;Array>} A promise that resolves to an array of generated questions.
  */
     const callYourCloudFunctionToGenerateQuestions = async (numQuestions, topicName, difficulty, definition) => {
         try {
@@ -471,7 +499,7 @@ const QuizComponent = () => {
 
             //conditional statement for two different scenerio based on the passed parameters above
             let messages;
-            if (numQuestions && topicName && definition && difficulty) {
+            if (numQuestions &amp;&amp; topicName &amp;&amp; definition &amp;&amp; difficulty) {
                 messages = [
                     {
                         role: "user",
@@ -551,7 +579,7 @@ const QuizComponent = () => {
             // retrieve all flashcard items based on flashcard status and store as object, if no then go to else and use name and subject
             const flashcardData = await FlashcardRepo.getFlashcardItemsByStatus(setId, flashcardRating);
             // check if there is any content in the flashcardData object
-            if (flashcardData && Object.keys(flashcardData).length > 0) {
+            if (flashcardData &amp;&amp; Object.keys(flashcardData).length > 0) {
                 const filteredFlashcardArray = Object.keys(flashcardData).map(key => ({
                     term: flashcardData[key].term,
                     definition: flashcardData[key].definition,
@@ -647,11 +675,11 @@ const QuizComponent = () => {
         switch (value) {
             case "AI":
                 return (
-                    <div>
-                        <Typography textAlign="center">
+                    &lt;div>
+                        &lt;Typography textAlign="center">
                             Quiz Based on AI: You can create a quiz by entering your quiz topic and our AI tools will handle it for you.
-                        </Typography>
-                        <TextField
+                        &lt;/Typography>
+                        &lt;TextField
                             autoFocus
                             margin="dense"
                             label="Provide your Description"
@@ -659,10 +687,10 @@ const QuizComponent = () => {
                             fullWidth
                             value={topicName}
                             onChange={(e) => setTopicName(e.target.value)}
-                            error={submitAttempted && !topicName}
-                            helperText={submitAttempted && !topicName ? 'Please Enter your Description' : ''}
+                            error={submitAttempted &amp;&amp; !topicName}
+                            helperText={submitAttempted &amp;&amp; !topicName ? 'Please Enter your Description' : ''}
                         />
-                        <TextField
+                        &lt;TextField
                             margin="dense"
                             label="Number of Question(s)"
                             type="number"
@@ -670,22 +698,22 @@ const QuizComponent = () => {
                             value={numberOfQuestions}
                             onChange={(e) => setNumOfQuestions(e.target.value)}
                         />
-                        <FormControl id="difficulty-control-buttons-AI"> Difficulty Levels:
-                            <RadioGroup
+                        &lt;FormControl id="difficulty-control-buttons-AI"> Difficulty Levels:
+                            &lt;RadioGroup
                                 aria-labelledby="difficulty-control-buttons-AI"
                                 name="difficulty"
                                 value={flashcardDifficulty}
                                 onChange={(e) => setDifficulty(e.target.value)}
                                 row
                             >
-                                <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
-                                <FormControlLabel value="Medium" control={<Radio />} label="Medium" />
-                                <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
-                            </RadioGroup>
-                            {submitAttempted && !flashcardDifficulty && <div style={{ color: 'red' }}>Please select a difficulty level</div>}
-                        </FormControl>
+                                &lt;FormControlLabel value="Easy" control={&lt;Radio />} label="Easy" />
+                                &lt;FormControlLabel value="Medium" control={&lt;Radio />} label="Medium" />
+                                &lt;FormControlLabel value="Hard" control={&lt;Radio />} label="Hard" />
+                            &lt;/RadioGroup>
+                            {submitAttempted &amp;&amp; !flashcardDifficulty &amp;&amp; &lt;div style={{ color: 'red' }}>Please select a difficulty level&lt;/div>}
+                        &lt;/FormControl>
 
-                        <input
+                        &lt;input
                             accept="image/*"
                             style={{ display: 'none' }}
                             id="raised-button-file"
@@ -693,38 +721,38 @@ const QuizComponent = () => {
                             type="file"
                             onChange={handleImageUpload}
                         />
-                        <label htmlFor="raised-button-file" style={{ position: 'absolute', bottom: '0', left: '0', padding: '8px' }}>
-                            <Button variant="contained" component="span">
+                        &lt;label htmlFor="raised-button-file" style={{ position: 'absolute', bottom: '0', left: '0', padding: '8px' }}>
+                            &lt;Button variant="contained" component="span">
                                 Upload Image
-                            </Button>
-                        </label>
+                            &lt;/Button>
+                        &lt;/label>
 
-                        {previewUrl && (
-                            <div style={{ marginTop: '10px' }}>
-                                <img src={previewUrl} alt="Image preview" style={{ maxWidth: '100%', height: 'auto' }} />
-                                <Button
+                        {previewUrl &amp;&amp; (
+                            &lt;div style={{ marginTop: '10px' }}>
+                                &lt;img src={previewUrl} alt="Image preview" style={{ maxWidth: '100%', height: 'auto' }} />
+                                &lt;Button
                                     variant="contained"
                                     color="secondary"
                                     onClick={handleCancelImage}
                                     style={{ marginTop: '10px' }}
                                 >
                                     Cancel Image
-                                </Button>
-                            </div>
+                                &lt;/Button>
+                            &lt;/div>
                         )}
-                    </div>
+                    &lt;/div>
                 );
             case "Flashcards":
 
                 return (
-                    <div>
-                        <Typography textAlign="center">
+                    &lt;div>
+                        &lt;Typography textAlign="center">
                             Quiz Based on Flashcards: Our AI tools will generate those question by using your flashcards that marked as "Don't Know"
-                        </Typography>
-                        <br />
-                        <Typography>
-                            By using this flashcard topic: &nbsp;
-                            <span
+                        &lt;/Typography>
+                        &lt;br />
+                        &lt;Typography>
+                            By using this flashcard topic: &amp;nbsp;
+                            &lt;span
                                 style={{
                                     fontWeight: "bold",
                                     color: "black",
@@ -732,9 +760,9 @@ const QuizComponent = () => {
                                 }}
                             >
                                 {flashcardSetName}
-                            </span>
-                        </Typography>
-                        <TextField
+                            &lt;/span>
+                        &lt;/Typography>
+                        &lt;TextField
                             margin="dense"
                             label="Number of Question(s)"
                             type="number"
@@ -742,37 +770,37 @@ const QuizComponent = () => {
                             value={numberOfQuestions}
                             onChange={(e) => setNumOfQuestions(e.target.value)}
                         />
-                        <FormControl id="rating-control-buttons"> Rating Levels:
-                            <RadioGroup
+                        &lt;FormControl id="rating-control-buttons"> Rating Levels:
+                            &lt;RadioGroup
                                 aria-labelledby="rating-control-buttons"
                                 name="rating"
                                 value={flashcardRating}
                                 onChange={(e) => setRating(e.target.value)}
                                 row
                             >
-                                <FormControlLabel value="know" control={<Radio />} label="Know" />
-                                <FormControlLabel value="dontKnow" control={<Radio />} label="Don't Know" />
-                                <FormControlLabel value="notSure" control={<Radio />} label="Not Sure" />
-                            </RadioGroup>
-                            {submitAttempted1 && !flashcardRating && <div style={{ color: 'red' }}>Please select a rating level</div>}
-                        </FormControl>
+                                &lt;FormControlLabel value="know" control={&lt;Radio />} label="Know" />
+                                &lt;FormControlLabel value="dontKnow" control={&lt;Radio />} label="Don't Know" />
+                                &lt;FormControlLabel value="notSure" control={&lt;Radio />} label="Not Sure" />
+                            &lt;/RadioGroup>
+                            {submitAttempted1 &amp;&amp; !flashcardRating &amp;&amp; &lt;div style={{ color: 'red' }}>Please select a rating level&lt;/div>}
+                        &lt;/FormControl>
 
-                        <FormControl id="difficulty-control-buttons"> Difficulty Levels:
-                            <RadioGroup
+                        &lt;FormControl id="difficulty-control-buttons"> Difficulty Levels:
+                            &lt;RadioGroup
                                 aria-labelledby="difficulty-control-buttons"
                                 name="difficulty"
                                 value={flashcardDifficulty}
                                 onChange={(e) => setDifficulty(e.target.value)}
                                 row
                             >
-                                <FormControlLabel value="Easy" control={<Radio />} label="Easy" />
-                                <FormControlLabel value="Medium" control={<Radio />} label="Medium" />
-                                <FormControlLabel value="Hard" control={<Radio />} label="Hard" />
-                            </RadioGroup>
-                            {submitAttempted1 && !flashcardDifficulty && <div style={{ color: 'red' }}>Please select a difficulty level</div>}
-                        </FormControl>
+                                &lt;FormControlLabel value="Easy" control={&lt;Radio />} label="Easy" />
+                                &lt;FormControlLabel value="Medium" control={&lt;Radio />} label="Medium" />
+                                &lt;FormControlLabel value="Hard" control={&lt;Radio />} label="Hard" />
+                            &lt;/RadioGroup>
+                            {submitAttempted1 &amp;&amp; !flashcardDifficulty &amp;&amp; &lt;div style={{ color: 'red' }}>Please select a difficulty level&lt;/div>}
+                        &lt;/FormControl>
 
-                    </div>
+                    &lt;/div>
                 );
             // Add more cases for additional tabs as needed
             default:
@@ -781,23 +809,23 @@ const QuizComponent = () => {
     };
 
     return (
-        <div style={{
+        &lt;div style={{
             display: "flex", flexDirection: "column", height: "100vh",
             backgroundColor: '#f9f9f9', padding: '20px'
         }}>
 
-            {isLoading && (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0, zIndex: 1000, backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
-                    <CircularProgress />
-                </div>
+            {isLoading &amp;&amp; (
+                &lt;div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', width: '100vw', position: 'fixed', top: 0, left: 0, zIndex: 1000, backgroundColor: 'rgba(255, 255, 255, 0.7)' }}>
+                    &lt;CircularProgress />
+                &lt;/div>
             )}
-            <Snackbar
+            &lt;Snackbar
                 open={!!successMessage}
                 autoHideDuration={6000}
                 onClose={() => setSuccessMessage('')}
                 message={successMessage}
             />
-            <Snackbar
+            &lt;Snackbar
                 open={!!errorMessage}
                 autoHideDuration={6000}
                 onClose={() => setErrorMessage('')}
@@ -805,58 +833,58 @@ const QuizComponent = () => {
                 color="error"
             />
 
-            <QuizList newQuizAdded={newQuizAdded} />
+            &lt;QuizList newQuizAdded={newQuizAdded} />
 
 
-            <div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
-                <List style={{
+            &lt;div style={{ flex: 1, display: "flex", flexDirection: "row", justifyContent: "space-between", marginBottom: '20px' }}>
+                &lt;List style={{
                     width: "30%", borderRight: "1px solid #e0e0e0",
                     borderRadius: '8px', overflow: 'hidden', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                 }}>
 
                     {/*quiz info button*/}
-                    <Button
+                    &lt;Button
                         variant="outlined"
-                        startIcon={<FormatQuoteIcon />}
+                        startIcon={&lt;FormatQuoteIcon />}
                         onClick={() => setOpenQuizInfo(true)}
                         style={{ alignSelf: 'center', marginTop: '20px', marginLeft: '10px' }}>
                         Quiz Info
-                    </Button>
+                    &lt;/Button>
 
                     {/* show list of question on the left panel with options to edit or delete */}
                     {questions.map((quiz, index) => (
-                        <ListItem button key={index} onClick={() => { setSelectedCard(quiz); setShowDefinition(false); }}>
+                        &lt;ListItem button key={index} onClick={() => { setSelectedCard(quiz); setShowDefinition(false); }}>
                             {quiz.question}
-                            <IconButton onClick={() => handleEditQuestion(quiz)}>
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton onClick={() => handleDeleteQuestion(quiz)}>
-                                <DeleteIcon />
-                            </IconButton>
-                        </ListItem>
+                            &lt;IconButton onClick={() => handleEditQuestion(quiz)}>
+                                &lt;EditIcon />
+                            &lt;/IconButton>
+                            &lt;IconButton onClick={() => handleDeleteQuestion(quiz)}>
+                                &lt;DeleteIcon />
+                            &lt;/IconButton>
+                        &lt;/ListItem>
                     ))}
-                    <Stack direction="row" spacing={2} >
-                        <Button onClick={() => setOpenAdd(true)} variant="outlined" startIcon={<AddIcon />}>
+                    &lt;Stack direction="row" spacing={2} >
+                        &lt;Button onClick={() => setOpenAdd(true)} variant="outlined" startIcon={&lt;AddIcon />}>
                             Add
-                        </Button>
-                        <Button variant="contained" endIcon={<SmartToyOutlinedIcon />} onClick={handleOpenGenerateAI}>Generate Question</Button>
-                        <Button variant="outlined" onClick={() => setOpenQuiz(true)}>Create a New Quiz</Button>
-                    </Stack>
-                </List>
+                        &lt;/Button>
+                        &lt;Button variant="contained" endIcon={&lt;SmartToyOutlinedIcon />} onClick={handleOpenGenerateAI}>Generate Question&lt;/Button>
+                        &lt;Button variant="outlined" onClick={() => setOpenQuiz(true)}>Create a New Quiz&lt;/Button>
+                    &lt;/Stack>
+                &lt;/List>
 
 
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
-                    <Typography variant="h6">
+                &lt;div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: '20px' }}>
+                    &lt;Typography variant="h6">
                         {selectedCard ? `${questions.indexOf(selectedCard) + 1}/${questions.length}` : ""}
-                    </Typography>
-                    <div style={{
+                    &lt;/Typography>
+                    &lt;div style={{
                         display: "flex", alignItems: "center", width: "80%", justifyContent: "space-between",
                         marginTop: '20px', borderRadius: '8px', padding: '10px', backgroundColor: '#fff', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
                     }}>
-                        <IconButton onClick={handleShowQuestion}>
-                            <ArrowBackIcon />
-                        </IconButton>
-                        <div
+                        &lt;IconButton onClick={handleShowQuestion}>
+                            &lt;ArrowBackIcon />
+                        &lt;/IconButton>
+                        &lt;div
                             style={{
                                 flex: 1,
                                 height: "300px",
@@ -869,59 +897,59 @@ const QuizComponent = () => {
                             }}
                             onClick={() => setShowDefinition(!showDefinition)}
                         >
-                            {selectedCard && (
-                                <div>
+                            {selectedCard &amp;&amp; (
+                                &lt;div>
 
-                                    <p><Typography variant="h5">Question:{'\n'}</Typography></p>
-                                    <Typography>{selectedCard.question}</Typography>
-                                    <p><Typography variant="h5">Answer Choices:</Typography></p>
-                                    <ul>
+                                    &lt;p>&lt;Typography variant="h5">Question:{'\n'}&lt;/Typography>&lt;/p>
+                                    &lt;Typography>{selectedCard.question}&lt;/Typography>
+                                    &lt;p>&lt;Typography variant="h5">Answer Choices:&lt;/Typography>&lt;/p>
+                                    &lt;ul>
                                         {Array.isArray(selectedCard.choices) ? (
                                             selectedCard.choices.map((choice, index) => (
-                                                <li key={index}>{choice}</li>
+                                                &lt;li key={index}>{choice}&lt;/li>
                                             ))
                                         ) : (
-                                            <li>{selectedCard.choices}</li>
+                                            &lt;li>{selectedCard.choices}&lt;/li>
                                         )}
-                                    </ul>
-                                </div>
+                                    &lt;/ul>
+                                &lt;/div>
                             )}
 
-                        </div>
+                        &lt;/div>
 
-                        <IconButton onClick={handleNextCard}>
-                            <ArrowForwardIcon />
-                        </IconButton>
-                    </div>
+                        &lt;IconButton onClick={handleNextCard}>
+                            &lt;ArrowForwardIcon />
+                        &lt;/IconButton>
+                    &lt;/div>
 
-                </div>
+                &lt;/div>
 
-            </div>
+            &lt;/div>
             {/*start quiz button*/}
-            <Button
+            &lt;Button
                 variant="contained"
                 color="primary"
                 onClick={startQuiz}
                 style={{ alignSelf: 'center', marginTop: '20px' }}
             >
                 Start Quiz
-            </Button>
+            &lt;/Button>
 
-            {isQuizPaused && (
-                <Button
+            {isQuizPaused &amp;&amp; (
+                &lt;Button
                     variant="contained"
                     color="secondary"
                     onClick={handleResumeQuiz}
                     style={{ alignSelf: 'center', marginTop: '20px' }}
                 >
                     Resume Quiz
-                </Button>
+                &lt;/Button>
             )}
 
-            <Dialog open={openEdit} onClose={() => { setOpenEdit(false) }}>
-                <DialogTitle>Edit question</DialogTitle>
-                <DialogContent>
-                    <TextField
+            &lt;Dialog open={openEdit} onClose={() => { setOpenEdit(false) }}>
+                &lt;DialogTitle>Edit question&lt;/DialogTitle>
+                &lt;DialogContent>
+                    &lt;TextField
                         autoFocus
                         margin="dense"
                         label="Question"
@@ -929,16 +957,16 @@ const QuizComponent = () => {
                         value={question}
                         onChange={(e) => setQuestion(e.target.value)}
                     />
-                    <div>
+                    &lt;div>
                         {choices.map((choice, index) => (
-                            <div key={index}>
-                                <TextField
+                            &lt;div key={index}>
+                                &lt;TextField
                                     label={`Choice ${index + 1}`}
                                     fullWidth
                                     value={choice}
                                     onChange={(e) => handleChoiceChange(e.target.value, index)}
                                 />
-                                <input
+                                &lt;input
                                     type="radio"
                                     name="correctChoice"
                                     value={index}
@@ -946,15 +974,15 @@ const QuizComponent = () => {
                                     checked={correctChoiceIndex === index}
                                 />{' '}
                                 Correct
-                            </div>
+                            &lt;/div>
                         ))}
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenEdit(false)} color="primary">
+                    &lt;/div>
+                &lt;/DialogContent>
+                &lt;DialogActions>
+                    &lt;Button onClick={() => setOpenEdit(false)} color="primary">
                         Cancel
-                    </Button>
-                    <Button
+                    &lt;/Button>
+                    &lt;Button
                         onClick={() => {
                             handleUpdateQuestion();
                             setOpenEdit(false);
@@ -962,32 +990,32 @@ const QuizComponent = () => {
                         color="primary"
                     >
                         Update
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    &lt;/Button>
+                &lt;/DialogActions>
+            &lt;/Dialog>
 
             {/* create a dialog and capture all the question data         */}
-            <Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
-                <DialogTitle>Add a new question</DialogTitle>
-                <DialogContent>
-                    <TextField
+            &lt;Dialog open={openAdd} onClose={() => setOpenAdd(false)}>
+                &lt;DialogTitle>Add a new question&lt;/DialogTitle>
+                &lt;DialogContent>
+                    &lt;TextField
                         autoFocus
                         margin="dense"
                         label="Question"
                         fullWidth
                         onChange={(e) => setQuestion(e.target.value)}
                     />
-                    <div>
+                    &lt;div>
                         {/* allow user to put all answer into multiple choices and select the correct answer */}
                         {choices.map((choice, index) => (
-                            <div key={index}>
-                                <TextField
+                            &lt;div key={index}>
+                                &lt;TextField
                                     label={`Choice ${index + 1}`}
                                     fullWidth
                                     value={choice}
                                     onChange={(e) => handleChoiceChange(e.target.value, index)}
                                 />
-                                <input
+                                &lt;input
                                     type="radio"
                                     name="correctChoice"
                                     value={index}
@@ -995,16 +1023,16 @@ const QuizComponent = () => {
                                     checked={correctChoiceIndex === index}
                                 />{' '}
                                 Correct
-                            </div>
+                            &lt;/div>
                         ))}
-                    </div>
+                    &lt;/div>
                     {/* this diaglog with either add or cancel the adding question process */}
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenAdd(false)} color="primary">
+                &lt;/DialogContent>
+                &lt;DialogActions>
+                    &lt;Button onClick={() => setOpenAdd(false)} color="primary">
                         Cancel
-                    </Button>
-                    <Button
+                    &lt;/Button>
+                    &lt;Button
                         onClick={() => {
                             handleAddQuestion();
                             setOpenAdd(false);
@@ -1012,26 +1040,26 @@ const QuizComponent = () => {
                         color="primary"
                     >
                         Add
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    &lt;/Button>
+                &lt;/DialogActions>
+            &lt;/Dialog>
 
-            <Dialog open={openQuiz} onClose={() => setOpenQuiz(false)}>
-                <DialogTitle>Please Enter Your Quiz Title</DialogTitle>
-                <DialogContent>
-                    <TextField
+            &lt;Dialog open={openQuiz} onClose={() => setOpenQuiz(false)}>
+                &lt;DialogTitle>Please Enter Your Quiz Title&lt;/DialogTitle>
+                &lt;DialogContent>
+                    &lt;TextField
                         autoFocus
                         margin="dense"
                         label="Quiz Title"
                         fullWidth
                         onChange={(e) => setQuizTitle(e.target.value)}
                     />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenQuiz(false)} color="primary">
+                &lt;/DialogContent>
+                &lt;DialogActions>
+                    &lt;Button onClick={() => setOpenQuiz(false)} color="primary">
                         Cancel
-                    </Button>
-                    <Button
+                    &lt;/Button>
+                    &lt;Button
                         onClick={() => {
                             handleCreateQuiz();
                             setOpenQuiz(false);
@@ -1039,29 +1067,29 @@ const QuizComponent = () => {
                         color="primary"
                     >
                         Confirm
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    &lt;/Button>
+                &lt;/DialogActions>
+            &lt;/Dialog>
             {/* prompt user if they really want to the delete a certain question                  */}
-            <Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
-                <DialogTitle>Confirm Deletion</DialogTitle>
-                <DialogContent>
-                    <Typography>Are you sure you want to delete this question?</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenDelete(false)} color="primary">
+            &lt;Dialog open={openDelete} onClose={() => setOpenDelete(false)}>
+                &lt;DialogTitle>Confirm Deletion&lt;/DialogTitle>
+                &lt;DialogContent>
+                    &lt;Typography>Are you sure you want to delete this question?&lt;/Typography>
+                &lt;/DialogContent>
+                &lt;DialogActions>
+                    &lt;Button onClick={() => setOpenDelete(false)} color="primary">
                         No
-                    </Button>
-                    <Button
+                    &lt;/Button>
+                    &lt;Button
                         onClick={confirmDelete}
                         color="primary"
                     >
                         Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    &lt;/Button>
+                &lt;/DialogActions>
+            &lt;/Dialog>
 
-            <Dialog
+            &lt;Dialog
                 open={openGenerate}
                 onClose={() => {
                     setOpenGenerateAI(false);
@@ -1074,65 +1102,87 @@ const QuizComponent = () => {
                     setPreviewUrl(null);
                 }}
             >
-                <Tabs
+                &lt;Tabs
                     value={value}
                     onChange={handleChange}
                     textColor="secondary"
                     indicatorColor="secondary"
                     aria-label="secondary tabs example"
                 >
-                    <Tab value="AI" label="Quiz Based on AI" />
-                    <Tab value="Flashcards" label="Quiz Based on Flashcards" />
-                </Tabs>
-                <DialogTitle
+                    &lt;Tab value="AI" label="Quiz Based on AI" />
+                    &lt;Tab value="Flashcards" label="Quiz Based on Flashcards" />
+                &lt;/Tabs>
+                &lt;DialogTitle
                     fontSize="25px"
                     fontWeight="bold"
                 >
-                    <PrecisionManufacturingIcon />
+                    &lt;PrecisionManufacturingIcon />
                     {"AI Generating Tools"}
-                </DialogTitle>
-                <DialogContent>
+                &lt;/DialogTitle>
+                &lt;DialogContent>
                     {renderOptions()}
-                </DialogContent>
-                <DialogActions>
-                    {/* <Button onClick={handleGenerateAIQuestion}>Generate Questions</Button> */}
-                    {value === "AI" && <Button variant="contained" onClick={handleGenerateAIQuestion}>Generate</Button>}
-                    {value === "Flashcards" && <Button variant="contained" onClick={getFlashcardsData}>Generate</Button>}
-                </DialogActions>
-            </Dialog>
+                &lt;/DialogContent>
+                &lt;DialogActions>
+                    {/* &lt;Button onClick={handleGenerateAIQuestion}>Generate Questions&lt;/Button> */}
+                    {value === "AI" &amp;&amp; &lt;Button variant="contained" onClick={handleGenerateAIQuestion}>Generate&lt;/Button>}
+                    {value === "Flashcards" &amp;&amp; &lt;Button variant="contained" onClick={getFlashcardsData}>Generate&lt;/Button>}
+                &lt;/DialogActions>
+            &lt;/Dialog>
 
             {/* Resume Quiz Confirmation Dialog */}
-            <Dialog open={openResumeConfirm} onClose={() => setOpenResumeConfirm(false)}>
-                <DialogTitle>Resume Quiz</DialogTitle>
-                <DialogContent>
-                    <Typography>Are you sure you want to resume the quiz?</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenResumeConfirm(false)} color="primary">
+            &lt;Dialog open={openResumeConfirm} onClose={() => setOpenResumeConfirm(false)}>
+                &lt;DialogTitle>Resume Quiz&lt;/DialogTitle>
+                &lt;DialogContent>
+                    &lt;Typography>Are you sure you want to resume the quiz?&lt;/Typography>
+                &lt;/DialogContent>
+                &lt;DialogActions>
+                    &lt;Button onClick={() => setOpenResumeConfirm(false)} color="primary">
                         No
-                    </Button>
-                    <Button onClick={confirmResumeQuiz} color="primary">
+                    &lt;/Button>
+                    &lt;Button onClick={confirmResumeQuiz} color="primary">
                         Yes
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                    &lt;/Button>
+                &lt;/DialogActions>
+            &lt;/Dialog>
 
             {/*diaglos show quiz infomatio*/}
-            <Dialog open={openQuizInfo} onClose={() => setOpenQuizInfo(false)}>
-                <DialogTitle>Quiz Information</DialogTitle>
-                <DialogContent>
-                    <Typography>Question number: {questions.length}</Typography>
-                    <Typography>Time Limit: {calculateTimeLimit()} minutes</Typography>
-                </DialogContent>
+            &lt;Dialog open={openQuizInfo} onClose={() => setOpenQuizInfo(false)}>
+                &lt;DialogTitle>Quiz Information&lt;/DialogTitle>
+                &lt;DialogContent>
+                    &lt;Typography>Question number: {questions.length}&lt;/Typography>
+                    &lt;Typography>Time Limit: {calculateTimeLimit()} minutes&lt;/Typography>
+                &lt;/DialogContent>
                 {/*close info display*/}
-                <DialogActions>
-                    <Button onClick={() => setOpenQuizInfo(false)} color="primary">
+                &lt;DialogActions>
+                    &lt;Button onClick={() => setOpenQuizInfo(false)} color="primary">
                         Close
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        </div>
+                    &lt;/Button>
+                &lt;/DialogActions>
+            &lt;/Dialog>
+        &lt;/div>
     );
 };
 
-export default QuizComponent;
+export default QuizComponent;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MainQuizPage.html">MainQuizPage</a></li><li><a href="MySets.html">MySets</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="Notification.html">Notification</a></li><li><a href="QuizComponent.html">QuizComponent</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 00:33:29 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

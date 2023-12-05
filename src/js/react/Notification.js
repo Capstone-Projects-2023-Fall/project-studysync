@@ -19,7 +19,6 @@ import { useNavigate } from "react-router-dom";
 /**
  * @class Notification
  * @classdesc Notification - A functional React component that renders a list of notifications.
- * 
  * @param {Object} props - Props including userId and closePanel function.
  * @returns {React.Component} A component displaying user notifications.
  */
@@ -151,6 +150,7 @@ const styles = {
     },
 };
 /**
+ * @memberof Notification
  * @function createNewFollowerEvent
  * @description Creates a new follower event from a notification.
  * @param {Object} notification - The notification object.
@@ -170,6 +170,7 @@ function createNewFollowerEvent(notification) {
     return data;
 }
 /**
+ * @memberof Notification
  * @function createSharedQuizEvent
  * @description Creates a data object for a shared quiz notification.
  * @param {Object} notification - The notification object containing quiz information.
@@ -190,6 +191,7 @@ function createSharedQuizEvent(notification) {
     return data;
 }
 /**
+ * @memberof Notification
  * @function createSharedFlashcardEvent
  * @description Creates a data object for a shared flashcard notification.
  * @param {Object} notification - The notification object containing flashcard information.
@@ -210,6 +212,7 @@ function createSharedFlashcardEvent(notification) {
     return data;
 }
 /**
+ * @memberof Notification
  * @function timeAgo
  * @description Converts a timestamp to a string indicating time elapsed.
  * @param {number} timestamp - The timestamp to convert.
@@ -232,6 +235,7 @@ function timeAgo(timestamp) {
     }
 }
 /**
+ * @memberof Notification
  * @function parseNotifications
  * @description Parses and processes an array of notification objects.
  * @param {Array} notifications - An array of notification objects to be processed.
