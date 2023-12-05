@@ -6,7 +6,7 @@ import FlashcardRepo from '../repositories/FlashcardRepo';
 //mainQuizPage component
 function MainQuizPage() {
 
-  const { setId,quizId} = useParams(); //aroute param to identify the quiz set
+  const {quizId} = useParams(); //aroute param to identify the quiz set
   const [questions, setQuestions] = useState([]); //array to hold question data from database
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
   const [score, setScore] = useState(null);//for score
@@ -50,7 +50,7 @@ function MainQuizPage() {
       questions,
       timeLeft
     };
-    localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ setId, paused: true, quizState }));
+    localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ quizId, paused: true, quizState }));
     setIsPaused(true);
     handleCloseDialog();
   };
@@ -60,7 +60,7 @@ function MainQuizPage() {
   const handleResume = () => {
     setIsPaused(false);
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-    if (savedState && savedState.setId === setId) {
+    if (savedState && savedState.quizId === quizId) {
       setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
       setQuestions(savedState.quizState.questions);
       setTimeLeft(savedState.quizState.timeLeft);
@@ -83,20 +83,20 @@ function MainQuizPage() {
   //save
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-    if (savedState && savedState.setId === setId) {
+    if (savedState && savedState.quizId === quizId) {
       setIsPaused(savedState.paused);
       setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
       setQuestions(savedState.quizState.questions);
       setTimeLeft(savedState.quizState.timeLeft);
     }
-  }, [setId]);
+  }, [quizId]);
 
 
   //fetch question from database, include questions and answers
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const questionData = await FlashcardRepo.getQuestionItems(setId);
+        const questionData = await FlashcardRepo.getQuestionItems(quizId);
         const questionsArray = Object.keys(questionData).map(key => {
         const correctAnswerIndex = questionData[key].correctChoice;
         const correctAnswer = questionData[key].choices[correctAnswerIndex];
@@ -117,7 +117,7 @@ function MainQuizPage() {
       }
     };
     fetchQuestions();}, 
-    [setId, shuffleChoices]);
+    [quizId, shuffleChoices]);
   
 
   //update timeleft when change length of question

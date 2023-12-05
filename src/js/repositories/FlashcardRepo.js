@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import { database, auth } from '../../firebase';
-import { collection, getDocs, getDoc, query, where, orderBy, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove } from 'firebase/firestore';
+import { collection, getDocs, getDoc, query, where, orderBy, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove, increment} from 'firebase/firestore';
 
 const FlashcardRepo = {
 
@@ -91,7 +91,7 @@ const FlashcardRepo = {
             const initialScore = {
                 [scoreId]: {
                     score: 0,
-                    attempt: 0, 
+                    attempt: increment(0), 
                 },
             };
 
@@ -680,7 +680,7 @@ const FlashcardRepo = {
             const initialScore = {
                 [scoreId]: {
                     score: 0,
-                    attempt: 0, 
+                    attempt: increment(0), 
                 },
             };
             const setData = {
@@ -797,36 +797,50 @@ const FlashcardRepo = {
         }
     },
     
-    updateScoreAndAddAttempt: async function(quizId, newScore) {
+    // this will add the user score to the db as well as the attempt
+    updateScoreAndAddAttempt: async function(quizId, score) {
         try {
-            //get a new ID for the attempt
-            const attemptId = doc(collection(database, 'attempts')).id;
-
-            //create the attempt data
-            const attemptData = {
-                score: newScore,
-                attemptId: attemptId,
-                
+            // create the attempt data
+            const scoreData = {
+                attempt: 1, // initialize attempt to 1 for the first attempt
+                score: score, // the calculated score
+                submitAt: Timestamp.now(), // capture the time the user submitted the quiz
             };
-
-            //get a reference to the quiz document in the 'quizzesCreation' collection
+    
+            // get a reference to the quiz document in the 'quizzesCreation' collection
             const quizRef = doc(database, 'quizzesCreation', quizId);
-
-            //update the quiz document with the new attempt data
+    
+            const snap = await getDoc(quizRef);
+            const data = snap.data();
+            let quizScore = data.quizScore || {};
+    
+            // check if there are existing attempts
+            const existingAttempts = Object.values(quizScore).length;
+    
+            // increment the attempt field by 1
+            if (existingAttempts > 0) {
+                scoreData.attempt = increment(existingAttempts);
+            }
+    
+            // get a new ID for the attempt
+            const scoreId = doc(collection(database, 'score')).id;
+    
+            // add the new score data to the quizScore object
+            quizScore[scoreId] = scoreData;
+    
+            console.log("Adding new score to DB:", quizScore);
+    
+            // update the quiz document with the updated quizScore
             await updateDoc(quizRef, {
-                attempts: arrayUnion(attemptData)
-                });
-
-            console.log(`Attempt ID ${attemptId} with score ${newScore} added to quiz ID ${quizId}.`);
-                return attemptId;
-            } catch (error) {
-                console.error("Error updating score and adding attempt:", error);
-                throw error;
-             }
-},
-
-
-
+                quizScore: quizScore
+            });
+    
+            return scoreId;
+        } catch (error) {
+            console.error("Error adding score", error);
+            throw error;
+        }
+    },
 
 };
 

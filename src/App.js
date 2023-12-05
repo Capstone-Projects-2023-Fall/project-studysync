@@ -72,7 +72,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/flashcard" element={<FlashcardComponent />} />
         <Route path="/quizFlash/:setId/quiz/:quizId" element={<Quiz />} />
-        <Route path="/quizmain/:setId" element={<MainQuizPage />} />
+        <Route path="/quizmain/:quizId" element={<MainQuizPage />} />
         <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
         <Route
           path="/"
