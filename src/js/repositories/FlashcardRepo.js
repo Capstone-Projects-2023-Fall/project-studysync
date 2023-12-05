@@ -842,6 +842,27 @@ const FlashcardRepo = {
         }
     },
 
+
+    //get score and attempt date
+    getQuizAttemptsForUser: async function(userId) {
+        const quizAttempts = [];
+        try {
+            //reference to the user's quiz scores
+            const scoresRef = collection(database, 'score'); 
+            const q = query(scoresRef, where("userId", "==", userId));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                quizAttempts.push({
+                    score: data.score,
+                    submitAt: data.submitAt.toDate().toLocaleString(), 
+                });
+        });
+    } catch (error) {
+        console.error("Error fetching user's quiz attempts:", error);
+    }
+    return quizAttempts;
+},
 };
 
 export default FlashcardRepo;
