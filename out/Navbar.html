@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: DashboardCom</title>
+    <title>JSDoc: Class: Navbar</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: DashboardCom</h1>
+    <h1 class="page-title">Class: Navbar</h1>
 
     
 
@@ -28,12 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>DashboardCom<span class="signature">()</span><span class="type-signature"></span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>Navbar<span class="signature">(items)</span><span class="type-signature"> &rarr; {React.Component}</span></h2>
         
-            <div class="class-description">DashboardCom 
-Provides a dashboard view in the application.
-This component displays events, friends, recent flashcards, and quizzes.
-It also handles loading animations and navigational functionality.</div>
+            <div class="class-description">Navbar - A functional React component that renders the navigation bar.</div>
         
     
 </header>
@@ -48,7 +45,7 @@ It also handles loading animations and navigational functionality.</div>
     
 
     
-    <h4 class="name" id="DashboardCom"><span class="type-signature"></span>new DashboardCom<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Navbar"><span class="type-signature"></span>new Navbar<span class="signature">(items)</span><span class="type-signature"> &rarr; {React.Component}</span></h4>
     
 
     
@@ -61,6 +58,55 @@ It also handles loading animations and navigational functionality.</div>
 
 
 
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>items</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Object></span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Array of navigation items for the navbar.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
 
 
@@ -96,7 +142,7 @@ It also handles loading animations and navigational functionality.</div>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DashboardCom.js.html">DashboardCom.js</a>, <a href="DashboardCom.js.html#line42">line 42</a>
+        <a href="Navbar.js.html">Navbar.js</a>, <a href="Navbar.js.html#line13">line 13</a>
     </li></ul></dd>
     
 
@@ -121,15 +167,30 @@ It also handles loading animations and navigational functionality.</div>
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    A navigation bar component.
+</div>
 
 
 
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">React.Component</span>
 
-    <h5>Example</h5>
+
+    </dd>
+</dl>
+
     
-    <pre class="prettyprint"><code>return (
-  &lt;DashboardCom />
-)</code></pre>
+
+
 
 
 
@@ -159,7 +220,7 @@ It also handles loading animations and navigational functionality.</div>
     
 
     
-    <h4 class="name" id=".useEffect"><span class="type-signature">(static) </span>useEffect<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".toggleNotificationPanel"><span class="type-signature">(static) </span>toggleNotificationPanel<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -167,9 +228,7 @@ It also handles loading animations and navigational functionality.</div>
 
 
 <div class="description">
-    useEffect hook for fetching data and animations when the component mounts.
-It fetches user friends, upcoming events, owned flashcards, and quizzes,
-and sets up Lottie animations.
+    Toggles the notification panel's visibility.
 </div>
 
 
@@ -213,7 +272,7 @@ and sets up Lottie animations.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="DashboardCom.js.html">DashboardCom.js</a>, <a href="DashboardCom.js.html#line69">line 69</a>
+        <a href="Navbar.js.html">Navbar.js</a>, <a href="Navbar.js.html#line31">line 31</a>
     </li></ul></dd>
     
 
