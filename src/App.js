@@ -21,8 +21,6 @@ import React, { useEffect, useState } from "react";
 import UpcomingEvents from "./js/react/UpcomingEvents.js";
 import { checkUpcomingEvents } from "./js/react/useNotificationCount.js";
 
-import QuizHistory from "./js/react/leaderboard.js";
-
 function App() {
   const [lottieAnimation, setLottieAnimation] = useState(null);
 
