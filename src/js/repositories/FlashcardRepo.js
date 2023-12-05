@@ -655,7 +655,7 @@ const FlashcardRepo = {
             orderBy('createdAt', 'asc'), 
             limit(1) // limit the result to only one document (the earliest created quiz)
         )
-    );
+        );
             if (!querySnapshot.empty) {
                 return querySnapshot.docs[0].id;
             }
