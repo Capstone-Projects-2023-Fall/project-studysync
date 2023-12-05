@@ -1,4 +1,32 @@
-import React, { useState, useEffect, useCallback } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: MainQuizPage.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: MainQuizPage.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useEffect, useCallback } from 'react';
 import { AppBar, Toolbar, Typography, Button, List, ListItem, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
@@ -100,7 +128,7 @@ function MainQuizPage() {
   const handleResume = () => {
     setIsPaused(false);
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-    if (savedState && savedState.setId === setId) {
+    if (savedState &amp;&amp; savedState.setId === setId) {
       setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
       setQuestions(savedState.quizState.questions);
       setTimeLeft(savedState.quizState.timeLeft);
@@ -130,7 +158,7 @@ function MainQuizPage() {
   //save
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-    if (savedState && savedState.setId === setId) {
+    if (savedState &amp;&amp; savedState.setId === setId) {
       setIsPaused(savedState.paused);
       setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
       setQuestions(savedState.quizState.questions);
@@ -175,7 +203,7 @@ function MainQuizPage() {
 
   useEffect(() => {
     let timer = null;
-    if (timeLeft > 0 && !isPaused && !quizFinished) {
+    if (timeLeft > 0 &amp;&amp; !isPaused &amp;&amp; !quizFinished) {
       timer = setInterval(() => {
         setTimeLeft(prevTimeLeft => prevTimeLeft - 1);
       }, 1000);
@@ -311,8 +339,8 @@ function MainQuizPage() {
   const getButtonStyle = (choiceIndex, questionIndex) => {
     if (questions.length > 0) {
       const question = questions[questionIndex];
-      const isSelected = question.userAnswer !== null && choiceIndex === question.userAnswer;
-      const isCorrect = quizFinished && choiceIndex === question.correctChoice;
+      const isSelected = question.userAnswer !== null &amp;&amp; choiceIndex === question.userAnswer;
+      const isCorrect = quizFinished &amp;&amp; choiceIndex === question.correctChoice;
       if (isCorrect) {
         return { backgroundColor: 'green', color: 'white' };
       } else if (isSelected) {
@@ -341,91 +369,91 @@ function MainQuizPage() {
 
 
   return (
-    <div>
+    &lt;div>
       {/*appBar for the main header */}
-      <AppBar position="static">
-        <Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h4" component="h2" style={{ margin: 0 }}>
+      &lt;AppBar position="static">
+        &lt;Toolbar style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          &lt;Typography variant="h4" component="h2" style={{ margin: 0 }}>
             Quiz
-          </Typography>
-          <div style={{ position: 'relative' }}>
-            {!quizFinished && (
-              <>
+          &lt;/Typography>
+          &lt;div style={{ position: 'relative' }}>
+            {!quizFinished &amp;&amp; (
+              &lt;>
                 {/*timer display */}
-                <Typography variant="h6" style={{ marginRight: '20px' }}>
+                &lt;Typography variant="h6" style={{ marginRight: '20px' }}>
                   Time Left: {formatTime()}
-                </Typography>
-              </>
+                &lt;/Typography>
+              &lt;/>
             )}
-          </div>
+          &lt;/div>
           {/*submit button */}
-          <Button
+          &lt;Button
             variant="contained"
             color="primary"
             onClick={handleSubmit}
             style={{ position: 'absolute', top: '100px', right: '0' }}
             disabled={isPaused}>
             Submit Quiz
-          </Button>
+          &lt;/Button>
 
           {/*pause and resume button*/}
-          {!quizFinished && !isPaused && (
-            <Button
+          {!quizFinished &amp;&amp; !isPaused &amp;&amp; (
+            &lt;Button
               variant="contained"
               color="primary"
               onClick={handlePause}>
               Pause Quiz
-            </Button>
+            &lt;/Button>
           )}
-          {!quizFinished && isPaused && (
-            <Button
+          {!quizFinished &amp;&amp; isPaused &amp;&amp; (
+            &lt;Button
               variant="contained"
               color="primary"
               onClick={handleResume}>
               resume
-            </Button>
+            &lt;/Button>
           )}
-        </Toolbar>
-      </AppBar>
+        &lt;/Toolbar>
+      &lt;/AppBar>
 
-      <div style={{ display: 'flex', marginTop: '20px' }}>
+      &lt;div style={{ display: 'flex', marginTop: '20px' }}>
         {/*sidebar for questions */}
-        <Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
-          <List>
+        &lt;Paper elevation={3} style={{ width: '20%', maxHeight: '100vh', overflow: 'auto', padding: '10px' }}>
+          &lt;List>
             {questions.map((_, index) => (
-              <ListItem
+              &lt;ListItem
                 button
                 key={index}
                 onClick={() => setSelectedQuestionIndex(index)}
                 style={getQuestionStyle(index)}
               >
                 {`Question ${index + 1}`}
-              </ListItem>
+              &lt;/ListItem>
             ))}
-          </List>
-        </Paper>
+          &lt;/List>
+        &lt;/Paper>
 
         {/*main content area for displaying questions and answer options */}
-        <div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          {selectedQuestionIndex !== null && questions[selectedQuestionIndex] && (
-            <>
+        &lt;div style={{ flex: 1, padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          {selectedQuestionIndex !== null &amp;&amp; questions[selectedQuestionIndex] &amp;&amp; (
+            &lt;>
               {/*question display */}
-              <Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
+              &lt;Typography variant="h4" component="h2" style={{ marginBottom: '30px' }}>
                 {`Question ${selectedQuestionIndex + 1}`}
-              </Typography>
-              <Typography variant="h6" component="h2" style={{ marginBottom: '30px' }}>
+              &lt;/Typography>
+              &lt;Typography variant="h6" component="h2" style={{ marginBottom: '30px' }}>
                 {questions[selectedQuestionIndex].question}
-              </Typography>
+              &lt;/Typography>
 
               {/*answer options */}
-              <div style={{
+              &lt;div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
                 gap: '10px',
                 marginTop: '20px'
               }}>
                 {questions[selectedQuestionIndex].choices.map((choice, index) => (
-                  <Button
+                  &lt;Button
                     key={index}
                     variant="contained"
                     style={getButtonStyle(index, selectedQuestionIndex)}
@@ -433,89 +461,89 @@ function MainQuizPage() {
                     disabled={quizFinished || isPaused}
                   >
                     {choice}
-                  </Button>
+                  &lt;/Button>
                 ))}
-              </div>
-            </>
+              &lt;/div>
+            &lt;/>
           )}
-        </div>
-      </div>
+        &lt;/div>
+      &lt;/div>
 
       {/*previous and next buttons */}
-      <div style={{ marginTop: '30px' }}>
-        <Button variant="contained" color="primary" onClick={handlePrevious} disabled={selectedQuestionIndex === 0}>
+      &lt;div style={{ marginTop: '30px' }}>
+        &lt;Button variant="contained" color="primary" onClick={handlePrevious} disabled={selectedQuestionIndex === 0}>
           Previous
-        </Button>
+        &lt;/Button>
 
-        <Button variant="contained" color="primary" onClick={handleNext} disabled={selectedQuestionIndex === questions.length - 1} style={{ marginLeft: '10px' }}>
+        &lt;Button variant="contained" color="primary" onClick={handleNext} disabled={selectedQuestionIndex === questions.length - 1} style={{ marginLeft: '10px' }}>
           Next
-        </Button>
-      </div>
+        &lt;/Button>
+      &lt;/div>
 
       {/*display score and button group*/}
-      {quizFinished && (
-        <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <Typography variant="h4" component="h2">
+      {quizFinished &amp;&amp; (
+        &lt;div style={{ textAlign: 'center', marginTop: '20px' }}>
+          &lt;Typography variant="h4" component="h2">
             {`Your score: ${score ? score.toFixed(2) : 0}%`}
-          </Typography>
+          &lt;/Typography>
 
           {/*button group*/}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
+          &lt;div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '10px' }}>
 
 
             {/*back button */}
-            <Button
+            &lt;Button
               variant="contained"
               color="secondary"
               onClick={handleBack}
             >
               Back
-            </Button>
-          </div>
-        </div>
+            &lt;/Button>
+          &lt;/div>
+        &lt;/div>
       )}
 
       {/*submit Quiz Confirmation Dialog */}
-      <Dialog open={openSubmitConfirm} onClose={() => setOpenSubmitConfirm(false)}>
-        <DialogTitle>Submit Quiz</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+      &lt;Dialog open={openSubmitConfirm} onClose={() => setOpenSubmitConfirm(false)}>
+        &lt;DialogTitle>Submit Quiz&lt;/DialogTitle>
+        &lt;DialogContent>
+          &lt;DialogContentText>
             Are you sure you want to submit the quiz?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenSubmitConfirm(false)} color="primary">
+          &lt;/DialogContentText>
+        &lt;/DialogContent>
+        &lt;DialogActions>
+          &lt;Button onClick={() => setOpenSubmitConfirm(false)} color="primary">
             No
-          </Button>
-          <Button onClick={handleConfirmSubmit} color="primary">
+          &lt;/Button>
+          &lt;Button onClick={handleConfirmSubmit} color="primary">
             Yes
-          </Button>
-        </DialogActions>
-      </Dialog>
+          &lt;/Button>
+        &lt;/DialogActions>
+      &lt;/Dialog>
 
       {/*pause quiz dialog*/}
-      <Dialog
+      &lt;Dialog
         open={openDialog}
         onClose={handleCloseDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description">
 
-        <DialogTitle id="alert-dialog-title">{"Pause Quiz"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+        &lt;DialogTitle id="alert-dialog-title">{"Pause Quiz"}&lt;/DialogTitle>
+        &lt;DialogContent>
+          &lt;DialogContentText id="alert-dialog-description">
             Are you sure you want to pause the quiz?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleConfirmPause} color="primary" autoFocus>
+          &lt;/DialogContentText>
+        &lt;/DialogContent>
+        &lt;DialogActions>
+          &lt;Button onClick={handleConfirmPause} color="primary" autoFocus>
             Yes
-          </Button>
-          <Button onClick={handleCloseDialog} color="primary">
+          &lt;/Button>
+          &lt;Button onClick={handleCloseDialog} color="primary">
             No
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+          &lt;/Button>
+        &lt;/DialogActions>
+      &lt;/Dialog>
+    &lt;/div>
   );
 }
 
@@ -523,3 +551,26 @@ export default MainQuizPage;
 
 
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MainQuizPage.html">MainQuizPage</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Tue Dec 05 2023 00:05:12 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
