@@ -1,19 +1,57 @@
 import React from 'react';
-
-// Sample data
-const usersData = [
-    { id: 1, name: 'Alice', totalQuizzes: 5, averageScore: 80 },
-    { id: 2, name: 'Bob', totalQuizzes: 3, averageScore: 70 },
-    { id: 3, name: 'Charlie', totalQuizzes: 8, averageScore: 90 },
-    // ... add more users as needed
-];
+import './leaderboard.css';
+import { database } from '../../firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 class Leaderboard extends React.Component {
+    state = {
+        usersData: [],
+        isLoading: true,
+        error: null
+    };
+
+    componentDidMount() {
+        this.fetchUsersAndScores();
+    }
+
+    fetchUsersAndScores = async () => {
+      this.setState({ isLoading: true });
+      try {
+          const usersSnapshot = await getDocs(collection(database, 'users'));
+          const usersData = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+          const usersWithScoresPromises = usersData.map(async user => {
+              const quizzesSnapshot = await getDocs(collection(database, 'quizzesCreation'));
+              let totalScore = 0;
+              let attemptCount = 0;
+
+              quizzesSnapshot.forEach(quizDoc => {
+                  const quizData = quizDoc.data();
+                  if (quizData.authorId === user.id && quizData.quizScore) {
+                      Object.values(quizData.quizScore).forEach(attempt => {
+                          totalScore += attempt.score;
+                          attemptCount++;
+                      });
+                  }
+              });
+
+              const averageScore = attemptCount > 0 ? (totalScore / attemptCount) : 0;
+              return { ...user, averageScore: averageScore.toFixed(2) };
+          });
+
+          const usersWithScores = await Promise.all(usersWithScoresPromises);
+          this.setState({ usersData: usersWithScores, isLoading: false });
+      } catch (error) {
+          console.error("Error fetching users and quizzes: ", error);
+          this.setState({ error, isLoading: false });
+      }
+    }
+  
     renderLeaderboard(data, title, key) {
         return (
-            <div>
+            <div className="leaderboard-section">
                 <h2>{title}</h2>
-                <table>
+                <table className="leaderboard-table">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -34,14 +72,21 @@ class Leaderboard extends React.Component {
     }
 
     render() {
-        // Sort users by totalQuizzes and averageScore respectively
-        const byTotalQuizzes = [...usersData].sort((a, b) => b.totalQuizzes - a.totalQuizzes);
-        const byAverageScore = [...usersData].sort((a, b) => b.averageScore - a.averageScore);
+        const { usersData, isLoading, error } = this.state;
+
+        if (isLoading) {
+            return <div className="loading">Loading...</div>;
+        }
+
+        if (error) {
+            return <div className="error">Error loading leaderboard: {error.message}</div>;
+        }
+
+        const sortedUsers = [...usersData].sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
 
         return (
-            <div>
-                {this.renderLeaderboard(byTotalQuizzes, 'Total Quizzes Leaderboard', 'totalQuizzes')}
-                {this.renderLeaderboard(byAverageScore, 'Average Score Leaderboard', 'averageScore')}
+            <div className="leaderboards-container">
+                {this.renderLeaderboard(sortedUsers, 'Average Score Leaderboard', 'averageScore')}
             </div>
         );
     }
