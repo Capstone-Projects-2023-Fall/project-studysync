@@ -72,7 +72,7 @@ const QuizComponent = () => {
 
     const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
-    const [isQuizPaused, setIsQuizPaused] = useState(true);//set quiz as pause
+    const [isQuizPaused, setIsQuizPaused] = useState(false);//set quiz as pause
     const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz info
     const [openResumeConfirm, setOpenResumeConfirm] = useState(false);//for resume dialog
 

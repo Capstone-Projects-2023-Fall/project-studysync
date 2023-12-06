@@ -6,7 +6,7 @@ import FlashcardRepo from '../repositories/FlashcardRepo';
 //mainQuizPage component
 function MainQuizPage() {
 
-  const { setId,quizId} = useParams(); //aroute param to identify the quiz set
+  const {quizId} = useParams(); //aroute param to identify the quiz set
   const [questions, setQuestions] = useState([]); //array to hold question data from database
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
   const [score, setScore] = useState(null);//for score
@@ -50,7 +50,7 @@ function MainQuizPage() {
       questions,
       timeLeft
     };
-    localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ setId, paused: true, quizState }));
+    localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ quizId, paused: true, quizState }));
     setIsPaused(true);
     handleCloseDialog();
   };
@@ -60,7 +60,7 @@ function MainQuizPage() {
   const handleResume = () => {
     setIsPaused(false);
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-    if (savedState && savedState.setId === setId) {
+    if (savedState && savedState.quizId === quizId) {
       setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
       setQuestions(savedState.quizState.questions);
       setTimeLeft(savedState.quizState.timeLeft);
@@ -83,20 +83,20 @@ function MainQuizPage() {
   //save
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-    if (savedState && savedState.setId === setId) {
+    if (savedState && savedState.quizId === quizId) {
       setIsPaused(savedState.paused);
       setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
       setQuestions(savedState.quizState.questions);
       setTimeLeft(savedState.quizState.timeLeft);
     }
-  }, [setId]);
+  }, [quizId]);
 
 
   //fetch question from database, include questions and answers
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const questionData = await FlashcardRepo.getQuestionItems(setId);
+        const questionData = await FlashcardRepo.getQuestionItems(quizId);
         const questionsArray = Object.keys(questionData).map(key => {
         const correctAnswerIndex = questionData[key].correctChoice;
         const correctAnswer = questionData[key].choices[correctAnswerIndex];
@@ -117,7 +117,7 @@ function MainQuizPage() {
       }
     };
     fetchQuestions();}, 
-    [setId, shuffleChoices]);
+    [quizId, shuffleChoices]);
   
 
   //update timeleft when change length of question
@@ -166,27 +166,42 @@ function MainQuizPage() {
 
 
   //calculate score
-  const calculateScore = () => {const correctAnswers = questions.reduce((acc, question) => {
-    //Count the number of correct answers
-    return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
-  }, 0);
-  //calculate the score percentage based on the total number of questions
-  const scorePercentage = (correctAnswers / questions.length) * 100;
-  setScore(scorePercentage);
-};
+  const calculateScore = () => {
+    const correctAnswers = questions.reduce((acc, question) => {
+      return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
+    }, 0);
+    const scorePercentage = (correctAnswers / questions.length) * 100;
+    return scorePercentage;
+  };
 
 //open submit dialog
 const handleSubmit = () => {
   setOpenSubmitConfirm(true);
 };
 
-//get score close dialog
-const handleConfirmSubmit = () => {
-  calculateScore();
+
+// for submit
+// Modify handleConfirmSubmit to use the returned score from calculateScore
+const handleConfirmSubmit = async () => {
+  const calculatedScore = calculateScore(); // Get the score directly
   setQuizFinished(true);
+  
+  if (calculatedScore !== null) {
+    try {
+      const newAttemptId = await FlashcardRepo.updateScoreAndAddAttempt(quizId, calculatedScore);
+      console.log(`New attempt recorded with ID: ${newAttemptId}`);
+      setScore(calculatedScore); // Now you can update the state with the calculated score
+    } catch (error) {
+      console.error("Failed to update score and attempt:", error);
+    }
+  } else {
+    console.error("Score calculation failed, cannot update score and attempt.");
+  }
+
   localStorage.removeItem(LOCAL_STORAGE_QUIZ_KEY);
   setOpenSubmitConfirm(false); 
 };
+
 
  
 
