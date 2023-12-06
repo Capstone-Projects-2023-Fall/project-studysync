@@ -15,41 +15,39 @@ class Leaderboard extends React.Component {
     }
 
     fetchUsersAndScores = async () => {
-      this.setState({ isLoading: true });
-      try {
-          const usersSnapshot = await getDocs(collection(database, 'users'));
-          const usersData = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-
-          const usersWithScoresPromises = usersData.map(async user => {
-              const quizzesSnapshot = await getDocs(collection(database, 'quizzesCreation'));
-              let totalScore = 0;
-              let attemptCount = 0;
-
-              quizzesSnapshot.forEach(quizDoc => {
-                const quizData = quizDoc.data();
-                if (quizData.authorId === user.id && quizData.quizScore) {
-                    Object.values(quizData.quizScore).forEach(attempt => {
-                        if (attempt.attempt > 0) {
+        this.setState({ isLoading: true });
+        try {
+            const usersSnapshot = await getDocs(collection(database, 'users'));
+            const usersData = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    
+            const usersWithScoresAndQuizzesPromises = usersData.map(async user => {
+                const quizzesSnapshot = await getDocs(collection(database, 'quizzesCreation'));
+                let totalScore = 0;
+                let attemptCount = 0;
+    
+                quizzesSnapshot.forEach(quizDoc => {
+                    const quizData = quizDoc.data();
+                    if (quizData.authorId === user.id && quizData.quizScore) {
+                        const userAttempts = Object.values(quizData.quizScore).filter(attempt => attempt.attempt > 0);
+                        userAttempts.forEach(attempt => {
                             totalScore += attempt.score;
-                            attemptCount++;
-                        }
-                    });
-                }
+                        });
+                        attemptCount += userAttempts.length;
+                    }
+                });
+    
+                const averageScore = attemptCount > 0 ? (totalScore / attemptCount) : 0;
+                return { ...user, averageScore: averageScore.toFixed(2), quizCount: attemptCount }; 
             });
-            
-
-              const averageScore = attemptCount > 0 ? (totalScore / attemptCount) : 0;
-              return { ...user, averageScore: averageScore.toFixed(2) };
-          });
-
-          const usersWithScores = await Promise.all(usersWithScoresPromises);
-          this.setState({ usersData: usersWithScores, isLoading: false });
-      } catch (error) {
-          console.error("Error fetching users and quizzes: ", error);
-          this.setState({ error, isLoading: false });
-      }
+    
+            const usersWithScoresAndQuizzes = await Promise.all(usersWithScoresAndQuizzesPromises);
+            this.setState({ usersData: usersWithScoresAndQuizzes, isLoading: false });
+        } catch (error) {
+            console.error("Error fetching users and quizzes: ", error);
+            this.setState({ error, isLoading: false });
+        }
     }
-  
+
     renderLeaderboard(data, title, key) {
         return (
             <div className="leaderboard-section">
@@ -74,6 +72,30 @@ class Leaderboard extends React.Component {
         );
     }
 
+    renderTotalQuizzesLeaderboard(data) {
+        return (
+            <div className="leaderboard-section">
+                <h2>Total Quizzes Taken</h2>
+                <table className="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Quizzes Taken</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map(user => (
+                            <tr key={user.id}>
+                                <td>{user.name}</td>
+                                <td>{user.quizCount}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
     render() {
         const { usersData, isLoading, error } = this.state;
 
@@ -85,11 +107,13 @@ class Leaderboard extends React.Component {
             return <div className="error">Error loading leaderboard: {error.message}</div>;
         }
 
-        const sortedUsers = [...usersData].sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
+        const sortedUsersByScore = [...usersData].sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
+        const sortedUsersByQuizzes = [...usersData].sort((a, b) => b.quizCount - a.quizCount);
 
         return (
             <div className="leaderboards-container">
-                {this.renderLeaderboard(sortedUsers, 'Average Score Leaderboard', 'averageScore')}
+                {this.renderLeaderboard(sortedUsersByScore, 'Average Score Leaderboard', 'averageScore')}
+                {this.renderTotalQuizzesLeaderboard(sortedUsersByQuizzes)}
             </div>
         );
     }
