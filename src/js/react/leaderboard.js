@@ -32,12 +32,12 @@ class Leaderboard extends React.Component {
                         userAttempts.forEach(attempt => {
                             totalScore += attempt.score;
                         });
-                        attemptCount += userAttempts.length;
+                        attemptCount += userAttempts.length; // Increment by the number of attempts, not quizzes
                     }
                 });
     
                 const averageScore = attemptCount > 0 ? (totalScore / attemptCount) : 0;
-                return { ...user, averageScore: averageScore.toFixed(2), quizCount: attemptCount }; 
+                return { ...user, averageScore: averageScore.toFixed(2), quizCount: attemptCount }; // Use attemptCount for quizCount
             });
     
             const usersWithScoresAndQuizzes = await Promise.all(usersWithScoresAndQuizzesPromises);
@@ -47,6 +47,7 @@ class Leaderboard extends React.Component {
             this.setState({ error, isLoading: false });
         }
     }
+    
 
     renderLeaderboard(data, title, key) {
         return (
