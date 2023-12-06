@@ -1,16 +1,14 @@
-import * as React from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardActionArea from '@mui/material/CardActionArea';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
+import Lottie from 'react-lottie-player';
 
 function RecentCards(props) {
-  const { card,imageLink ,cardLink} = props;
-
-
+  const { card, lottieAnimation, cardLink } = props;
 
   return (
     <Grid item xs={12} md={4}>
@@ -18,17 +16,21 @@ function RecentCards(props) {
         <Card sx={{ display: 'flex' }}>
           <CardContent sx={{ flex: 1 }}>
             <Typography component="h2" variant="h5" className='cards'>
-              {card.name.substring(0,14)}
+              {card.name.substring(0, 14)}
             </Typography>
             <Typography variant="subtitle1" paragraph>
+            
             </Typography>
           </CardContent>
-          <CardMedia
-            component="img"
-            sx={{ width: 160, display: { xs: 'none', sm: 'block' } }}
-            image={imageLink}
-            alt='Recent cards Pictures'
-          />
+         
+          {lottieAnimation && (
+            <Lottie
+              loop
+              animationData={lottieAnimation}
+              play
+              style={{ width: 160, height: 160 }}
+            />
+          )}
         </Card>
       </CardActionArea>
     </Grid>
@@ -36,13 +38,9 @@ function RecentCards(props) {
 }
 
 RecentCards.propTypes = {
-  post: PropTypes.shape({
-    date: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    imageLabel: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-  }).isRequired,
+  card: PropTypes.object.isRequired,
+  lottieAnimation: PropTypes.object, // Lottie animation data
+  cardLink: PropTypes.string.isRequired,
 };
 
 export default RecentCards;
