@@ -26,14 +26,17 @@ class Leaderboard extends React.Component {
               let attemptCount = 0;
 
               quizzesSnapshot.forEach(quizDoc => {
-                  const quizData = quizDoc.data();
-                  if (quizData.authorId === user.id && quizData.quizScore) {
-                      Object.values(quizData.quizScore).forEach(attempt => {
-                          totalScore += attempt.score;
-                          attemptCount++;
-                      });
-                  }
-              });
+                const quizData = quizDoc.data();
+                if (quizData.authorId === user.id && quizData.quizScore) {
+                    Object.values(quizData.quizScore).forEach(attempt => {
+                        if (attempt.attempt > 0) {
+                            totalScore += attempt.score;
+                            attemptCount++;
+                        }
+                    });
+                }
+            });
+            
 
               const averageScore = attemptCount > 0 ? (totalScore / attemptCount) : 0;
               return { ...user, averageScore: averageScore.toFixed(2) };
