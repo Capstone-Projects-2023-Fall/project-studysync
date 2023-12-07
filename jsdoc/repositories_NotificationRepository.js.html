@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: repositories/NotificationRepository.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: repositories/NotificationRepository.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
+    getItemById,
+    removeDocumentFromCollection,
+    getAllItems,
+    setField,
+} from "../utils/sharedRepositoryFunctions";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import { updateNotification } from "../react/useNotificationCount";
+/**
+ * @class NotificationRepository
+ * @classdesc NotificationRepository - Manages notification-related data interactions with the database.
+ * 
+ * @param {Object} database - The database connection used for accessing notification data.
+ * @param {EventRepository} eventRepo - An instance of EventRepository for event-related operations.
+ */
+export class NotificationRepository {
+    constructor(database, eventRepo) {
+        this.database = database;
+        this.eventRepo = eventRepo;
+    }
+    /**
+       * @memberof NotificationRepository
+       * @function getNotification
+       * @description Retrieves a single notification by its ID.
+       * @param {string} id - The ID of the notification to retrieve.
+       * @returns {Promise&lt;Object>} A promise that resolves to the notification object.
+       */
+    async getNotification(id) {
+        const notification = await getItemById(
+            this.database,
+            id,
+            "notifications",
+            "notification"
+        );
+        return notification;
+    }
+    /**
+       * @memberof NotificationRepository
+       * @function getAllNotifications
+       * @description Retrieves all notifications from the database.
+       * @returns {Promise&lt;Array&lt;Object>>} A promise that resolves to an array of notification objects.
+       */
+    async getAllNotifications() {
+        const notifications = await getAllItems(this.database, "notifications");
+        return notifications;
+    }
+    /**
+      * @memberof NotificationRepository
+      * @function removeNotification
+      * @description Removes a notification from the database.
+      * @param {string} id - The ID of the notification to be removed.
+      * @returns {Promise&lt;void>}
+      */
+    async removeNotification(id) {
+        await removeDocumentFromCollection(
+            this.database,
+            id,
+            "notifications",
+            "notification"
+        );
+    }
+    /**
+       * @memberof NotificationRepository
+       * @function addNotification
+       * @description Adds a new notification to the database.
+       * @param {Object} notification - The notification object to add.
+       * @returns {Promise&lt;string>} A promise that resolves to the ID of the newly added notification.
+       */
+    async addNotification(notification) {
+        try {
+            const notificationsCollection = collection(
+                this.database,
+                "notifications"
+            );
+            const notificationRef = await addDoc(
+                notificationsCollection,
+                notification.toJSON()
+            );
+            await setField(
+                this.database,
+                notificationRef.id,
+                "notifications",
+                "id",
+                notificationRef.id
+            );
+            return notificationRef.id;
+        } catch (error) {
+            console.log("error adding notification", error);
+        }
+    }
+    /**
+       * @memberof NotificationRepository
+       * @function getNotificationById
+       * @description Retrieves a notification by its ID.
+       * @param {string} id - The ID of the notification to retrieve.
+       * @returns {Promise&lt;Object>} A promise that resolves to the notification object.
+       */
+    async getNotificationById(id) {
+        return await this.getNotification(id);
+    }
+    /**
+      * @memberof NotificationRepository
+      * @function update
+      * @description Updates a notification's data in the database.
+      * @param {string} id - The ID of the notification to update.
+      * @returns {Promise&lt;Object>} A promise that resolves to the updated notification object.
+      */
+    async update(id) {
+        const noti = await updateNotification(id);
+        await this.updateNoti(id, noti);
+        return noti;
+    }
+    /**
+      * @memberof NotificationRepository
+      * @function updateNoti
+      * @description Updates specific fields of a notification in the database.
+      * @param {string} notiId - The ID of the notification to update.
+      * @param {Object} obj - The object containing updated fields for the notification.
+      * @returns {Promise&lt;void>}
+      */
+    async updateNoti(notiId, obj) {
+        const userRef = doc(this.database, "notifications", notiId);
+        try {
+            await updateDoc(userRef, obj);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+    /**
+       * @memberof NotificationRepository
+       * @function getListOfNotifications
+       * @description Retrieves a list of notifications by their IDs.
+       * @param {Array&lt;string>} listOfNotificationIds - An array of notification IDs.
+       * @returns {Promise&lt;Array&lt;Object>>} A promise that resolves to an array of notification objects.
+       */
+    async getListOfNotifications(listOfNotificationIds) {
+        const res = [];
+        let nullCount = 0;
+        for (const id of listOfNotificationIds) {
+            const noti = await this.getNotificationById(id);
+            res.push(noti);
+            if (!noti.event) {
+                nullCount += 1;
+            }
+        }
+        console.log("aaidoo list of notifications: ", res.length);
+        console.log("aaidoo, nullCount is: ", nullCount);
+        console.log(res);
+
+        return res;
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="EventRepository.html">EventRepository</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardRepo.html">FlashcardRepo</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MainQuizPage.html">MainQuizPage</a></li><li><a href="MySets.html">MySets</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="Notification.html">Notification</a></li><li><a href="NotificationRepository.html">NotificationRepository</a></li><li><a href="QuizComponent.html">QuizComponent</a></li><li><a href="QuizList.html">QuizList</a></li><li><a href="QuizRepository.html">QuizRepository</a></li><li><a href="UpcomingEvents.html">UpcomingEvents</a></li><li><a href="UserRepository.html">UserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Dec 07 2023 00:18:12 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
