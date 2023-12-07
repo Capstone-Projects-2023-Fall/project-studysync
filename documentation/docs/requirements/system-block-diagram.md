@@ -3,7 +3,10 @@ sidebar_position: 2
 ---
 
 # System Block Diagram
-![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/fd4272b0-e601-4698-87c5-7e6eaaa6c9d6)
+![system_block_diagram drawio](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/80e7c121-847a-4679-8f48-bd9bd3ae20f6)
+
+
+
 
 ## System Overview
 
