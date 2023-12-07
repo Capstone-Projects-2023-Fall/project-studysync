@@ -3,28 +3,51 @@ sidebar_position: 2
 ---
 
 # System Block Diagram
-![image](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/112578002/fd4272b0-e601-4698-87c5-7e6eaaa6c9d6)
+![system_block_diagram drawio](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/80e7c121-847a-4679-8f48-bd9bd3ae20f6)
 
-Users start using StudySync by going to the website on a browser, entering an engaging space created with React Frontend. Here, they log in securely with Firebase Authentication, making sure their experience is safe. Once logged in, users can easily interact with their study materials, with the Frontend and Firebase Database working together to let users access and change their learning resources in real time. All of this happens smoothly and reliably on Google Cloud, giving users a dependable and unified learning platform. All these parts work together to create a secure, interactive learning experience, powered by advanced technology, making studying easier and more enjoyable for everyone.
 
-Describing the User Journey
 
-User Interaction with Browser:
-Users start their journey when they access the StudySync platform through a web browser.
-Here, they interact with the interface and access different features, facilitated by the Frontend designed using React.
 
-Frontend and Authentication:
-When users need to log in or sign up, the Frontend interacts with Firebase Authentication.
-This block verifies the user credentials and handles secure user sessions, allowing or denying access based on the verification.
+## System Overview
 
-Frontend and Database Interaction:
-Once authenticated, users can create, modify, or interact with the study materials.
-The Frontend fetches and sends data to and from the Firebase Database, ensuring users can retrieve and store their flashcards, quizzes, and other study materials.
+StudySync is a web-based application optimized for educational engagement, running in web browsers.
 
-Google Cloud Hosting:
-The entire platform is hosted on Google Cloud through Firebase services.
-This provides a robust and scalable environment, ensuring seamless access to the StudySync platform for all users, regardless of traffic load.
+### System Components:
+- **Frontend Development**: 
+  - Utilizes React for an engaging user interface.
+  - Facilitates easy navigation and interaction.
 
-User Experience:
-Users experience an interactive and user-friendly environment through the React-powered Frontend.
-They can leverage the comprehensive features offered by StudySync, such as flashcard creation, quizzes, and social learning, with the assurance of secure and seamless interactions facilitated by Firebase services.
+- **Firebase Database and User Authentication**: 
+  - Manages user data and real-time transactions.
+  - Ensures user data safety and privacy.
+
+- **Integration of ChatGPT API**: 
+  - Processes and responds to user inputs via Firebase Cloud Functions.
+  - Enhances the interactive learning experience.
+
+- **Hosting on Google Cloud**: 
+  - Ensures reliable performance and scalability.
+  - Uses Firebase services, part of Google Cloud, for platform support.
+
+## User Journey
+
+### 1. User Interaction with Browser:
+- Access the platform through a web browser.
+- Interact with the React-based interface for various educational features.
+
+### 2. Frontend and Authentication:
+- Log in or sign up via the frontend that interfaces with Firebase Authentication.
+- Validates credentials and maintains secure access.
+
+### 3. Frontend and Database Interaction:
+- Post-authentication, engage with study materials.
+- Frontend manages real-time data exchange with Firebase Database.
+
+### 4. ChatGPT API Integration:
+- ChatGPT API interactions are managed through Firebase Cloud Functions.
+- Enables AI-based educational content and responses.
+
+### 5. User Experience:
+- Interactive and user-friendly environment provided by React Frontend.
+- Offers AI-enhanced flashcard creation, quizzes, and social learning.
+- User interactions secured by Firebase services.
