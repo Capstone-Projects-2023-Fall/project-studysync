@@ -20,6 +20,8 @@ import Lottie from "react-lottie-player";
 import UpcomingEvents from "./js/react/UpcomingEvents.js";
 import { checkUpcomingEvents } from "./js/react/useNotificationCount.js";
 
+import Leaderboard from "./js/react/leaderboard.js";
+
 function App() {
   const [lottieAnimation, setLottieAnimation] = useState(null);
 
@@ -62,6 +64,8 @@ function App() {
     { label: "Socials", link: `/socials/${user && user.uid}` },
     { label: "Profile", link: `/profile/${user && user.uid}` },
     { label: "Events", link: `/events/${user && user.uid}` },
+    { label: "Leaderboard", link: "/leaderboard" },
+
     //... add other items
   ];
 
@@ -73,7 +77,7 @@ function App() {
         <Route path="/flashcard" element={<FlashcardComponent />} />
         <Route path="/profile/:UserId" element={<UserProfile />} />
         <Route path="/quizFlash/:setId/quiz/:quizId" element={<Quiz />} />
-        <Route path="/quizmain/:setId" element={<MainQuizPage />} />
+        <Route path="/quizmain/:quizId" element={<MainQuizPage />} />
         <Route path="/flashcard-ui/:setId" element={<FlashcardApp />} />
         <Route
           path="/"
@@ -112,6 +116,7 @@ function App() {
         <Route path="/mysets/:UserId" element={<MySets />} />
         <Route path="/events/:UserId" element={<UpcomingEvents />} />
         <Route path="/dashboard/:UserId" element={<DashboardCom />} />
+        <Route path="/leaderboard/" element={<Leaderboard/>} />
         <Route
           path="/flashcardshare/:flashcardId"
           element={<FlashcardShare />}

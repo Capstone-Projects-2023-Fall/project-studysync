@@ -15,7 +15,8 @@ import FlashcardRepo from '../repositories/FlashcardRepo';
  */
 function MainQuizPage() {
 
-  const { setId, quizId } = useParams(); //aroute param to identify the quiz set
+
+  const {quizId} = useParams(); //aroute param to identify the quiz set
   const [questions, setQuestions] = useState([]); //array to hold question data from database
   const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null); //current selected question index
   const [score, setScore] = useState(null);//for score
@@ -85,7 +86,7 @@ function MainQuizPage() {
       questions,
       timeLeft
     };
-    localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ setId, paused: true, quizState }));
+    localStorage.setItem(LOCAL_STORAGE_QUIZ_KEY, JSON.stringify({ quizId, paused: true, quizState }));
     setIsPaused(true);
     handleCloseDialog();
   };
@@ -100,7 +101,7 @@ function MainQuizPage() {
   const handleResume = () => {
     setIsPaused(false);
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-    if (savedState && savedState.setId === setId) {
+    if (savedState && savedState.quizId === quizId) {
       setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
       setQuestions(savedState.quizState.questions);
       setTimeLeft(savedState.quizState.timeLeft);
@@ -130,20 +131,20 @@ function MainQuizPage() {
   //save
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem(LOCAL_STORAGE_QUIZ_KEY));
-    if (savedState && savedState.setId === setId) {
+    if (savedState && savedState.quizId === quizId) {
       setIsPaused(savedState.paused);
       setSelectedQuestionIndex(savedState.quizState.selectedQuestionIndex);
       setQuestions(savedState.quizState.questions);
       setTimeLeft(savedState.quizState.timeLeft);
     }
-  }, [setId]);
+  }, [quizId]);
 
 
   //fetch question from database, include questions and answers
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const questionData = await FlashcardRepo.getQuestionItems(setId);
+        const questionData = await FlashcardRepo.getQuestionItems(quizId);
         const questionsArray = Object.keys(questionData).map(key => {
           const correctAnswerIndex = questionData[key].correctChoice;
           const correctAnswer = questionData[key].choices[correctAnswerIndex];
@@ -163,10 +164,10 @@ function MainQuizPage() {
         console.error("Failed to fetch questions:", error);
       }
     };
-    fetchQuestions();
-  },
-    [setId, shuffleChoices]);
 
+    fetchQuestions();}, 
+    [quizId, shuffleChoices]);
+  
 
   //update timeleft when change length of question
   useEffect(() => {
@@ -226,44 +227,45 @@ function MainQuizPage() {
 
 
   //calculate score
-  /**
- * @memberof MainQuizPage
- * @function calculateScore
- * @description Calculates the score based on the number of correct answers.
- */
+
   const calculateScore = () => {
     const correctAnswers = questions.reduce((acc, question) => {
-      //Count the number of correct answers
       return acc + (question.userAnswer === question.correctChoice ? 1 : 0);
     }, 0);
-    //calculate the score percentage based on the total number of questions
     const scorePercentage = (correctAnswers / questions.length) * 100;
-    setScore(scorePercentage);
+    return scorePercentage;
   };
 
-  //open submit dialog
-  /**
-   * @memberof MainQuizPage
-   * @function handleSubmit
-   * @description Opens the submit confirmation dialog.
-   */
-  const handleSubmit = () => {
-    setOpenSubmitConfirm(true);
-  };
+//open submit dialog
+const handleSubmit = () => {
+  setOpenSubmitConfirm(true);
+};
 
-  //get score close dialog
-  /**
-   * @memberof MainQuizPage
-   * @function handleConfirmSubmit
-   * @description Confirms the submission of the quiz, calculates the score, and finishes the quiz.
-   */
-  const handleConfirmSubmit = () => {
-    calculateScore();
-    setQuizFinished(true);
-    localStorage.removeItem(LOCAL_STORAGE_QUIZ_KEY);
-    setOpenSubmitConfirm(false);
-  };
 
+// for submit
+// Modify handleConfirmSubmit to use the returned score from calculateScore
+const handleConfirmSubmit = async () => {
+  const calculatedScore = calculateScore(); // Get the score directly
+  setQuizFinished(true);
+  
+  if (calculatedScore !== null) {
+    try {
+      const newAttemptId = await FlashcardRepo.updateScoreAndAddAttempt(quizId, calculatedScore);
+      console.log(`New attempt recorded with ID: ${newAttemptId}`);
+      setScore(calculatedScore); // Now you can update the state with the calculated score
+    } catch (error) {
+      console.error("Failed to update score and attempt:", error);
+    }
+  } else {
+    console.error("Score calculation failed, cannot update score and attempt.");
+  }
+
+  localStorage.removeItem(LOCAL_STORAGE_QUIZ_KEY);
+  setOpenSubmitConfirm(false); 
+};
+
+
+ 
 
 
   //for previous button

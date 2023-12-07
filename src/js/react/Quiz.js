@@ -78,7 +78,7 @@ const QuizComponent = () => {
 
     const [newQuizAdded, setQuizList] = useState([]); // store the newly created quiz
 
-    const [isQuizPaused, setIsQuizPaused] = useState(true);//set quiz as pause
+    const [isQuizPaused, setIsQuizPaused] = useState(false);//set quiz as pause
     const [openQuizInfo, setOpenQuizInfo] = useState(false);//quiz info
     const [openResumeConfirm, setOpenResumeConfirm] = useState(false);//for resume dialog
 
@@ -872,9 +872,27 @@ const QuizComponent = () => {
                             {selectedCard && (
                                 <div>
 
-                                    <p><Typography variant="h5">Question:{'\n'}</Typography></p>
-                                    <Typography>{selectedCard.question}</Typography>
-                                    <p><Typography variant="h5">Answer Choices:</Typography></p>
+                                    
+                                    <Typography 
+                                        variant="h5" 
+                                        align="left"
+                                        paragraph
+                                        color="black"
+                                        padding="5px"
+                                    >Question:{'\n'}</Typography> 
+                                    <Typography 
+                                        paragraph
+                                        color="black"
+                                        padding="5px"
+                                    >{selectedCard.question}</Typography> 
+                                    <Typography 
+                                        variant="h5" 
+                                        align="left"
+                                        paragraph
+                                        color="black"
+                                        padding="5px"
+                                    >Answer Choices:</Typography>                             
+
                                     <ul>
                                         {Array.isArray(selectedCard.choices) ? (
                                             selectedCard.choices.map((choice, index) => (

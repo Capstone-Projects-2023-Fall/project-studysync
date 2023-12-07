@@ -315,6 +315,9 @@ function FlashcardApp() {
         }
     };
 
+
+
+
     /**
      * @memberof FlashcardApp
      * @function handleEditClick
@@ -627,66 +630,83 @@ function FlashcardApp() {
                         </List>
                     )}
 
-                    <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", marginLeft: isFullScreen ? '0' : '20px' }}>
-                        <Typography variant="h6">
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%" }}>
+
+                        <Typography variant="h6" style={{ top: 0, width: '100%', textAlign: 'center', padding: '10px 0', zIndex: 1 }}>
                             {selectedCard ? `${cards.indexOf(selectedCard) + 1}/${cards.length}` : ""}
                         </Typography>
-                        <div style={{
-                            display: "flex", alignItems: "center", width: "80%", justifyContent: "space-between",
-                            marginTop: '20px', borderRadius: '8px', padding: '10px', backgroundColor: '#fff', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)'
-                        }}>
+                        <div style={{ paddingTop: '60px' }}></div>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", marginTop: '20px' }}>
                             <IconButton onClick={handlePrevCard}>
                                 <ArrowBackIcon />
                             </IconButton>
-                            <div
-                                style={{
-                                    flex: 1,
-                                    height: "150px",
-                                    border: "1px solid #e0e0e0",
-                                    borderRadius: '8px',
-                                    transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                                    transition: 'transform 0.6s',
-                                    transformStyle: 'preserve-3d',
-                                    position: 'relative'
-                                }}
-                                onClick={toggleFlip}
-                            >
 
+                            <div style={{ width: '500px', height: '250px', perspective: '1000px' }}>
                                 <div
                                     style={{
-                                        position: 'absolute',
                                         width: '100%',
                                         height: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backfaceVisibility: 'hidden',
+                                        position: 'relative',
+                                        transformStyle: 'preserve-3d',
+                                        transition: 'transform 0.6s',
+                                        transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)'
                                     }}
+                                    onClick={toggleFlip}
                                 >
-                                    {selectedCard && !isFlipped && selectedCard.term}
-                                </div>
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            width: '100%',
+                                            height: '100%',
+                                            backfaceVisibility: 'hidden',
+                                            backgroundColor: '#1DB954',
+                                            color: 'white',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: '10px',
+                                            padding: '20px',
+                                            boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+                                        }}
+                                    >
+                                        {selectedCard && !isFlipped && (
+                                            <div style={{ fontSize: '18px', textAlign: 'center' }}>
+                                                {selectedCard.term}
+                                            </div>
+                                        )}
+                                    </div>
 
-
-                                <div
-                                    style={{
-                                        position: 'absolute',
-                                        width: '100%',
-                                        height: '100%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        backfaceVisibility: 'hidden',
-                                        transform: 'rotateY(180deg)'
-                                    }}
-                                >
-                                    {selectedCard && isFlipped && selectedCard.definition}
+                                    <div
+                                        style={{
+                                            position: 'absolute',
+                                            width: '100%',
+                                            height: '100%',
+                                            backfaceVisibility: 'hidden',
+                                            transform: 'rotateY(180deg)',
+                                            backgroundColor: '#535353',
+                                            color: 'white',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: '10px',
+                                            padding: '20px',
+                                            boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+                                        }}
+                                    >
+                                        {selectedCard && isFlipped && (
+                                            <div style={{ fontSize: '18px', textAlign: 'center', overflowY: 'auto' }}>
+                                                {selectedCard.definition}
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
+
                             <IconButton onClick={handleNextCard}>
                                 <ArrowForwardIcon />
                             </IconButton>
                         </div>
-                        <div style={{ display: "flex", justifyContent: "center", marginTop: "10px", width: "100%" }}>
+                        <div style={{ width: "100%", textAlign: 'center', marginTop: '50px' }}>
                             <Button
                                 variant="outlined"
                                 style={{ margin: "5px", backgroundColor: selectedButton === 'know' ? 'lightgreen' : '' }}
@@ -887,7 +907,7 @@ function FlashcardApp() {
 
 
             </div>
-        </ThemeProvider>
+        </ThemeProvider >
     );
 
 }
