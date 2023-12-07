@@ -19,12 +19,12 @@ class Leaderboard extends React.Component {
         try {
             const usersSnapshot = await getDocs(collection(database, 'users'));
             const usersData = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    
+
             const usersWithScoresAndQuizzesPromises = usersData.map(async user => {
                 const quizzesSnapshot = await getDocs(collection(database, 'quizzesCreation'));
                 let totalScore = 0;
                 let attemptCount = 0;
-    
+
                 quizzesSnapshot.forEach(quizDoc => {
                     const quizData = quizDoc.data();
                     if (quizData.authorId === user.id && quizData.quizScore) {
@@ -35,11 +35,11 @@ class Leaderboard extends React.Component {
                         attemptCount += userAttempts.length; // Increment by the number of attempts, not quizzes
                     }
                 });
-    
+
                 const averageScore = attemptCount > 0 ? (totalScore / attemptCount) : 0;
                 return { ...user, averageScore: averageScore.toFixed(2), quizCount: attemptCount }; // Use attemptCount for quizCount
             });
-    
+
             const usersWithScoresAndQuizzes = await Promise.all(usersWithScoresAndQuizzesPromises);
             this.setState({ usersData: usersWithScoresAndQuizzes, isLoading: false });
         } catch (error) {
@@ -47,7 +47,7 @@ class Leaderboard extends React.Component {
             this.setState({ error, isLoading: false });
         }
     }
-    
+
 
     renderLeaderboard(data, title, key) {
         return (

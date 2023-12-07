@@ -49,7 +49,7 @@ function AddQuiz() {
   }, []);
 
   // Extract unique subjects
-  const uniqueSubjects = [...new Set(quizzes.map((quiz) => quiz.subject))]; 
+  const uniqueSubjects = [...new Set(quizzes.map((quiz) => quiz.subject))];
 
   const handleAddQuizSubject = () => {
     if (selectedSubject || (dialogStep === 1 && newSubject)) {
@@ -61,14 +61,14 @@ function AddQuiz() {
     if (quizTitle && numQuestions > 0) {
       const quizzesCollection = collection(database, 'quizzes');
       let subjectToAdd = dialogStep === 1 ? newSubject : selectedSubject;
-      
+
       if (subjectToAdd === 'custom') {
         subjectToAdd = newSubject;
       }
-  
+
       // Capture the current date
       const currentDate = new Date();
-  
+
       addDoc(quizzesCollection, {
         subject: subjectToAdd,
         title: quizTitle,
@@ -94,18 +94,18 @@ function AddQuiz() {
 
   return (
     <div>
-       <div
-      style={{
-        display: 'flex',
-        maxWidth: '50%',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
-    >
-      <TableContainer component={Paper} style={{ maxHeight: '400px', overflowY: 'auto' }}>
-        {/* ... Table structure */}
-      </TableContainer>
-    </div>
+      <div
+        style={{
+          display: 'flex',
+          maxWidth: '50%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <TableContainer component={Paper} style={{ maxHeight: '400px', overflowY: 'auto' }}>
+          {/* ... Table structure */}
+        </TableContainer>
+      </div>
 
       <div>
         <Button
@@ -194,14 +194,14 @@ function AddQuiz() {
                   value={numQuestions}
                   onChange={(e) => setNumQuestions(Number(e.target.value))}
                 />
-                 <TextField
-        margin="dense"
-        label="Time Limit (minutes)"
-        type="number"
-        fullWidth
-        value={timeLimit}
-        onChange={(e) => setTimeLimit(Number(e.target.value))}
-      />
+                <TextField
+                  margin="dense"
+                  label="Time Limit (minutes)"
+                  type="number"
+                  fullWidth
+                  value={timeLimit}
+                  onChange={(e) => setTimeLimit(Number(e.target.value))}
+                />
                 <DialogActions>
                   <Button onClick={() => setDialogStep(1)} color="primary">
                     Previous

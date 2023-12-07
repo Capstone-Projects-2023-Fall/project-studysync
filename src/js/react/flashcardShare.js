@@ -6,7 +6,14 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useParams } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import { useNavigate } from "react-router-dom";
-
+/**
+ * @class FlashcardShare
+ * @classdesc FlashcardShare - A functional React component for displaying flashcards in a shareable format.
+ * It includes functionalities like viewing flashcards, flipping cards, navigating between cards,
+ * and saving cards to user's collection.
+ * 
+ * @returns {React.Component} A component displaying flashcards and associated actions.
+ */
 function FlashcardShare() {
     const { setId, flashcardId } = useParams();
     const [cards, setCards] = useState([]);
@@ -18,7 +25,11 @@ function FlashcardShare() {
     const userId = FlashcardRepo.getCurrentUid();
     const navigate = useNavigate();
     console.log("flashcard", flashcardId)
-
+    /**
+      * @memberof FlashcardShare
+      * @function useEffect
+      * @description useEffect hook for fetching flashcards from the repository when the component mounts.
+      */
     useEffect(() => {
         const fetchFlashcards = async () => {
             try {
@@ -103,28 +114,50 @@ function FlashcardShare() {
             }
         }
     };
-
+    /**
+       * @memberof FlashcardShare
+       * @function selectCard
+       * @description Selects a flashcard to display.
+       * @param {Object} card - The flashcard object to be displayed.
+       */
     const selectCard = (card) => {
         setSelectedCard(card);
     };
-
+    /**
+       * @memberof FlashcardShare
+       * @function handleNextCard
+       * @description Navigates to the next flashcard.
+       */
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex < cards.length - 1) {
             setSelectedCard(cards[currentIndex + 1]);
         }
     };
-
+    /**
+       * @memberof FlashcardShare
+       * @function handlePrevCard
+       * @description Navigates to the previous flashcard.
+       */
     const handlePrevCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex > 0) {
             setSelectedCard(cards[currentIndex - 1]);
         }
     };
-
+    /**
+       * @memberof FlashcardShare
+       * @function toggleFlip
+       * @description Toggles the flip state of the flashcard.
+       */
     const toggleFlip = () => {
         setIsFlipped(!isFlipped);
     };
+    /**
+  * @memberof FlashcardShare
+  * @function handleSaveToMyFlashcards
+  * @description Saves the flashcard set to the user's collection.
+  */
     const handleSaveToMyFlashcards = async () => {
         if (flashcardId) {
             try {

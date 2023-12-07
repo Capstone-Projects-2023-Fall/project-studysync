@@ -68,7 +68,11 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 const defaultTheme = createTheme();
-
+/**
+ * @class FriendsPage
+ * @classdesc FriendsPage - A React functional component for displaying and managing friends, followers, and following.
+ * It offers features for viewing profiles, adding or removing friends, following or unfollowing users, and searching for new friends.
+ */
 export default function FriendsPage() {
   const { UserId } = useParams();
   const [open, setOpen] = React.useState(true);
@@ -160,7 +164,11 @@ export default function FriendsPage() {
         });
     }
   }, [type]);
-
+  /**
+     * @memberof FriendsPage
+     * @function toggleDrawer
+     * @description Toggles the side drawer open and close state.
+     */
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -168,6 +176,7 @@ export default function FriendsPage() {
   const styles = {
     marginBottom: "10%",
   };
+
   const mainListItems = (
     <React.Fragment>
       <ListItemButton style={styles}>
@@ -232,12 +241,24 @@ export default function FriendsPage() {
       </ListItemButton>
     </React.Fragment>
   );
-
+  /**
+     * @memberof FriendsPage
+     * @function MainList
+     * @description Renders the main list of friends, followers, or following based on the selected type.
+     * Allows users to manage their social connections.
+     * @returns {React.Component} A component representing the main list in the FriendsPage.
+     */
   function MainList() {
     function removeFriend(uid) {
       removeFollower(uid);
       unfollowUser(uid);
     }
+    /**
+ * @memberof FriendsPage
+ * @function removeFollower
+ * @description Removes a follower from the current user's followers list.
+ * @param {string} uid - The unique ID of the user to be removed from followers.
+ */
     function removeFollower(uid) {
       setIsLoading(true);
       userRepository
@@ -252,6 +273,12 @@ export default function FriendsPage() {
           setIsLoading(false);
         });
     }
+    /**
+ * @memberof FriendsPage
+ * @function viewUser
+ * @description Navigates to the profile page of a specified user.
+ * @param {string} uid - The unique ID of the user whose profile is to be viewed.
+ */
     function viewUser(uid) {
       navigate(`/profile/${uid}`);
     }
@@ -284,7 +311,12 @@ export default function FriendsPage() {
     //   showList.splice(index, 1);
     //   console.log(`Stopped following: ${showList}`);
     // }
-
+    /**
+     * @memberof FriendsPage
+     * @function handlebtn1
+     * @description Handles actions for the first button in the table. This could be either following a user or viewing a user's profile.
+     * @param {string} uid - The unique ID of the user for which the action is to be taken.
+     */
     function handlebtn1(uid) {
       if (type == "Followers") {
         followUser(uid);
@@ -292,6 +324,12 @@ export default function FriendsPage() {
         viewUser(uid);
       }
     }
+    /**
+ * @memberof FriendsPage
+ * @function handlebtn2
+ * @description Handles actions for the second button in the table. This could be removing a friend, unfollowing a user, or removing a follower.
+ * @param {string} uid - The unique ID of the user for which the action is to be taken.
+ */
     function handlebtn2(uid) {
       if (type == "Followers") {
         removeFollower(uid);
@@ -302,7 +340,13 @@ export default function FriendsPage() {
         removeFriend(uid);
       }
     }
-
+    /**
+     * @memberof FriendsPage
+     * @function handleFollowOrUnfollow
+     * @description Decides whether to follow or unfollow a user based on the current state.
+     * @param {string} userId - The unique ID of the user to follow or unfollow.
+     * @param {boolean} isFollowing - Indicates whether the current user is already following the target user.
+     */
     const handleFollowOrUnfollow = (userId, isFollowing) => {
       const shouldFollow = isFollowing;
       if (shouldFollow) {
@@ -336,7 +380,12 @@ export default function FriendsPage() {
       });
       setFilteredData(filtered);
     };
-
+    /**
+     * @memberof FriendsPage
+     * @function tableContent
+     * @description Generates the table content based on the current type (Friends, Following, or Followers).
+     * @returns {React.Component} Table rows with user data and action buttons.
+     */
     function tableContent() {
       let firstbtn = "";
       let secondbtn = "";
