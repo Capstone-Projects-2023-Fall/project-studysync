@@ -93,7 +93,7 @@ A user is about to take a naturalization test but doesn't have time to study for
 4. User selects a quiz and completes it.
 5. The system will then calculate and the display user's score on the leaderboard.
 6. User then navigates to the leaderboard page to compare scores with his/her friends.
-![](../requirements/static/usecase5.png)
+![](../requirements/static/usecase5new.png)
 
 
 ## Use case 6
