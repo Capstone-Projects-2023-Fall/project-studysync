@@ -20,5 +20,5 @@ sidebar_position: 3
 
 ## ChatGPT API
 
-https://openai.com/blog/openai-api
+   https://openai.com/blog/openai-api
 
