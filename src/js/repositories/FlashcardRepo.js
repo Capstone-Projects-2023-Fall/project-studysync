@@ -4,7 +4,7 @@ import { collection, getDocs, getDoc, query, where, setDoc, doc, addDoc, deleteD
 /**
  * @class FlashcardRepo
  * @classdesc FlashcardRepo
- * @description Repository for handling flashcard-related operations with Firebase.
+ * @description Repository for handling flashcard-related operations with Firebase..
  */
 const FlashcardRepo = {
     /**
