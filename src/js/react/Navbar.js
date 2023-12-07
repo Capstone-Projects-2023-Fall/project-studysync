@@ -9,14 +9,6 @@ import NotificationBadge from "./NotificationBadge";
 import { useState, useEffect } from "react";
 import Notification from "./Notification";
 import useNotificationCount from "./useNotificationCount";
-
-/**
- * @class Navbar
- * @classdesc Navbar - A functional React component that renders the navigation bar.
- * 
- * @param {Object[]} items - Array of navigation items for the navbar.
- * @returns {React.Component} A navigation bar component.
- */
 function Navbar({ items }) {
     const { user, isLoading } = useUser();
     const [isNotificationPanelOpen, setIsNotificationPanelOpen] =
@@ -28,11 +20,7 @@ function Navbar({ items }) {
         setCurrUser(user)
     }, [user, isLoading])
     const notificationCount = useNotificationCount()
-    /**
-       * @memberof Navbar
-       * @function toggleNotificationPanel
-       * @description Toggles the notification panel's visibility.
-       */
+
     const toggleNotificationPanel = () => {
         if (isNotificationPanelOpen) {
             userRepository.setNotificationCountoZero(user.uid).then((res) => {

@@ -13,7 +13,6 @@ import { styles, stylesz } from "./Styles";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
-
 export function CircularIndeterminate() {
   return (
     <Box sx={{ display: "flex" }}>
@@ -21,12 +20,7 @@ export function CircularIndeterminate() {
     </Box>
   );
 }
-/**
- * @class MySets
- * @classdesc MySets - A functional React component that displays a user's flashcard and quiz sets.
- * 
- * @returns {React.Component} A component for managing and displaying flashcard and quiz sets.
- */
+
 export default function MySets() {
   const { UserId } = useParams();
 
@@ -39,12 +33,7 @@ export default function MySets() {
 
   const [currentData, setCurrentData] = useState([]);
   const [filteredData, setFilteredData] = useState(currentData);
-  /**
-     * @memberof MySets
-     * @function handleFilterChange
-     * @description Handles changes in the filter selection.
-     * @param {Event} event - The event object.
-     */
+
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
@@ -63,12 +52,7 @@ export default function MySets() {
   //     });
   //     console.log("filtered from banche is: ", filteredData);
   //   };
-  /**
-     * @memberof MySets
-     * @function handleSearchChange
-     * @description Handles changes in the search input.
-     * @param {Event} event - The event object.
-     */
+
   const handleSearchChange = (event) => {
     const newSearchTerm = event.target.value;
     setSearchTerm(newSearchTerm);
@@ -91,13 +75,7 @@ export default function MySets() {
 
     setFilteredData(filtered);
   };
-  /**
-     * @memberof MySets
-     * @function handleShareClick
-     * @description Handles click events for sharing a set.
-     * @param {String} id - The ID of the set.
-     * @param {Boolean} isFlashcard - Indicates whether the set is a flashcard.
-     */
+
   const handleShareClick = (id, isFlashcard) => {
     if (isFlashcard) {
       setSelectedFlashcardId(id);
@@ -105,14 +83,7 @@ export default function MySets() {
     }
     setSelectedQuizId(id);
   };
-  /**
-    * @memberof MySets
-    * @function handleShare
-    * @description Handles the sharing of a set with selected users.
-    * @param {String} selectedId - The ID of the selected set.
-    * @param {Array} selectedUsers - Array of selected users to share with.
-    * @param {Boolean} isFlashcard - Indicates whether the set is a flashcard.
-    */
+
   const handleShare = (selectedId, selectedUsers, isFlashcard) => {
     if (isFlashcard) {
       for (const u of selectedUsers) {

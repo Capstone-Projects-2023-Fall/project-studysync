@@ -39,19 +39,7 @@ function Copyright(props) {
 
 
 const defaultTheme = createTheme();
-/**
- * @class DashboardCom
- * @classdesc DashboardCom 
- * Provides a dashboard view in the application.
- * This component displays events, friends, recent flashcards, and quizzes.
- * It also handles loading animations and navigational functionality.
- * 
- * @component
- * @example
- * return (
- *   <DashboardCom />
- * )
- */
+
 export default function DashboardCom() {
 
   const { user } = useUser();
@@ -65,14 +53,6 @@ export default function DashboardCom() {
   const [lottieAnimation1, setLottieAnimation1] = useState(null);
   const [lottieAnimation2, setLottieAnimation2] = useState(null);
   const navigate = useNavigate();
-
-  /**
-  * @memberof DashboardCom
-  * @function useEffect
-  * @description useEffect hook for fetching data and animations when the component mounts.
-  * It fetches user friends, upcoming events, owned flashcards, and quizzes,
-  * and sets up Lottie animations.
-  */
   useEffect(() => {
 
     fetch(
