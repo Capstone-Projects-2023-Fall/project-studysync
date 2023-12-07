@@ -1,4 +1,32 @@
-import Event from "../models/event";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: repositories/EventRepository.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: repositories/EventRepository.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import Event from "../models/event";
 import { EVENT_TYPE } from "../models/event";
 import {
   setDoc,
@@ -33,7 +61,7 @@ export class EventRepository {
    * @description Creates a new follower event in the database.
    * @param {string} followerId - The ID of the follower.
    * @param {string} followingId - The ID of the user being followed.
-   * @returns {Promise<string>} The ID of the created event.
+   * @returns {Promise&lt;string>} The ID of the created event.
    */
   async createNewFollowerEvent(followerId, followingId) {
     const event = new Event(
@@ -53,7 +81,7 @@ export class EventRepository {
    * @param {string} sharedBy - The ID of the user sharing the quiz.
    * @param {string} sharedWith - The ID of the user the quiz is shared with.
    * @param {string} itemId - The ID of the quiz being shared.
-   * @returns {Promise<string>} The ID of the created event.
+   * @returns {Promise&lt;string>} The ID of the created event.
    */
   async createShareQuizEvent(sharedBy, sharedWith, itemId) {
     const event = new Event(
@@ -73,7 +101,7 @@ export class EventRepository {
    * @param {string} sharedBy - The ID of the user sharing the flashcard.
    * @param {string} sharedWith - The ID of the user the flashcard is shared with.
    * @param {string} itemId - The ID of the flashcard being shared.
-   * @returns {Promise<string>} The ID of the created event.
+   * @returns {Promise&lt;string>} The ID of the created event.
    */
   async createShareFlashcardEvent(sharedBy, sharedWith, itemId) {
     const event = new Event(
@@ -99,7 +127,7 @@ export class EventRepository {
      * @memberof EventRepository
      * @function getAllEvents
      * @description Retrieves all events from the database.
-     * @returns {Promise<Object[]>} An array of event objects.
+     * @returns {Promise&lt;Object[]>} An array of event objects.
      */
   async getAllEvents() {
     return await getAllItems(this.database, "events", null);
@@ -109,7 +137,7 @@ export class EventRepository {
      * @function getEventById
      * @description Retrieves a specific event by its ID.
      * @param {string} id - The ID of the event to retrieve.
-     * @returns {Promise<Object>} The event object.
+     * @returns {Promise&lt;Object>} The event object.
      */
   async getEventById(id) {
     return await getItemById(this.database, id, "events", "event");
@@ -120,7 +148,7 @@ export class EventRepository {
    * @memberof EventRepository
    * @function getAllUpcomingEvents
    * @description Retrieves all upcoming events from the database.
-   * @returns {Promise<Object[]>} An array of upcoming event objects.
+   * @returns {Promise&lt;Object[]>} An array of upcoming event objects.
    */
   async getAllUpcomingEvents() {
     const collectionRef = collection(this.database, "upcomingEvents");
@@ -142,7 +170,7 @@ export class EventRepository {
      * @function createUpcomingEvent
      * @description Creates a new upcoming event in the database.
      * @param {Object} upcomingEvent - The upcoming event object to create.
-     * @returns {Promise<string>} The ID of the created upcoming event.
+     * @returns {Promise&lt;string>} The ID of the created upcoming event.
      */
   async createUpcomingEvent(upcomingEvent) {
     try {
@@ -159,7 +187,7 @@ export class EventRepository {
     * @function getUpcomingEventById
     * @description Retrieves a specific upcoming event by its ID.
     * @param {string} upcomingEventId - The ID of the upcoming event to retrieve.
-    * @returns {Promise<Object>} The upcoming event object.
+    * @returns {Promise&lt;Object>} The upcoming event object.
     */
   async getUpcomingEventById(upcomingEventId) {
     return await getItemById(
@@ -248,3 +276,26 @@ export class EventRepository {
     return true;
   }
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="EventRepository.html">EventRepository</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardRepo.html">FlashcardRepo</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MainQuizPage.html">MainQuizPage</a></li><li><a href="MySets.html">MySets</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="Notification.html">Notification</a></li><li><a href="NotificationRepository.html">NotificationRepository</a></li><li><a href="QuizComponent.html">QuizComponent</a></li><li><a href="QuizList.html">QuizList</a></li><li><a href="QuizRepository.html">QuizRepository</a></li><li><a href="UpcomingEvents.html">UpcomingEvents</a></li><li><a href="UserRepository.html">UserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Dec 06 2023 22:13:06 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

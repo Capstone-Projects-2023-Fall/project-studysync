@@ -1,4 +1,32 @@
-import {
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: react/FlashcardSet.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: react/FlashcardSet.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
   Paper,
   Typography,
   Button,
@@ -153,7 +181,7 @@ function FlashCardSet({
   };
 
   return (
-    <Paper
+    &lt;Paper
       elevation={3}
       style={styles.cardStyle}
       onMouseOver={(e) =>
@@ -173,15 +201,15 @@ function FlashCardSet({
         }
       }}
     >
-      <div style={styles.titleBar}>
-        <Typography variant="subtitle1">{title}</Typography>
-      </div>
-      <Typography variant="body2" style={styles.infoText}>
+      &lt;div style={styles.titleBar}>
+        &lt;Typography variant="subtitle1">{title}&lt;/Typography>
+      &lt;/div>
+      &lt;Typography variant="body2" style={styles.infoText}>
         {terms}
-      </Typography>
-      <div style={styles.flexContainer}>
-        <div style={styles.leftGroup}>
-          <Avatar
+      &lt;/Typography>
+      &lt;div style={styles.flexContainer}>
+        &lt;div style={styles.leftGroup}>
+          &lt;Avatar
             alt={author}
             src={imageURL}
             style={styles.avatar}
@@ -190,104 +218,104 @@ function FlashCardSet({
               navigate(`/profile/${authorId}`);
             }}
           />
-          <Typography variant="body2">{author || "Mike Scott"}</Typography>
-        </div>
-        <div style={styles.rightGroup}>
-          <Button
+          &lt;Typography variant="body2">{author || "Mike Scott"}&lt;/Typography>
+        &lt;/div>
+        &lt;div style={styles.rightGroup}>
+          &lt;Button
             style={styles.button}
             variant="contained"
             color="primary"
             onClick={handleShareClick}
           >
             Share
-          </Button>
-          <Button
+          &lt;/Button>
+          &lt;Button
             style={styles.button}
             onClick={openScheduleDialogD}
             variant="contained"
             color="primary"
           >
-            <AccessTimeIcon />
-          </Button>
-        </div>
+            &lt;AccessTimeIcon />
+          &lt;/Button>
+        &lt;/div>
 
-        <ScheduleDialog
+        &lt;ScheduleDialog
           open={scheduleDialogOpenD}
           onClose={closeScheduleDialogD}
           onSchedule={handleScheduleD}
         />
-        <Dialog
+        &lt;Dialog
           open={open}
           onClose={handleClose}
           onClick={(e) => {
             e.stopPropagation();
           }}
         >
-          <DialogTitle sx={{ fontSize: "1.0rem" }}>
+          &lt;DialogTitle sx={{ fontSize: "1.0rem" }}>
             Select/Search Users to Share With
-          </DialogTitle>
-          <Button
+          &lt;/DialogTitle>
+          &lt;Button
             onClick={handleClose}
             color="primary"
             style={{ position: "absolute", top: "8px", right: "8px" }} // Position the close button
           >
-            <CloseIcon /> {/* Add a CloseIcon from Material-UI */}
-          </Button>
+            &lt;CloseIcon /> {/* Add a CloseIcon from Material-UI */}
+          &lt;/Button>
 
-          <DialogContent
+          &lt;DialogContent
             style={{
               height: "30rem",
               overflow: "auto",
               width: "30rem",
             }}
           >
-            <SearchBar width="100%" onSearch={handleSearch} />
-            <List>
+            &lt;SearchBar width="100%" onSearch={handleSearch} />
+            &lt;List>
               {/* Replace the following with your actual list of users */}
               {filteredData.map((user, index) => (
-                <ListItem
+                &lt;ListItem
                   key={user.id || index}
                   sx={{
-                    "&:hover": {
+                    "&amp;:hover": {
                       backgroundColor: "rgba(0, 0, 0, 0.05)", // Grey highlight color
                       cursor: "pointer", // Change the cursor to a pointer on hover
                     },
                   }}
                 >
-                  <ListItemAvatar>
-                    <Avatar
+                  &lt;ListItemAvatar>
+                    &lt;Avatar
                       src={user.imageURL}
                       alt={user.name || user.firstName || user.email}
                       onClick={() => {
                         navigate(`/profile/${user.id}`);
                       }}
                     />
-                  </ListItemAvatar>
-                  <ListItemText
+                  &lt;/ListItemAvatar>
+                  &lt;ListItemText
                     primary={user.name || user.firstName || user.email}
                   />
-                  <Checkbox
+                  &lt;Checkbox
                     onChange={() => handleCheckboxChange(user.id)}
                     checked={checkedItems.includes(user.id)}
                   />
-                </ListItem>
+                &lt;/ListItem>
               ))}
-            </List>
+            &lt;/List>
 
-            {filteredData.length > 0 && (
-              <Button
+            {filteredData.length > 0 &amp;&amp; (
+              &lt;Button
                 variant="contained"
                 color="primary"
                 onClick={handleShare}
                 style={styles.button}
               >
                 Share
-              </Button>
+              &lt;/Button>
             )}
-          </DialogContent>
-        </Dialog>
-      </div>
-    </Paper>
+          &lt;/DialogContent>
+        &lt;/Dialog>
+      &lt;/div>
+    &lt;/Paper>
   );
 }
 
@@ -302,7 +330,7 @@ const styles = {
     width: "100%", // take up 80% of the page width
     // maxWidth: "800px", // maximum width of the card
     cursor: "pointer",
-    "&:hover": {
+    "&amp;:hover": {
       boxShadow:
         "0 8px 16px rgba(0, 0, 0, 0.16), 0 12px 24px rgba(0, 0, 0, 0.12)", // further enhanced shadow on hover
     },
@@ -333,7 +361,7 @@ const styles = {
     width: "30rem",
   },
   listItemHover: {
-    "&:hover": {
+    "&amp;:hover": {
       backgroundColor: "rgba(0, 0, 0, 0.05)",
       cursor: "pointer",
     },
@@ -376,3 +404,26 @@ const styles = {
 };
 
 export default FlashCardSet;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="EventRepository.html">EventRepository</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardRepo.html">FlashcardRepo</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MainQuizPage.html">MainQuizPage</a></li><li><a href="MySets.html">MySets</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="Notification.html">Notification</a></li><li><a href="NotificationRepository.html">NotificationRepository</a></li><li><a href="QuizComponent.html">QuizComponent</a></li><li><a href="QuizList.html">QuizList</a></li><li><a href="QuizRepository.html">QuizRepository</a></li><li><a href="UpcomingEvents.html">UpcomingEvents</a></li><li><a href="UserRepository.html">UserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Dec 06 2023 22:13:06 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

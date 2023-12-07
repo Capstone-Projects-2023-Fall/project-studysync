@@ -1,4 +1,32 @@
-import * as React from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: react/Notification.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: react/Notification.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as React from "react";
 import { useState } from "react";
 import empty from "../../bell.webp";
 import {
@@ -53,15 +81,15 @@ export default function Notification({ userId, closePanel }) {
     };
 
     return (
-        <div>
-            <List sx={{ width: "100%", bgcolor: "background.paper" }}>
+        &lt;div>
+            &lt;List sx={{ width: "100%", bgcolor: "background.paper" }}>
                 {parseNotifications(notifications)
                     .slice((page - 1) * itemsPerPage, page * itemsPerPage)
                     .map((item) => (
-                        <React.Fragment key={item.id}>
-                            <ListItem alignItems="flex-start" sx={styles.listItem}>
-                                <ListItemAvatar>
-                                    <Avatar
+                        &lt;React.Fragment key={item.id}>
+                            &lt;ListItem alignItems="flex-start" sx={styles.listItem}>
+                                &lt;ListItemAvatar>
+                                    &lt;Avatar
                                         alt={item.author}
                                         src={item.avatar}
                                         onClick={() => {
@@ -72,8 +100,8 @@ export default function Notification({ userId, closePanel }) {
                                             closePanel();
                                         }}
                                     />
-                                </ListItemAvatar>
-                                <ListItemText
+                                &lt;/ListItemAvatar>
+                                &lt;ListItemText
                                     primary={item.name}
                                     onClick={() => {
                                         if (item.isFlashcard) {
@@ -88,8 +116,8 @@ export default function Notification({ userId, closePanel }) {
                                         closePanel();
                                     }}
                                     secondary={
-                                        <React.Fragment>
-                                            <Typography
+                                        &lt;React.Fragment>
+                                            &lt;Typography
                                                 sx={{ display: "inline" }}
                                                 component="span"
                                                 variant="body2"
@@ -108,9 +136,9 @@ export default function Notification({ userId, closePanel }) {
                                                 }}
                                             >
                                                 {item.author}
-                                            </Typography>
-                                            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                                            <Typography
+                                            &lt;/Typography>
+                                            &amp;nbsp;&amp;nbsp;&amp;nbsp; &amp;nbsp;&amp;nbsp;&amp;nbsp;
+                                            &lt;Typography
                                                 sx={{
                                                     display: "inline",
                                                     marginLeft: "auto",
@@ -120,31 +148,31 @@ export default function Notification({ userId, closePanel }) {
                                                 variant="body2"
                                             >
                                                 {item.when}
-                                            </Typography>
-                                        </React.Fragment>
+                                            &lt;/Typography>
+                                        &lt;/React.Fragment>
                                     }
                                 />
-                            </ListItem>
-                            <Divider variant="inset" component="li" />
-                        </React.Fragment>
+                            &lt;/ListItem>
+                            &lt;Divider variant="inset" component="li" />
+                        &lt;/React.Fragment>
                     ))}
-            </List>
-            {notifications.length >= itemsPerPage && (
-                <Pagination
+            &lt;/List>
+            {notifications.length >= itemsPerPage &amp;&amp; (
+                &lt;Pagination
                     count={Math.ceil(notifications.length / itemsPerPage)}
                     page={page}
                     onChange={handleChangePage}
                     color="primary"
                 />
             )}
-        </div>
+        &lt;/div>
     );
 }
 
 const styles = {
     listItem: {
         cursor: "pointer",
-        "&:hover": {
+        "&amp;:hover": {
             backgroundColor: "#f5f5f5", // Light grey background on hover
         },
     },
@@ -221,12 +249,12 @@ function createSharedFlashcardEvent(notification) {
 function timeAgo(timestamp) {
     const seconds = (Date.now() - timestamp) / 1000;
 
-    if (seconds < 60) {
+    if (seconds &lt; 60) {
         return `${Math.floor(seconds)}s`;
-    } else if (seconds < 3600) {
+    } else if (seconds &lt; 3600) {
         const minutes = Math.floor(seconds / 60);
         return `${minutes}m`;
-    } else if (seconds < 86400) {
+    } else if (seconds &lt; 86400) {
         const hours = Math.floor(seconds / 3600);
         return `${hours}h`;
     } else {
@@ -279,3 +307,26 @@ function parseNotifications(notifications) {
     }
     return data;
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="EventRepository.html">EventRepository</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardRepo.html">FlashcardRepo</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MainQuizPage.html">MainQuizPage</a></li><li><a href="MySets.html">MySets</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="Notification.html">Notification</a></li><li><a href="NotificationRepository.html">NotificationRepository</a></li><li><a href="QuizComponent.html">QuizComponent</a></li><li><a href="QuizList.html">QuizList</a></li><li><a href="QuizRepository.html">QuizRepository</a></li><li><a href="UpcomingEvents.html">UpcomingEvents</a></li><li><a href="UserRepository.html">UserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Dec 06 2023 22:13:06 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
