@@ -10,15 +10,15 @@ sidebar_position: 4
 
 2. **Flashcard Creation:** Users can create, edit, and delete their flashcards with terms and definitions.
 
-3. **Customization:** Users can upvote/downvote flashcards, assign priority levels, set study dates, and mark difficulty levels.
+3. **Customization:** Users can upvote/downvote flashcards, set study dates, and mark difficulty levels.
 
 4. **Commenting:** Users can add comments on a friend’s flashcard set.
 
-5. **Quizzes/Tests:** Users can create and assign quizzes or tests based on their flashcards or friends' flashcards.
+5. **Quizzes/Tests:** Users can create and assign quizzes or tests based on their flashcards.
 
-6. **Social Interaction:** Users can send friend requests, accept/reject requests, view friends' flashcards, and score-based competitions.
+6. **Social Interaction:** Users can follow another users, view their' flashcards, and score-based competitions.
 
-7. **Search and Filter:** Users can search for specific terms or filter flashcards based on various parameters like difficulty.
+7. **Search and Filter:** Users can  filter flashcards based on various parameters like difficulty.
 
 ## Non-functional Requirements:
 
