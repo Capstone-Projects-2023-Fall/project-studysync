@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: react/MySets.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: react/MySets.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import SearchIcon from "@mui/icons-material/Search";
+import React from "react";
+import { useEffect, useState } from "react";
+import { userRepository } from "../../firebase";
+import { useParams } from "react-router-dom";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FlashCardSet from "./FlashcardSet";
+import EmptySetCompponent from "./EmptySet";
+import { styles, stylesz } from "./Styles";
+
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+
+
+export function CircularIndeterminate() {
+  return (
+    &lt;Box sx={{ display: "flex" }}>
+      &lt;CircularProgress />
+    &lt;/Box>
+  );
+}
+/**
+ * @class MySets
+ * @classdesc MySets - A functional React component that displays a user's flashcard and quiz sets.
+ * 
+ * @returns {React.Component} A component for managing and displaying flashcard and quiz sets.
+ */
+export default function MySets() {
+  const { UserId } = useParams();
+
+  const [users, setUsers] = useState([]);
+  const [selectedFlashcardId, setSelectedFlashcardId] = useState(null);
+  const [selectedQuizId, setSelectedQuizId] = useState(null);
+  const [filter, setFilter] = useState("My Flashcards");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const [currentData, setCurrentData] = useState([]);
+  const [filteredData, setFilteredData] = useState(currentData);
+  /**
+     * @memberof MySets
+     * @function handleFilterChange
+     * @description Handles changes in the filter selection.
+     * @param {Event} event - The event object.
+     */
+  const handleFilterChange = (event) => {
+    setFilter(event.target.value);
+  };
+
+  //   const handleSearchChange = (event) => {
+  //     setSearchTerm(event.target.value);
+
+  //     const filtered = currentData.filter((item) => {
+  //       if (item.name != null) {
+  //         return item.name.toLowerCase().includes(searchTerm.toLowerCase());
+  //       }
+  //       if (item.quizName != null) {
+  //         console.log("hereee");
+  //         return item.quizName.toLowerCase().includes(searchTerm.toLowerCase());
+  //       }
+  //     });
+  //     console.log("filtered from banche is: ", filteredData);
+  //   };
+  /**
+     * @memberof MySets
+     * @function handleSearchChange
+     * @description Handles changes in the search input.
+     * @param {Event} event - The event object.
+     */
+  const handleSearchChange = (event) => {
+    const newSearchTerm = event.target.value;
+    setSearchTerm(newSearchTerm);
+
+    if (newSearchTerm.trim() === "") {
+      setFilteredData(currentData); // No search term, show all data
+      return;
+    }
+
+    const lowercasedSearchTerm = newSearchTerm.toLowerCase();
+    const filtered = currentData.filter((item) => {
+      const itemName = item.name ? item.name.toLowerCase() : "";
+      const itemQuizName = item.quizName ? item.quizName.toLowerCase() : "";
+
+      return (
+        itemName.includes(lowercasedSearchTerm) ||
+        itemQuizName.includes(lowercasedSearchTerm)
+      );
+    });
+
+    setFilteredData(filtered);
+  };
+  /**
+     * @memberof MySets
+     * @function handleShareClick
+     * @description Handles click events for sharing a set.
+     * @param {String} id - The ID of the set.
+     * @param {Boolean} isFlashcard - Indicates whether the set is a flashcard.
+     */
+  const handleShareClick = (id, isFlashcard) => {
+    if (isFlashcard) {
+      setSelectedFlashcardId(id);
+      return;
+    }
+    setSelectedQuizId(id);
+  };
+  /**
+    * @memberof MySets
+    * @function handleShare
+    * @description Handles the sharing of a set with selected users.
+    * @param {String} selectedId - The ID of the selected set.
+    * @param {Array} selectedUsers - Array of selected users to share with.
+    * @param {Boolean} isFlashcard - Indicates whether the set is a flashcard.
+    */
+  const handleShare = (selectedId, selectedUsers, isFlashcard) => {
+    if (isFlashcard) {
+      for (const u of selectedUsers) {
+        userRepository
+          .shareFlashcard(UserId, u, selectedId)
+          .then((res) => {
+            console.log("Share Flashcard Success: ", res);
+          })
+          .catch((err) => {
+            console.log("Share Flashcard Failure: ", err);
+          });
+      }
+      setSelectedFlashcardId(null);
+      return;
+    }
+
+    for (const u of selectedUsers) {
+      userRepository
+        .shareQuiz(UserId, u, selectedId)
+        .then((res) => {
+          console.log("Share Quiz Success: ", res);
+        })
+        .catch((err) => {
+          console.log("Share Quiz Failure: ", err);
+        });
+    }
+    setSelectedQuizId(null);
+  };
+
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredData(currentData);
+    } else {
+      const lowercasedSearchTerm = searchTerm.toLowerCase();
+      const filtered = currentData.filter((item) => {
+        const itemName = item.name ? item.name.toLowerCase() : "";
+        const itemQuizName = item.quizName ? item.quizName.toLowerCase() : "";
+
+        return (
+          itemName.includes(lowercasedSearchTerm) ||
+          itemQuizName.includes(lowercasedSearchTerm)
+        );
+      });
+
+      setFilteredData(filtered);
+    }
+  }, [currentData, searchTerm]);
+
+  useEffect(() => {
+    setLoading(true);
+    const fetchData = async () => {
+      try {
+        switch (filter) {
+          case "My Flashcards":
+            const res1 = await userRepository.getOwnedFlashcards(UserId);
+            setCurrentData(res1);
+            setFilteredData(res1);
+            break;
+          case "My Quizzes":
+            const res2 = await userRepository.getOwnedQuizzes(UserId);
+            setCurrentData(res2);
+            setFilteredData(res2);
+            break;
+          case "Shared Quizzes":
+            const res3 = await userRepository.getSharedQuizzes(UserId);
+            setCurrentData(res3);
+            setFilteredData(res3);
+            break;
+          case "Shared Flashcards":
+            const res4 = await userRepository.getSharedFlashcards(UserId);
+            setCurrentData(res4);
+            setFilteredData(res4);
+            break;
+          default:
+        }
+        return true;
+      } catch (error) {
+        setCurrentData([]);
+        throw new Error("error: ", error);
+      }
+    };
+
+    fetchData()
+      .then(() => {
+        console.log("Set loading to false");
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log("error while fetching data");
+        console.error(error);
+      });
+    userRepository.getAllUsers().then((res) => setUsers(res));
+  }, [filter]);
+
+  return (
+    &lt;div style={{ margin: "0 10rem" }}>
+      &lt;div style={stylesz.headerContainer}>
+        &lt;FormControl style={stylesz.formControl}>
+          {/* The InputLabel is removed since you don't want "Filter" to show up */}
+          &lt;Select
+            displayEmpty
+            value={filter}
+            onChange={handleFilterChange}
+            style={stylesz.select}
+            renderValue={
+              filter !== ""
+                ? undefined
+                : () => &lt;span style={{ color: "grey" }}>Recent&lt;/span>
+            }
+            sx={{
+              ".MuiSelect-select": {
+                padding: "8px 24px 8px 12px",
+              },
+              ".MuiOutlinedInput-notchedOutline": {
+                border: "none",
+              },
+              "&amp; .MuiSvgIcon-root": {
+                color: "rgba(0, 0, 0, 0.54)",
+              },
+              backgroundColor: "white",
+              borderRadius: "8px",
+            }}
+          >
+            &lt;MenuItem value="My Flashcards">My Flashcards&lt;/MenuItem>
+            &lt;MenuItem value="My Quizzes">My Quizzes&lt;/MenuItem>
+            &lt;MenuItem value="Shared Flashcards">Shared Flashcards&lt;/MenuItem>
+            &lt;MenuItem value="Shared Quizzes">Shared Quizzes&lt;/MenuItem>
+          &lt;/Select>
+        &lt;/FormControl>
+        &lt;div style={stylesz.searchContainer}>
+          &lt;SearchIcon style={styles.searchIcon} />
+          &lt;input
+            type="text"
+            placeholder="Search your sets"
+            style={stylesz.searchInput}
+            onChange={handleSearchChange}
+          />
+        &lt;/div>
+      &lt;/div>
+
+      {loading &amp;&amp; (
+        &lt;div style={styles.centeredContainerStyle}>
+          &lt;CircularIndeterminate />
+        &lt;/div>
+      )}
+
+      {currentData.length == 0 &amp;&amp; (
+        &lt;div style={styles.centeredContainerStyle}>
+          {filter.toLowerCase().includes("shared flashcards") &amp;&amp; (
+            &lt;EmptySetCompponent isShared={true} userId={UserId} />
+          )}
+          {filter.toLowerCase().includes("shared quizzes") &amp;&amp; (
+            &lt;EmptySetCompponent isQuiz={true} isShared={true} userId={UserId} />
+          )}
+          {filter.toLowerCase().includes("my flashcards") &amp;&amp; (
+            &lt;EmptySetCompponent isShared={false} />
+          )}
+          {filter.toLowerCase().includes("my quizzes") &amp;&amp; (
+            &lt;EmptySetCompponent isShared={false} isQuiz={true} />
+          )}
+        &lt;/div>
+      )}
+
+      {!loading &amp;&amp; (
+        &lt;>
+          &lt;div>
+            {filteredData.map((item) => {
+              let title = "";
+              let terms = "";
+              let isFlashcard = true;
+
+              if (filter.toLowerCase().includes("quiz")) {
+                title = item.quizName;
+                terms = item.questionItems
+                  ? `${Object.keys(item.questionItems).length} questions`
+                  : "";
+                isFlashcard = false;
+              } else {
+                title = item.name;
+                terms = item.flashcardItems
+                  ? `${Object.keys(item.flashcardItems).length} terms`
+                  : "";
+              }
+
+              return (
+                &lt;FlashCardSet
+                  key={item.id}
+                  item={item}
+                  author={item.author.name}
+                  imageURL={item.author.imageURL}
+                  title={title}
+                  terms={terms}
+                  users={users}
+                  quizId={item.id}
+                  flashcardId={item.id}
+                  onShareClick={() => handleShareClick(item.id, isFlashcard)}
+                  onShare={(selectedUsers) =>
+                    handleShare(item.id, selectedUsers, isFlashcard)
+                  }
+                  authorId={item.authorId}
+                  isFlashcard={isFlashcard}
+                  filter={filter}
+                />
+              );
+            })}
+          &lt;/div>
+        &lt;/>
+      )}
+    &lt;/div>
+  );
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="DashboardCom.html">DashboardCom</a></li><li><a href="EventCard.html">EventCard</a></li><li><a href="EventRepository.html">EventRepository</a></li><li><a href="FlashCardSet.html">FlashCardSet</a></li><li><a href="FlashcardApp.html">FlashcardApp</a></li><li><a href="FlashcardComponent.html">FlashcardComponent</a></li><li><a href="FlashcardRepo.html">FlashcardRepo</a></li><li><a href="FlashcardShare.html">FlashcardShare</a></li><li><a href="FriendsPage.html">FriendsPage</a></li><li><a href="LoginPage.html">LoginPage</a></li><li><a href="MainQuizPage.html">MainQuizPage</a></li><li><a href="MySets.html">MySets</a></li><li><a href="Navbar.html">Navbar</a></li><li><a href="Notification.html">Notification</a></li><li><a href="NotificationRepository.html">NotificationRepository</a></li><li><a href="QuizComponent.html">QuizComponent</a></li><li><a href="QuizList.html">QuizList</a></li><li><a href="QuizRepository.html">QuizRepository</a></li><li><a href="UpcomingEvents.html">UpcomingEvents</a></li><li><a href="UserRepository.html">UserRepository</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Dec 07 2023 00:18:12 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
