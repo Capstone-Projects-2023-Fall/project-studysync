@@ -110,8 +110,8 @@ A user is about to take a naturalization test but doesn't have time to study for
    A user has been studying for 6 hours and wants to take a break but also wants to save the quiz's progress.
 
 1. User is taking a quiz but then realizes he/she wants to take a quick coffee break.
-2. User clicks "Save&Exit" button in order for the quiz to be saved and quit.
-3. The system saves the user's progress.
+2. User clicks "Pause Quiz" button in order for the quiz to be saved and quit.
+3. The system saves the user's progress as well as the time remaining.
 4. After the break, the user logs in and goes to the "Quiz" section to resume the paused quiz.
 5. User chooses to resume the quiz from where they left off.
 <img width="953" alt="Updated #7" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/d6c07c85-44c7-4b3d-aa4d-72f91852bf70" />
@@ -119,13 +119,13 @@ A user is about to take a naturalization test but doesn't have time to study for
 
 
 ## Use case 8
-  A user finds out some flashcards need to be updated in order to improve accuracy.
+  A user finds out some quiz question need to be updated in order to improve accuracy.
 
-1. User logs in to StudySynce as usual.
-2. Then user has to go to their created flashcards.
-3. User finds out which flashcards need to be updated.
-4. User makes some changes to the flashcard definition and details.
-5. User saves changes and then flashcards are updated and ready to be learned.
+1. User logs in to StudySync as usual.
+2. The user navigates to the quiz page and selects a specific question or answer.
+3. User finds out which questions need to be updated.
+4. User makes some changes to the question as well as the answer choices.
+5. User saves changes and then questions are updated and the quiz is now ready for the user to take.
 <img width="790" alt="Updated #8" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/b3ccb4f4-9259-4516-b2d4-1c1ac8727916" />
 
 
