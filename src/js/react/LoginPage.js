@@ -12,9 +12,9 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useState } from 'react';
+import {useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import {signInWithEmailAndPassword} from 'firebase/auth';
 import { auth } from '../../firebase';
 
 
@@ -25,13 +25,7 @@ import { auth } from '../../firebase';
 
 
 
-/**
- * @memberof LoginPage
- * @function Copyright
- * @description Renders a copyright message.
- * @param {Object} props - Properties passed to the component.
- * @returns {React.Component} Copyright component.
- */
+
 
 function Copyright(props) {
   return (
@@ -49,49 +43,37 @@ function Copyright(props) {
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
-/**
- * @class LoginPage
- * @classdesc LoginPage - A functional React component providing a user interface for login.
- * It includes form inputs for email and password, and handles user authentication.
- * 
- * @returns {React.Component} A component for user login.
- */
-const LoginPage = () => {
 
-  const [_email, setEmail] = useState('');
-  const [_password, setPassword] = useState('');
+const LoginPage = ()=> {
+
+  const [_email,setEmail] = useState('');
+  const [_password,setPassword] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-  /**
-    * @memberof LoginPage
-    * @function handleSubmit
-    * @description Handles the submit event of the login form.
-    * It performs user authentication and navigates to the home page upon successful login.
-    * @param {Event} event - The event object.
-    */
-  const handleSubmit = async (event) => {
+
+  const handleSubmit = async(event) => {
     event.preventDefault();
-    if (_email == '' || _password == '') {
-      alert('One or both of the fields are empty!');
-      return;
-    }
-    try {
-      await signInWithEmailAndPassword(auth, _email, _password);
-      navigate('/');
-    } catch (e) {
-      switch (e.code) {
-        case 'auth/invalid-email':
-          alert('Invalid Email!');
-          break;
-        case 'auth/invalid-login-credentials':
-          alert('Invalid Credentials!');
-          break;
-        case 'auth/invalid-password':
-          alert('Invalid password!');
-          break;
+      if(_email == '' || _password == ''){
+        alert('One or both of the fields are empty!');
+        return;
       }
-    }
+        try{
+          await signInWithEmailAndPassword(auth,_email,_password);          
+          navigate('/');
+      }catch(e){
+          switch(e.code){
+            case 'auth/invalid-email':
+              alert('Invalid Email!');
+              break;
+            case 'auth/invalid-login-credentials':
+              alert('Invalid Credentials!');
+              break;        
+            case 'auth/invalid-password':
+              alert('Invalid password!');
+              break;   
+          }
+      }
   };
 
   return (
@@ -131,7 +113,7 @@ const LoginPage = () => {
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
                 value={_email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e)=>setEmail(e.target.value)}
                 margin="normal"
                 required
                 fullWidth
@@ -145,7 +127,7 @@ const LoginPage = () => {
                 margin="normal"
 
                 value={_password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e)=>setPassword(e.target.value)}
 
                 required
                 fullWidth
