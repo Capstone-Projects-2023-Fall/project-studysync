@@ -50,36 +50,42 @@ class Leaderboard extends React.Component {
 
 
     renderLeaderboard(data, title, key) {
+        let rank = 0; 
+        
         return (
-            <div className="leaderboardSection">
-                <h2>{title}</h2>
-                <table className="leaderboardTable">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>{key}</th>
+        <div className="leaderboardSection">
+            <h2>{title}</h2>
+            <table className="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>{key}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map(user => (
+                        <tr key={user.id}>
+                            <td>{++rank}</td>
+                            <td>{user.name}</td>
+                            <td>{user[key]}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {data.map(user => (
-                            <tr key={user.id}>
-                                <td>{user.name}</td>
-                                <td>{user[key]}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        );
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
     }
 
     renderTotalQuizzesLeaderboard(data) {
+        let rank = 0;
         return (
             <div className="leaderboardSection">
                 <h2>Total Quizzes Taken</h2>
                 <table className="leaderboardTable">
                     <thead>
                         <tr>
+                            <th>Rank</th> 
                             <th>Name</th>
                             <th>Quizzes Taken</th>
                         </tr>
@@ -87,6 +93,7 @@ class Leaderboard extends React.Component {
                     <tbody>
                         {data.map(user => (
                             <tr key={user.id}>
+                                <td>{++rank}</td>
                                 <td>{user.name}</td>
                                 <td>{user.quizCount}</td>
                             </tr>
@@ -96,6 +103,7 @@ class Leaderboard extends React.Component {
             </div>
         );
     }
+    
 
     render() {
         const { usersData, isLoading, error } = this.state;
