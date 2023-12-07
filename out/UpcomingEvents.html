@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Class: LoginPage</title>
+    <title>JSDoc: Class: UpcomingEvents</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Class: LoginPage</h1>
+    <h1 class="page-title">Class: UpcomingEvents</h1>
 
     
 
@@ -28,10 +28,9 @@
 
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>LoginPage<span class="signature">()</span><span class="type-signature"> &rarr; {React.Component}</span></h2>
+        <h2><span class="attribs"><span class="type-signature"></span></span>UpcomingEvents<span class="signature">()</span><span class="type-signature"> &rarr; {React.Component}</span></h2>
         
-            <div class="class-description">LoginPage - A functional React component providing a user interface for login.
-It includes form inputs for email and password, and handles user authentication.</div>
+            <div class="class-description">UpcomingEvents - A functional React component that renders a list of upcoming events.</div>
         
     
 </header>
@@ -46,7 +45,7 @@ It includes form inputs for email and password, and handles user authentication.
     
 
     
-    <h4 class="name" id="LoginPage"><span class="type-signature"></span>new LoginPage<span class="signature">()</span><span class="type-signature"> &rarr; {React.Component}</span></h4>
+    <h4 class="name" id="UpcomingEvents"><span class="type-signature"></span>new UpcomingEvents<span class="signature">()</span><span class="type-signature"> &rarr; {React.Component}</span></h4>
     
 
     
@@ -94,7 +93,7 @@ It includes form inputs for email and password, and handles user authentication.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoginPage.js.html">LoginPage.js</a>, <a href="LoginPage.js.html#line52">line 52</a>
+        <a href="UpcomingEvents.js.html">UpcomingEvents.js</a>, <a href="UpcomingEvents.js.html#line12">line 12</a>
     </li></ul></dd>
     
 
@@ -123,7 +122,7 @@ It includes form inputs for email and password, and handles user authentication.
 
         
 <div class="param-desc">
-    A component for user login.
+    A component displaying upcoming events for a user.
 </div>
 
 
@@ -172,7 +171,7 @@ It includes form inputs for email and password, and handles user authentication.
     
 
     
-    <h4 class="name" id=".Copyright"><span class="type-signature">(static) </span>Copyright<span class="signature">(props)</span><span class="type-signature"> &rarr; {React.Component}</span></h4>
+    <h4 class="name" id=".deleteUpcomingEvent"><span class="type-signature">(static) </span>deleteUpcomingEvent<span class="signature">(id)</span><span class="type-signature"> &rarr; {Promise.&lt;boolean>}</span></h4>
     
 
     
@@ -180,7 +179,7 @@ It includes form inputs for email and password, and handles user authentication.
 
 
 <div class="description">
-    Renders a copyright message.
+    Deletes a selected upcoming event.
 </div>
 
 
@@ -216,13 +215,13 @@ It includes form inputs for email and password, and handles user authentication.
 
         <tr>
             
-                <td class="name"><code>props</code></td>
+                <td class="name"><code>id</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">string</span>
 
 
             
@@ -232,7 +231,7 @@ It includes form inputs for email and password, and handles user authentication.
 
             
 
-            <td class="description last">Properties passed to the component.</td>
+            <td class="description last">The ID of the event to be deleted.</td>
         </tr>
 
     
@@ -273,7 +272,7 @@ It includes form inputs for email and password, and handles user authentication.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoginPage.js.html">LoginPage.js</a>, <a href="LoginPage.js.html#line28">line 28</a>
+        <a href="UpcomingEvents.js.html">UpcomingEvents.js</a>, <a href="UpcomingEvents.js.html#line92">line 92</a>
     </li></ul></dd>
     
 
@@ -302,7 +301,7 @@ It includes form inputs for email and password, and handles user authentication.
 
         
 <div class="param-desc">
-    Copyright component.
+    A promise that resolves to true upon successful deletion.
 </div>
 
 
@@ -313,7 +312,7 @@ It includes form inputs for email and password, and handles user authentication.
     </dt>
     <dd>
         
-<span class="param-type">React.Component</span>
+<span class="param-type">Promise.&lt;boolean></span>
 
 
     </dd>
@@ -331,7 +330,7 @@ It includes form inputs for email and password, and handles user authentication.
     
 
     
-    <h4 class="name" id=".handleSubmit"><span class="type-signature">(static) </span>handleSubmit<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".handleFilterChange"><span class="type-signature">(static) </span>handleFilterChange<span class="signature">(event)</span><span class="type-signature"></span></h4>
     
 
     
@@ -339,8 +338,7 @@ It includes form inputs for email and password, and handles user authentication.
 
 
 <div class="description">
-    Handles the submit event of the login form.
-It performs user authentication and navigates to the home page upon successful login.
+    Handles changes to the event filter.
 </div>
 
 
@@ -392,7 +390,7 @@ It performs user authentication and navigates to the home page upon successful l
 
             
 
-            <td class="description last">The event object.</td>
+            <td class="description last">The event object from the filter change.</td>
         </tr>
 
     
@@ -433,7 +431,144 @@ It performs user authentication and navigates to the home page upon successful l
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="LoginPage.js.html">LoginPage.js</a>, <a href="LoginPage.js.html#line66">line 66</a>
+        <a href="UpcomingEvents.js.html">UpcomingEvents.js</a>, <a href="UpcomingEvents.js.html#line25">line 25</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id=".handleSearchChange"><span class="type-signature">(static) </span>handleSearchChange<span class="signature">(event)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Handles changes in the search input and filters the events accordingly.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>event</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Event</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The event object from the search input change.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="UpcomingEvents.js.html">UpcomingEvents.js</a>, <a href="UpcomingEvents.js.html#line34">line 34</a>
     </li></ul></dd>
     
 
