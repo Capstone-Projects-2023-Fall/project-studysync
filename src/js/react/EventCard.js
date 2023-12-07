@@ -55,14 +55,6 @@ const eventCardStyles = {
   },
 };
 
-/**
- * @class EventCard
- * @classdesc EventCard - A functional React component for displaying event details in card format.
- * 
- * @param {Object} props - Props for EventCard including event details and onDelete callback.
- * @returns {React.Component} A card component displaying event details.
- */
-
 const EventCard = ({ initialEvent, onDelete }) => {
   const [event, setEvent] = useState({
     date: "",
@@ -82,44 +74,23 @@ const EventCard = ({ initialEvent, onDelete }) => {
     event.type === "Flashcard"
       ? `/flashcardshare/${event.itemId}`
       : `/quizmain/${event.itemId}`;
-  /**
-     * @memberof EventCard
-     * @function handleClickOpen
-     * @description Opens the dialog to edit event details.
-     * @param {Object} e - Event object to prevent event bubbling.
-     */
+
   const handleClickOpen = (e) => {
     e.stopPropagation();
     setTempEvent({ ...event });
     setOpen(true);
   };
 
-  /**
-   * @memberof EventCard
-   * @function handleClose
-   * @description Closes the edit event dialog.
-   */
   const handleClose = () => {
     setOpen(false);
   };
 
-  /**
-   * @memberof EventCard
-   * @function updateEvent
-   * @description Updates the event details in the database.
-   * @returns {Promise<Boolean>} Promise indicating the success of the update operation.
-   */
   const updateEvent = async () => {
     const { id, ...eventWithoutId } = tempEvent;
     await eventRepository.updateUpcomingEvent(id, eventWithoutId);
     return true;
   };
 
-  /**
-  * @memberof EventCard
-  * @function handleClickSaveChanges
-  * @description Handles the click event on the Save Changes button.
-  */
   const handleClickSaveChanges = async () => {
     console.log("save changes clicked");
     updateEvent().then((res) => {
@@ -129,24 +100,11 @@ const EventCard = ({ initialEvent, onDelete }) => {
     });
   };
 
-  /**
-   * @memberof EventCard
-   * @function handleChange
-   * @description Handles changes to the event fields in the dialog.
-   * @param {string} prop - Property name of the event to update.
-   * @returns {Function} A function that takes an event object and updates the event state.
-   */
   const handleChange = (prop) => (e) => {
     // setEvent({ ...event, [prop]: e.target.value });
     setTempEvent({ ...tempEvent, [prop]: e.target.value });
   };
 
-  /**
-  * @memberof EventCard
-  * @function handleDialogKeyDown
-  * @description Handles key down event on the dialog, specifically the Escape key.
-  * @param {Object} event - The key down event object.
-  */
   const handleDialogKeyDown = (event) => {
     if (event.key === "Escape") {
       event.stopPropagation();
