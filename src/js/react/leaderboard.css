@@ -1,10 +1,10 @@
-.leaderboards-container {
+.leaderboardsContainer {
     display: flex;
     justify-content: space-between;
     padding: 20px;
 }
 
-.leaderboard-half {
+.leaderboardSection {
     flex: 1;
     margin: 0 10px;
     background-color: #f5f5f5;
@@ -13,42 +13,39 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.leaderboard-half:first-child {
+.leaderboardSection:first-child {
     margin-right: 5px;
 }
 
-.leaderboard-half:last-child {
+.leaderboardSection:last-child {
     margin-left: 5px;
 }
 
-.leaderboard-half h2 {
+.leaderboardSection h2 {
     color: #333;
     text-align: center;
     margin-bottom: 20px;
 }
 
-table {
+.leaderboardTable {
     width: 100%;
     border-collapse: collapse;
 }
 
-table,
-th,
-td {
+.leaderboardTable, .leaderboardTable th, .leaderboardTable td {
     border: 1px solid #ddd;
 }
 
-th,
-td {
+.leaderboardTable th, .leaderboardTable td {
     text-align: left;
     padding: 8px;
 }
 
-th {
+.leaderboardTable th {
     background-color: #4CAF50;
     color: white;
 }
 
-tr:nth-child(even) {
+.leaderboardTable tr:nth-child(even) {
     background-color: #f2f2f2;
 }
