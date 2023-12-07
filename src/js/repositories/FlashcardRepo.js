@@ -1,11 +1,21 @@
 import { useId } from 'react';
 import { database, auth } from '../../firebase';
-import { collection, getDocs, getDoc, query, where, orderBy, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove, increment} from 'firebase/firestore';
 
-
+import { collection, getDocs, getDoc, query, where, orderBy, setDoc, doc, addDoc, deleteDoc, updateDoc, arrayUnion, Timestamp, arrayRemove, increment } from 'firebase/firestore';
+/**
+ * @class FlashcardRepo
+ * @classdesc FlashcardRepo
+ * @description Repository for handling flashcard-related operations with Firebase.
+ */
 const FlashcardRepo = {
 
 
+    /**
+         * @memberof FlashcardRepo
+         * @function getCurrentUid
+         * @description Retrieves the current user's UID.
+         * @returns {string|null} The current user's UID or null if not logged in.
+         */
     getCurrentUid: function () {
         const user = auth.currentUser;
         return user ? user.uid : null;
@@ -99,14 +109,12 @@ const FlashcardRepo = {
                 },
             };
 
-
             const initialScore = {
                 [scoreId]: {
                     score: 0,
                     attempt: increment(0),
                 },
             };
-
 
             const setData = {
                 name: name,
@@ -133,8 +141,10 @@ const FlashcardRepo = {
                 sharedWith: [],
                 quizName: "Initial Quiz",
                 questionItems: initialQuizItems,
+
                 flashcardSetId: newDocRef.id,
                 quizScore: initialScore
+
             };
 
 
@@ -790,7 +800,6 @@ const FlashcardRepo = {
                 },
             };
 
-
             const initialScore = {
                 [scoreId]: {
                     score: 0,
@@ -926,9 +935,34 @@ const FlashcardRepo = {
 
         }
     },
-   
+
+    getFlashcardItemsByStatus: async function (setId, status) {
+        try {
+            const setRef = doc(database, 'flashcardSets', setId);
+            const setSnapshot = await getDoc(setRef);
+            const setData = setSnapshot.data();
+            const flashcardData = setData.flashcardItems || [];
+
+            // if flashcardData is an object, convert it to an array
+            const flashcardArray = Object.values(flashcardData);
+            //console.log('Converted flashcardData to array:', flashcardArray);
+            // filter flashcards based on the status field
+            const flashcardsWithStatus = flashcardArray.filter(flashcard => flashcard.status === status);
+            //console.log("Filtered flashcards are: ", flashcardsWithStatus);
+
+
+            return flashcardsWithStatus;
+        } catch (error) {
+            console.error("Error getting flashcard items:", error);
+            throw error;
+
+
+        }
+    },
+
     // this will add the user score to the db as well as the attempt
-    updateScoreAndAddAttempt: async function(quizId, score) {
+    updateScoreAndAddAttempt: async function (quizId, score) {
+
         try {
             // create the attempt data
             const scoreData = {
@@ -936,7 +970,7 @@ const FlashcardRepo = {
                 score: score, // the calculated score
                 submitAt: Timestamp.now(), // capture the time the user submitted the quiz
             };
-   
+
             // get a reference to the quiz document in the 'quizzesCreation' collection
             const quizRef = doc(database, 'quizzesCreation', quizId);
    
@@ -947,10 +981,12 @@ const FlashcardRepo = {
             // check if there are existing attempts
             const existingAttempts = Object.values(quizScore).length;
    
+
             // increment the attempt field by 1
             if (existingAttempts > 0) {
                 scoreData.attempt = increment(existingAttempts);
             }
+
    
             // get a new ID for the attempt
             const scoreId = doc(collection(database, 'score')).id;
@@ -960,11 +996,12 @@ const FlashcardRepo = {
    
             console.log("Adding new score to DB:", quizScore);
    
+
             // update the quiz document with the updated quizScore
             await updateDoc(quizRef, {
                 quizScore: quizScore
             });
-   
+
             return scoreId;
         } catch (error) {
             console.error("Error adding score", error);
@@ -977,6 +1014,7 @@ const FlashcardRepo = {
 
     //get score and attempt date
     getQuizAttemptsForUser: async function(userId) {
+
         const quizAttempts = [];
         try {
             //reference to the user's quiz scores
@@ -989,13 +1027,16 @@ const FlashcardRepo = {
                     score: data.score,
                     submitAt: data.submitAt.toDate().toLocaleString(),
                 });
+
         });
     } catch (error) {
         console.error("Error fetching user's quiz attempts:", error);
     }
     return quizAttempts;
 },
+
 };
+
 
 
 export default FlashcardRepo;
