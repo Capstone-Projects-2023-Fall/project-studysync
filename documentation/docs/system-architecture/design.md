@@ -85,26 +85,27 @@ A user is about to take a naturalization test but doesn't have time to study for
 ![](../requirements/static/UseCase4.png)
 
 ## Use case 5
-   A user wants to take a quiz created by themselves or a friend.
+   A user wants to take a quiz created by themselves or a friend and compare it to his/her friends.
 
 1. User logs in to StudySync.
 2. User then navigate to the mySets section.
 3. At the mySets section, user has a wide range of quizzes either created by themselves or shared by friends.
-4. Then the user completes the quiz and submits their answers.
+4. User selects a quiz and completes it.
 5. The system will then calculate and the display user's score on the leaderboard.
+6. User then navigates to the leaderboard page to compare scores with his/her friends.
 ![](../requirements/static/usecase5.png)
 
 
 ## Use case 6
-   A user wants to add friends on StudySync.
+   Jack wants to add John as a friend on StudySync.
 
-1. User will have to log in to their own account.
+1. Jack will have to log in to his own account.
 2. Then navigate to the socials section.
-3. User searches for friend's friend.
-4. Once the friend's name popup, user recognizes their friends then clicks follow.
-5. The friend receives the follow notification and follows the user back.
-6. They are now friends.
-![](../requirements/static/UseCase6.png)
+3. Jack searches for John.
+4. Once the John's name popup, Jack recognizes his friends then selects follow.
+5. John receives the follow notification and follows the Jack back.
+6. John and Jack are now friends on StudySync as they have now follow each other.
+![](../requirements/static/usecase6new.png)
 
 
 ## Use case 7
@@ -115,7 +116,7 @@ A user is about to take a naturalization test but doesn't have time to study for
 3. The system saves the user's progress.
 4. After the break, the user goes to the mySets section and pick the quiz to resume.
 5. User finishes the quiz and saves its data to the database.
-![](../requirements/static/usecase7.png)
+![](../requirements/static/usecase7new.png)
 
 
 
