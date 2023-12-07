@@ -32,12 +32,12 @@ class Leaderboard extends React.Component {
                         userAttempts.forEach(attempt => {
                             totalScore += attempt.score;
                         });
-                        attemptCount += userAttempts.length; // Increment by the number of attempts, not quizzes
+                        attemptCount += userAttempts.length; 
                     }
                 });
 
                 const averageScore = attemptCount > 0 ? (totalScore / attemptCount) : 0;
-                return { ...user, averageScore: averageScore.toFixed(2), quizCount: attemptCount }; // Use attemptCount for quizCount
+                return { ...user, averageScore: averageScore.toFixed(2), quizCount: attemptCount }; 
             });
 
             const usersWithScoresAndQuizzes = await Promise.all(usersWithScoresAndQuizzesPromises);
@@ -50,36 +50,42 @@ class Leaderboard extends React.Component {
 
 
     renderLeaderboard(data, title, key) {
+        let rank = 0; 
+        
         return (
-            <div className="leaderboard-section">
-                <h2>{title}</h2>
-                <table className="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>{key}</th>
+        <div className="leaderboardSection">
+            <h2>{title}</h2>
+            <table className="leaderboardTable">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>{key}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {data.map(user => (
+                        <tr key={user.id}>
+                            <td>{++rank}</td>
+                            <td>{user.name}</td>
+                            <td>{user[key]}</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {data.map(user => (
-                            <tr key={user.id}>
-                                <td>{user.name}</td>
-                                <td>{user[key]}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        );
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
     }
 
     renderTotalQuizzesLeaderboard(data) {
+        let rank = 0;
         return (
-            <div className="leaderboard-section">
+            <div className="leaderboardSection">
                 <h2>Total Quizzes Taken</h2>
-                <table className="leaderboard-table">
+                <table className="leaderboardTable">
                     <thead>
                         <tr>
+                            <th>Rank</th> 
                             <th>Name</th>
                             <th>Quizzes Taken</th>
                         </tr>
@@ -87,6 +93,7 @@ class Leaderboard extends React.Component {
                     <tbody>
                         {data.map(user => (
                             <tr key={user.id}>
+                                <td>{++rank}</td>
                                 <td>{user.name}</td>
                                 <td>{user.quizCount}</td>
                             </tr>
@@ -96,6 +103,7 @@ class Leaderboard extends React.Component {
             </div>
         );
     }
+    
 
     render() {
         const { usersData, isLoading, error } = this.state;
@@ -108,11 +116,13 @@ class Leaderboard extends React.Component {
             return <div className="error">Error loading leaderboard: {error.message}</div>;
         }
 
-        const sortedUsersByScore = [...usersData].sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
-        const sortedUsersByQuizzes = [...usersData].sort((a, b) => b.quizCount - a.quizCount);
+        const activeUsers = usersData.filter(user => user.quizCount > 0);
+        const sortedUsersByScore = [...activeUsers].sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
+        const sortedUsersByQuizzes = [...activeUsers].sort((a, b) => b.quizCount - a.quizCount);
+
 
         return (
-            <div className="leaderboards-container">
+            <div className="leaderboardsContainer">
                 {this.renderLeaderboard(sortedUsersByScore, 'Average Score Leaderboard', 'averageScore')}
                 {this.renderTotalQuizzesLeaderboard(sortedUsersByQuizzes)}
             </div>
