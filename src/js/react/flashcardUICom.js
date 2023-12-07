@@ -11,7 +11,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import { CircularProgress, Snackbar } from '@mui/material';
 
 
-
+/**
+ * @class FlashcardApp
+ * @classdesc FlashcardApp - A functional React component for managing flashcards.
+ * It includes functionalities like adding, editing, deleting flashcards, flipping cards,
+ * filtering, and interacting with AI for flashcard generation.
+ * 
+ * @returns {React.Component} A component for flashcard management and interaction.
+ */
 function FlashcardApp() {
     const [term, setTerm] = useState('');
     const [definition, setDefinition] = useState('');
@@ -51,7 +58,11 @@ function FlashcardApp() {
     const [errorMessage, setErrorMessage] = useState('');
 
 
-
+    /**
+         * @memberof FlashcardApp
+         * @function useEffect
+         * @description useEffect hook for fetching flashcards, comments, and user image when the component mounts.
+         */
     useEffect(() => {
         const fetchFlashcards = async () => {
             try {
@@ -143,7 +154,11 @@ function FlashcardApp() {
             console.error("Failed to fetch comments:", error);
         }
     };
-
+    /**
+         * @memberof FlashcardApp
+         * @function handleSendComment
+         * @description Handles the action of sending a comment.
+         */
     const handleSendComment = async () => {
         if (comment) {
             try {
@@ -162,7 +177,11 @@ function FlashcardApp() {
         }
     };
 
-
+    /**
+         * @memberof FlashcardApp
+         * @function handlePrevCard
+         * @description Navigates to the previous flashcard.
+         */
     const handlePrevCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex > 0) {
@@ -172,12 +191,22 @@ function FlashcardApp() {
             setShowDefinition(false);
         }
     };
+    /**
+     * @memberof FlashcardApp
+     * @function handleDeleteClick
+     * @description Opens the delete dialog and sets the selected card for deletion.
+     * @param {Object} card - The card to be deleted.
+     */
     const handleDeleteClick = (card) => {
         setCardToDelete(card);
         setOpenDelete(true);
     };
 
-
+    /**
+         * @memberof FlashcardApp
+         * @function confirmDelete
+         * @description Confirms the deletion of a selected flashcard.
+         */
     const confirmDelete = async () => {
         if (cardToDelete) {
             try {
@@ -191,6 +220,14 @@ function FlashcardApp() {
             setOpenDelete(false);
         }
     }
+    /**
+     * @memberof FlashcardApp
+     * @function handleStatusChange
+     * @description Updates the status of a flashcard.
+     * @param {string} setId - The ID of the flashcard set.
+     * @param {string} flashcardId - The ID of the flashcard.
+     * @param {string} newStatus - The new status to be set.
+     */
     const handleStatusChange = async (setId, flashcardId, newStatus) => {
         try {
             await FlashcardRepo.updateCardStatus(setId, flashcardId, newStatus);
@@ -204,18 +241,34 @@ function FlashcardApp() {
             console.error("Failed to update flashcard status:", error);
         }
     };
-
+    /**
+         * @memberof FlashcardApp
+         * @function handleButtonClick
+         * @description Handles button clicks for changing the status of a flashcard.
+         * @param {string} status - The status to be set for the selected card.
+         */
     const handleButtonClick = async (status) => {
         if (selectedCard) {
             await handleStatusChange(setId, selectedCard.flashcardId, status);
             setSelectedButton(status);
         }
     };
-
+    /**
+         * @memberof FlashcardApp
+         * @function selectCard
+         * @description Selects a card for viewing or editing.
+         * @param {Object} card - The card to be selected.
+         */
     const selectCard = (card) => {
         setSelectedCard(card);
         setSelectedButton(card.status);
     };
+    /**
+     * @memberof FlashcardApp
+     * @function handleFilterChange
+     * @description Handles changes in the filter options.
+     * @param {Event} event - The event object from the filter checkbox.
+     */
     const handleFilterChange = (event) => {
         setFilterOptions({ ...filterOptions, [event.target.name]: event.target.checked });
     };
@@ -229,6 +282,11 @@ function FlashcardApp() {
             return false;
         })
         : cards;
+    /**
+     * @memberof FlashcardApp
+     * @function handleNextCard
+     * @description Navigates to the next flashcard.
+     */
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
         if (currentIndex < cards.length - 1) {
@@ -238,6 +296,11 @@ function FlashcardApp() {
             setShowDefinition(false);
         }
     };
+    /**
+     * @memberof FlashcardApp
+     * @function handleAddFlashcard
+     * @description Handles the addition of a new flashcard.
+     */
     const handleAddFlashcard = async () => {
         if (term && definition) {
             try {
@@ -253,13 +316,25 @@ function FlashcardApp() {
     };
 
 
+
+
+    /**
+     * @memberof FlashcardApp
+     * @function handleEditClick
+     * @description Opens the edit dialog and sets the selected card for editing.
+     * @param {Object} card - The card to be edited.
+     */
     const handleEditClick = (card) => {
         setTerm(card.term);
         setDefinition(card.definition);
         setCardToEdit(card);
         setOpenEdit(true);
     };
-
+    /**
+     * @memberof FlashcardApp
+     * @function handleUpdateFlashcard
+     * @description Updates the selected flashcard with new term and definition.
+     */
     const handleUpdateFlashcard = async () => {
         if (cardToEdit && term && definition) {
             try {
@@ -279,7 +354,13 @@ function FlashcardApp() {
             }
         }
     };
-
+    /**
+         * @memberof FlashcardApp
+         * @function parseGPTResponse
+         * @description Parses the response from GPT into a usable format.
+         * @param {string} rawResponse - The raw response string from GPT.
+         * @returns {Array} An array of parsed flashcards.
+         */
     function parseGPTResponse(rawResponse) {
         try {
 
@@ -308,11 +389,19 @@ function FlashcardApp() {
         }
     }
 
-
+    /**
+         * @memberof FlashcardApp
+         * @function handleAIClick
+         * @description Opens the AI dialog for generating flashcards.
+         */
     const handleAIClick = () => {
         setOpenAIDialog(true);
     };
-
+    /**
+         * @memberof FlashcardApp
+         * @function handleGenerateFlashcards
+         * @description Generates flashcards using AI based on the provided description and image.
+         */
     const handleGenerateFlashcards = async () => {
         setOpenAIDialog(false);
         setIsLoading(true);
@@ -341,7 +430,15 @@ function FlashcardApp() {
     };
 
 
-
+    /**
+         * @memberof FlashcardApp
+         * @function callYourCloudFunctionToGenerateFlashcards
+         * @description Calls a cloud function to generate flashcards using GPT and an image.
+         * @param {number} numFlashcards - Number of flashcards to generate.
+         * @param {string} topicName - The topic for the flashcards.
+         * @param {string} imageFile - The image file in base64 format.
+         * @returns {Array} An array of generated flashcards.
+         */
     const callYourCloudFunctionToGenerateFlashcards = async (numFlashcards, topicName, imageFile) => {
         try {
             const functionUrl = 'https://us-central1-studysync-a603a.cloudfunctions.net/askGPTWithImage';
@@ -389,7 +486,12 @@ function FlashcardApp() {
             throw error;
         }
     };
-
+    /**
+         * @memberof FlashcardApp
+         * @function handleImageUpload
+         * @description Handles the image upload event and sets the image for AI generation.
+         * @param {Event} event - The event object from the file input.
+         */
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -405,7 +507,11 @@ function FlashcardApp() {
             reader.readAsDataURL(file);
         }
     };
-
+    /**
+         * @memberof FlashcardApp
+         * @function handleCancelImage
+         * @description Cancels the selected image and resets the image state.
+         */
     const handleCancelImage = () => {
         setImage(null);
         setPreviewUrl(null);
@@ -413,7 +519,11 @@ function FlashcardApp() {
 
 
 
-
+    /**
+         * @memberof FlashcardApp
+         * @function handleCloseDialog
+         * @description Closes the AI dialog and resets related states.
+         */
     const handleCloseDialog = () => {
         setOpenAIDialog(false);
         setPreviewUrl(null);
@@ -431,6 +541,11 @@ function FlashcardApp() {
             fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
         },
     });
+    /**
+     * @memberof FlashcardApp
+     * @function toggleFlip
+     * @description Toggles the flip state of the flashcard, showing either term or definition.
+     */
     const toggleFlip = () => {
         setIsFlipped(!isFlipped);
     };
@@ -521,7 +636,7 @@ function FlashcardApp() {
                             {selectedCard ? `${cards.indexOf(selectedCard) + 1}/${cards.length}` : ""}
                         </Typography>
                         <div style={{ paddingTop: '60px' }}></div>
-                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", marginTop: '20px' }}>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "120%", marginTop: '20px' }}>
                             <IconButton onClick={handlePrevCard}>
                                 <ArrowBackIcon />
                             </IconButton>
@@ -541,7 +656,7 @@ function FlashcardApp() {
                                     <div
                                         style={{
                                             position: 'absolute',
-                                            width: '100%',
+                                            width: '90%',
                                             height: '100%',
                                             backfaceVisibility: 'hidden',
                                             backgroundColor: '#1DB954',
@@ -564,7 +679,7 @@ function FlashcardApp() {
                                     <div
                                         style={{
                                             position: 'absolute',
-                                            width: '100%',
+                                            width: '90%',
                                             height: '100%',
                                             backfaceVisibility: 'hidden',
                                             transform: 'rotateY(180deg)',

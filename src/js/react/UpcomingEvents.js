@@ -9,7 +9,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import { userRepository } from "../../firebase";
 import { useParams } from "react-router-dom";
 import { CircularIndeterminate } from "./MySets";
-
+/**
+ * @class UpcomingEvents
+ * @classdesc UpcomingEvents - A functional React component that renders a list of upcoming events.
+ * 
+ * @returns {React.Component} A component displaying upcoming events for a user.
+ */
 const UpcomingEvents = () => {
   const [filter, setFilter] = useState("Upcoming Events");
   const [events, setEvents] = useState([]);
@@ -17,10 +22,21 @@ const UpcomingEvents = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const { UserId } = useParams();
+  /**
+   * @memberof UpcomingEvents
+   * @function handleFilterChange
+   * @description Handles changes to the event filter.
+   * @param {Event} event - The event object from the filter change.
+   */
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
-
+  /**
+    * @memberof UpcomingEvents
+    * @function handleSearchChange
+    * @description Handles changes in the search input and filters the events accordingly.
+    * @param {Event} event - The event object from the search input change.
+    */
   const handleSearchChange = (event) => {
     const newSearchTerm = event.target.value;
     setSearchTerm(newSearchTerm);
@@ -73,7 +89,13 @@ const UpcomingEvents = () => {
       setLoading(false);
     });
   }, [filter]);
-
+  /**
+     * @memberof UpcomingEvents
+     * @function deleteUpcomingEvent
+     * @description Deletes a selected upcoming event.
+     * @param {string} id - The ID of the event to be deleted.
+     * @returns {Promise<boolean>} A promise that resolves to true upon successful deletion.
+     */
   const deleteUpcomingEvent = async (id) => {
     await userRepository.removeUpcomingEvent(UserId, id);
     setEvents(events.filter((e) => e.id != id));

@@ -23,6 +23,15 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime"; // Import the timer
 import ScheduleDialog from "./ScheduleDialog";
 import CloseIcon from "@mui/icons-material/Close";
 import { UPCOMING_EVENT_TYPE } from "../models/event";
+
+/**
+ * @class FlashCardSet
+ * @classdesc FlashCardSet - A functional React component providing a view for a flashcard set.
+ * It includes functionalities like sharing, scheduling, and navigation to flashcard details.
+ * 
+ * @param {Object} props - Props for FlashCardSet including various event and item details.
+ * @returns {React.Component} A paper component displaying a flashcard set.
+ */
 function FlashCardSet({
   author,
   title,
@@ -48,16 +57,29 @@ function FlashCardSet({
     })
   );
   const navigate = useNavigate();
-
+  /**
+     * @memberof FlashCardSet
+     * @function openScheduleDialogD
+     * @description Opens the dialog to schedule an event.
+     * @param {Object} e - Event object to prevent event bubbling.
+     */
   const openScheduleDialogD = (e) => {
     e.stopPropagation();
     setScheduleDialogOpenD(true);
   };
 
+
   const closeScheduleDialogD = () => {
     setScheduleDialogOpenD(false);
   };
-
+  /**
+     * @memberof FlashCardSet
+     * @function handleScheduleD
+     * @description Handles scheduling of an event.
+     * @param {Date} selectedDate - The selected date for the event.
+     * @param {string} selectedTime - The selected time for the event.
+     * @param {string} eventName - The name of the event.
+     */
   const handleScheduleD = (selectedDate, selectedTime, eventName) => {
     //Scheduling logic
     const itemName = isFlashcard === false ? item.quizName : item.name;
@@ -84,7 +106,11 @@ function FlashCardSet({
 
     closeScheduleDialogD();
   };
-
+  /**
+     * @memberof FlashCardSet
+     * @function handleClose
+     * @description Closes the share dialog.
+     */
   const handleClose = () => {
     setOpen(false);
   };

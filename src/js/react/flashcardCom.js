@@ -10,6 +10,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import Quiz from './Quiz';
 
 
+
 const astyle = {
   fontFamily: `-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
   colors: {
@@ -18,6 +19,13 @@ const astyle = {
   },
   borderRadius: '10px'
 };
+/**
+ * @class FlashcardComponent
+ * @classdesc FlashcardComponent
+ * FlashcardComponent - A React component for managing flashcards.
+ * This component allows users to view, add, edit, and delete flashcards and their subjects.
+ * It also provides navigation to flashcard details and associated quizzes.
+ */
 
 const FlashcardComponent = () => {
   const [subjects, setSubjects] = useState([]);
@@ -31,17 +39,48 @@ const FlashcardComponent = () => {
   const [showQuiz, setShowQuiz] = useState(false);
   const { setId, quizId } = useParams();
   const [searchQuery, setSearchQuery] = useState('');
+
+
+  /**
+   * @memberof FlashcardComponent
+   * @function handleSearchChange
+   * @description Handles changes to the search field.
+   * @public
+   * @param {Object} event - The event object from the search input field.
+   */
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value.toLowerCase());
   };
+  /**
+   * @memberof FlashcardComponent
+   * @function handleClearSearch
+   * @description Clears the current search query.
+   */
   const handleClearSearch = () => {
     setSearchQuery('');
   };
+  /**
+   * @memberof FlashcardComponent
+   * @function filteredFlashcards
+   * @description Filters flashcards based on the search query.
+   * @public
+   * @param {string} subject - The subject to filter flashcards under.
+   * @returns {Array} An array of filtered flashcards.
+   */
   const filteredFlashcards = (subject) => {
     return flashcards[subject] ? flashcards[subject].filter(topic => topic.toLowerCase().includes(searchQuery)) : [];
   };
+  // Navigation hook from react-router-dom
   const navigate = useNavigate();
 
+  /**
+   * @memberof FlashcardComponent
+   * @function handleFlashcardClick
+   * @description Handles the action when a flashcard is clicked.
+   * @description Navigates to the flashcard details page.
+   * @public
+   * @param {string} topicName - The name of the topic.
+   */
   const handleFlashcardClick = async (topicName) => {
     try {
       const setId = await FlashcardRepo.getSetIdByTopicName(topicName);
@@ -55,7 +94,14 @@ const FlashcardComponent = () => {
     }
   };
 
-  //navigate to quiz page by passing flashcardSet ID as parameter
+  /**
+   * @memberof FlashcardComponent
+   * @function handleQuizClick
+   * @description Handles the action when the quiz button is clicked.
+   * @description Navigates to the associated quiz page.
+   * @public
+   * @param {string} topicName - The name of the topic.
+   */
   const handleQuizClick = async (topicName) => {
     try {
       const setId = await FlashcardRepo.getSetIdByTopicName(topicName);
@@ -71,6 +117,7 @@ const FlashcardComponent = () => {
       console.error("Error in handleFlashcardClick:", error);
     }
   };
+
 
   useEffect(() => {
     async function fetchData() {
@@ -111,7 +158,11 @@ const FlashcardComponent = () => {
     }
     fetchData();
   }, []);
-
+  /**
+   * @memberof FlashcardComponent
+   * @function handleAddTopic
+     * @description Handles adding a new topic.
+     */
   const handleAddTopic = async () => {
     try {
       const uid = FlashcardRepo.getCurrentUid();
@@ -138,7 +189,13 @@ const FlashcardComponent = () => {
       console.error("Error adding new topic:", error);
     }
   };
-
+  /**
+   * @memberof FlashcardComponent
+   * @function handleDelete
+     * @description Handles the deletion of a topic.
+     * @public
+     * @param {string} topicName - The name of the topic to delete.
+     */
   const handleDelete = async (topicName) => {
     try {
       const uid = FlashcardRepo.getCurrentUid();
@@ -161,7 +218,11 @@ const FlashcardComponent = () => {
       console.error("Error deleting flashcard set:", error);
     }
   };
-
+  /**
+   * @memberof FlashcardComponent
+   * @function handleAdd
+     * @description Handles the action when the add button is clicked.
+     */
   const handleAdd = async () => {
     const trimmedEntry = newEntry.trim();
 
@@ -191,7 +252,11 @@ const FlashcardComponent = () => {
     setNewEntry('');
     setOpen(false);
   };
-
+  /**
+   * @memberof FlashcardComponent
+   * @function handleEdit
+     * @description Handles editing an existing topic.
+     */
   const handleEdit = async () => {
     console.log('handleEdit called');
 

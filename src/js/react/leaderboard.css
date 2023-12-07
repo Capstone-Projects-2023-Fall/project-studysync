@@ -7,7 +7,7 @@
 .leaderboard-half {
     flex: 1;
     margin: 0 10px;
-    background-color: #f5f5f5; 
+    background-color: #f5f5f5;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -32,11 +32,14 @@ table {
     border-collapse: collapse;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid #ddd;
 }
 
-th, td {
+th,
+td {
     text-align: left;
     padding: 8px;
 }
