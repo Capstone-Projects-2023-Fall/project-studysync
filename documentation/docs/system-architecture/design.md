@@ -116,6 +116,7 @@ A user is about to take a naturalization test but doesn't have time to study for
 3. The system saves the user's progress.
 4. After the break, the user goes to the mySets section and pick the quiz to resume.
 5. User finishes the quiz and saves its data to the database.
+
 ![](../requirements/static/usecase7new.png)
 
 

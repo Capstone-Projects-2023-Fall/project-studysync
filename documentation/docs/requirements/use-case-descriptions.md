@@ -73,7 +73,7 @@ Features associated with this use case:
 User account management
 Quizzes/tests
 
-      A user wants to take a quiz created by themselves or a friend and compare it to his/her friends.
+    A user wants to take a quiz created by themselves or a friend and compare it to his/her friends.
 
 1. User logs in to StudySync.
 2. User then navigate to the mySets section.
