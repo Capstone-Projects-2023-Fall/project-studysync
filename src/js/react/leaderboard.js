@@ -7,7 +7,8 @@ class Leaderboard extends React.Component {
     state = {
         usersData: [],
         isLoading: true,
-        error: null
+        error: null,
+        searchQuery: ''
     };
 
     componentDidMount() {
@@ -48,10 +49,14 @@ class Leaderboard extends React.Component {
         }
     }
 
+    handleSearch = (event) => {
+        this.setState({ searchQuery: event.target.value });
+    }
+
 
     renderLeaderboard(data, title, key) {
         let rank = 0; 
-        
+        const filteredData = data.filter(user => user.name.toLowerCase().includes(this.state.searchQuery.toLowerCase()));
         return (
         <div className="leaderboardSection">
             <h2>{title}</h2>
@@ -64,7 +69,7 @@ class Leaderboard extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.map(user => (
+                    {filteredData.map(user => (
                         <tr key={user.id}>
                             <td>{++rank}</td>
                             <td>{user.name}</td>
@@ -79,6 +84,7 @@ class Leaderboard extends React.Component {
 
     renderTotalQuizzesLeaderboard(data) {
         let rank = 0;
+        const filteredData = data.filter(user => user.name.toLowerCase().includes(this.state.searchQuery.toLowerCase()));
         return (
             <div className="leaderboardSection">
                 <h2>Total Quizzes Taken</h2>
@@ -91,7 +97,7 @@ class Leaderboard extends React.Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {data.map(user => (
+                        {filteredData.map(user => (
                             <tr key={user.id}>
                                 <td>{++rank}</td>
                                 <td>{user.name}</td>
@@ -123,6 +129,15 @@ class Leaderboard extends React.Component {
 
         return (
             <div className="leaderboardsContainer">
+                <div className="searchBar">
+                    <input
+                        type="text"
+                        placeholder="Search by name..."
+                        value={this.state.searchQuery}
+                        onChange={this.handleSearch}
+                    />
+                </div>
+                
                 {this.renderLeaderboard(sortedUsersByScore, 'Average Score Leaderboard', 'averageScore')}
                 {this.renderTotalQuizzesLeaderboard(sortedUsersByQuizzes)}
             </div>
