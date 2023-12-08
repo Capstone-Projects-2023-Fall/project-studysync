@@ -19,7 +19,6 @@ flashcard creation/customization
 5. Finally, the user completes the quiz and the correct answer is displayed.
 6. After submission, the quiz shows all the correct answer and quiz score will be saved to the leaderboard.
 
-
 ## Use Case 2
 
 Features associated with this use case:
