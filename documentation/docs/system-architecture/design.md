@@ -2,14 +2,16 @@
 sidebar_position: 1
 ---
 
-## Client
-
-The StudySync web interface offers a user-centric dashboard that centralizes learning tools, friend interactions, and personalized notifications. After logging in, users can access a suite of study tools, view and interact with friends' content, receive system and friend notifications, and manage their profile, all seamlessly interconnected for an efficient and engaging learning experience.
-
-![stydysync2](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/1c1f832c-66f8-4687-ac0b-89185ad4812d)
+## System diagram
 
 
-## Server
+The StudySync platform is designed to enhance students' learning experiences by providing a centralized dashboard for streamlined access to educational resources. With an emphasis on collaboration and efficiency, it facilitates AI-powered creation of flashcards and quizzes, fostering an interactive learning environment. Students can effortlessly share these resources with friends, enriching the collective study process. Additionally, StudySync allows users to schedule study sessions, ensuring consistent and focused learning engagements.
+
+![component diagram drawio](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/111998266/32a4c280-d721-4807-8ba5-fd6f4efd1add)
+
+
+
+## Backend
 StudySync is an easy-to-use learning platform where users can study, interact with friends, and manage their profiles. It’s powered by Firebase from Google Cloud, ensuring everything runs smoothly and securely. Users can quickly access up-to-date study materials like flashcards and quizzes, and the platform can respond in real-time to keep users engaged. 
 
 The server part of StudySync uses Firebase, and it acts like the spine of the platform, making sure everything talks to each other safely and quickly. we mainly look after sign-ins and managing data. When someone logs in, Firebase makes sure the login details are correct and keeps the user's session safe while they use the platform.From the user-friendly dashboard on the user's side, users can ask to see or change data, and the Firebase Database on the server side takes care of these requests. This lets users see and interact with their study materials and profiles instantly and consistently.The way Firebase services blend with the user side means users get a smooth, safe, and quick experience. They get a central place for learning tools and interactions, and they receive personalized notifications without hassle. This collaboration between the server and user side lets StudySync give a fun learning experience, focusing on easy interactions and safe access to learning materials.
