@@ -1028,6 +1028,7 @@ const QuizComponent = () => {
                             setOpenAdd(false);
                         }}
                         color="primary"
+                        data-testid = "add-dialog"
                     >
                         Add
                     </Button>
