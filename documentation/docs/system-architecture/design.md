@@ -86,25 +86,27 @@ A user is about to take a naturalization test but doesn't have time to study for
 ![](../requirements/static/UseCase4.png)
 
 ## Use case 5
-   A user wants to take a quiz created by themselves or a friend.
+   A user wants to take a quiz created by themselves or a friend and compare it to his/her friends.
 
 1. User logs in to StudySync.
-2. User then navigate to the "Quiz" section.
-3. At the "Quiz" section, user has a wide range of quizzes either created by themselves or friends.
-4. Then the user completes the quiz and submits their answers.
+2. User then navigate to the mySets section.
+3. At the mySets section, user has a wide range of quizzes either created by themselves or shared by friends.
+4. User selects a quiz and completes it.
 5. The system will then calculate and the display user's score on the leaderboard.
-![](../requirements/static/UseCase5.png)
+6. User then navigates to the leaderboard page to compare scores with his/her friends.
+![](../requirements/static/usecase5new.png)
 
 
 ## Use case 6
-   A user wants to add friends on StudySync.
+   Jack wants to add John as a friend on StudySync.
 
-1. User will have to log in to their own account.
-2. Then navigate to the "Add Friend" section.
-3. User enters the friend's email or username.
-4. Once the friend's name popup, user recognizes their friends then clicks "add as friend".
-5. The friend receives the friend request and is able to accept or reject it.
-![](../requirements/static/UseCase6.png)
+1. Jack will have to log in to his own account.
+2. Then navigate to the socials section.
+3. Jack searches for John.
+4. Once the John's name popup, Jack recognizes his friends then selects follow.
+5. John receives the follow notification and follows the Jack back.
+6. John and Jack are now friends on StudySync as they have now follow each other.
+![](../requirements/static/usecase6new.png)
 
 
 ## Use case 7
@@ -113,9 +115,11 @@ A user is about to take a naturalization test but doesn't have time to study for
 1. User is taking a quiz but then realizes he/she wants to take a quick coffee break.
 2. User clicks "Save&Exit" button in order for the quiz to be saved and quit.
 3. The system saves the user's progress.
-4. After the break, the user logs in and goes to the "Quiz" section to resume the paused quiz.
-5. User chooses to resume the quiz from where they left off.
-<img width="953" alt="Updated #7" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/d6c07c85-44c7-4b3d-aa4d-72f91852bf70" />
+4. After the break, the user goes to the mySets section and pick the quiz to resume.
+5. User finishes the quiz and saves its data to the database.
+
+![](../requirements/static/usecase7new.png)
+
 
 
 
@@ -123,11 +127,11 @@ A user is about to take a naturalization test but doesn't have time to study for
   A user finds out some flashcards need to be updated in order to improve accuracy.
 
 1. User logs in to StudySynce as usual.
-2. Then user has to go to their created flashcards.
-3. User finds out which flashcards need to be updated.
-4. User makes some changes to the flashcard definition and details.
+2. Then user goes to MySets to view owned/shared flashcards.
+3. User finds out which flashcard set need to be updated.
+4. User selects flashcard set and makes changes to the flashcard definition and details.
 5. User saves changes and then flashcards are updated and ready to be learned.
-<img width="790" alt="Updated #8" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/70645481/b3ccb4f4-9259-4516-b2d4-1c1ac8727916" />
+![](../requirements/static/usecase8.png)
 
 
 

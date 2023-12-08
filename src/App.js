@@ -16,7 +16,7 @@ import MySets from "./js/react/MySets.js";
 import FlashcardShare from "./js/react/flashcardShare";
 
 import React, { useEffect, useState } from "react";
-import Lottie from "react-lottie-player";
+// import Lottie from "react-lottie-player";
 import UpcomingEvents from "./js/react/UpcomingEvents.js";
 import { checkUpcomingEvents } from "./js/react/useNotificationCount.js";
 
