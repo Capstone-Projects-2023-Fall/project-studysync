@@ -20,6 +20,9 @@ sidebar_position: 4
 
 7. **Search and Filter:** Users can  filter flashcards based on various parameters like difficulty.
 
+8. **AI Features:** Users have the capability to leverage artificial intelligence for the generation of flashcards and quiz questions. This can be accomplished through inputting
+  specific criteria or by uploading images.
+
 ## Non-functional Requirements:
 
 1. **Responsiveness:** The application should be accessible and usable on various devices, including mobile phones, tablets, and desktops.
