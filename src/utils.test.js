@@ -11,6 +11,8 @@ import Notification from './js/models/notification.js';
 import Question from './js/models/question.js';
 import SchedulingSystem from './js/models/schedualSys.js'; 
 import Score from './js/models/Score.js';
+import DashboardCom from './js/react/DashboardCom.js';
+import Friends from './js/react/DashboardUI/Friends.js';
 
 //--------------------------------------------------------------------------------
 // AiTutor.test.js
@@ -466,3 +468,30 @@ describe('Score', () => {
   });
 // Score.test.js end
 //--------------------------------------------------------------------------------
+
+
+//Unit test dashboard
+describe(DashboardCom,()=>{
+
+  const mockFriends = [{name: "Harris",id: "123123",imageURL:"123ndnasdlknsad"},
+  {name:"Ichigo",id:"89y84y3123",imageURL:"329ulkncknasca"}];
+
+  it('Correctly renders friends in the table', () => {
+    render(<Friends friends={mockFriends} />);
+
+    // Check if the friends' names are rendered
+    mockFriends.forEach((friend) => {
+      const friendName = screen.getByText(friend.name);
+      expect(friendName).toBeInTheDocument();
+    });
+
+    // Check if the friends' profile picture URLs are rendered
+    mockFriends.forEach((friend) => {
+      if (friend.imageURL) {
+        const friendImage = screen.getByAltText('friend-profile-picture');
+        expect(friendImage).toBeInTheDocument();
+        expect(friendImage).toHaveAttribute('src', friend.imageURL);
+      }
+    });
+  });
+})

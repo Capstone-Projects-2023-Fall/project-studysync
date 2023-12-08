@@ -21,7 +21,7 @@ import './DashboardUI/RecentFlash.css';
 import './DashboardUI/Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
-import Lottie from "react-lottie-player";
+// import Lottie from "react-lottie-player";
 
 function Copyright(props) {
   return (
