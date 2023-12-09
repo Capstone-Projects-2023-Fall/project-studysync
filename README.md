@@ -22,11 +22,12 @@ Quizlet, HTML, CSS, JS, ReactJS, Firebase, NodeJs
 StudySync: Revolutionizing Learning with AI and Community. This platform harnesses AI's power, transforming uploaded images into tailored flashcards and quizzes, enhancing personalized learning. Exclusive to each user, fostering focused self-study. It's a space where learning evolves, blending technology with collaboration.
 
 ### Key Features:
-1. **AI-Generated Flashcards & Quizzes:** Users can upload images or text, and the AI will generate relevant flashcards and quizzes.
-2. **Flashcard & quiz Customization:** Manual creation and customization of flashcards and quizzes based on priority, difficulty, and study schedules.
-3. **Social Learning:** Features include adding friends, sharing resources and a leaderboard to track quiz scores.
-4. **Interactivit:** Users can upvote/downvote cards, comment, and organize their study materials.
-5. **User Account Management:** Secure login with personal data storage in a Firebase database.
+1. **Frontend:** Developed using ReactJs, offering an interactive interface for users.
+2. **Backend:** Leveraging Firebase for server operations, database management, and user authentication.
+3. **Database:** Firebase database is chosen as the database system to store user information, flashcards, comments, and quiz scores.
+4. **Social and Gamification Features:** Incorporating social elements like friend connections, resource sharing, and a leaderboard system for quiz scores.
+5. **AI Integration:** ChatGPT integrated via Firebase Cloud Functions to analyze inputs and generate educational content.
+
 
 ## High Level Requirement
 
