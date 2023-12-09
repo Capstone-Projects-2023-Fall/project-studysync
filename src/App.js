@@ -16,7 +16,7 @@ import MySets from "./js/react/MySets.js";
 import FlashcardShare from "./js/react/flashcardShare";
 
 import React, { useEffect, useState } from "react";
-// import Lottie from "react-lottie-player";
+import Lottie from "react-lottie-player";
 import UpcomingEvents from "./js/react/UpcomingEvents.js";
 import { checkUpcomingEvents } from "./js/react/useNotificationCount.js";
 
@@ -116,7 +116,7 @@ function App() {
         <Route path="/mysets/:UserId" element={<MySets />} />
         <Route path="/events/:UserId" element={<UpcomingEvents />} />
         <Route path="/dashboard/:UserId" element={<DashboardCom />} />
-        <Route path="/leaderboard/" element={<Leaderboard/>} />
+        <Route path="/leaderboard/" element={<Leaderboard />} />
         <Route
           path="/flashcardshare/:flashcardId"
           element={<FlashcardShare />}

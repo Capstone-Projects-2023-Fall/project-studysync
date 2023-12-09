@@ -77,6 +77,7 @@ function FlashcardApp() {
                     };
                 });
                 setCards(flashcardsArray);
+                setSelectedCard(flashcardsArray[0])
             } catch (error) {
                 console.error("Failed to fetch flashcards:", error);
             }
@@ -133,6 +134,7 @@ function FlashcardApp() {
         fetchComments();
         fetchTopicName();
 
+
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
@@ -177,6 +179,13 @@ function FlashcardApp() {
         }
     };
 
+    const handleCommentKeyDown = async (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Prevents the default action of the Enter key
+            await handleSendComment();
+        }
+    };
+
     /**
          * @memberof FlashcardApp
          * @function handlePrevCard
@@ -184,12 +193,9 @@ function FlashcardApp() {
          */
     const handlePrevCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
-        if (currentIndex > 0) {
-            const prevCard = cards[currentIndex - 1];
-            setSelectedCard(prevCard);
-            setSelectedButton(prevCard.status);
-            setShowDefinition(false);
-        }
+        const newIndex = (currentIndex - 1 + cards.length) % cards.length;
+        setSelectedCard(cards[newIndex]);
+        setShowDefinition(false);
     };
     /**
      * @memberof FlashcardApp
@@ -289,12 +295,9 @@ function FlashcardApp() {
      */
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
-        if (currentIndex < cards.length - 1) {
-            const nextCard = cards[currentIndex + 1];
-            setSelectedCard(nextCard);
-            setSelectedButton(nextCard.status);
-            setShowDefinition(false);
-        }
+        const newIndex = (currentIndex + 1) % cards.length;
+        setSelectedCard(cards[newIndex]);
+        setShowDefinition(false);
     };
     /**
      * @memberof FlashcardApp
@@ -762,7 +765,7 @@ function FlashcardApp() {
                     <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
                         <div style={{ display: "flex", alignItems: "center", }}>
                             <Avatar src={userImage} />
-                            <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
+                            <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} onKeyDown={handleCommentKeyDown} />
                             <IconButton onClick={handleSendComment}>
                                 <SendIcon />
                             </IconButton>
