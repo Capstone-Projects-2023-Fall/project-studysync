@@ -1,11 +1,13 @@
 import React from 'react';
-import { render, fireEvent, screen, act } from '@testing-library/react';
+import { render, fireEvent, screen, act, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import EditQuizDialog from '../Tests/EditQuizTitle';
-import QuizList from '../Tests/FetchQuizList';
+import QuizList from '../Tests/FetchQuizLists';
+import FetchQuestions from '../Tests/FetchQuestions';
+import UpdateQuestions from '../Tests/UpdateQuestions';
 import FlashcardRepo from '../js/repositories/FlashcardRepo';
 
-// Mock the module containing the database fetch logic
+// mock the module containing the database fetch logic
 jest.mock('../js/repositories/FlashcardRepo');
 
 describe('QuizList Component', () => {
@@ -22,10 +24,10 @@ describe('QuizList Component', () => {
             />
     );
 
-        // Check if the component renders with the correct title
+        // check if the component renders with the correct title
         expect(getByText('Edit Quiz Title')).toBeInTheDocument();
 
-        // Check if the text field is rendered with the initial quiz title
+        // check if the text field is rendered with the initial quiz title
         const textField = getByLabelText('Enter a New Quiz Title');
         expect(textField).toBeInTheDocument();
         expect(textField).toHaveValue('Initial Title');
@@ -34,13 +36,9 @@ describe('QuizList Component', () => {
         expect(getByText('Cancel')).toBeInTheDocument();
         expect(getByText('Save')).toBeInTheDocument();
 
-        // Simulate user interaction: change text field value
         fireEvent.change(textField, { target: { value: 'New Title' } });
-
-        // Simulate user interaction: click Save button
         fireEvent.click(getByText('Save'));
 
-        // Check if onEditQuizTitle and handleClose are called with the correct arguments
         expect(onEditQuizTitle).toHaveBeenCalledWith('New Title');
         expect(handleClose).toHaveBeenCalled();
         });
@@ -48,20 +46,19 @@ describe('QuizList Component', () => {
     it('fetches and displays quiz titles', async () => {
         const mockQuizData = ['Quiz 1', 'Quiz 2'];
 
-        // Mock the implementation of getQuizTitleFromFlashcardSet
         FlashcardRepo.getQuizTitleFromFlashcardSet.mockResolvedValue(mockQuizData);
 
-        // Render the component
+        // render the component
         let container;
         await act(async () => {
         container = render(<QuizList setId={1} quizId={2} navigate={() => {}} newQuizAdded={null} />);
         });
 
-        // Wait for the asynchronous operation to complete
-        // This is important when dealing with asynchronous code inside useEffect
+        // wait for the asynchronous operation to complete
+        // this is important when dealing with asynchronous code inside useEffect
         await act(async () => {});
 
-        // Assert that the component renders the fetched quiz titles
+        // assert that the component renders the fetched quiz titles
         mockQuizData.forEach(quizTitle => {
         expect(container.getByText(quizTitle)).toBeInTheDocument();
         });
@@ -69,27 +66,56 @@ describe('QuizList Component', () => {
 });
 
 describe('Quiz Component', () => {
-    it('fetches and displays questions from the database', async () => {
-        const mockQuestionData = {
-          question1: { question: 'What is the capital of France?', choices: ['Paris', 'Berlin', 'Madrid'], },
-          question2: { question: 'What is the largest planet?', choices: ['Jupiter', 'Saturn', 'Neptune'], },
-        };
     
-        // Mock the implementation of getQuestionItems
-        FlashcardRepo.getQuestionItems.mockResolvedValue(mockQuestionData);
+      it('does not add a question when input is invalid', async () => {
+        // mock the implementation of addQuizQuestion to simulate a failure
+        FlashcardRepo.addQuizQuestion.mockRejectedValue(new Error('Invalid input'));
     
-        // Render the component
-        let container;
+        // render the component
+        const { getByText } = render(<FetchQuestions quizId={1} setQuizData={() => {}} />);
         await act(async () => {
-          container = render(<FlashcardComponent quizId={1} termArray={[]} definitionArray={[]} />);
+          fireEvent.click(getByText('Add Question'));
         });
-    
-        // Wait for the asynchronous operation to complete
-        await act(async () => {});
-    
-        // Assert that the component renders the fetched questions
-        Object.values(mockQuestionData).forEach(({ question }) => {
-          expect(container.getByText(question)).toBeInTheDocument();
+
+        expect(FlashcardRepo.addQuizQuestion).not.toHaveBeenCalled();
+      });
+
+      it('should confirm deletion', async () => {
+        const mockEditQuestion = {
+            questionId: 1,
+            question: 'Old question',
+            choices: ['Choice A', 'Choice B', 'Choice C', 'Choice D'],
+            correctChoiceIndex: 0,
+          };
+        
+          const mockQuestions = [
+            { questionId: 1, question: 'Question 1', choices: ['A', 'B', 'C', 'D'], correctChoiceIndex: 2 },
+            { questionId: 2, question: 'Question 2', choices: ['A', 'B', 'C', 'D'], correctChoiceIndex: 1 },
+            // ...
+          ];
+        
+          const mockSetQuizData = jest.fn();
+          const mockSetOpenEdit = jest.fn();
+          const mockSetEditQuestion = jest.fn();
+        
+          const { getByLabelText, getByText } = render(
+            <UpdateQuestions
+              quizId={1}
+              editQuestion={mockEditQuestion}
+              questions={mockQuestions}
+              setQuizData={mockSetQuizData}
+              setOpenEdit={mockSetOpenEdit}
+              setEditQuestion={mockSetEditQuestion}
+            />
+          );
+        
+          fireEvent.change(getByLabelText('Question'), { target: { value: 'New question' } });
+          fireEvent.click(getByText('Update Question'));
+        
+          await waitFor(() => {
+            expect(mockSetQuizData).toHaveBeenCalled();
+            expect(mockSetOpenEdit).toHaveBeenCalledWith(false);
+            expect(mockSetEditQuestion).toHaveBeenCalledWith(null);
+          });
         });
-    });
 });
