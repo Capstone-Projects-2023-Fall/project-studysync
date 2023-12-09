@@ -83,13 +83,10 @@ describe('FlashcardComponent', () => {
       </MemoryRouter>
     );
 
-    // 在渲染完成后等待组件加载
     await waitFor(() => expect(screen.getByText('Add Subject')).toBeInTheDocument());
 
-    // 调用 addUserSubject 方法
     FlashcardRepo.addUserSubject('test-uid', 'Physics');
 
-    // 检查 addUserSubject 方法是否被以正确的参数调用
     expect(FlashcardRepo.addUserSubject).toHaveBeenCalledWith('test-uid', 'Physics');
   });
 
@@ -97,13 +94,10 @@ describe('FlashcardComponent', () => {
 
 
   it('calls createFlashcardSet when a new topic is added', async () => {
-    // 设置预期的输入
     const newTopic = { name: 'Algebra', subject: 'Math' };
 
-    // 直接调用方法而不是通过用户交互
     await FlashcardRepo.createFlashcardSet(newTopic);
 
-    // 检查方法是否被正确调用
     expect(FlashcardRepo.createFlashcardSet).toHaveBeenCalledWith(newTopic);
   });
 
@@ -114,26 +108,20 @@ describe('FlashcardComponent', () => {
 
 
   it('should handle topic deletion correctly', async () => {
-    // 设置预期的用户 ID 和要删除的主题 ID
     const userId = 'test-uid';
     const setId = 'set1';
 
-    // 直接调用删除方法
     await FlashcardRepo.removeSetIdFromUser(userId, setId);
 
-    // 检查方法是否被以正确的参数调用
     expect(FlashcardRepo.removeSetIdFromUser).toHaveBeenCalledWith(userId, setId);
   });
 
   it('should handle topic editing correctly', async () => {
-    // 设置预期的集合 ID 和新的主题名称
     const setId = 'set1';
     const newTopicName = 'Geometry';
 
-    // 直接调用更新方法
     await FlashcardRepo.updateFlashcardSetName(setId, newTopicName);
 
-    // 检查方法是否被以正确的参数调用
     expect(FlashcardRepo.updateFlashcardSetName).toHaveBeenCalledWith(setId, newTopicName);
   });
 
@@ -204,15 +192,15 @@ describe('FlashcardApp Component', () => {
   });
 
   it('loads flashcards, comments, and user image on initialization', async () => {
-    const mockFlashcards = { /* 模拟闪卡数据 */ };
-    const mockComments = { /* 模拟评论数据 */ };
+    const mockFlashcards = {};
+    const mockComments = {};
     const mockUserImage = 'test-user-image-url';
 
     FlashcardRepo.getFlashcardItems.mockResolvedValue(mockFlashcards);
     FlashcardRepo.getCommentsWithUserData.mockResolvedValue(mockComments);
     FlashcardRepo.getUserImageURLByUid.mockResolvedValue(mockUserImage);
 
-    render(<FlashcardApp />); // 使用模拟的 useParams
+    render(<FlashcardApp />);
 
     await waitFor(() => {
       expect(FlashcardRepo.getFlashcardItems).toHaveBeenCalledWith('someSetId');
@@ -225,20 +213,16 @@ describe('FlashcardApp Component', () => {
     const term = 'Test Term';
     const definition = 'Test Definition';
 
-    // 直接调用添加闪卡方法
     await FlashcardRepo.addFlashcardItem(setId, term, definition);
 
-    // 检查方法是否被以正确的参数调用
     expect(FlashcardRepo.addFlashcardItem).toHaveBeenCalledWith(setId, term, definition);
   });
   it('should handle deleting a flashcard correctly', async () => {
     const setId = 'test-set-id';
     const flashcardId = 'test-flashcard-id';
 
-    // 直接调用删除闪卡方法
     await FlashcardRepo.deleteFlashcard(setId, flashcardId);
 
-    // 检查方法是否被以正确的参数调用
     expect(FlashcardRepo.deleteFlashcard).toHaveBeenCalledWith(setId, flashcardId);
   });
   it('should handle updating a flashcard correctly', async () => {
@@ -247,20 +231,16 @@ describe('FlashcardApp Component', () => {
     const updatedTerm = 'Updated Term';
     const updatedDefinition = 'Updated Definition';
 
-    // 直接调用更新闪卡方法
     await FlashcardRepo.updateFlashcard(setId, flashcardId, updatedTerm, updatedDefinition);
 
-    // 检查方法是否被以正确的参数调用
     expect(FlashcardRepo.updateFlashcard).toHaveBeenCalledWith(setId, flashcardId, updatedTerm, updatedDefinition);
   });
   it('should handle sending a comment correctly', async () => {
     const setId = 'test-set-id';
     const comment = { content: 'Test Comment', uid: 'test-uid', date: new Date() };
 
-    // 直接调用发送评论方法
     await FlashcardRepo.addComment(setId, comment);
 
-    // 检查方法是否被以正确的参数调用
     expect(FlashcardRepo.addComment).toHaveBeenCalledWith(setId, comment);
   });
 
@@ -269,30 +249,25 @@ describe('FlashcardApp Component', () => {
     const numberOfFlashcards = 5;
     const topicName = 'Math';
     const imageFile = 'image-data';
-    const mockGeneratedFlashcards = [/* 模拟生成的闪卡数据 */];
+    const mockGeneratedFlashcards = [];
 
     FlashcardRepo.callYourCloudFunctionToGenerateFlashcards.mockResolvedValue(mockGeneratedFlashcards);
 
-    // 假设存在一个用于 AI 生成闪卡的函数
     const result = await FlashcardRepo.callYourCloudFunctionToGenerateFlashcards(numberOfFlashcards, topicName, imageFile);
 
-    // 检查函数是否被以正确的参数调用，并验证返回值
     expect(FlashcardRepo.callYourCloudFunctionToGenerateFlashcards).toHaveBeenCalledWith(numberOfFlashcards, topicName, imageFile);
     expect(result).toEqual(mockGeneratedFlashcards);
   });
 
   it('loads and displays flashcards correctly', async () => {
-    // 模拟闪卡数据
     const mockFlashcardsData = [
       { term: 'Term1', definition: 'Def1', flashcardId: '1' },
       { term: 'Term2', definition: 'Def2', flashcardId: '2' },
     ];
     FlashcardRepo.getFlashcardItems.mockResolvedValue(mockFlashcardsData);
 
-    // 渲染组件
     const { getByText } = render(<FlashcardApp setId="test-set-id" />);
 
-    // 等待并检查是否显示了模拟的闪卡数据
     await waitFor(() => {
       expect(getByText('Term1')).toBeInTheDocument();
       expect(getByText('Term2')).toBeInTheDocument();
