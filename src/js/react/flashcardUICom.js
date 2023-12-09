@@ -77,6 +77,7 @@ function FlashcardApp() {
                     };
                 });
                 setCards(flashcardsArray);
+                setSelectedCard(flashcardsArray[0])
             } catch (error) {
                 console.error("Failed to fetch flashcards:", error);
             }
@@ -133,6 +134,7 @@ function FlashcardApp() {
         fetchComments();
         fetchTopicName();
 
+
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
@@ -184,12 +186,9 @@ function FlashcardApp() {
          */
     const handlePrevCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
-        if (currentIndex > 0) {
-            const prevCard = cards[currentIndex - 1];
-            setSelectedCard(prevCard);
-            setSelectedButton(prevCard.status);
-            setShowDefinition(false);
-        }
+        const newIndex = (currentIndex - 1 + cards.length) % cards.length;
+        setSelectedCard(cards[newIndex]);
+        setShowDefinition(false);
     };
     /**
      * @memberof FlashcardApp
@@ -289,12 +288,9 @@ function FlashcardApp() {
      */
     const handleNextCard = () => {
         const currentIndex = cards.indexOf(selectedCard);
-        if (currentIndex < cards.length - 1) {
-            const nextCard = cards[currentIndex + 1];
-            setSelectedCard(nextCard);
-            setSelectedButton(nextCard.status);
-            setShowDefinition(false);
-        }
+        const newIndex = (currentIndex + 1) % cards.length;
+        setSelectedCard(cards[newIndex]);
+        setShowDefinition(false);
     };
     /**
      * @memberof FlashcardApp
