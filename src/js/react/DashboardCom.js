@@ -220,7 +220,7 @@ export default function DashboardCom() {
                   Recent flashcards:
                 </div>
                 <Grid id='flashcard-grid' container spacing={4}>
-                  {ownedFlashcards ? ownedFlashcards.map((card, index) => (
+                  {ownedFlashcards ? ownedFlashcards.slice(ownedFlashcards.length-3,ownedFlashcards.length).map((card, index) => (
                     <RecentCards key={index} card={card}
                       lottieAnimation={lottieAnimation1}
                       cardLink={`/flashcard-ui/${card.id}`} />
@@ -232,7 +232,7 @@ export default function DashboardCom() {
                 </div>
                 <Grid id='flashcard-grid' container spacing={4}>
                   {ownedQuizzes ?
-                    ownedQuizzes.map((card, index) => (
+                    ownedQuizzes.slice(ownedQuizzes.length-3,ownedQuizzes.length).map((card, index) => (
                       <RecentCards
                         key={index}
                         card={card}
