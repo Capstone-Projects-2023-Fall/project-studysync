@@ -1149,9 +1149,9 @@ export class UserRepository {
      * @returns {string} A short form of the day of the week.
      */
   getDayOfWeekShort(dateString) {
-    const daysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const daysShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const date = new Date(dateString);
-    return daysShort[date.getDay() + 1];
+    return daysShort[date.getDay()];
   }
   /**
    * @memberof UserRepository

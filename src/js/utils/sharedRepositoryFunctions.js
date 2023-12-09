@@ -235,3 +235,45 @@ async function checkFieldExists(db, col, fieldName) {
     return false;
   }
 }
+
+export function convertTo12HourFormat(timeString) {
+  let [hours, minutes] = timeString.split(":").map(Number);
+
+  // Determine AM or PM suffix
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  // Convert hour from 24-hour to 12-hour format
+  hours = hours % 12 || 12; // Converts '0' to '12'
+
+  // Format the hour and minutes to ensure they always have two digits
+  const formattedHour = hours.toString().padStart(2, "0");
+  const formattedMinutes = minutes.toString().padStart(2, "0");
+
+  // Return the formatted time string
+  return `${formattedHour}:${formattedMinutes} ${ampm}`;
+}
+
+export function getDayOfWeekShort(dateString) {
+  const daysShort = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const date = new Date(dateString);
+  return daysShort[date.getDay()];
+}
+
+export function getMonthAbbreviation(dateString) {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const date = new Date(dateString);
+  return months[date.getMonth()];
+}

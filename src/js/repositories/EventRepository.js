@@ -13,12 +13,15 @@ import {
   getItemById,
   removeDocumentFromCollection,
   updateNonArrayDocumentFields,
+  convertTo12HourFormat,
+  getDayOfWeekShort,
+  getMonthAbbreviation,
 } from "../utils/sharedRepositoryFunctions";
 const { v4: uuidv4 } = require("uuid");
 /**
  * @class EventRepository
  * @classdesc EventRepository - Manages event-related data interactions with the database.
- * 
+ *
  * @param {Object} database - The database connection used for accessing event data.
  */
 export class EventRepository {
@@ -96,21 +99,21 @@ export class EventRepository {
     }
   }
   /**
-     * @memberof EventRepository
-     * @function getAllEvents
-     * @description Retrieves all events from the database.
-     * @returns {Promise<Object[]>} An array of event objects.
-     */
+   * @memberof EventRepository
+   * @function getAllEvents
+   * @description Retrieves all events from the database.
+   * @returns {Promise<Object[]>} An array of event objects.
+   */
   async getAllEvents() {
     return await getAllItems(this.database, "events", null);
   }
   /**
-     * @memberof EventRepository
-     * @function getEventById
-     * @description Retrieves a specific event by its ID.
-     * @param {string} id - The ID of the event to retrieve.
-     * @returns {Promise<Object>} The event object.
-     */
+   * @memberof EventRepository
+   * @function getEventById
+   * @description Retrieves a specific event by its ID.
+   * @param {string} id - The ID of the event to retrieve.
+   * @returns {Promise<Object>} The event object.
+   */
   async getEventById(id) {
     return await getItemById(this.database, id, "events", "event");
   }
@@ -138,12 +141,12 @@ export class EventRepository {
     }
   }
   /**
-     * @memberof EventRepository
-     * @function createUpcomingEvent
-     * @description Creates a new upcoming event in the database.
-     * @param {Object} upcomingEvent - The upcoming event object to create.
-     * @returns {Promise<string>} The ID of the created upcoming event.
-     */
+   * @memberof EventRepository
+   * @function createUpcomingEvent
+   * @description Creates a new upcoming event in the database.
+   * @param {Object} upcomingEvent - The upcoming event object to create.
+   * @returns {Promise<string>} The ID of the created upcoming event.
+   */
   async createUpcomingEvent(upcomingEvent) {
     try {
       const eventsCollectionRef = collection(this.database, "upcomingEvents");
@@ -155,12 +158,12 @@ export class EventRepository {
     }
   }
   /**
-    * @memberof EventRepository
-    * @function getUpcomingEventById
-    * @description Retrieves a specific upcoming event by its ID.
-    * @param {string} upcomingEventId - The ID of the upcoming event to retrieve.
-    * @returns {Promise<Object>} The upcoming event object.
-    */
+   * @memberof EventRepository
+   * @function getUpcomingEventById
+   * @description Retrieves a specific upcoming event by its ID.
+   * @param {string} upcomingEventId - The ID of the upcoming event to retrieve.
+   * @returns {Promise<Object>} The upcoming event object.
+   */
   async getUpcomingEventById(upcomingEventId) {
     return await getItemById(
       this.database,
@@ -170,11 +173,11 @@ export class EventRepository {
     );
   }
   /**
-     * @memberof EventRepository
-     * @function deleteUpcomingEvent
-     * @description Deletes a specific upcoming event from the database.
-     * @param {string} upcomingEventId - The ID of the upcoming event to delete.
-     */
+   * @memberof EventRepository
+   * @function deleteUpcomingEvent
+   * @description Deletes a specific upcoming event from the database.
+   * @param {string} upcomingEventId - The ID of the upcoming event to delete.
+   */
   async deleteUpcomingEvent(upcomingEventId) {
     await removeDocumentFromCollection(
       this.database,
@@ -194,6 +197,42 @@ export class EventRepository {
    * @param {Object} updatedUpcomingEvent - The updated fields of the upcoming event.
    */
   async updateUpcomingEvent(upcomingEventId, updatedUpcomingEvent) {
+    //update the date format before storing in database
+
+    const date = updatedUpcomingEvent.date;
+    const time = updatedUpcomingEvent.time;
+
+    const [year, month, day] = date.split("-");
+
+    const y = parseInt(year, 10);
+    const m = parseInt(month, 10) - 1;
+    const d = parseInt(day, 10);
+    const splitTime = time.split(":");
+    const scheduledDate = new Date(
+      y,
+      m,
+      d,
+      parseInt(splitTime[0]),
+      parseInt(splitTime[1]),
+      0
+    );
+
+    const utcStamp = scheduledDate.getTime();
+    const dd = new Date(date);
+
+    const dateToStore =
+      getDayOfWeekShort(dd) +
+      " " +
+      getMonthAbbreviation(dd) +
+      " " +
+      day +
+      " " +
+      year;
+
+    updatedUpcomingEvent.date = dateToStore;
+    updatedUpcomingEvent.timestamp = utcStamp;
+    updatedUpcomingEvent.time = convertTo12HourFormat(time);
+
     await updateNonArrayDocumentFields(
       this.database,
       upcomingEventId,
@@ -213,12 +252,12 @@ export class EventRepository {
     await this.updateUpcomingEvent(upcomingEventId, { date: newDate });
   }
   /**
- * @memberof EventRepository
- * @function updateUpcomingEventTime
- * @description Updates the time of a specific upcoming event in the database.
- * @param {string} upcomingEventId - The ID of the upcoming event to update.
- * @param {string} newTime - The new time to set for the event.
- */
+   * @memberof EventRepository
+   * @function updateUpcomingEventTime
+   * @description Updates the time of a specific upcoming event in the database.
+   * @param {string} upcomingEventId - The ID of the upcoming event to update.
+   * @param {string} newTime - The new time to set for the event.
+   */
   async updateUpcomingEventTime(upcomingEventId, newTime) {
     await this.updateUpcomingEvent(upcomingEventId, { date: newTime });
   }
