@@ -19,13 +19,14 @@ Quizlet, HTML, CSS, JS, ReactJS, Firebase, NodeJs
 ## Project Abstract
 
 ### Title 
-StudySync - A Comprehensive Web-based Study Tool. To design an interactive, web-based studying platform where users can customize flashcards for effective learning, add friends, and challenge each other with quizzes.
+StudySync: Revolutionizing Learning with AI and Community. This platform harnesses AI's power, transforming uploaded images into tailored flashcards and quizzes, enhancing personalized learning. Exclusive to each user, fostering focused self-study. It's a space where learning evolves, blending technology with collaboration.
 
 ### Key Features:
-1. **Flashcard Creation & Customization:** Users can add terms and definitions to flashcards. These cards can be further customized based on priority, difficulty, and upcoming study dates.
-2. **Interactivity & Collaboration:** Users can upvote/downvote cards, add comments, and organize their study materials.
-3. **Social Learning:** The platform allows users to add friends, create quizzes/tests for each other, and even compete based on test scores.
-4. **User Account Management:** Secure login capabilities with personal data stored in a Firebase database.
+1. **AI-Generated Flashcards & Quizzes:** Users can upload images or text, and the AI will generate relevant flashcards and quizzes.
+2. **Flashcard & quiz Customization:** Manual creation and customization of flashcards and quizzes based on priority, difficulty, and study schedules.
+3. **Social Learning:** Features include adding friends, sharing resources and a leaderboard to track quiz scores.
+4. **Interactivit:** Users can upvote/downvote cards, comment, and organize their study materials.
+5. **User Account Management:** Secure login with personal data storage in a Firebase database.
 
 ## High Level Requirement
 
@@ -37,17 +38,17 @@ StudySync is a comprehensive, user-centric digital study tool designed for enhan
 The application is designed as a full-stack web application.
 
 1. **Frontend:** Developed using ReactJs, offering an interactive interface for users.
-2. **Backend:** Built using NodeJs and ExpressJs, responsible for server operations and API functionalities.
+2. **Backend:** Built using firebase, responsible for server operations and API functionalities.
 3. **Database:** Firebase is chosen as the database system to store user information, flashcards, comments, and quiz scores.
 4. **Integration:** The backend will serve the frontend through API endpoints, with data interchange in JSON format.
 
 ## Background
 
-The idea of StudySync is derived from platforms like Quizlet, which assist students in using cards to learn new terms and definitions.Unlike traditional study tools, StudySync introduces a gamified and collaborative approach to learning. The system offers a plethora of customization options, including the ability to upvote/downvote flashcards and organize them based on various parameters. Additionally, the social aspect of adding friends and creating shared learning experiences stands out.
+StudySync, inspired by platforms like Quizlet, elevates the learning experience by integrating AI as its core feature. It transcends traditional study methods by allowing users to generate custom flashcards and quizzes through AI analysis of uploaded images. This innovative approach not only streamlines the learning process but also adds a layer of personalization and efficiency. Alongside its AI capabilities, StudySync fosters a collaborative learning environment. Users can engage with peers through friend connections, share resources, and contribute to a dynamic academic community. The platform's interactive and user-friendly interface, enriched with AI technology, redefines the conventional approach to studying, making it more engaging and effective for the modern student.
 
 ## Required Resources
 
-To successfully develop StudySync, we'll need a thorough understanding of ReactJS, NodeJS, ExpressJS, and Firebase. Hardware-wise, potent development computers and a robust server (either on-premise or cloud-based) are crucial. On the software front, essential tools include development frameworks for React, Node, and Firebase, an IDE like Visual Studio Code, version control via GitHub, and testing tools like Jest and Postman. 
+To successfully develop StudySync, we'll need a thorough understanding of ReactJS, NodeJS, and Firebase. Hardware-wise, potent development computers and a robust server (either on-premise or cloud-based) are crucial. On the software front, essential tools include development frameworks for React, Node, and Firebase, an IDE like Visual Studio Code, version control via GitHub, and testing tools like Jest and Postman. 
 
 
 ## Collaborators
