@@ -179,6 +179,13 @@ function FlashcardApp() {
         }
     };
 
+    const handleCommentKeyDown = async (event) => {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Prevents the default action of the Enter key
+            await handleSendComment();
+        }
+    };
+
     /**
          * @memberof FlashcardApp
          * @function handlePrevCard
@@ -758,7 +765,7 @@ function FlashcardApp() {
                     <div style={{ height: '60px', backgroundColor: '#fff', borderRadius: '8px', padding: '10px', boxShadow: '0px 0px 15px rgba(0,0,0,0.1)' }}>
                         <div style={{ display: "flex", alignItems: "center", }}>
                             <Avatar src={userImage} />
-                            <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} />
+                            <TextField fullWidth label="Add a comment" variant="outlined" value={comment} onChange={(e) => setComment(e.target.value)} onKeyDown={handleCommentKeyDown} />
                             <IconButton onClick={handleSendComment}>
                                 <SendIcon />
                             </IconButton>
