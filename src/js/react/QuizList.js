@@ -335,7 +335,7 @@ function QuizList({ newQuizAdded }) {
       ))}
 
       <Dialog open={isEditDialogOpen} onClose={handleCloseEditDialog}>
-        <DialogTitle data-testid = 'testConfirm'>Confirmation</DialogTitle>
+        <DialogTitle>Confirmation</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
