@@ -5,10 +5,11 @@ import EditQuizDialog from '../Tests/EditQuizTitle';
 import QuizList from '../Tests/FetchQuizLists';
 import FetchQuestions from '../Tests/FetchQuestions';
 import UpdateQuestions from '../Tests/UpdateQuestions';
+import CreateQuiz from '../Tests/CreateQuiz';
 import FlashcardRepo from '../js/repositories/FlashcardRepo';
 
-// mock the module containing the database fetch logic
-jest.mock('../js/repositories/FlashcardRepo');
+    // mock the module containing the database fetch logic
+    jest.mock('../js/repositories/FlashcardRepo');
 
 describe('QuizList Component', () => {
     it('updates the quiz title', () => {
@@ -65,9 +66,8 @@ describe('QuizList Component', () => {
     });
 });
 
-describe('Quiz Component', () => {
-    
-      it('does not add a question when input is invalid', async () => {
+describe('Quiz Component', () => {    
+    it('does not add a question when input is invalid', async () => {
         // mock the implementation of addQuizQuestion to simulate a failure
         FlashcardRepo.addQuizQuestion.mockRejectedValue(new Error('Invalid input'));
     
@@ -80,7 +80,7 @@ describe('Quiz Component', () => {
         expect(FlashcardRepo.addQuizQuestion).not.toHaveBeenCalled();
       });
 
-      it('should confirm deletion', async () => {
+    it('confirm question deletion', async () => {
         const mockEditQuestion = {
             questionId: 1,
             question: 'Old question',
@@ -118,4 +118,36 @@ describe('Quiz Component', () => {
             expect(mockSetEditQuestion).toHaveBeenCalledWith(null);
           });
         });
+
+
+    jest.mock('../js/repositories/FlashcardRepo', () => ({
+        getCurrentUid: jest.fn(),
+        createNewQuiz: jest.fn(),
+        addOwnedQuizSetToUser: jest.fn(),
+    }));
+  
+    it('creates new quiz', async () => {
+        // Mock necessary functions
+        FlashcardRepo.getCurrentUid.mockReturnValue('mockedUserId');
+        FlashcardRepo.createNewQuiz.mockResolvedValue('mockedQuizId');
+
+        const setQuizList = jest.fn();
+        const { getByText } = render(<CreateQuiz setId="mockedSetId" quizTitle="Mocked Quiz" setQuizList={setQuizList} />);
+
+        // Trigger the button click event
+        fireEvent.click(getByText('Create Quiz'));
+
+        // Wait for asynchronous operations to complete
+        await act(async () => {
+        // Add any additional asynchronous operations here
+        });
+
+        // Add assertions based on your expected behavior
+        expect(FlashcardRepo.createNewQuiz).toHaveBeenCalledWith('mockedSetId', 'Mocked Quiz');
+
+        // Use the mock directly from the mocked module
+        expect(FlashcardRepo.addOwnedQuizSetToUser).toHaveBeenCalledWith('mockedUserId', 'mockedQuizId');
+
+        expect(setQuizList).toHaveBeenCalledWith('mockedQuizId');
+    });
 });
