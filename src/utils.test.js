@@ -34,7 +34,7 @@ jest.mock('./js/repositories/FlashcardRepo.js', () => ({
   callYourCloudFunctionToGenerateFlashcards: jest.fn(),
 
 }));
-// 可以继续添加其他需要模拟的函数
+
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: () => ({ setId: 'someSetId', quizId: 'someQuizId', flashcardId: 'abc' }),
