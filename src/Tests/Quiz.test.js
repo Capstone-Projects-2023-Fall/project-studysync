@@ -6,6 +6,7 @@ import QuizList from '../Tests/FetchQuizLists';
 import FetchQuestions from '../Tests/FetchQuestions';
 import UpdateQuestions from '../Tests/UpdateQuestions';
 import CreateQuiz from '../Tests/CreateQuiz';
+import GetFlash from '../Tests/GetFlashcardSet';
 import FlashcardRepo from '../js/repositories/FlashcardRepo';
 
     // mock the module containing the database fetch logic
@@ -150,4 +151,35 @@ describe('Quiz Component', () => {
 
         expect(setQuizList).toHaveBeenCalledWith('mockedQuizId');
     });
+
+    jest.mock('../js/repositories/FlashcardRepo', () => ({
+      getFlashcardSetById: jest.fn(),
+    }));
+    it('handles opening and fetches flashcard set name', async () => {
+      const flashcardSetHandler = new GetFlash();
+  
+      // Mock necessary functions
+      const mockSetOpenGenerateAI = jest.fn();
+      const mockSetFlashcardSetName = jest.fn();
+      const mockSetFlashcardSubject = jest.fn();
+  
+      FlashcardRepo.getFlashcardSetById.mockResolvedValue({
+        name: 'MockedSetName',
+        subject: 'MockedSubject',
+      });
+  
+      await flashcardSetHandler.handleOpenGenerateAI(
+        'mockedSetId',
+        mockSetOpenGenerateAI,
+        mockSetFlashcardSetName,
+        mockSetFlashcardSubject
+      );
+  
+      // Add assertions based on your expected behavior
+      expect(mockSetOpenGenerateAI).toHaveBeenCalledWith(true);
+      expect(FlashcardRepo.getFlashcardSetById).toHaveBeenCalledWith('mockedSetId');
+      expect(mockSetFlashcardSetName).toHaveBeenCalledWith('MockedSetName');
+      expect(mockSetFlashcardSubject).toHaveBeenCalledWith('MockedSubject');
+    });
+  
 });
