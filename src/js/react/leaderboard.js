@@ -11,10 +11,12 @@ class Leaderboard extends React.Component {
         searchQuery: ''
     };
 
+    //hook
     componentDidMount() {
         this.fetchUsersAndScores();
     }
 
+    //get user data from quizCreation in database
     fetchUsersAndScores = async () => {
         this.setState({ isLoading: true });
         try {
@@ -33,21 +35,23 @@ class Leaderboard extends React.Component {
                         userAttempts.forEach(attempt => {
                             totalScore += attempt.score;
                         });
-                        attemptCount += userAttempts.length; 
+                        attemptCount += userAttempts.length;
                     }
                 });
 
                 const averageScore = attemptCount > 0 ? (totalScore / attemptCount) : 0;
-                return { ...user, averageScore: averageScore.toFixed(2), quizCount: attemptCount }; 
+                return { ...user, averageScore: averageScore.toFixed(2), quizCount: attemptCount };
             });
 
             const usersWithScoresAndQuizzes = await Promise.all(usersWithScoresAndQuizzesPromises);
 
+          
             usersWithScoresAndQuizzes.sort((a, b) => parseFloat(b.averageScore) - parseFloat(a.averageScore));
             usersWithScoresAndQuizzes.forEach((user, index) => {
                 user.rankByScore = index + 1;
             });
 
+            
             usersWithScoresAndQuizzes.sort((a, b) => b.quizCount - a.quizCount);
             usersWithScoresAndQuizzes.forEach((user, index) => {
                 user.rankByQuizzes = index + 1;
@@ -60,12 +64,32 @@ class Leaderboard extends React.Component {
         }
     }
 
+    //for search
     handleSearch = (event) => {
         this.setState({ searchQuery: event.target.value });
     }
 
+    //render leadrboard
     renderLeaderboard(data, title, key, rankKey) {
-        const filteredData = data.filter(user => user.name.toLowerCase().includes(this.state.searchQuery.toLowerCase()));
+        const lowercasedQuery = this.state.searchQuery.toLowerCase();
+        const filteredData = data
+            .filter(user => user.name.toLowerCase().includes(lowercasedQuery))
+            .sort((a, b) => {
+            
+                if (title === 'Average Score Leaderboard') {
+                    return parseFloat(b.averageScore) - parseFloat(a.averageScore);
+                }
+              
+                if (title === 'Total Quizzes Taken') {
+                    return b.quizCount - a.quizCount;
+                }
+            })
+            .map((user, index) => ({
+                ...user,
+             
+                [rankKey]: index + 1
+            }));
+
         return (
             <div className="leaderboardSection">
                 <h2>{title}</h2>
@@ -91,33 +115,7 @@ class Leaderboard extends React.Component {
         );
     }
 
-    renderTotalQuizzesLeaderboard(data) {
-        const filteredData = data.filter(user => user.name.toLowerCase().includes(this.state.searchQuery.toLowerCase()));
-        return (
-            <div className="leaderboardSection">
-                <h2>Total Quizzes Taken</h2>
-                <table className="leaderboardTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Name</th>
-                            <th>Quizzes Taken</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredData.map(user => (
-                            <tr key={user.id}>
-                                <td>{user.rankByQuizzes}</td>
-                                <td>{user.name}</td>
-                                <td>{user.quizCount}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        );
-    }
-
+    //rendering board with filtered list
     render() {
         const { usersData, isLoading, error } = this.state;
 
@@ -128,7 +126,6 @@ class Leaderboard extends React.Component {
         if (error) {
             return <div className="error">Error loading leaderboard: {error.message}</div>;
         }
-
         const activeUsers = usersData.filter(user => user.quizCount > 0);
 
         return (
@@ -141,9 +138,9 @@ class Leaderboard extends React.Component {
                         onChange={this.handleSearch}
                     />
                 </div>
-                
+
                 {this.renderLeaderboard(activeUsers, 'Average Score Leaderboard', 'averageScore', 'rankByScore')}
-                {this.renderTotalQuizzesLeaderboard(activeUsers)}
+                {this.renderLeaderboard(activeUsers, 'Total Quizzes Taken', 'quizCount', 'rankByQuizzes')}
             </div>
         );
     }
