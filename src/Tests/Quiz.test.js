@@ -1,16 +1,20 @@
 import React from 'react';
 import { render, fireEvent, screen, act, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+
+// all testing components
 import EditQuizDialog from '../Tests/EditQuizTitle';
 import QuizList from '../Tests/FetchQuizLists';
 import FetchQuestions from '../Tests/FetchQuestions';
 import UpdateQuestions from '../Tests/UpdateQuestions';
 import CreateQuiz from '../Tests/CreateQuiz';
 import GetFlash from '../Tests/GetFlashcardSet';
+
 import FlashcardRepo from '../js/repositories/FlashcardRepo';
 
-    // mock the module containing the database fetch logic
-    jest.mock('../js/repositories/FlashcardRepo');
+   
+// mock the module containing the database fetch logic
+jest.mock('../js/repositories/FlashcardRepo');
 
 describe('QuizList Component', () => {
     it('updates the quiz title', () => {
@@ -18,13 +22,13 @@ describe('QuizList Component', () => {
         const onEditQuizTitle = jest.fn();
 
         const { getByText, getByLabelText } = render(
-            <EditQuizDialog
-            isOpen={true}
-            handleClose={handleClose}
-            initialQuizTitle="Initial Title"
-            onEditQuizTitle={onEditQuizTitle}
-            />
-    );
+          <EditQuizDialog
+          isOpen={true}
+          handleClose={handleClose}
+          initialQuizTitle="Initial Title"
+          onEditQuizTitle={onEditQuizTitle}
+          />
+        );
 
         // check if the component renders with the correct title
         expect(getByText('Edit Quiz Title')).toBeInTheDocument();
@@ -120,13 +124,13 @@ describe('Quiz Component', () => {
           });
         });
 
-
-    jest.mock('../js/repositories/FlashcardRepo', () => ({
+// mock the functions from FlashcardRepo
+jest.mock('../js/repositories/FlashcardRepo', () => ({
         getCurrentUid: jest.fn(),
         createNewQuiz: jest.fn(),
         addOwnedQuizSetToUser: jest.fn(),
-    }));
-  
+}));    
+
     it('creates new quiz', async () => {
         // Mock necessary functions
         FlashcardRepo.getCurrentUid.mockReturnValue('mockedUserId');
@@ -152,9 +156,11 @@ describe('Quiz Component', () => {
         expect(setQuizList).toHaveBeenCalledWith('mockedQuizId');
     });
 
-    jest.mock('../js/repositories/FlashcardRepo', () => ({
-      getFlashcardSetById: jest.fn(),
-    }));
+// mock function from FlashcardRepo
+jest.mock('../js/repositories/FlashcardRepo', () => ({
+    getFlashcardSetById: jest.fn(),
+}));      
+
     it('handles opening and fetches flashcard set name', async () => {
       const flashcardSetHandler = new GetFlash();
   

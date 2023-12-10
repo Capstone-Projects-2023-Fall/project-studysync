@@ -12,7 +12,7 @@ flashcard creation/customization
 
   A user forgets to review because of daily chores and uses StudySync to review before midterm is approaching.
 
-1. User login using StudySynce credential.
+1. User login using StudySync credential.
 2. After logging into the account, the user navigates to Study Tool tab to check his flashcard decks.
 3. Then he found the flashcard topic for his subject.
 4. After reviewing the flashcards, the user went back to Study Tool page and select "Quiz".
@@ -28,7 +28,7 @@ Flashcard creation/customization
   A user is about to take a naturalization test but doesn't have time to study for it due to work, so he needs to practice for the test using StudySync.
 
 1. Users opens the website and logs in with their StudySync accounts.
-2. Then since there is nothing on StudySync that he needs to learn, the user needs to add some questions.
+2. Then since there is nothing on StudySync that he needs to learn, the user needs to add some flashcards.
 3. He then adds the naturalization test questions he has studied and uploads them to StudySync.
 4. After completing the upload of the flashcard items he chooses flashcard mode to study those terms and definitions.
 5. When the flashcard comes out there are three options, know, don't know, and not sure.

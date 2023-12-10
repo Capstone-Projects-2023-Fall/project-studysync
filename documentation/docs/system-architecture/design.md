@@ -53,7 +53,7 @@ A user forgets to review because of daily chores and uses StudySync to review be
 A user is about to take a naturalization test but doesn't have time to study for it due to work, so he needs to practice for the test using StudySyne.
 
 1. Users opens the website and logs in with their StudySync accounts.
-2. Then since there is nothing on StudySync that he needs to learn, the user needs to add some questions.
+2. Then since there is nothing on StudySync that he needs to learn, the user needs to add some flashcards.
 3. He then adds the naturalization test questions he has studied and uploads them to StudySync.
 4. After completing the upload of the question bank he chose flashcard mode to study those terms and definitions.
 5. When the flashcard comes out there are three options, know, don't know, and not sure.

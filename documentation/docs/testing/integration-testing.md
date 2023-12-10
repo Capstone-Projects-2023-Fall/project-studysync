@@ -20,12 +20,12 @@ The purpose of integration test in the Studysync project is to ensure that the i
 User account management, Flashcards creation/customization, Interactivity, and collaboration.
 
 - A user forgets to review because of daily chores and uses StudySync to review before midterm is approaching.
-- User login using StudySynce credential.
-- After logging into the account, the user navigates to Study Tool tab to check his flashcard decks.
-- Then he found the flashcard topic for his subject.
-- After reviewing the flashcards, the user went back to Study Tool page and select "Quiz".
-- Finally, the user completes the quiz and the correct answer is displayed.
-- After submission, the quiz shows all the correct answer and quiz score will be saved to the leaderboard.
+  - User login using StudySync credential.
+  - After logging into the account, the user navigates to Study Tool tab to check his flashcard decks.
+  - Then he found the flashcard topic for his subject.
+  - After reviewing the flashcards, the user went back to Study Tool page and select "Quiz".
+  - Finally, the user completes the quiz and the correct answer is displayed.
+  - After submission, the quiz shows all the correct answer and quiz score will be saved to the leaderboard.
 
 ### Test Steps:
 1. **User Login**
@@ -67,7 +67,7 @@ Features to be Tested: User Account Management, Flashcards Creation/Customizatio
 
 - A user is about to take a naturalization test but does not have time to study for it due to work, so they need to practice for the test using StudySync.
   - Users opens the website and logs in with their StudySync accounts.
-  - Then since there is nothing on StudySync that he needs to learn, the user needs to add some questions.
+  - Then since there is nothing on StudySync that he needs to learn, the user needs to add some flashcards.
   - He then adds the naturalization test questions he has studied and uploads them to StudySync.
   - After completing the upload of the flashcard items he chose flashcard mode to study those terms and definitions.
   - When the flashcard comes out there are three options, know, don't know, and not sure.
