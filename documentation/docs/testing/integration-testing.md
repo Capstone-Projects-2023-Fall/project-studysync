@@ -20,12 +20,12 @@ The purpose of integration test in the Studysync project is to ensure that the i
 User account management, Flashcards creation/customization, Interactivity, and collaboration.
 
 - A user forgets to review because of daily chores and uses StudySync to review before midterm is approaching.
-  - User login using Google api.
-  - After logging into the account, the user finds the study outline.
-  - Then he found the flash cards for his subject.
-  - Next the user will proceed to flash Select Q&A mode.
-  - Finally, the user completes the quiz and the correct answer is displayed.
-  - The last wrong questions will be collected and then these questions will be saved in a new topic
+- User login using StudySynce credential.
+- After logging into the account, the user navigates to Study Tool tab to check his flashcard decks.
+- Then he found the flashcard topic for his subject.
+- After reviewing the flashcards, the user went back to Study Tool page and select "Quiz".
+- Finally, the user completes the quiz and the correct answer is displayed.
+- After submission, the quiz shows all the correct answer and quiz score will be saved to the leaderboard.
 
 ### Test Steps:
 1. **User Login**
@@ -54,45 +54,46 @@ User account management, Flashcards creation/customization, Interactivity, and c
    - Action: User wants to access flashcards before midterm.
    - Expected Result: The user was able to find and access flashcards relevant to their subject.
 3. **Taking the Quiz**:
-   - Action: Now the user is ready to take the quiz by selecting Quiz mode.
+   - Action: Now the user is ready to take the quiz by selecting Quiz.
    - Expected Result: The user was able to complete the quiz and view the correct answers.
 4. **Collection of Incorrect Questions**:
    - Action: The system collects incorrect questions for later review.
-   - Expected Result: The system collected and stored incorrect questions for future review.
+   - Expected Result: The system collected and stored incorrect questions for review.
 
 
 ## USE CASE #2:
  
 Features to be Tested: User Account Management, Flashcards Creation/Customization.
 
-- A user is about to take a naturalization test but does not have time to study for it due to work, so they need to practice for the test using Studysync.
-  - Users open the website and enter their account password to log in.
-  - Since there is nothing on Studysync that they need to learn, they need to enter the questions themselves.
-  - They then add the naturalization test questions they have studied and upload them to StudySync.
-  - After completing the upload of the question bank, they choose the flashcard mode for memory training.
-  - When the flashcard comes out, there are three options: recognize, don't recognize.
-  - Finally, the questions they recognize will be skipped in the next exercise, and the questions they don't recognize will show the answer and then continue to appear in the next exercise.
+- A user is about to take a naturalization test but does not have time to study for it due to work, so they need to practice for the test using StudySync.
+  - Users opens the website and logs in with their StudySync accounts.
+  - Then since there is nothing on StudySync that he needs to learn, the user needs to add some questions.
+  - He then adds the naturalization test questions he has studied and uploads them to StudySync.
+  - After completing the upload of the flashcard items he chose flashcard mode to study those terms and definitions.
+  - When the flashcard comes out there are three options, know, don't know, and not sure.
+  - Finally, the rating for those questions will be saved and can be used to generate questions for quiz.
+
      
 ### Test Steps:
 - **User Login**
-  - Action: User navigates to Studysync website and logs in using their valid credentials.
+  - Action: User navigates to StudySync website and logs in using their valid credentials.
   - Expected Result: The user is successfully logged in and has access to the website.
 - **Flashcards Creation from User**
-  - Action: The user selects custom flashcard mode by using their custom questions.
-  - Expected Result: Flashcards are generated from the user’s custom questions.
+  - Action: The user selects flashcard topic and starts adding terms and definitions.
+  - Expected Result: Flashcards are generated successfully.
 - **Interacting with Custom Flashcards**
-  - Action: The user gets to choose recognize or not recognize when the flashcard pops up.
-  - Expected Result: Recognized flashcards are skipped in the next exercise.
+  - Action: The user gets to choose know, don't know and not sure when the flashcard pops up.
+  - Expected Result: Data will be saved and user is able to generate question based on their flashcard ratings.
    
 ## USE CASE #3:
  
 Features to be Tested: User Account Management, Social Learning, Quiz
  
 - A user was recommended a learning program by his classmates that said he could have a quiz competition.
-  - He opened the website his classmate gave him and created the account password.
+  - He navigates to StudySync website and sign up for a new StudySync account.
   - Then he went to the friends list and chose to add a friend.
-  - After adding his friends, he received an invitation to a quiz contest sent to him by his classmate.
-  - After completing the quiz, the scores and rankings of the inviter as well as all invited people appeared.
+  - After adding his friends he is able to receive a shared quiz from one of his friends.
+  - The user then has the ability to do the quiz that was shared by his friends.
     
 ### Test Steps:
 
@@ -101,30 +102,31 @@ Features to be Tested: User Account Management, Social Learning, Quiz
   - Expected Result: The user successfully registers the account and gains access to Studysync.
 - **Adding Friends on Studysync**
   - Action: The user is new to Studysync and would like to add some friends.
-  - Expected Result: New friends are added and await approval from others.
+  - Expected Result: The user is able to follow their firends and wait to get the followback to consider friend.
 - **Quiz Competition**
-  - Action: After adding friends, the user receives an invitation to a quiz competition from their friends.
-  - Expected Result: The user can successfully join the quiz and complete it.
+  - Action: After adding friends, the user is able to get the shared quiz from their friends
+  - Expected Result: The user can successfully take the quiz and get their scores.
 - **Viewing Scores and Rankings**
   - Action: The user wants to view the quiz scores and the leaderboard.
-  - Expected Result: Scores and rankings for all participants are displayed as expected.
+  - Expected Result: Scores are display for all participants as expected.
     
 ## USE CASE #4:
 Features to be Tested: User Account Management, Flashcards Creation/Customization, AI-Generated Function
  
-- A user wants to study the subject he wants but, he doesn't find the flash card for the subject he wants in StudySync.
-  - He opened StudySync and automatically logged in
-  - After he didn't find a flash card for the subject he wanted to study he turned on the AI topic generation function
-  - After pressing AI Flash Card Generator you will first see all the flash cards and you can filter them.
-  - After completing the screening you can study, then while flash card studying you are not satisfied with a particular topic then choose to be dissatisfied with that topic.
-  - The question will then be deleted from the pool.
+- A user wants to study the subject he wants, but he doesn't find the flashcard for the subject he wants in StudySync.
+  - The user navigates to StudySync website and then logs in.
+  - After he didn't find any flashcard for the subject he wanted to study, he turned on the AI topic generation function.
+  - After pressing AI Assist button, the user is able to specify the description of his desired flashcards.
+  - Once the AI has finished the flashcard generating, the user is able to study the flashcard and is also able to rate them.
+  - After learning, the user is able to go "Quiz" mode and generate questions by using AI question generating feature.
+  - The user didn't like the questions generated by AI, so he/she decides to edit the questions as well as the answer choices and then save it.
     
 ### Test Steps:
 - **User Login**
-  - Action: User navigates to Studysync website and logs in using their valid credentials.
+  - Action: User navigates to StudySync website and logs in using their valid credentials.
   - Expected Result: The user is successfully logged in and has access to the website.
 - **Enabling AI Flashcard Generator**
-  - Action: The user cannot find any flashcards for his subjects, so he/she turns on AI flashcards generator.
+  - Action: The user cannot find any flashcards for his subjects, so he/she turns on AI Assist to generate flashcards.
   - Expected Result: The AI flashcards generator feature is enabled.
 
  ```
@@ -147,11 +149,11 @@ Failed Call:
 }
 ```
 - **Filtering AI-Generated Flashcards**
-  - Action: The user gets all the AI-generated flashcards and wants to filter them.
-  - Expected Result: Flashcards are generated by AI and can be filtered for learning.
+  - Action: The user gets all the AI-generated flashcards and wants to mark them as "know", "don't know", and "not sure".
+  - Expected Result: Flashcards are generated by AI and can be rated for learning.
 - **Managing Flashcards**
-  - Action: The user does not like some of the flashcards that AI has generated.
-  - Expected Result: Any marked flashcards are removed successfully.
+  - Action: The user wants to generate quiz questions based on their flashcard ratings.
+  - Expected Result: The user is able to generate those questions through AI and has the ability to either delete them or edit.
     
 ## USE CASE #5:
 Features to be Tested: User Account Management, Quiz.
