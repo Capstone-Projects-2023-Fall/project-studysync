@@ -58,7 +58,7 @@ const eventCardStyles = {
 /**
  * @class EventCard
  * @classdesc EventCard - A functional React component for displaying event details in card format.
- * 
+ *
  * @param {Object} props - Props for EventCard including event details and onDelete callback.
  * @returns {React.Component} A card component displaying event details.
  */
@@ -83,14 +83,16 @@ const EventCard = ({ initialEvent, onDelete }) => {
       ? `/flashcardshare/${event.itemId}`
       : `/quizmain/${event.itemId}`;
   /**
-     * @memberof EventCard
-     * @function handleClickOpen
-     * @description Opens the dialog to edit event details.
-     * @param {Object} e - Event object to prevent event bubbling.
-     */
+   * @memberof EventCard
+   * @function handleClickOpen
+   * @description Opens the dialog to edit event details.
+   * @param {Object} e - Event object to prevent event bubbling.
+   */
   const handleClickOpen = (e) => {
     e.stopPropagation();
-    setTempEvent({ ...event });
+    const formattedDate = formatDateToYYYYMMDD(event.date);
+    const formattedTime = convertTo24Hour(event.time);
+    setTempEvent({ ...event, date: formattedDate, time: formattedTime });
     setOpen(true);
   };
 
@@ -116,15 +118,17 @@ const EventCard = ({ initialEvent, onDelete }) => {
   };
 
   /**
-  * @memberof EventCard
-  * @function handleClickSaveChanges
-  * @description Handles the click event on the Save Changes button.
-  */
+   * @memberof EventCard
+   * @function handleClickSaveChanges
+   * @description Handles the click event on the Save Changes button.
+   */
   const handleClickSaveChanges = async () => {
     console.log("save changes clicked");
     updateEvent().then((res) => {
       console.log("update event res is: ", res);
-      setEvent({ ...tempEvent });
+      const formattedDate = formatDateToDayMonDDYYYY(tempEvent.date);
+      const formattedTime = userRepository.convertTo12HourFormat(tempEvent.time);
+      setEvent({ ...tempEvent, date: formattedDate, time: formattedTime });
       setOpen(false);
     });
   };
@@ -142,11 +146,11 @@ const EventCard = ({ initialEvent, onDelete }) => {
   };
 
   /**
-  * @memberof EventCard
-  * @function handleDialogKeyDown
-  * @description Handles key down event on the dialog, specifically the Escape key.
-  * @param {Object} event - The key down event object.
-  */
+   * @memberof EventCard
+   * @function handleDialogKeyDown
+   * @description Handles key down event on the dialog, specifically the Escape key.
+   * @param {Object} event - The key down event object.
+   */
   const handleDialogKeyDown = (event) => {
     if (event.key === "Escape") {
       event.stopPropagation();
@@ -204,7 +208,7 @@ const EventCard = ({ initialEvent, onDelete }) => {
             </Typography>
             <TextField
               label="Date"
-              type="text"
+              type="date"
               fullWidth
               margin="normal"
               value={tempEvent.date}
@@ -222,20 +226,11 @@ const EventCard = ({ initialEvent, onDelete }) => {
             />
             <TextField
               label="Time"
-              type="text"
+              type="time"
               fullWidth
               margin="normal"
               value={tempEvent.time}
               onChange={handleChange("time")}
-              variant="outlined"
-            />
-            <TextField
-              label="Type"
-              type="text"
-              fullWidth
-              margin="normal"
-              value={tempEvent.type}
-              onChange={handleChange("type")}
               variant="outlined"
             />
             <Button
@@ -253,5 +248,47 @@ const EventCard = ({ initialEvent, onDelete }) => {
     </Card>
   );
 };
+
+// Convert a date string to YYYY-MM-DD format
+function formatDateToYYYYMMDD(dateString) {
+  const date = new Date(dateString);
+  let month = "" + (date.getMonth() + 1);
+  let day = "" + date.getDate();
+  const year = date.getFullYear();
+
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [year, month, day].join("-");
+}
+
+// Convert 12-hour time format to 24-hour format
+function convertTo24Hour(timeString) {
+  const [time, modifier] = timeString.split(" ");
+  let [hours, minutes] = time.split(":");
+  if (hours === "12") {
+    hours = "00";
+  }
+  if (modifier === "PM") {
+    hours = parseInt(hours, 10) + 12;
+  }
+  return `${hours}:${minutes}`;
+}
+
+function formatDateToDayMonDDYYYY(date) {
+  const [year, _, day] = date.split("-");
+
+  const dd = new Date(date);
+
+  const dateToStore =
+    userRepository.getDayOfWeekShort(dd) +
+    " " +
+    userRepository.getMonthAbbreviation(dd) +
+    " " +
+    day +
+    " " +
+    year;
+  return dateToStore;
+}
 
 export default EventCard;

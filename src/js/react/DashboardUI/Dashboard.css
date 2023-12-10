@@ -1,3 +1,4 @@
+
 .recent-headers{
     color: #1976d2;
     padding-top: 3%;
@@ -6,8 +7,9 @@
 }
 .banner {
     width: 100%;
-    background:url(http://s6.favim.com/orig/150112/background-cold-gif-nature-Favim.com-2380226.gif);
+    background:url('../static/snow.gif');
     /*https://i0.wp.com/media.giphy.com/media/5ERaOy5fQEIAU/giphy.gif*/
+    /*http://s6.favim.com/orig/150112/background-cold-gif-nature-Favim.com-2380226.gif*/
     background-size: cover;
     font-size: 40px;
     color: #fff;
