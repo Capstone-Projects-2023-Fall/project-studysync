@@ -79,7 +79,7 @@ function Sidebar(props) {
       </Typography>
       
       {friends.map((friend) => (
-        <Link  sx={{mt:1, ml:6}} className='socials-list' isplay="block" variant="body1" href={friendLink(friend.id)} key={friend.id}>
+        <Link  sx={{mt:1, ml:6}} className='socials-list' display="block" variant="body1" href={friendLink(friend.id)} key={friend.id}>
           {friend.name}
         </Link>
       ))}
