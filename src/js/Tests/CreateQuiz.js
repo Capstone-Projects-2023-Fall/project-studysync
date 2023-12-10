@@ -1,6 +1,6 @@
 // CreateQuizForm.js
 import React, { useState } from 'react';
-import FlashcardRepo from '../js/repositories/FlashcardRepo';
+import FlashcardRepo from '../repositories/FlashcardRepo';
 
 const QuizCreator = ({ setId, quizTitle, setQuizList }) => {
     const handleCreateQuiz = async () => {

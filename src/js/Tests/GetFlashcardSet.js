@@ -1,4 +1,4 @@
-import FlashcardRepo from '../js/repositories/FlashcardRepo';
+import FlashcardRepo from '../repositories/FlashcardRepo';
 
 class FlashcardSetHandler {
   async handleOpenGenerateAI(setId, setOpenGenerateAI, setFlashcardSetName, setFlashcardSubject) {

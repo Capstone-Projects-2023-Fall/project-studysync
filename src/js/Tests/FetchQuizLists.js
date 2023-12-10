@@ -1,6 +1,6 @@
 // FlashcardComponent.js
 import React, { useState, useEffect } from 'react';
-import FlashcardRepo from '../js/repositories/FlashcardRepo'; // assuming this is the module with the database fetch logic
+import FlashcardRepo from '../repositories/FlashcardRepo'; // assuming this is the module with the database fetch logic
 
 const QuizList = ({ setId, quizId, navigate, newQuizAdded }) => {
   const [quizList, setQuizList] = useState([]);

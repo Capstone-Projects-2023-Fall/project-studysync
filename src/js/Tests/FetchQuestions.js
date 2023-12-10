@@ -1,6 +1,6 @@
 // Assume your component is named AddQuestionForm.js
 import React, { useState } from 'react';
-import FlashcardRepo from '../js/repositories/FlashcardRepo';
+import FlashcardRepo from '../repositories/FlashcardRepo';
 
 const AddQuestionForm = ({ quizId, setQuizData }) => {
   const [question, setQuestion] = useState('');

@@ -3,11 +3,12 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router-dom';
 
-import LoginPage from '../js/react/LoginPage';
-import FlashcardPage from './AddFlashcard';
-import QuizList from './FetchQuizLists';
-import UpdateQuestions from './UpdateQuestions';
-import FlashcardRepo from '../js/repositories/FlashcardRepo';
+import LoginPage from './js/react/LoginPage';
+import FlashcardPage from './js/Tests/AddFlashcard';
+import QuizList from './js/Tests/FetchQuizLists';
+import UpdateQuestions from './js/Tests/UpdateQuestions';
+import FlashcardRepo from './js/repositories/FlashcardRepo';
+
 
 // mock the entire firebase/auth module
 jest.mock('firebase/auth', () => ({
@@ -18,14 +19,14 @@ jest.mock('firebase/auth', () => ({
   }));
 
 // mock the functions from FlashcardRepo
-jest.mock('../js/repositories/FlashcardRepo', () => ({
+jest.mock('./js/repositories/FlashcardRepo', () => ({
     addFlashcardItem: jest.fn(() => Promise.resolve('mockedFlashcardId')),
     getQuizTitleFromFlashcardSet: jest.fn().mockResolvedValue(['Quiz 1', 'Quiz 2']),
     updateQuestion: jest.fn(),
 }));
   
   // mocking userRepository's addUser function
-jest.mock('../../firebase', () => ({
+jest.mock('./firebase', () => ({
       userRepository: {
       addUser: jest.fn(() => Promise.resolve()),
     },

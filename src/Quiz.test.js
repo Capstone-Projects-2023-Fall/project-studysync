@@ -3,18 +3,18 @@ import { render, fireEvent, screen, act, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect';
 
 // all testing components
-import EditQuizDialog from '../Tests/EditQuizTitle';
-import QuizList from '../Tests/FetchQuizLists';
-import FetchQuestions from '../Tests/FetchQuestions';
-import UpdateQuestions from '../Tests/UpdateQuestions';
-import CreateQuiz from '../Tests/CreateQuiz';
-import GetFlash from '../Tests/GetFlashcardSet';
+import EditQuizDialog from './js/Tests/EditQuizTitle';
+import QuizList from './js/Tests/FetchQuizLists';
+import FetchQuestions from './js/Tests/FetchQuestions';
+import UpdateQuestions from './js/Tests/UpdateQuestions';
+import CreateQuiz from './js/Tests/CreateQuiz';
+import GetFlash from './js/Tests/GetFlashcardSet';
 
-import FlashcardRepo from '../js/repositories/FlashcardRepo';
+import FlashcardRepo from './js/repositories/FlashcardRepo';
 
    
 // mock the module containing the database fetch logic
-jest.mock('../js/repositories/FlashcardRepo');
+jest.mock('./js/repositories/FlashcardRepo');
 
 describe('QuizList Component', () => {
     it('updates the quiz title', () => {
@@ -125,7 +125,7 @@ describe('Quiz Component', () => {
         });
 
 // mock the functions from FlashcardRepo
-jest.mock('../js/repositories/FlashcardRepo', () => ({
+jest.mock('./js/repositories/FlashcardRepo', () => ({
         getCurrentUid: jest.fn(),
         createNewQuiz: jest.fn(),
         addOwnedQuizSetToUser: jest.fn(),
@@ -157,7 +157,7 @@ jest.mock('../js/repositories/FlashcardRepo', () => ({
     });
 
 // mock function from FlashcardRepo
-jest.mock('../js/repositories/FlashcardRepo', () => ({
+jest.mock('./js/repositories/FlashcardRepo', () => ({
     getFlashcardSetById: jest.fn(),
 }));      
 

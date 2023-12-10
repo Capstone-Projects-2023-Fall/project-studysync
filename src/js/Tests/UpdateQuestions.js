@@ -1,6 +1,6 @@
 // FlashcardComponent.js
 import React, { useState } from 'react';
-import FlashcardRepo from '../js/repositories/FlashcardRepo';  // Adjust the path accordingly
+import FlashcardRepo from '../repositories/FlashcardRepo';  // Adjust the path accordingly
 
 
 const UpdateQuestions = ({ quizId, editQuestion, questions, setQuizData, setOpenEdit, setEditQuestion }) => {
