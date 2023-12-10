@@ -289,7 +289,8 @@ describe('FlashcardApp Component', () => {
   // ... additional tests specific to FlashcardApp ...
 });
 
-// all testing components
+//--------------------------------------------------------------------------------
+//Leapheng unit test part
 import EditQuizDialog from './js/Tests/EditQuizTitle';
 import QuizList from './js/Tests/FetchQuizLists';
 import FetchQuestions from './js/Tests/FetchQuestions';
@@ -297,7 +298,6 @@ import UpdateQuestions from './js/Tests/UpdateQuestions';
 import CreateQuiz from './js/Tests/CreateQuiz';
 import GetFlash from './js/Tests/GetFlashcardSet';
    
-
 describe('QuizList Component', () => {
     it('updates the quiz title', () => {
         const handleClose = jest.fn();
@@ -367,7 +367,7 @@ describe('Quiz Component', () => {
         expect(FlashcardRepo.addQuizQuestion).not.toHaveBeenCalled();
       });
 
-      it('confirm question deletion', async () => {
+      it('confirms question deletion', async () => {
             const quizId = 'quiz-Id';
             const questionId = 'questionId';
         
@@ -376,7 +376,7 @@ describe('Quiz Component', () => {
             expect(FlashcardRepo.deleteQuestion).toHaveBeenCalledWith(questionId, quizId);
           });
       
-    it('creates new quiz', async () => {
+    it('adds owned quiz to the user', async () => {
         // Mock necessary functions
         FlashcardRepo.getCurrentUid.mockReturnValue('mockedUserId');
         FlashcardRepo.createNewQuiz.mockResolvedValue('mockedQuizId');
@@ -427,7 +427,7 @@ describe('Quiz Component', () => {
       expect(mockSetFlashcardSetName).toHaveBeenCalledWith('MockedSetName');
       expect(mockSetFlashcardSubject).toHaveBeenCalledWith('MockedSubject');
     });
-    it('generate questions by using AI generating', async () => {
+    it('generates questions by using AI generating', async () => {
         const setId = 'test-set-id';
         const numberOfQuestions = 10;
         const topicName = 'Math';
@@ -441,14 +441,14 @@ describe('Quiz Component', () => {
         expect(FlashcardRepo.callYourCloudFunctionToGenerateFlashcards).toHaveBeenCalledWith(numberOfQuestions, topicName, imageFile);
         expect(result).toEqual(mockGeneratedFlashcards);
       });
-    it('retreive the quiz title using quiz id', async () => {
+    it('retreives the quiz title using quiz id', async () => {
         const quizId = "some-quiz-id";
     
         await FlashcardRepo.getQuizTitleFromFlashcardSet(quizId);
     
         expect(FlashcardRepo.getQuizTitleFromFlashcardSet).toHaveBeenCalledWith(quizId);
     });
-    it('retreive the quiz id from a flashcard set', async () => {
+    it('retreives the quiz id from a flashcard set', async () => {
         const quizName = "Intro to Java";
         const setId = "123"
     
@@ -456,7 +456,7 @@ describe('Quiz Component', () => {
     
         expect(FlashcardRepo.getQuizTitleId).toHaveBeenCalledWith(quizName, setId);
     });
-    it('retreive the quiz id from a topic name', async () => {
+    it('retreives the quiz id from a topic name', async () => {
         const quizName = "Intro to Java";
     
         await FlashcardRepo.getQuizIdByTopicName(quizName);
