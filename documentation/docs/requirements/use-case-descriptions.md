@@ -9,17 +9,15 @@ sidebar_position: 5
 Features associated with this use case:
 user account management
 flashcard creation/customization
-Interactivity and collaboration
 
   A user forgets to review because of daily chores and uses StudySync to review before midterm is approaching.
 
-1. User login using Google api.
-2. After logging into the account, the user finds the study outline.
-3. Then he found the flash cards for his subject.
-4. Next the user will proceed to flash Select Q&A mode.
+1. User login using StudySync credential.
+2. After logging into the account, the user navigates to Study Tool tab to check his flashcard decks.
+3. Then he found the flashcard topic for his subject.
+4. After reviewing the flashcards, the user went back to Study Tool page and select "Quiz".
 5. Finally, the user completes the quiz and the correct answer is displayed.
-6. The last wrong questions will be collected and then these questions will be saved in a new topic.
-
+6. After submission, the quiz shows all the correct answer and quiz score will be saved to the leaderboard.
 
 ## Use Case 2
 
@@ -27,28 +25,28 @@ Features associated with this use case:
 User account management
 Flashcard creation/customization
 
-  A user is about to take a naturalization test but doesn't have time to study for it due to work, so he needs to practice for the test using StudySyne.
+  A user is about to take a naturalization test but doesn't have time to study for it due to work, so he needs to practice for the test using StudySync.
 
-1. Users open the website and enter their account password to log in.
-2. Then since there is nothing on StudySyne that he needs to learn, he needs to enter the questions himself.
-3. He then adds the naturalization test questions he has studied and uploads them to StudySyne.
-4. After completing the upload of the question bank he chose flash card mode for memory training.
-5. When the flash card comes out there are three options, recognize, don't recognize.
-6. Finally, the questions you recognize will be skipped in the next exercise, and the questions you don't recognize will show the answer and then continue to appear in the next exercise.
+1. Users opens the website and logs in with their StudySync accounts.
+2. Then since there is nothing on StudySync that he needs to learn, the user needs to add some flashcards.
+3. He then adds the naturalization test questions he has studied and uploads them to StudySync.
+4. After completing the upload of the flashcard items he chooses flashcard mode to study those terms and definitions.
+5. When the flashcard comes out there are three options, know, don't know, and not sure.
+6. Finally, the rating for those questions will be saved and can be used to generate questions for quiz.
 
 ## Use Case 3
 
 Features associated with this use case:
 User account management
 Social learning
-Quizzes/test
+Quiz
 
   A user was recommended a learning program by his classmates that said he could have a quiz competition.
 
-1. He opened the website his classmate gave him and created the account password.
+1. He navigates to StudySync website and sign up for a new StudySync account.
 2. Then he went to the friends list and chose to add a friend.
-3. After adding his friends he received an invitation to a quiz contest sent to him by his classmate.
-4. After completing the quiz the scores and rankings of the inviter as well as all invited people appeared.
+3. After adding his friends he is able to receive a shared quiz from one of his friends.
+4. The user then has the ability to do the quiz that was shared by his friends.
 
 
 ## Use Case 4
@@ -58,13 +56,14 @@ User account management
 Flashcard creation/customization
 Customization(AI generation function)
 
-  A user wants to study the subject he wants but, he doesn't find the flash card for the subject he wants in StudySync.
+  A user wants to study the subject he wants, but he doesn't find the flashcard for the subject he wants in StudySync.
 
-1. He opened StudySync and automatically logged in
-2. After he didn't find a flash card for the subject he wanted to study he turned on the AI topic generation function
-3. After pressing AI Flash Card Generator you will first see all the flash cards and you can filter them.
-4. After completing the screening you can study, then while flash card studying you are not satisfied with a particular topic then choose to be dissatisfied with that topic.
-5. The question will then be deleted from the pool.
+1. The user navigates to StudySync website and then logs in.
+2. After he didn't find any flashcard for the subject he wanted to study, he turned on the AI topic generation function.
+3. After pressing AI Assist button, the user is able to specify the description of his desired flashcards.
+4. Once the AI has finished the flashcard generating, the user is able to study the flashcard and is also able to rate them.
+5. After learning, the user is able to go "Quiz" mode and generate questions by using AI question generating feature.
+6. The user didn't like the questions generated by AI, so he/she decides to edit the questions as well as the answer choices and then save it.
 
 
 ## Use Case 5

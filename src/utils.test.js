@@ -32,7 +32,18 @@ jest.mock('./js/repositories/FlashcardRepo.js', () => ({
   getUserImageURLByUid: jest.fn(),
   addComment: jest.fn(),
   callYourCloudFunctionToGenerateFlashcards: jest.fn(),
-
+  getCurrentUid: jest.fn(),
+  createNewQuiz: jest.fn(),
+  addOwnedQuizSetToUser: jest.fn(),
+  getFlashcardSetById: jest.fn(),
+  getQuizTitleFromFlashcardSet:jest.fn(),
+  addQuizQuestion:jest.fn(),
+  deleteQuestion:jest.fn(),
+  getQuizTitleFromFlashcardSet:jest.fn(),
+  getQuizTitleId:jest.fn(),
+  getQuizIdByTopicName:jest.fn(),
+  getFlashcardItemsByStatus:jest.fn(),
+  updateScoreAndAddAttempt:jest.fn(),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -276,4 +287,201 @@ describe('FlashcardApp Component', () => {
 
 
   // ... additional tests specific to FlashcardApp ...
+});
+
+//--------------------------------------------------------------------------------
+//Leapheng unit test part
+import EditQuizDialog from './js/Tests/EditQuizTitle';
+import QuizList from './js/Tests/FetchQuizLists';
+import FetchQuestions from './js/Tests/FetchQuestions';
+import UpdateQuestions from './js/Tests/UpdateQuestions';
+import CreateQuiz from './js/Tests/CreateQuiz';
+import GetFlash from './js/Tests/GetFlashcardSet';
+   
+describe('QuizList Component', () => {
+    it('updates the quiz title', () => {
+        const handleClose = jest.fn();
+        const onEditQuizTitle = jest.fn();
+
+        const { getByText, getByLabelText } = render(
+          <EditQuizDialog
+          isOpen={true}
+          handleClose={handleClose}
+          initialQuizTitle="Initial Title"
+          onEditQuizTitle={onEditQuizTitle}
+          />
+        );
+
+        // check if the component renders with the correct title
+        expect(getByText('Edit Quiz Title')).toBeInTheDocument();
+
+        // check if the text field is rendered with the initial quiz title
+        const textField = getByLabelText('Enter a New Quiz Title');
+        expect(textField).toBeInTheDocument();
+        expect(textField).toHaveValue('Initial Title');
+
+        // Check if Cancel and Save buttons are present
+        expect(getByText('Cancel')).toBeInTheDocument();
+        expect(getByText('Save')).toBeInTheDocument();
+
+        fireEvent.change(textField, { target: { value: 'New Title' } });
+        fireEvent.click(getByText('Save'));
+
+        expect(onEditQuizTitle).toHaveBeenCalledWith('New Title');
+        expect(handleClose).toHaveBeenCalled();
+        });
+
+    it('fetches and displays quiz titles', async () => {
+        const mockQuizData = ['Quiz 1', 'Quiz 2'];
+
+        FlashcardRepo.getQuizTitleFromFlashcardSet.mockResolvedValue(mockQuizData);
+
+        // render the component
+        let container;
+        await act(async () => {
+        container = render(<QuizList setId={1} quizId={2} navigate={() => {}} newQuizAdded={null} />);
+        });
+
+        // wait for the asynchronous operation to complete
+        // this is important when dealing with asynchronous code inside useEffect
+        await act(async () => {});
+
+        // assert that the component renders the fetched quiz titles
+        mockQuizData.forEach(quizTitle => {
+        expect(container.getByText(quizTitle)).toBeInTheDocument();
+        });
+    });
+});
+
+describe('Quiz Component', () => {    
+    it('does not add a question when input is invalid', async () => {
+        // mock the implementation of addQuizQuestion to simulate a failure
+        FlashcardRepo.addQuizQuestion.mockRejectedValue(new Error('Invalid input'));
+    
+        // render the component
+        const { getByText } = render(<FetchQuestions quizId={1} setQuizData={() => {}} />);
+        await act(async () => {
+          fireEvent.click(getByText('Add Question'));
+        });
+
+        expect(FlashcardRepo.addQuizQuestion).not.toHaveBeenCalled();
+      });
+
+      it('confirms question deletion', async () => {
+            const quizId = 'quiz-Id';
+            const questionId = 'questionId';
+        
+            await FlashcardRepo.deleteQuestion(questionId, quizId);
+        
+            expect(FlashcardRepo.deleteQuestion).toHaveBeenCalledWith(questionId, quizId);
+          });
+      
+    it('adds owned quiz to the user', async () => {
+        // Mock necessary functions
+        FlashcardRepo.getCurrentUid.mockReturnValue('mockedUserId');
+        FlashcardRepo.createNewQuiz.mockResolvedValue('mockedQuizId');
+
+        const setQuizList = jest.fn();
+        const { getByText } = render(<CreateQuiz setId="mockedSetId" quizTitle="Mocked Quiz" setQuizList={setQuizList} />);
+
+        // Trigger the button click event
+        fireEvent.click(getByText('Create Quiz'));
+
+        // Wait for asynchronous operations to complete
+        await act(async () => {
+        // Add any additional asynchronous operations here
+        });
+
+        // Add assertions based on your expected behavior
+        expect(FlashcardRepo.createNewQuiz).toHaveBeenCalledWith('mockedSetId', 'Mocked Quiz');
+
+        // Use the mock directly from the mocked module
+        expect(FlashcardRepo.addOwnedQuizSetToUser).toHaveBeenCalledWith('mockedUserId', 'mockedQuizId');
+
+        expect(setQuizList).toHaveBeenCalledWith('mockedQuizId');
+    });   
+
+    it('handles opening and fetches flashcard set name', async () => {
+      const flashcardSetHandler = new GetFlash();
+  
+      // Mock necessary functions
+      const mockSetOpenGenerateAI = jest.fn();
+      const mockSetFlashcardSetName = jest.fn();
+      const mockSetFlashcardSubject = jest.fn();
+  
+      FlashcardRepo.getFlashcardSetById.mockResolvedValue({
+        name: 'MockedSetName',
+        subject: 'MockedSubject',
+      });
+  
+      await flashcardSetHandler.handleOpenGenerateAI(
+        'mockedSetId',
+        mockSetOpenGenerateAI,
+        mockSetFlashcardSetName,
+        mockSetFlashcardSubject
+      );
+  
+      // Add assertions based on your expected behavior
+      expect(mockSetOpenGenerateAI).toHaveBeenCalledWith(true);
+      expect(FlashcardRepo.getFlashcardSetById).toHaveBeenCalledWith('mockedSetId');
+      expect(mockSetFlashcardSetName).toHaveBeenCalledWith('MockedSetName');
+      expect(mockSetFlashcardSubject).toHaveBeenCalledWith('MockedSubject');
+    });
+    it('generates questions by using AI generating', async () => {
+        const setId = 'test-set-id';
+        const numberOfQuestions = 10;
+        const topicName = 'Math';
+        const imageFile = 'image-data';
+        const mockGeneratedFlashcards = [];
+    
+        FlashcardRepo.callYourCloudFunctionToGenerateFlashcards.mockResolvedValue(mockGeneratedFlashcards);
+    
+        const result = await FlashcardRepo.callYourCloudFunctionToGenerateFlashcards(numberOfQuestions, topicName, imageFile);
+    
+        expect(FlashcardRepo.callYourCloudFunctionToGenerateFlashcards).toHaveBeenCalledWith(numberOfQuestions, topicName, imageFile);
+        expect(result).toEqual(mockGeneratedFlashcards);
+      });
+    it('retreives the quiz title using quiz id', async () => {
+        const quizId = "some-quiz-id";
+    
+        await FlashcardRepo.getQuizTitleFromFlashcardSet(quizId);
+    
+        expect(FlashcardRepo.getQuizTitleFromFlashcardSet).toHaveBeenCalledWith(quizId);
+    });
+    it('retreives the quiz id from a flashcard set', async () => {
+        const quizName = "Intro to Java";
+        const setId = "123"
+    
+        await FlashcardRepo.getQuizTitleId(quizName, setId);
+    
+        expect(FlashcardRepo.getQuizTitleId).toHaveBeenCalledWith(quizName, setId);
+    });
+    it('retreives the quiz id from a topic name', async () => {
+        const quizName = "Intro to Java";
+    
+        await FlashcardRepo.getQuizIdByTopicName(quizName);
+    
+        expect(FlashcardRepo.getQuizIdByTopicName).toHaveBeenCalledWith(quizName);
+      });
+    it('creates new quiz for a flashcard set', async () => {
+            const newQuiz = { setId: '12345', quizTitle: 'Math' };
+
+            await FlashcardRepo.createNewQuiz(newQuiz);
+
+            expect(FlashcardRepo.createNewQuiz).toHaveBeenCalledWith(newQuiz);
+    });
+    it('get flashcard items by status', async () => {
+        const retrieveFlash = { setId: '12345', status: 'Know' };
+
+        await FlashcardRepo.getFlashcardItemsByStatus(retrieveFlash);
+
+        expect(FlashcardRepo.getFlashcardItemsByStatus).toHaveBeenCalledWith(retrieveFlash);
+    });
+    it('updates user score and add attempt', async () => {
+        const score = { quizId: '12345', score: '89.99' };
+
+        await FlashcardRepo.updateScoreAndAddAttempt(score);
+
+        expect(FlashcardRepo.updateScoreAndAddAttempt).toHaveBeenCalledWith(score);
+    });
 });

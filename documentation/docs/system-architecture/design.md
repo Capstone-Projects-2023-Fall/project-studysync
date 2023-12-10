@@ -102,12 +102,12 @@ Events and Upcoming Events collections will use these structures.
 ## Use case 1
 A user forgets to review because of daily chores and uses StudySync to review before midterm is approaching.
 
-1. User login using Google api.
-2. After logging into the account, the user finds the study outline.
-3. Then he found the flash cards for his subject.
-4. Next the user will proceed to flash Select Q&A mode.
+1. User login using StudySynce credential.
+2. After logging into the account, the user navigates to Study Tool tab to check his flashcard decks.
+3. Then he found the flashcard topic for his subject.
+4. After reviewing the flashcards, the user went back to Study Tool page and select "Quiz".
 5. Finally, the user completes the quiz and the correct answer is displayed.
-6. The last wrong questions will be collected and then these questions will be saved in a new topic.
+6. After submission, the quiz shows all the correct answer and quiz score will be saved to the leaderboard.
 ![user case1](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/23609bc1-daf0-40c4-916e-c6b169d03936)
 
   
@@ -117,12 +117,12 @@ A user forgets to review because of daily chores and uses StudySync to review be
 ## Use case 2
 A user is about to take a naturalization test but doesn't have time to study for it due to work, so he needs to practice for the test using StudySyne.
 
-1. The user opens the website and enters their account credentials to log in.
-2. Then, because there is no content they need to study on StudySync, they have to input their own questions.
-3. Afterward, they add the citizenship test questions they've learned to StudySync.
-4. Once the question bank upload is complete, they choose flashcards for memory training.
-5. When flashcards appear, there are three options: recognize, don't recognize, and unsure.
-6. Finally, in the next practice session, the questions they didn't recognize will be added to a quiz and continue to appear in the subsequent exercises.
+1. Users opens the website and logs in with their StudySync accounts.
+2. Then since there is nothing on StudySync that he needs to learn, the user needs to add some flashcards.
+3. He then adds the naturalization test questions he has studied and uploads them to StudySync.
+4. After completing the upload of the question bank he chose flashcard mode to study those terms and definitions.
+5. When the flashcard comes out there are three options, know, don't know, and not sure.
+6. Finally, the rating for those questions will be saved and can be used to generate questions for quiz.
 ![user case2](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/192b3e85-9173-4d86-b0c7-5dfe55447132)
 
 
@@ -130,10 +130,10 @@ A user is about to take a naturalization test but doesn't have time to study for
 ## Use case 3
   A user was recommended a learning program by his classmates that said he could have a quiz competition.
 
-1. He opened the website his classmate gave him and created the account password.
+1. He navigates to StudySync website and sign up for a new StudySync account.
 2. Then he went to the friends list and chose to add a friend.
-3. After adding his friends he received an invitation to a quiz contest sent to him by his classmate.
-4. After completing the quiz the scores and rankings of the inviter as well as all invited people appeared.
+3. After adding his friends he is able to receive a shared quiz from one of his friends.
+4. The user then has the ability to do the quiz that was shared by his friends.
 ![user case3](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/9dbe93cc-fcc5-4435-9335-26b936b4ab41)
 
 
@@ -141,11 +141,12 @@ A user is about to take a naturalization test but doesn't have time to study for
 ## Use case 4
   A user wants to study the subject he wants but, he doesn't find the flash card for the subject he wants in StudySync.
 
-1. He opened StudySync and automatically logged in
-2. After he didn't find a flash card for the subject he wanted to study he turned on the AI topic generation function
-3. After pressing AI Flash Card Generator you will first see all the flash cards and you can filter them.
-4. After completing the screening you can study, then while flash card studying you are not satisfied with a particular topic then choose to be dissatisfied with that topic.
-5. The question will then be deleted from the pool.
+1. The user navigates to StudySync website and then logs in.
+2. After he didn't find any flashcard for the subject he wanted to study, he turned on the AI topic generation function.
+3. After pressing AI Assist button, the user is able to specify the description of his desired flashcards.
+4. Once the AI has finished the flashcard generating, the user is able to study the flashcard and is also able to rate them.
+5. After learning, the user is able to go "Quiz" mode and generate questions by using AI question generating feature.
+6. The user didn't like the questions generated by AI, so he/she decides to edit the questions as well as the answer choices and  then save it.
 
 ![](../requirements/static/UseCase4.png)
 
