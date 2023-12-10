@@ -98,13 +98,13 @@ Features to be Tested: User Account Management, Social Learning, Quiz
 ### Test Steps:
 
 - **User Account Registration**
-  - Action: The user wants to register an account to use Studysync.
-  - Expected Result: The user successfully registered the account and gained access to Studysync.
+  - Action: The user wants to register an account to use StudySync.
+  - Expected Result: The user successfully registered the account and gained access to StudySync.
 - **Adding Friends on Studysync**
   - Action: The user is new to Studysync and would like to add some friends.
   - Expected Result: The user is able to follow their friends and waits to get the followback to consider friend.
 - **Quiz Competition**
-  - Action: After adding friends, the user is able to get the shared quiz from their friends
+  - Action: After adding friends, the user is able to get the shared quiz from their friends.
   - Expected Result: The user can successfully take the quiz and get their scores.
 - **Viewing Scores and Rankings**
   - Action: The user wants to view the quiz scores and the leaderboard.
