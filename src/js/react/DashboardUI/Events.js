@@ -39,7 +39,7 @@ export default function Events(props) {
       <Title>Upcoming Events</Title>
       <Table size='small'>
         <TableBody>
-          {_events.map((event, index) => (
+          {_events.length != 0 ? _events.map((event, index) => (
             <TableRow key={index}>
               <TableCell>{event.name}</TableCell>
               <TableCell></TableCell>
@@ -47,7 +47,7 @@ export default function Events(props) {
               <TableCell></TableCell>
               <TableCell align="right">{convertToDate(event)}</TableCell>
             </TableRow>
-          ))}
+          )) : <div className='message'>No upcoming events.</div>}
 
         </TableBody>
 
