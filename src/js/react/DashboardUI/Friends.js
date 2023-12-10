@@ -12,7 +12,6 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
-
 function preventDefault(event) {
   event.preventDefault();
 }
@@ -20,6 +19,7 @@ function preventDefault(event) {
 export default function Friends(props) {
     
   const {friends} = props;
+  const {user} = useUser();
   //List only 4 friends
   const _friends = friends.slice(0,3);
   for(let i =0; i < _friends.length;i++){
@@ -39,7 +39,7 @@ export default function Friends(props) {
       <Title>Friends</Title>
       <Table size='small'>
         <TableBody>
-          {_friends.map((friend)=>(
+          {_friends.length != 0 ? _friends.map((friend)=>(
             <TableRow key={friend.id}>
               <TableCell id='friend-row'>
                 {friend.imageURL &&
@@ -48,7 +48,7 @@ export default function Friends(props) {
                 <a id='Friend-link' href={link(friend.id)}>{friend.name}</a>
               </TableCell>
             </TableRow>
-          ))}
+          )) : <a href={`/socials/${user && user.uid}`}>No Friends? Find your friends here!</a>}
       
         </TableBody>
       

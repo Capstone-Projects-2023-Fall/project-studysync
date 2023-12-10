@@ -22,7 +22,7 @@ import './DashboardUI/Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 import FlashcardRepo from '../repositories/FlashcardRepo';
 import Lottie from "react-lottie-player";
-
+import bannerPicture from './static/bannerPicture.jpg';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -162,7 +162,6 @@ export default function DashboardCom() {
     )
   }
 
-
   return (
     <>
       <div class="banner animated tada">
@@ -220,7 +219,7 @@ export default function DashboardCom() {
                   Recent flashcards:
                 </div>
                 <Grid id='flashcard-grid' container spacing={4}>
-                  {ownedFlashcards ? ownedFlashcards.slice(ownedFlashcards.length-3,ownedFlashcards.length).map((card, index) => (
+                  {ownedFlashcards.length != 0 ? ownedFlashcards.slice(ownedFlashcards.length-3,ownedFlashcards.length).map((card, index) => (
                     <RecentCards key={index} card={card}
                       lottieAnimation={lottieAnimation1}
                       cardLink={`/flashcard-ui/${card.id}`} />
@@ -231,7 +230,7 @@ export default function DashboardCom() {
                   Recent Quizzes:
                 </div>
                 <Grid id='flashcard-grid' container spacing={4}>
-                  {ownedQuizzes ?
+                  {ownedQuizzes.length != 0 ?
                     ownedQuizzes.slice(ownedQuizzes.length-3,ownedQuizzes.length).map((card, index) => (
                       <RecentCards
                         key={index}
