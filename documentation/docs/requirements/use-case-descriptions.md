@@ -30,8 +30,8 @@ Flashcard creation/customization
 1. Users opens the website and logs in with their StudySync accounts.
 2. Then since there is nothing on StudySync that he needs to learn, the user needs to add some flashcards.
 3. He then adds the naturalization test questions he has studied and uploads them to StudySync.
-4. After completing the upload of the flashcard items he chooses flashcard mode to study those terms and definitions.
-5. When the flashcard comes out there are three options, know, don't know, and not sure.
+4. After completing the upload of the flashcard items, the user chooses flashcard mode to study those terms and definitions.
+5. When the flashcards come out, there are three options: know, don't know, and not sure.
 6. Finally, the rating for those questions will be saved and can be used to generate questions for quiz.
 
 ## Use Case 3
@@ -41,11 +41,11 @@ User account management
 Social learning
 Quiz
 
-  A user was recommended a learning program by his classmates that said he could have a quiz competition.
+  A user was recommended to use StudySync by his classmates that said he could have a quiz competition.
 
-1. He navigates to StudySync website and sign up for a new StudySync account.
-2. Then he went to the friends list and chose to add a friend.
-3. After adding his friends he is able to receive a shared quiz from one of his friends.
+1. He navigates to StudySync website and signs up for a new StudySync account.
+2. Then he clicks on "Social" and decides to add a friend.
+3. After adding his friends, he is able to receive a shared quiz from one of his friends.
 4. The user then has the ability to do the quiz that was shared by his friends.
 
 
@@ -56,10 +56,10 @@ User account management
 Flashcard creation/customization
 Customization(AI generation function)
 
-  A user wants to study the subject he wants, but he doesn't find the flashcard for the subject he wants in StudySync.
+  A user wants to study the subject he wants, but he can not find the flashcard for the subject he wants in StudySync.
 
 1. The user navigates to StudySync website and then logs in.
-2. After he didn't find any flashcard for the subject he wanted to study, he turned on the AI topic generation function.
+2. After he didn't find any flashcard for the subject, he wanted to study, he turned on the AI topic generation function.
 3. After pressing AI Assist button, the user is able to specify the description of his desired flashcards.
 4. Once the AI has finished the flashcard generating, the user is able to study the flashcard and is also able to rate them.
 5. After learning, the user is able to go "Quiz" mode and generate questions by using AI question generating feature.
