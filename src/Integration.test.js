@@ -147,4 +147,13 @@ describe('Integration Test', () => {
         expect(setEditQuestion).toHaveBeenCalledWith(null);
         });
     });
+
+    it('Use Case 5: Users can interact with my sets', async () => {});
+
+    it('Use Case 6: Users can interact with the social feature', async () => {});
+
+    it('Use Case 7: Users can pause quiz and come back later', async () => {});
+
+    it('Use Case 8: Users can update flashcard to improve accuracy', async () => {});
+
 });
