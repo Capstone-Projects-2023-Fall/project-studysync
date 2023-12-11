@@ -168,7 +168,41 @@ const FlashcardRepo = {
         }
     },
 
+    copyFlashcards: async function (flashcardId, userId) {
+        try {
 
+            const originalFlashcardRef = doc(database, 'flashcardSets', flashcardId);
+            const originalFlashcardSnapshot = await getDoc(originalFlashcardRef);
+
+            if (!originalFlashcardSnapshot.exists()) {
+                console.error("Original flashcard set not found.");
+                return null;
+            }
+
+            const originalFlashcardData = originalFlashcardSnapshot.data();
+            const subject = originalFlashcardData.subject;
+            const newFlashcardData = {
+                ...originalFlashcardData,
+                createdAt: Timestamp.now(),
+
+            };
+
+            const newFlashcardRef = await addDoc(collection(database, 'flashcardSets'), newFlashcardData);
+            if (subject) {
+                await this.addUserSubject(userId, subject);
+            }
+            const newFlashcardId = newFlashcardRef.id;
+
+            await this.addOwnedFlashcardSetToUser(userId, newFlashcardId);
+
+            console.log("New flashcard set created with ID:", newFlashcardId);
+
+            return newFlashcardId;
+        } catch (error) {
+            console.error("Error copying flashcards:", error);
+            throw error;
+        }
+    },
 
 
 
