@@ -158,12 +158,13 @@ Failed Call:
 ## USE CASE #5:
 Features to be Tested: User Account Management, Quiz.
 
-- A user wants to take a quiz created by themselves or a friend.
-  - User logs in to StudySync.
-  - User then navigate to the "Quiz" section.
-  - At the "Quiz" section, user has a wide range of quizzes either created by themselves or friends.
-  - Then the user completes the quiz and submits their answers.
-  - The system will then calculate and display users score on the leaderboard.
+-  A user wants to take a quiz created by themselves or a friend and compare it to his/her friends.
+1. User logs in to StudySync.
+2. User then navigate to the mySets section.
+3. At the mySets section, user has a wide range of quizzes either created by themselves or shared by friends.
+4. User selects a quiz and completes it.
+5. The system will then calculate and the display user's score on the leaderboard.
+6. User then navigates to the leaderboard page to compare scores with his/her friends.
  
 ### Test Steps:
 - **User Login**
@@ -182,12 +183,12 @@ Features to be Tested: User Account Management, Quiz.
 ## USE CASE #6:
 Features to be Tested: User Account Management, Social Learning
  
-- A user wants to add friends on StudySync.
-  - The user will have to log in to their own account.
-  - Then navigate to the "Add Friend" section.
-  - User enters the friend's email or username.
-  - Once the friend's name pops up, the user recognizes their friends then clicks "add as friend".
-  - The friend receives the request and can accept or reject it.
+1. Jack will have to log in to his own account.
+2. Then navigate to the socials section.
+3. Jack searches for John.
+4. Once the John's name popup, Jack recognizes his friends then selects follow.
+5. John receives the follow notification and follows the Jack back.
+6. John and Jack are now friends on StudySync as they have now follow each other.
     
 ### Test Steps:
 - **User Login**
@@ -203,12 +204,12 @@ Features to be Tested: User Account Management, Social Learning
 ## USE CASE #7:
 Features to be Tested: User Account Management, Quiz.
  
-- A user has been studying for 6 hours and wants to take a break but also wants to save the quiz's progress.
-  - The user is taking a quiz but then realizes he/she wants to take a quick coffee break.
-  - User clicks "Save&Exit" button in order for the quiz to be saved and quit.
-  - The system saves the user's progress.
-  - After the break, the user logs in and goes to the "Quiz" section to resume the paused quiz.
-  - Users choose to resume the quiz from where they left off.
+-    A user has been studying for 6 hours and wants to take a break but also wants to save the quiz's progress.
+1. User is taking a quiz but then realizes he/she wants to take a quick coffee break.
+2. User clicks "Save&Exit" button in order for the quiz to be saved and quit.
+3. The system saves the user's progress.
+4. After the break, the user goes to the mySets section and pick the quiz to resume.
+5. User finishes the quiz and saves its data to the database.
     
 ### Test Steps:
 - **Save Quiz Progress**
@@ -221,12 +222,12 @@ Features to be Tested: User Account Management, Quiz.
 ## USE CASE #8:
 Features to be Tested: User Account Management, Flashcards Creation/Customization
 
-- A user finds out some flashcards need to be updated in order to improve accuracy.
-  - User logs in to Studysync as usual.
-  - Then the user has to go to their created flashcards.
-  - User finds out which flashcards need to be updated.
-  - User makes some changes to the flashcard definition and details.
-  - User saves changes and then flashcards are updated and ready to be learned.
+-   A user finds out some flashcards need to be updated in order to improve accuracy.
+1. User logs in to StudySynce as usual.
+2. Then user goes to MySets to view owned/shared flashcards.
+3. User finds out which flashcard set need to be updated.
+4. User selects flashcard set and makes changes to the flashcard definition and details.
+5. User saves changes and then flashcards are updated and ready to be learned.
 
 ### Test Steps:
 - **User Login**
