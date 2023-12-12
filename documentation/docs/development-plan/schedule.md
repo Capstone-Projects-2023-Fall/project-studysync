@@ -116,29 +116,48 @@ gantt
         Milestone Demo 2 :crit, milestone,  , 2023-11-13, 1d
 
         
-        section Detailed Pet Interactions & Task Reminders
-        Sprint 4: , 2023-03-29, 2w
-        section Detailed Pet Interactions & Task Reminders
-        Sprint Planning Meeting: active , 2023-03-29, 1d
-        section Detailed Pet Interactions & Task Reminders
-        Make the pet reactive + Multiple frames for each tier: , 2023-03-30, 5d
-        section Detailed Pet Interactions & Task Reminders
-        Create task/assignment reminders: , 2023-04-05, 5d
-        section Detailed Pet Interactions & Task Reminders
-        Milestone Demo 3 :crit, milestone,  , 2023-04-11, 1d
+        section Complete all features
+        Sprint 5: , 2023-11-13, 3w
+        section Complete all features
+        Sprint Planning Meeting: active , 2023-11-13, 1d
+        section Complete all features
+        Web hosting: , 2023-11-13, 1d
+        section Complete all features
+        AI with image: , 2023-11-13, 5d
+        section Complete all features
+        Complete social features: , 2023-11-13, 5d
+        section Complete all features
+        Generate quiz base on flashcards: , 2023-11-13, 5d
+        section Complete all features
+        User able to take the quiz , 2023-11-13, 5d
+        section Complete all features
+        Fix profile UI: , 2023-11-20, 3d
+        section Complete all features
+        User able to create upcoming events: , 2023-11-20, 5d
+        section Complete all features
+        Redesign flashcard UI: , 2023-11-20, 5d
+        section Complete all features
+        Dashboard UI: , 2023-11-27, 1w
+        section Complete all features
+        Add quiz features: , 2023-11-27, 1w
+        section Complete all features
+        Leaderboard design: , 2023-11-27, 1w
+        section Complete all features
+        Milestone Demo 3 :crit, milestone,  , 2023-12-04, 1d
+
 
         section Final Demo
-        Sprint 5: , 2023-04-12, 16d
+        Sprint 6: , 2023-12-04, 1w
         section Final Demo
-        Sprint Planning Meeting: active , 2023-04-12, 1d
+        Sprint Planning Meeting: active , 2023-12-04, 1d
         section Final Demo
-        Add more detailed animations for pet states.: active , 2023-04-13, 5d
+        Fix bugs: active , 2023-12-04, 1w
         section Final Demo
-        Add more states/customizations to pet(s): , 2023-04-16, 5d
+        Complete documents: , 2023-12-04, 1w
         section Final Demo
-        Final Presentation & Demo :crit, milestone,  , 2023-04-27, 1d
+        Complete test documents: , 2023-12-04, 1w
         section Final Demo
-        Submit Test Report Document Assignment: milestone, , 2023-05-06, 1d
+        Submit Test Report Document Assignment: milestone, , 2023-12-10, 1d
         section Final Demo
-        Submit Final Software Release Assignment: milestone, , 2023-05-07, 1d
+        Submit Final Software Release Assignment: milestone, , 2023-12-11, 1d
 ```
