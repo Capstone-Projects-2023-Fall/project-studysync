@@ -172,7 +172,7 @@ sidebar_position: 1
 
     - Expected Result: The flashcards should be correctly fetched and displayed as per the data provided. 
 
- <img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/1c04eadc-3027-4cac-84f8-4be87b9e23ac">
+ <img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/1c04eadc-3027-4cac-84f8-4be87b9e23ac"></img>
 
 ## Quiz List Component Test Suite 
 1. Updates the Quiz Title
@@ -303,7 +303,7 @@ sidebar_position: 1
     - Method:  
     
         - Calls FlashcardRepo.updateScoreAndAddAttempt with a score object and expects it to be called with the correct argument. 
-  <img alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/c1d55bc2-6687-4aa1-9b4a-1ea5d2d93bd3">
+  <img alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/c1d55bc2-6687-4aa1-9b4a-1ea5d2d93bd3"></img>
 
 ## MainQuizPage Component Test Suite 
 
@@ -337,7 +337,7 @@ sidebar_position: 1
 
     - Expected Result: The initial time displayed should be the total number of questions multiplied by the allotted time per question (in seconds). 
 
-<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/05c928a2-e9bc-4dfa-a09b-4b11a6d89dd4">
+<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/05c928a2-e9bc-4dfa-a09b-4b11a6d89dd4"></img>
 
 ## Leaderboard Component Test Suite 
 
@@ -370,7 +370,7 @@ sidebar_position: 1
     - Method: handleSearch(event) 
 
     - Expected Result: As a user types into the search field, the leaderboard should update in real-time to only display users whose names match the search query. 
-<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/6a5067d5-2f0a-478f-9f7c-6e365ba99434">
+<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/6a5067d5-2f0a-478f-9f7c-6e365ba99434"></img>
 
 ## Event Repository Test Suite
 
@@ -443,7 +443,7 @@ sidebar_position: 1
     - Method: MarkAsNotified(eventId)
 
     - Expected Result: The specified past event should be marked as notified in the repository.
-<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/7d8b1e4d-2c0d-4aac-8e1c-6a39a75345f1">
+<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/7d8b1e4d-2c0d-4aac-8e1c-6a39a75345f1"></img>
 
 ## Notification Repository Test Suite
 1. getNotificationById
@@ -473,7 +473,7 @@ sidebar_position: 1
     - Method: UpdateNotification(notificationId, updatedNotification)
 
     - Expected Result: The notification with the specified notificationId should be successfully updated in the repository.
-      <img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/efe8b42e-189e-4bfd-9c96-78aaa0d29c05">
+      <img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/efe8b42e-189e-4bfd-9c96-78aaa0d29c05"></img>
 
 
 ## QuizRepository Test Suite
@@ -505,7 +505,7 @@ sidebar_position: 1
     - Expected Result: The repository should handle the failure case gracefully and return an appropriate error or null when attempting to find a quiz with an invalid id.
 
 
-<img alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/0e25bd14-58d1-4352-8447-756aa494a808">
+<img alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/0e25bd14-58d1-4352-8447-756aa494a808"></img>
 
 ## Flashcard Repository Test Suite
 
@@ -537,7 +537,7 @@ sidebar_position: 1
 
     - Expected Result: The repository should successfully retrieve and return the flashcards corresponding to the list of flashcardIds.
 
-<img alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/e74c33b4-8579-41f6-920a-1816eff6c5d4">
+<img alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/e74c33b4-8579-41f6-920a-1816eff6c5d4"></img>
 
 ## UserRepository Test Suite
 
@@ -721,7 +721,7 @@ sidebar_position: 1
     - Expected Result: The repository should successfully remove the upcoming event (eventId) from the user with the specified userId.
 
 
-<img alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/bb2796c5-36d4-4d10-b97d-ffadf8f34cd0">
+<img alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/bb2796c5-36d4-4d10-b97d-ffadf8f34cd0"></img>
 
 
 
