@@ -17,6 +17,7 @@ The purpose of integration test in the Studysync project is to ensure that the i
 ## USE CASE #1:
 
 ### Features to be Tested: 
+
 User account management, Flashcards creation/customization, Interactivity, and collaboration.
 
 - A user forgets to review because of daily chores and uses StudySync to review before midterm is approaching.
@@ -28,7 +29,9 @@ User account management, Flashcards creation/customization, Interactivity, and c
   - After submission, the quiz shows all the correct answer and quiz score will be saved to the leaderboard.
 
 ### Test Steps:
+
 1. **User Login**
+   
    - Action: User navigates to Studysync website and logs in using their valid credentials.
    - Expected Result: The user is successfully logged in and has access to the website.
      ```
@@ -239,5 +242,6 @@ Features to be Tested: User Account Management, Flashcards Creation/Customizatio
 - **Updating Flashcards** 
   - Action: The user identifies flashcards that need updates and then proceeds to make changes to the flashcard definitions and details.
   - Expected Result: The flashcards are updated and ready to be learned again.
+<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/27a54ecb-0252-46ac-b724-4833e18cf015">
 
 

@@ -108,7 +108,7 @@ A user forgets to review because of daily chores and uses StudySync to review be
 4. After reviewing the flashcards, the user went back to Study Tool page and select "Quiz".
 5. Finally, the user completes the quiz and the correct answer is displayed.
 6. After submission, the quiz shows all the correct answer and quiz score will be saved to the leaderboard.
-![user case1](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/23609bc1-daf0-40c4-916e-c6b169d03936)
+![](../requirements/static/UseCase1.png)
 
   
 
@@ -123,7 +123,7 @@ A user is about to take a naturalization test but doesn't have time to study for
 4. After completing the upload of the question bank he chose flashcard mode to study those terms and definitions.
 5. When the flashcard comes out there are three options, know, don't know, and not sure.
 6. Finally, the rating for those questions will be saved and can be used to generate questions for quiz.
-![user case2](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/192b3e85-9173-4d86-b0c7-5dfe55447132)
+![](../requirements/static/UseCase2.png)
 
 
 
@@ -134,7 +134,7 @@ A user is about to take a naturalization test but doesn't have time to study for
 2. Then he went to the friends list and chose to add a friend.
 3. After adding his friends he is able to receive a shared quiz from one of his friends.
 4. The user then has the ability to do the quiz that was shared by his friends.
-![user case3](https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/9dbe93cc-fcc5-4435-9335-26b936b4ab41)
+![](../requirements/static/UseCase3.png)
 
 
 
