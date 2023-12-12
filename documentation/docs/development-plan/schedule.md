@@ -161,3 +161,68 @@ gantt
         Submit Final Software Release Assignment: milestone, , 2023-12-22, 1d
 
 ```
+## Milestone Demo Features for Studysync
+
+### Milestone Demo 1 [User Registration, Flashcard Creation, AI Integration]
+
+- **F1: User Account Management**
+  - **R1:** Users can register new accounts with email and password.
+  - **R2:** Users can log in with existing credentials.
+  - **R3:** Profile customization including username and profile picture.
+  - **R4:** Account information viewable and editable by the user.
+
+- **F2: Flashcard and Quiz Creation**
+  - **R1:** Users can create flashcards with terms and definitions.
+  - **R2:** Option to generate flashcards using AI (ChatGPT API).
+  - **R3:** Users can create quizzes based on flashcard sets.
+  - **R4:** Flashcards and quizzes can be edited and deleted.
+
+- **F3: AI Integration for Content Generation**
+  - **R1:** Integration with ChatGPT API for generating flashcard content.
+  - **R2:** Users can input topics to receive AI-generated flashcards and quizzes.
+
+- **F4: Social Sharing and Collaboration**
+  - **R1:** Users can share flashcards and quizzes with others.
+  - **R2:** Users can collaborate on flashcard and quiz creation.
+
+### Milestone Demo 2 [Advanced AI Features, Study Scheduling, Leaderboard]
+
+- **F5: Advanced AI Integration**
+  - **R1:** Enhanced AI-generated content for complex subjects.
+  - **R2:** Option for users to refine AI-generated content.
+
+- **F6: Study Scheduling System**
+  - **R1:** Users can schedule study sessions for specific dates.
+  - **R2:** Calendar integration for tracking study plans.
+
+- **F7: Leaderboard and Progress Tracking**
+  - **R1:** Leaderboard feature to compare scores with friends.
+  - **R2:** Progress tracking for quizzes and learning objectives.
+
+### Milestone Demo 3 [User Interface Enhancements, Performance Optimization]
+
+- **F8: User Interface Enhancements**
+  - **R1:** Redesign of the user interface for improved usability.
+  - **R2:** Interactive elements for engaging user experience.
+
+- **F9: Performance Optimization**
+  - **R1:** Optimizations for faster load times and smoother interactions.
+  - **R2:** Backend improvements for handling large data sets.
+
+- **F10: Mobile Responsiveness**
+  - **R1:** Responsive design for mobile devices.
+  - **R2:** Mobile-friendly features for on-the-go learning.
+
+### Milestone Demo 4 [Final Testing, Deployment, User Feedback]
+
+- **F11: Comprehensive Testing**
+  - **R1:** Final round of testing for all features.
+  - **R2:** User acceptance testing for real-world feedback.
+
+- **F12: Deployment**
+  - **R1:** Deploy the final version to the production server.
+  - **R2:** Ensure stable and secure operation in a live environment.
+
+- **F13: User Feedback and Future Planning**
+  - **R1:** Collect user feedback for future improvements.
+  - **R2:** Plan for additional features based on user suggestions.
