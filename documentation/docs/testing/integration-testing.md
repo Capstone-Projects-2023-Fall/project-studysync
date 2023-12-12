@@ -242,6 +242,6 @@ Features to be Tested: User Account Management, Flashcards Creation/Customizatio
 - **Updating Flashcards** 
   - Action: The user identifies flashcards that need updates and then proceeds to make changes to the flashcard definitions and details.
   - Expected Result: The flashcards are updated and ready to be learned again.
-<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/27a54ecb-0252-46ac-b724-4833e18cf015">
+<img  alt="image" src="https://github.com/Capstone-Projects-2023-Fall/project-studysync/assets/123430237/27a54ecb-0252-46ac-b724-4833e18cf015"></img>
 
 
