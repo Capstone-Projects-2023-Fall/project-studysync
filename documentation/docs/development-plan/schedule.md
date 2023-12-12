@@ -163,7 +163,7 @@ gantt
 ```
 ## Milestone Demo Features for Studysync
 
-### Milestone Demo 1 [User Registration, Flashcard Creation, AI Integration]
+### Milestone Demo 1 [User Registration, Flashcard Creation]
 
 - **F1: User Account Management**
   - **R1:** Users can register new accounts with email and password.
@@ -173,56 +173,52 @@ gantt
 
 - **F2: Flashcard and Quiz Creation**
   - **R1:** Users can create flashcards with terms and definitions.
-  - **R2:** Option to generate flashcards using AI (ChatGPT API).
-  - **R3:** Users can create quizzes based on flashcard sets.
-  - **R4:** Flashcards and quizzes can be edited and deleted.
+  - **R2:** User able create a quiz under the topic.
+  - **R3:** User able add edit or delete flashcards or questions.
+
+
+### Milestone Demo 2 [ AI Integration, UI design, Study Scheduling]
 
 - **F3: AI Integration for Content Generation**
-  - **R1:** Integration with ChatGPT API for generating flashcard content.
-  - **R2:** Users can input topics to receive AI-generated flashcards and quizzes.
+  - **R1:** Deploy chatgpt api to firebase cloud function.
+  - **R2:** Users can input topics to receive AI-generated flashcards.
 
-- **F4: Social Sharing and Collaboration**
+- **F4: UI design for components**
+  - **R1:** Design UI for the components.
+    
+- **F5: Social Sharing and Collaboration**
   - **R1:** Users can share flashcards and quizzes with others.
-  - **R2:** Users can collaborate on flashcard and quiz creation.
+  - **R2:** Users can follow and unfollow a user.
 
-### Milestone Demo 2 [Advanced AI Features, Study Scheduling, Leaderboard]
+### Milestone Demo 3 [User Interface Enhancements, Leaderboard, Advanced AI Features]
 
-- **F5: Advanced AI Integration**
-  - **R1:** Enhanced AI-generated content for complex subjects.
-  - **R2:** Option for users to refine AI-generated content.
-
-- **F6: Study Scheduling System**
-  - **R1:** Users can schedule study sessions for specific dates.
-  - **R2:** Calendar integration for tracking study plans.
-
+- **F6: User Interface Enhancements**
+  - **R1:** Redesign UI for user profile and flashcards.
+  - **R2:** Finish of Dashboard UI and related features
+ 
 - **F7: Leaderboard and Progress Tracking**
   - **R1:** Leaderboard feature to compare scores with friends.
   - **R2:** Progress tracking for quizzes and learning objectives.
+    
+- **F8: AI with flashcards Quiz questions**
+  - **R1:** Users can create quizzes based on flashcard sets, also able to generate questions based on image.
+  - **R2:** User able to pause the quiz.
+ 
+- **F9: Study Scheduling System**
+  - **R1:** Users can schedule study sessions for specific dates.
+  - **R2:** User will be ablt to edit ot delete the events
 
-### Milestone Demo 3 [User Interface Enhancements, Performance Optimization]
+- **F10: Notification system**
+  - **R1:** User is bale to receive notification while having a new follower.
+  - **R2:** User is ablt to receive notification while the upcoming event is due in five mins.
 
-- **F8: User Interface Enhancements**
-  - **R1:** Redesign of the user interface for improved usability.
-  - **R2:** Interactive elements for engaging user experience.
+### Final Demo [Final Testing, Deployment, User Feedback]
 
-- **F9: Performance Optimization**
-  - **R1:** Optimizations for faster load times and smoother interactions.
-  - **R2:** Backend improvements for handling large data sets.
-
-- **F10: Mobile Responsiveness**
-  - **R1:** Responsive design for mobile devices.
-  - **R2:** Mobile-friendly features for on-the-go learning.
-
-### Milestone Demo 4 [Final Testing, Deployment, User Feedback]
-
-- **F11: Comprehensive Testing**
+- **F11: Comprehensive Testing and documentation**
   - **R1:** Final round of testing for all features.
-  - **R2:** User acceptance testing for real-world feedback.
+  - **R2:** Revising all documents and finish test document.
 
 - **F12: Deployment**
-  - **R1:** Deploy the final version to the production server.
+  - **R1:** Deploy the final version to the firebase hosting.
   - **R2:** Ensure stable and secure operation in a live environment.
 
-- **F13: User Feedback and Future Planning**
-  - **R1:** Collect user feedback for future improvements.
-  - **R2:** Plan for additional features based on user suggestions.
