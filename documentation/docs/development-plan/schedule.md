@@ -127,7 +127,7 @@ gantt
         section Complete all features
         Generate quiz base on flashcards: , 2023-11-13, 5d
         section Complete all features
-        User able to take the quiz , 2023-11-13, 5d
+        User able to take the quiz :, 2023-11-13, 5d
         section Complete all features
         Fix profile UI: , 2023-11-20, 3d
         section Complete all features
@@ -156,7 +156,8 @@ gantt
         section Final Demo
         Submit Test Report Document Assignment: milestone, , 2023-12-10, 1d
         section Final Demo
-        final demo dayt: milestone, , 2023-12-11, 1d
+        final demo day:crit, milestone, , 2023-12-11, 1d
         section Final Demo
         Submit Final Software Release Assignment: milestone, , 2023-12-22, 1d
+
 ```
