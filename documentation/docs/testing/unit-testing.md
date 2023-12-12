@@ -663,58 +663,57 @@ sidebar_position: 1
 
     - Expected Result: The repository should successfully add the upcoming event (eventId) to the user with the specified userId.
 
-## Utils
-1. Test should convert 24-hour time to 12-hour format
+20. Test should convert 24-hour time to 12-hour format
     - Test Case: Test should convert 24-hour time to 12-hour format
 
     - Method: convertTo12HourFormat(time)
 
     - Expected Result: The method should successfully convert the given 24-hour time to 12-hour format.
-2. test should return the short form of the day of the week
+21. test should return the short form of the day of the week
     - Test Case: Test should return the short form of the day of the week
 
     - Method: getShortDayOfWeek(dayOfWeek)
 
     - Expected Result: The method should successfully return the short form of the given day of the week.
-3. Test should return the abbreviated month name
+22. Test should return the abbreviated month name
     - Test Case: Test should return the abbreviated month name
 
     - Method: getAbbreviatedMonthName(month)
 
     - Expected Result: The method should successfully return the abbreviated month name for the given month.
-4. Test should return true for a future timestamp
+23. Test should return true for a future timestamp
     - Test Case: Test should return true for a future timestamp
 
     - Method: isFutureTimestamp(timestamp)
 
     - Expected Result: The method should return true if the timestamp is in the future.
-5.  Test should return false for a past timestamp
+24.  Test should return false for a past timestamp
     - Test Case: Test should return false for a past timestamp
 
     - Method: isFutureTimestamp(timestamp)
 
     - Expected Result: The method should return false if the timestamp is in the past.
 
-## Remove By Id
-1. Test Remove follower by id
+
+25. Test Remove follower by id
     - Test Case: Follower - Test Remove follower by id
 
     - Method: removeFollowerById(userId, followerId)
 
     - Expected Result: The repository should successfully remove the follower (followerId) from the user with the specified userId.
-2. Test Remove following by id
+26. Test Remove following by id
     - Test Case: Following - Test Remove following by id
 
     - Method: removeFollowingById(userId, followingId)
 
     - Expected Result: The repository should successfully remove the following (followingId) from the user with the specified userId.
-3. Test Remove notifications by id
+27. Test Remove notifications by id
     - Test Case: Notifications - Test Remove notifications by id
 
     - Method: removeNotificationById(userId, notificationId)
 
     - Expected Result: The repository should successfully remove the notification (notificationId) from the user with the specified userId.
-4. Test Remove upcoming events by id
+28. Test Remove upcoming events by id
     - Test Case: Upcoming Events - Test Remove upcoming events by id
 
     - Method: removeUpcomingEventById(userId, eventId)
