@@ -9,17 +9,15 @@ sidebar_position: 1
 2. To understand how these technologies synergize, proof of concept prototypes will be created.
 3. Gathering information about AI algorithms for generating flashcards and quizzes through ChatGPT API is essential.
 4. Investigate different social features implemented in competing apps to enhance user engagement.
-5. Explore various hosting solutions such as Firebase Hosting, AWS, and Netlify.
-6. Conduct research on UI/UX best practices for educational platforms, focusing on Material-UI (MUI) implementation.
+5. Explore hosting solutions: Firebase Hosting.
+
 
 ## Top-Level Design
 1. Develop a navigation system for accessing different features like flashcards, quizzes, social sharing, and user settings.
 2. Implement AI-generated flashcards and quizzes, allowing users to learn and test themselves on various topics.
-3. Design and integrate a user progress tracking system to incentivize app usage and learning.
-4. Set up user authentication and profile management using Firebase.
-5. Enable social interaction features, allowing users to share flashcards and compare quiz scores.
-6. Integrate scheduling tools for users to plan their study sessions effectively.
-7. Develop a responsive and engaging UI using Material-UI, ensuring compatibility across different devices.
+3. Set up user authentication and profile management using Firebase.
+4. Enable social interaction features, allowing users to share flashcards and compare quiz scores.
+5. Integrate scheduling tools for users to plan their study sessions effectively.
 
 ## Detailed Design
 ### Flashcard and Quiz Pages:
@@ -45,13 +43,9 @@ sidebar_position: 1
   - Integrate ChatGPT API for generating educational content dynamically.
 
 ### Hosting and Deployment:
-  - Choose a suitable cloud platform for hosting the web application.
-  - Ensure scalability and reliability of the hosting solution.
+  - Choose firebase hosting as the solution.
 
-## Research and Development
-- Continuous research on improving AI algorithms for content generation.
-- Gathering user feedback for iterative development and feature enhancement.
-- Stay updated with the latest trends in web development and educational technology.
+
 
 ## Testing Strategies for Studysync Project
 
@@ -60,18 +54,9 @@ sidebar_position: 1
 - **React Frontend**: Unit tests will be written using Jest along with React Testing Library. These tests will focus on individual components' functionality and their interactions with the state.
 - **Firebase Backend**: For backend unit testing, we'll use Firebase's emulator suite and appropriate testing frameworks to simulate database interactions and API responses.
 
-### Mock Data
-
-- **Flashcards and Quizzes**: We will create mock flashcards and quizzes to simulate the content generation using the ChatGPT API.
-- **User Data**: Mock user accounts, including their preferences and history, will be generated to test database operations and user interactions within the app.
-
 ### Integration Testing
 
 - We will use tools like Jest for integration testing to ensure that the React components and Firebase backend work together seamlessly, particularly focusing on data fetching, updating, and user authentication processes.
-
-### System Testing
-
-- The complete system, including React frontend, Firebase backend, and ChatGPT API integration, will be deployed in a controlled environment to validate the entire application's performance and stability.
 
 ### Acceptance Testing
 
@@ -81,5 +66,5 @@ sidebar_position: 1
 ### Continuous Integration and Deployment
 
 - We will set up CI/CD pipelines to automate testing and deployment processes. This will include running unit and integration tests on every code commit to ensure code quality and application stability.
-- The deployment will be managed on a cloud platform, enabling us to update the app swiftly and efficiently based on the testing feedback.
+
 
