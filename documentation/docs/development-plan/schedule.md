@@ -4,6 +4,8 @@ sidebar_position: 3
 
 # Schedule
 
+## Gantt Chart
+
 ```mermaid
 gantt
     title Studysync Schedule Gantt Chart
@@ -60,7 +62,6 @@ gantt
         section Test document, UI for Study tools, login and sign up page
         Submit Test Procedures Document Assignment: milestone, , 2023-10-15, 1d
         
-
         section UI for userprofile, Flashcard and Quiz
         Sprint 3: , 2023-10-16, 2w
         section UI for userprofile, Flashcard and Quiz
@@ -90,8 +91,6 @@ gantt
         section UI for userprofile, Flashcard and Quiz
         Milestone Demo 1 :crit, milestone,  , 2023-10-30, 1d
 
-
-
         section UI for Friends, Notification and Main quiz page 
         Sprint 4: , 2023-10-30, 2w
         section UI for Friends, Notification and Main quiz page 
@@ -115,7 +114,6 @@ gantt
         section UI for Friends, Notification and Main quiz page 
         Milestone Demo 2 :crit, milestone,  , 2023-11-13, 1d
 
-        
         section Complete all features
         Sprint 5: , 2023-11-13, 3w
         section Complete all features
@@ -145,7 +143,6 @@ gantt
         section Complete all features
         Milestone Demo 3 :crit, milestone,  , 2023-12-04, 1d
 
-
         section Final Demo
         Sprint 6: , 2023-12-04, 1w
         section Final Demo
@@ -159,5 +156,7 @@ gantt
         section Final Demo
         Submit Test Report Document Assignment: milestone, , 2023-12-10, 1d
         section Final Demo
-        Submit Final Software Release Assignment: milestone, , 2023-12-11, 1d
+        final demo dayt: milestone, , 2023-12-11, 1d
+        section Final Demo
+        Submit Final Software Release Assignment: milestone, , 2023-12-22, 1d
 ```
